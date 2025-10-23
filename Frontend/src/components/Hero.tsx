@@ -5,27 +5,28 @@ import { Star } from "lucide-react";
 
 const Hero = () => {
   return (
-    <section className="relative bg-gradient-to-br from-gray-700 to-gray-900 py-12 md:py-20 overflow-hidden">
-      <div className="container mx-auto px-4">
+    <section className="relative py-12 md:py-20 overflow-hidden">
+      {/* Background Image */}
+      <div 
+        className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat" 
+        style={{
+          backgroundImage: 'url("https://images.unsplash.com/photo-1625047509168-a7026f36de04?auto=format&fit=crop&q=80")',
+          filter: 'brightness(0.5)'
+        }}
+      ></div>
+      
+      <div className="container mx-auto px-4 relative z-10">
         <div className="grid md:grid-cols-2 gap-8 items-center">
-          {/* Left side - Car illustration */}
-          <div className="relative">
-            <div className="text-center">
-              <img 
-                src="https://gomechprod.blob.core.windows.net/websiteasset/New%20Website/components/Homepage/car-top-view.png" 
-                alt="Car Service" 
-                className="w-full max-w-lg mx-auto"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                }}
-              />
-            </div>
+          {/* Left side - Text content */}
+          <div className="relative text-white">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Professional Car Service</h2>
+            <p className="text-xl opacity-90">Expert mechanics working with premium tools and genuine parts for your luxury vehicle.</p>
           </div>
 
           {/* Right side - Form */}
-          <div className="bg-card rounded-lg shadow-2xl p-6 md:p-8">
+          <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-2xl p-6 md:p-8">
             <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-3">
-              Experience The Best Car Services In Mumbai
+              Experience The Best Car Services In Bhubaneswar
             </h1>
             <p className="text-muted-foreground mb-6">
               Get instant quotes for your car service
@@ -34,12 +35,10 @@ const Hero = () => {
             <div className="space-y-4">
               <Select>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="MUMBAI" />
+                  <SelectValue placeholder="BHUBANESWAR" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="mumbai">Mumbai</SelectItem>
-                  <SelectItem value="delhi">Delhi</SelectItem>
-                  <SelectItem value="bangalore">Bangalore</SelectItem>
+                  <SelectItem value="bhubaneswar">Bhubaneswar</SelectItem>
                 </SelectContent>
               </Select>
 
