@@ -3,15 +3,15 @@ import { Car, ChevronDown } from "lucide-react";
 
 const Header = () => {
   return (
-    <header className="bg-black text-white py-2 sticky top-0 z-50 shadow-lg">
-      <div className="container mx-auto px-4">
+    <header className="bg-black text-white py-1.5 sticky top-0 z-50 shadow-lg">
+      <div className="container mx-auto px-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-6">
             <div className="flex items-center">
               <img 
                 src="/Images/AUTOMEX.png" 
                 alt="AutoMex Logo" 
-                className="h-10 w-auto object-contain"
+                className="h-20 w-auto object-contain"
               />
             </div>
             
