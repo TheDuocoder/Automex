@@ -11,7 +11,7 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
     "Our Services",
     "Curated Custom Service",
     "Summer Services",
-    "How GoMechanic Works",
+    "How AutoMex Works",
     "Rating & Reviews",
     "FAQ",
   ];

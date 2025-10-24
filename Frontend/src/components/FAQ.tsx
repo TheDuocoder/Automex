@@ -8,12 +8,12 @@ import {
 const FAQ = () => {
   const faqs = [
     {
-      question: "What services does GoMechanic offer?",
-      answer: "GoMechanic offers a comprehensive range of car services including periodic servicing, AC service & repair, battery replacement, tyre replacement, denting & painting, car detailing, car spa & cleaning, car inspections, and more.",
+      question: "What services does AutoMex offer?",
+      answer: "AutoMex offers a comprehensive range of car services including periodic servicing, AC service & repair, battery replacement, tyre replacement, denting & painting, car detailing, car spa & cleaning, car inspections, and more.",
     },
     {
       question: "Is pickup and drop service free?",
-      answer: "Yes, we offer complimentary doorstep pickup and drop service for all our car services across Mumbai. Our team will collect your car from your preferred location and deliver it back after the service is completed.",
+      answer: "Yes, we offer complimentary doorstep pickup and drop service for all our car services across Bhubaneswar. Our team will collect your car from your preferred location and deliver it back after the service is completed.",
     },
     {
       question: "How can I track my car service?",

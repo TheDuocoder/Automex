@@ -3,17 +3,20 @@ import { Car, ChevronDown } from "lucide-react";
 
 const Header = () => {
   return (
-    <header className="bg-gray-800 text-white py-3 sticky top-0 z-50 shadow-lg">
+    <header className="bg-black text-white py-2 sticky top-0 z-50 shadow-lg">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-6">
-            <div className="flex items-center gap-2">
-              <Car className="w-8 h-8" />
-              <span className="text-xl font-bold">GoMechanic</span>
+            <div className="flex items-center">
+              <img 
+                src="/Images/AUTOMEX.png" 
+                alt="AutoMex Logo" 
+                className="h-10 w-auto object-contain"
+              />
             </div>
             
             <button className="flex items-center gap-1 text-sm hover:text-primary transition-colors">
-              Mumbai <ChevronDown className="w-4 h-4" />
+              Bhubaneswar <ChevronDown className="w-4 h-4" />
             </button>
           </div>
 

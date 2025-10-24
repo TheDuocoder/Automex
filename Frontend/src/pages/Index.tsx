@@ -19,7 +19,7 @@ const Index = () => {
         return <CuratedServices />;
       case "Summer Services":
         return <CuratedServices />;
-      case "How GoMechanic Works":
+      case "How AutoMex Works":
         return <HowItWorks />;
       case "Rating & Reviews":
         return <Reviews />;
