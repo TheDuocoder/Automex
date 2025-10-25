@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="g1" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#3f4752"/>
+      <stop offset="100%" stop-color="#1f2430"/>
+    </linearGradient>
+    <linearGradient id="g2" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#59626e"/>
+      <stop offset="100%" stop-color="#2a2f3a"/>
+    </linearGradient>
+  </defs>
+  <rect fill="#f4f6f8" width="100%" height="100%"/>
+  <g transform="translate(100,140)">
+    <!-- Battery body -->
+    <rect x="0" y="60" width="600" height="260" rx="16" fill="url(#g1)" stroke="#0f1218" stroke-width="4"/>
+    <!-- Top ridge -->
+    <rect x="-10" y="40" width="620" height="28" rx="8" fill="#2b313b" stroke="#0f1218" stroke-width="3"/>
+    <!-- Handles -->
+    <rect x="140" y="0" width="120" height="28" rx="6" fill="#2f3641" stroke="#12151c" stroke-width="3"/>
+    <rect x="340" y="0" width="120" height="28" rx="6" fill="#2f3641" stroke="#12151c" stroke-width="3"/>
+    <!-- Terminals -->
+    <circle cx="80" cy="40" r="14" fill="#c9ced6" stroke="#8c93a1" stroke-width="4"/>
+    <rect x="66" y="16" width="28" height="16" rx="4" fill="#c9ced6" stroke="#8c93a1" stroke-width="3"/>
+
+    <circle cx="520" cy="40" r="14" fill="#c9ced6" stroke="#8c93a1" stroke-width="4"/>
+    <rect x="506" y="16" width="28" height="16" rx="4" fill="#c9ced6" stroke="#8c93a1" stroke-width="3"/>
+
+    <!-- Label plate -->
+    <rect x="80" y="120" width="440" height="140" rx="10" fill="url(#g2)" stroke="#0e1117" stroke-width="3"/>
+    <!-- Plus/Minus icons -->
+    <g transform="translate(150,150)" fill="#e74c3c">
+      <rect x="-12" y="20" width="100" height="16" rx="3"/>
+      <rect x="28" y="-10" width="16" height="100" rx="3"/>
+    </g>
+    <g transform="translate(420,150)" fill="#ecf0f1">
+      <rect x="-50" y="20" width="100" height="16" rx="3"/>
+    </g>
+    <!-- Highlight lines -->
+    <rect x="14" y="74" width="572" height="4" fill="#48515f" opacity="0.5"/>
+    <rect x="20" y="84" width="560" height="3" fill="#5b6575" opacity="0.4"/>
+  </g>
+</svg>

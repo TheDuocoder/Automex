@@ -5,7 +5,7 @@ import { Star } from "lucide-react";
 
 const Hero = () => {
   return (
-    <section className="relative py-12 md:py-20 overflow-hidden">
+    <section className="relative py-4 md:py-6 overflow-hidden">
       {/* Background Image */}
       <div 
         className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat" 
@@ -24,11 +24,11 @@ const Hero = () => {
           </div>
 
           {/* Right side - Form */}
-          <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-2xl p-6 md:p-8">
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-3">
+          <div className="bg-transparent backdrop-blur-none rounded-lg p-6 md:p-8">
+            <h1 className="text-2xl md:text-3xl font-bold text-white mb-3">
               Experience The Best Car Services In Bhubaneswar
             </h1>
-            <p className="text-muted-foreground mb-6">
+            <p className="text-white/80 mb-6">
               Get instant quotes for your car service
             </p>
 
@@ -65,17 +65,17 @@ const Hero = () => {
               </Button>
             </div>
 
-            <div className="flex items-center justify-between mt-6 pt-6 border-t">
+            <div className="flex items-center justify-between mt-6 pt-6 border-t border-white/20">
               <div className="flex items-center gap-2">
-                <Star className="w-5 h-5 fill-green-500 text-green-500" />
+                <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
                 <div>
-                  <p className="font-bold text-lg">4.0/5</p>
-                  <p className="text-xs text-muted-foreground">Based on 150000+ Reviews</p>
+                  <p className="font-bold text-lg text-white">4.0/5</p>
+                  <p className="text-xs text-white/70">Based on 150000+ Reviews</p>
                 </div>
               </div>
               <div className="text-right">
-                <p className="font-bold text-lg">2 Million+</p>
-                <p className="text-xs text-muted-foreground">Happy Customers</p>
+                <p className="font-bold text-lg text-white">2 Million+</p>
+                <p className="text-xs text-white/70">Happy Customers</p>
               </div>
             </div>
           </div>
