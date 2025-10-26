@@ -272,21 +272,6 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
                     <CarouselItem className="md:basis-1/2 lg:basis-1/3">
                       <div className="relative group aspect-[16/9] overflow-hidden rounded-xl">
                         <img 
-                          src="https://images.unsplash.com/photo-1633509817627-5a29634475af?auto=format&fit=crop&q=80" 
-                          alt="Mercedes AMG"
-                          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" 
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent">
-                          <div className="absolute bottom-4 left-4">
-                            <h3 className="text-white text-xl font-semibold">Mercedes AMG</h3>
-                            <p className="text-white/80 text-sm">Luxury Performance</p>
-                          </div>
-                        </div>
-                      </div>
-                    </CarouselItem>
-                    <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                      <div className="relative group aspect-[16/9] overflow-hidden rounded-xl">
-                        <img 
                           src="https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&q=80" 
                           alt="BMW M4"
                           className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" 
