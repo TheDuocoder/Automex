@@ -92,20 +92,20 @@ const SummerServices = () => {
   ];
 
   return (
-    <section className="py-16 bg-gradient-to-b from-orange-50 via-white to-orange-50">
+    <section className="py-8 md:py-12 lg:py-16 bg-gradient-to-b from-orange-50 via-white to-orange-50">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="text-center mb-12 animate-fade-in">
-          <h2 className="text-4xl md:text-5xl font-bold mb-3 bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+        <div className="text-center mb-8 md:mb-12 animate-fade-in">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-3 bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
             Get Summer Ready With AutoMex
           </h2>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+          <p className="text-gray-600 text-sm md:text-base lg:text-lg max-w-2xl mx-auto px-4">
             Beat the heat with our specialized summer car care packages designed to keep your vehicle performing at its best
           </p>
         </div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8 md:mb-12">
           {services.map((service, index) => (
             <Card 
               key={index} 
@@ -115,7 +115,7 @@ const SummerServices = () => {
               {/* Hover Overlay */}
               <div className="absolute inset-0 bg-gradient-to-br from-orange-500/0 to-red-500/0 group-hover:from-orange-500/10 group-hover:to-red-500/10 transition-all duration-500 z-10 pointer-events-none"></div>
               
-              <div className="relative h-56 overflow-hidden">
+              <div className="relative h-44 md:h-56 overflow-hidden">
                 <img
                   src={service.image}
                   alt={service.title}
@@ -125,13 +125,13 @@ const SummerServices = () => {
                   }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent group-hover:from-black/90 transition-all duration-500"></div>
-                <div className="absolute bottom-0 left-0 right-0 p-5">
-                  <h3 className="text-white font-bold text-xl mb-1 transform group-hover:translate-y-[-4px] transition-transform duration-300">{service.title}</h3>
-                  <div className="h-1 w-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-full transform origin-left group-hover:scale-x-150 transition-transform duration-500"></div>
+                <div className="absolute bottom-0 left-0 right-0 p-4 md:p-5">
+                  <h3 className="text-white font-bold text-lg md:text-xl mb-1 transform group-hover:translate-y-[-4px] transition-transform duration-300">{service.title}</h3>
+                  <div className="h-1 w-10 md:w-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-full transform origin-left group-hover:scale-x-150 transition-transform duration-500"></div>
                 </div>
               </div>
-              <div className="p-6 relative z-20">
-                <p className="text-gray-600 text-sm mb-4 leading-relaxed group-hover:text-gray-700 transition-colors">{service.description}</p>
+              <div className="p-4 md:p-6 relative z-20">
+                <p className="text-gray-600 text-xs md:text-sm mb-3 md:mb-4 leading-relaxed group-hover:text-gray-700 transition-colors">{service.description}</p>
                 <div className="space-y-2.5">
                   {service.features.map((feature, idx) => (
                     <div 
