@@ -31,7 +31,7 @@ const HowItWorks = () => {
   ];
 
   return (
-    <section className="py-8 bg-gray-50">
+    <section className="pt-8 pb-4 bg-gray-50 shadow-lg">
       <div className="container mx-auto px-4">
         <h2 className="text-2xl md:text-3xl font-bold text-left mb-6 text-gray-900">
           How AutoMex works?
@@ -87,7 +87,7 @@ const HowItWorks = () => {
         </div>
 
         {/* Stats Section */}
-        <div className="mt-8 pt-6 border-t border-gray-300">
+        <div className="mt-6 pt-4 border-t border-gray-300">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             <div className="transform hover:scale-105 transition-transform duration-300">
               <p className="text-2xl md:text-3xl font-bold text-primary mb-0.5">3M+</p>

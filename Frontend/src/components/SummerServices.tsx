@@ -1,8 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CheckCircle } from "lucide-react";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
+import { useRef } from "react";
 
 const SummerServices = () => {
+  const autoplayPlugin = useRef(
+    Autoplay({ delay: 4000, stopOnInteraction: false })
+  );
+
   const services = [
     {
       title: "Front Bumper Paint",
@@ -27,6 +34,60 @@ const SummerServices = () => {
       description: "Seasonal maintenance package covering fluids, filters, and safety systems for summer reliability.",
       image: "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&q=80&w=600",
       features: ["AC check", "Coolant top-up", "Battery health"]
+    }
+  ];
+
+  const promotionalOffers = [
+    {
+      badge: "⚡ FLASH SALE",
+      title: "Premium Detailing Package",
+      description: "Professional interior & exterior detailing with ceramic coating, steam wash, paint correction, and premium wax protection for ultimate shine",
+      features: [
+        { icon: "✓", text: "Ceramic Coating" },
+        { icon: "✓", text: "Paint Correction" },
+        { icon: "✓", text: "Steam Sanitization" },
+        { icon: "✓", text: "Interior Deep Clean" }
+      ],
+      price: "₹3,499",
+      originalPrice: "₹5,999",
+      discount: "42%",
+      buttonText: "Save 42% - Book Now",
+      image: "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&q=80&w=800",
+      gradient: "from-blue-900 via-blue-800 to-slate-900"
+    },
+    {
+      badge: "🌟 BEST VALUE",
+      title: "Complete Tyre Care Package",
+      description: "Comprehensive tyre service including wheel alignment, balancing, rotation, nitrogen filling, and complete tread inspection",
+      features: [
+        { icon: "✓", text: "4-Wheel Alignment" },
+        { icon: "✓", text: "Wheel Balancing" },
+        { icon: "✓", text: "Nitrogen Filling" },
+        { icon: "✓", text: "Tread Inspection" }
+      ],
+      price: "₹1,799",
+      originalPrice: "₹2,999",
+      discount: "40%",
+      buttonText: "Save 40% - Book Now",
+      image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&q=80&w=800",
+      gradient: "from-purple-900 via-purple-800 to-slate-900"
+    },
+    {
+      badge: "🎯 TRENDING NOW",
+      title: "Engine Care Specialist",
+      description: "Complete engine diagnostics, oil change, filter replacement, fuel system cleaning, and performance optimization for peak efficiency",
+      features: [
+        { icon: "✓", text: "Engine Diagnostics" },
+        { icon: "✓", text: "Oil & Filter Change" },
+        { icon: "✓", text: "Fuel System Clean" },
+        { icon: "✓", text: "Performance Check" }
+      ],
+      price: "₹2,199",
+      originalPrice: "₹3,499",
+      discount: "37%",
+      buttonText: "Save 37% - Book Now",
+      image: "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&q=80&w=800",
+      gradient: "from-orange-900 via-red-800 to-slate-900"
     }
   ];
 
@@ -94,82 +155,86 @@ const SummerServices = () => {
           ))}
         </div>
 
-        {/* Special Offer Banner */}
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 shadow-2xl border border-orange-500/20 animate-fade-in">
-          {/* Animated background */}
-          <div className="absolute inset-0 overflow-hidden opacity-10">
-            <div className="absolute -right-20 -top-20 w-96 h-96 bg-orange-500 rounded-full blur-3xl animate-pulse"></div>
-            <div className="absolute -left-20 -bottom-20 w-96 h-96 bg-red-500 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-          </div>
-          
-          <div className="relative px-8 md:px-12 py-12 flex flex-col md:flex-row items-center justify-between gap-8">
-            {/* Left side - Content */}
-            <div className="flex-1 text-white space-y-6">
-              <div>
-                <div className="inline-block bg-orange-500/20 backdrop-blur-sm rounded-full px-4 py-1 mb-4 animate-bounce">
-                  <span className="text-orange-400 font-semibold text-sm">🔥 LIMITED TIME OFFER</span>
-                </div>
-                <h3 className="text-3xl md:text-5xl font-bold mb-3 bg-gradient-to-r from-orange-400 via-orange-300 to-red-500 bg-clip-text text-transparent">
-                  Complete Summer Care Package
-                </h3>
-                <p className="text-lg md:text-xl text-gray-300 leading-relaxed">
-                  Premium service package including AC maintenance, coolant system check, battery diagnostics, 
-                  brake inspection, and complete vehicle health assessment
-                </p>
-              </div>
-              
-              {/* Features list */}
-              <div className="grid grid-cols-2 gap-3">
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5 text-green-400" />
-                  <span className="text-sm text-gray-300">AC Service & Gas Refill</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5 text-green-400" />
-                  <span className="text-sm text-gray-300">Battery Health Check</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5 text-green-400" />
-                  <span className="text-sm text-gray-300">Coolant Top-up</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5 text-green-400" />
-                  <span className="text-sm text-gray-300">Brake System Check</span>
-                </div>
-              </div>
-              
-              <div className="flex flex-wrap items-center gap-4">
-                <div className="bg-gradient-to-r from-orange-500/20 to-red-500/20 backdrop-blur-sm rounded-xl px-6 py-4 border border-orange-500/30">
-                  <div className="text-3xl font-bold text-orange-400">₹2,499</div>
-                  <div className="text-sm line-through text-gray-400">₹3,999</div>
-                </div>
-                <Button size="lg" className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-bold shadow-lg shadow-orange-500/50 transform hover:scale-105 transition-all">
-                  Save 37% - Book Now
-                </Button>
-              </div>
-            </div>
+        {/* Special Offer Carousel - Smaller Size */}
+        <Carousel
+          plugins={[autoplayPlugin.current]}
+          className="w-full animate-fade-in"
+          opts={{
+            align: "start",
+            loop: true,
+          }}
+        >
+          <CarouselContent>
+            {promotionalOffers.map((offer, index) => (
+              <CarouselItem key={index}>
+                <div className={`relative overflow-hidden rounded-xl bg-gradient-to-br ${offer.gradient} shadow-xl border border-orange-500/20`}>
+                  {/* Animated background */}
+                  <div className="absolute inset-0 overflow-hidden opacity-10">
+                    <div className="absolute -right-20 -top-20 w-64 h-64 bg-orange-500 rounded-full blur-3xl animate-pulse"></div>
+                    <div className="absolute -left-20 -bottom-20 w-64 h-64 bg-red-500 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+                  </div>
+                  
+                  <div className="relative px-6 md:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-6">
+                    {/* Left side - Content */}
+                    <div className="flex-1 text-white space-y-4">
+                      <div>
+                        <div className="inline-block bg-orange-500/20 backdrop-blur-sm rounded-full px-3 py-1 mb-3 animate-bounce">
+                          <span className="text-orange-400 font-semibold text-xs">{offer.badge}</span>
+                        </div>
+                        <h3 className="text-2xl md:text-3xl font-bold mb-2 bg-gradient-to-r from-orange-400 via-orange-300 to-red-500 bg-clip-text text-transparent">
+                          {offer.title}
+                        </h3>
+                        <p className="text-sm md:text-base text-gray-300 leading-relaxed">
+                          {offer.description}
+                        </p>
+                      </div>
+                      
+                      {/* Features list */}
+                      <div className="grid grid-cols-2 gap-2">
+                        {offer.features.map((feature, idx) => (
+                          <div key={idx} className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4 text-green-400 flex-shrink-0" />
+                            <span className="text-xs text-gray-300">{feature.text}</span>
+                          </div>
+                        ))}
+                      </div>
+                      
+                      <div className="flex flex-wrap items-center gap-3">
+                        <div className="bg-gradient-to-r from-orange-500/20 to-red-500/20 backdrop-blur-sm rounded-lg px-4 py-3 border border-orange-500/30">
+                          <div className="text-2xl font-bold text-orange-400">{offer.price}</div>
+                          <div className="text-xs line-through text-gray-400">{offer.originalPrice}</div>
+                        </div>
+                        <Button size="default" className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-bold shadow-lg shadow-orange-500/50 transform hover:scale-105 transition-all text-sm">
+                          {offer.buttonText}
+                        </Button>
+                      </div>
+                    </div>
 
-            {/* Right side - Image */}
-            <div className="flex-shrink-0 w-full md:w-2/5">
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-tr from-orange-500/20 to-red-500/20 rounded-xl blur-xl"></div>
-                <img
-                  src="https://images.unsplash.com/photo-1625047509168-a7026f36de04?auto=format&fit=crop&q=80&w=800"
-                  alt="Professional AUTOMEX car service"
-                  className="relative w-full h-auto rounded-xl shadow-2xl border-2 border-orange-500/30 transform hover:scale-105 transition-transform duration-300"
-                  onError={(e) => {
-                    (e.currentTarget as HTMLImageElement).src = "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&q=80&w=800";
-                  }}
-                />
-                {/* Overlay badge */}
-                <div className="absolute -bottom-4 -right-4 bg-gradient-to-br from-red-600 to-red-700 text-white rounded-full w-24 h-24 flex flex-col items-center justify-center shadow-xl border-4 border-slate-900 animate-pulse">
-                  <span className="text-2xl font-bold">37%</span>
-                  <span className="text-xs font-semibold">OFF</span>
+                    {/* Right side - Image */}
+                    <div className="flex-shrink-0 w-full md:w-2/5">
+                      <div className="relative">
+                        <div className="absolute inset-0 bg-gradient-to-tr from-orange-500/20 to-red-500/20 rounded-lg blur-lg"></div>
+                        <img
+                          src={offer.image}
+                          alt={offer.title}
+                          className="relative w-full h-auto rounded-lg shadow-xl border-2 border-orange-500/30 transform hover:scale-105 transition-transform duration-300"
+                          onError={(e) => {
+                            (e.currentTarget as HTMLImageElement).src = "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&q=80&w=800";
+                          }}
+                        />
+                        {/* Overlay badge */}
+                        <div className="absolute -bottom-3 -right-3 bg-gradient-to-br from-red-600 to-red-700 text-white rounded-full w-16 h-16 flex flex-col items-center justify-center shadow-xl border-2 border-slate-900 animate-pulse">
+                          <span className="text-lg font-bold">{offer.discount}</span>
+                          <span className="text-[10px] font-semibold">OFF</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
       </div>
 
       {/* CSS Animations */}
