@@ -5,8 +5,8 @@ import { Star } from "lucide-react";
 
 const Hero = () => {
   return (
-    <section className="relative py-4 md:py-6 overflow-hidden">
-      {/* Background Image */}
+    <section className="relative min-h-[calc(100vh-3.5rem)] overflow-hidden bg-white">
+      {/* Background Image - Full width */}
       <div 
         className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat" 
         style={{
@@ -15,20 +15,23 @@ const Hero = () => {
         }}
       ></div>
       
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="grid md:grid-cols-2 gap-8 items-center">
+      {/* Overlay gradient for better text readability */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-black/30 to-transparent"></div>
+      
+      <div className="container mx-auto px-4 relative z-10 h-full flex items-center py-8 md:py-12">
+        <div className="grid md:grid-cols-2 gap-8 items-center w-full">
           {/* Left side - Text content */}
-          <div className="relative text-white">
+          <div className="relative text-white animate-fade-in">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">Professional Car Service</h2>
             <p className="text-xl opacity-90">Expert mechanics working with premium tools and genuine parts for your luxury vehicle.</p>
           </div>
 
-          {/* Right side - Form */}
-          <div className="bg-transparent backdrop-blur-none rounded-lg p-6 md:p-8">
-            <h1 className="text-2xl md:text-3xl font-bold text-white mb-3">
+          {/* Right side - Form with falling animation */}
+          <div className="bg-white rounded-lg p-6 md:p-8 shadow-2xl animate-slide-in-right">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
               Experience The Best Car Services In Bhubaneswar
             </h1>
-            <p className="text-white/80 mb-6">
+            <p className="text-gray-600 mb-6">
               Get instant quotes for your car service
             </p>
 
@@ -65,22 +68,62 @@ const Hero = () => {
               </Button>
             </div>
 
-            <div className="flex items-center justify-between mt-6 pt-6 border-t border-white/20">
+            <div className="flex items-center justify-between mt-6 pt-6 border-t border-gray-200">
               <div className="flex items-center gap-2">
                 <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
                 <div>
-                  <p className="font-bold text-lg text-white">4.0/5</p>
-                  <p className="text-xs text-white/70">Based on 150000+ Reviews</p>
+                  <p className="font-bold text-lg text-gray-900">4.0/5</p>
+                  <p className="text-xs text-gray-600">Based on 150000+ Reviews</p>
                 </div>
               </div>
               <div className="text-right">
-                <p className="font-bold text-lg text-white">2 Million+</p>
-                <p className="text-xs text-white/70">Happy Customers</p>
+                <p className="font-bold text-lg text-gray-900">2 Million+</p>
+                <p className="text-xs text-gray-600">Happy Customers</p>
               </div>
             </div>
           </div>
         </div>
       </div>
+      
+      {/* CSS Animation Styles */}
+      <style>{`
+        @keyframes slideInRight {
+          0% {
+            transform: translateX(100%) translateY(-100%) rotate(10deg);
+            opacity: 0;
+          }
+          60% {
+            transform: translateX(-10px) translateY(0) rotate(-2deg);
+            opacity: 1;
+          }
+          80% {
+            transform: translateX(5px) translateY(0) rotate(1deg);
+          }
+          100% {
+            transform: translateX(0) translateY(0) rotate(0);
+            opacity: 1;
+          }
+        }
+        
+        @keyframes fadeIn {
+          0% {
+            opacity: 0;
+            transform: translateX(-20px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        
+        .animate-slide-in-right {
+          animation: slideInRight 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        
+        .animate-fade-in {
+          animation: fadeIn 0.8s ease-out forwards;
+        }
+      `}</style>
     </section>
   );
 };

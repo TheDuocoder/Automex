@@ -37,93 +37,94 @@ const tabs = [
 const carServices = [
   {
     title: "Premium Car Services",
-    image: "https://images.pexels.com/photos/3807517/pexels-photo-3807517.jpeg?auto=compress&cs=tinysrgb&w=600",
+    image: "https://images.unsplash.com/photo-1625047509168-a7026f36de04?auto=format&fit=crop&q=80&w=600",
     description: "Specialized maintenance for luxury vehicles including BMW, Mercedes-Benz, and Audi. Our certified technicians use advanced diagnostic tools and genuine parts to ensure premium performance. Services include engine diagnostics, transmission service, brake systems, and electronic systems calibration."
   },
   {
     title: "AC Service & Repair",
-    image: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&q=80",
+    image: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&q=80&w=600",
     description: "Expert AC system diagnosis, repair, and maintenance. We handle gas refilling, component replacement, and ensure optimal cooling performance for your comfort."
   },
   {
     title: "Batteries",
-    // Use the provided local photo placed in public/images
-    image: "/images/battery-hero.jpg",
+    image: "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&q=80&w=600",
     isIcon: false,
     description: "Complete battery solutions including health check, charging system diagnosis, replacement with genuine batteries, and warranty support for all car models."
   },
   {
     title: "Tyres & Wheel Care",
-    // Local icon to guarantee visibility
-    image: tyreIcon as unknown as string,
-    isIcon: true,
+    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&q=80&w=600",
+    isIcon: false,
     description: "Professional wheel alignment, balancing, rotation, and tyre replacement services. We ensure optimal tyre pressure and tread life for safe driving."
   },
   {
     title: "Denting & Painting",
-    image: "https://images.unsplash.com/photo-1507136566006-cfc505b114fc?auto=format&fit=crop&q=80",
+    image: "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&q=80&w=600",
     description: "Expert dent removal, scratch repair, and premium paint jobs. Our skilled technicians use advanced techniques and quality materials for a factory-like finish."
   },
   {
     title: "Detailing Services",
-    image: "https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?auto=format&fit=crop&q=80",
+    image: "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&q=80&w=600",
     description: "Premium car detailing including paint correction, ceramic coating, interior deep cleaning, and exterior protection for that showroom-like appearance."
   },
   {
     title: "Car Spa & Cleaning",
-    image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&q=80",
+    image: "https://images.unsplash.com/photo-1601362840469-51e4d8d58785?auto=format&fit=crop&q=80&w=600",
     description: "Thorough interior and exterior cleaning, steam wash, upholstery care, and protective coating. We restore your car's shine and freshness."
   },
   {
     title: "Car Inspections",
-    image: "https://images.unsplash.com/photo-1493134799591-2c9eed26201a?auto=format&fit=crop&q=80",
+    image: "https://images.unsplash.com/photo-1487754180451-c456f719a1fc?auto=format&fit=crop&q=80&w=600",
     description: "Detailed 50-point inspection covering safety, performance, and compliance checks. Get a comprehensive report of your vehicle's condition.",
     isNew: true
   }
 ];
 
-const summerServices = [
+type SummerService = {
+  title: string;
+  description: string;
+  image: string;
+  features: string[];
+};
+
+const summerServices: SummerService[] = [
   {
     title: "Front Bumper Paint",
-    description: "Professional paint service for your front bumper with premium quality materials",
-    image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&q=80",
-    price: "₹4,999",
+    description: "Restore your bumper to a factory-fresh look with precision prep, priming, and multi‑stage paint matching. We remove scuffs and micro-dents for a seamless finish that blends perfectly with the body color.",
+    image: "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&q=80&w=1600",
     features: [
-      "High-quality paint materials",
-      "Color matching technology",
-      "UV protection coating",
-      "3-layer paint process"
+      "Computerized color matching",
+      "Premium base + clear coat system",
+      "Panel prep and priming",
+      "UV-resistant ceramic-friendly finish",
     ]
   },
   {
     title: "Rubbing & Polishing",
-    description: "Complete exterior polishing to restore your car's shine and protect the paint",
-    image: "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&q=80",
-    price: "₹2,499",
+    description: "Two-stage cut and refine process that removes oxidation, swirl marks, and light scratches to reveal a deep, glossy finish with added protection.",
+    image: "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&q=80&w=1600",
     features: [
-      "Machine polishing",
-      "Scratch removal",
-      "Paint protection",
-      "Mirror finish"
+      "Dual-action machine polishing",
+      "Swirl and haze reduction",
+      "Paint sealant application",
+      "Mirror-gloss enhancement",
     ]
   },
   {
     title: "Deep All Round Spa",
-    description: "Comprehensive car spa treatment for interior and exterior",
-    image: "https://images.unsplash.com/photo-1601362840469-51e4d8d58785?auto=format&fit=crop&q=80",
-    price: "₹3,999",
+    description: "Thorough interior and exterior spa that sanitizes the cabin, rejuvenates upholstery, and restores the exterior sheen for a showroom-ready appearance.",
+    image: "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&q=80&w=1600",
     features: [
-      "Deep interior cleaning",
-      "Exterior detailing",
-      "Engine bay cleaning",
-      "Ceramic coating"
+      "Steam sanitization of touchpoints",
+      "Upholstery shampoo and vacuum",
+      "Exterior foam wash and wax",
+      "Tyre and trim revival",
     ]
   },
   {
     title: "Periodic Service",
-    description: "Complete summer checkup and maintenance service",
-    image: "https://images.unsplash.com/photo-1632823551592-e161a42973e9?auto=format&fit=crop&q=80",
-    price: "₹5,999",
+    description: "Seasonal maintenance package covering fluids, filters, and safety systems to keep your car reliable through the heat.",
+    image: "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&q=80&w=1600",
     features: [
       "AC performance check",
       "Coolant top-up",
@@ -133,10 +134,46 @@ const summerServices = [
   }
 ];
 
+const curatedServices = [
+  {
+    title: "Comprehensive Inspection Pack",
+    image: "https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&q=80&w=1600",
+    description: "A 50+ point inspection with digital report, prioritised repairs and a tailored service plan to keep your vehicle safe and performing.",
+    bullets: ["Engine & transmission health check", "Brake & suspension assessment", "Electrical systems scan"]
+  },
+  {
+    title: "Priority Warranty & Parts",
+    image: "https://images.unsplash.com/photo-1511910429153-6f6d7a0b7f54?auto=format&fit=crop&q=80&w=1600",
+    description: "Get priority sourcing of OEM parts, extended warranty options and fast-track repairs for premium vehicles.",
+    bullets: ["Genuine OEM parts", "Fast-tracked fulfillment", "Extended warranty packages"]
+  },
+  {
+    title: "Concierge & On-site Service",
+    image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=1600",
+    description: "Doorstep inspections and repairs at your convenience with certified technicians and full transparency via our app.",
+    bullets: ["Home pick-up & drop-off", "Real-time technician updates", "Secure payments & records"]
+  },
+  {
+    title: "Paint Protection & Coating",
+    image: "https://images.unsplash.com/photo-1549924231-f129b911e442?auto=format&fit=crop&q=80&w=1600",
+    description: "Protect your paint with advanced sealants and ceramic coatings that resist UV and environmental damage.",
+    bullets: ["Ceramic coatings", "UV protection", "Long-lasting gloss"]
+  },
+  {
+    title: "Mobile Repair & Support",
+    image: "https://images.unsplash.com/photo-1519148246706-6f2d8b1e1a3a?auto=format&fit=crop&q=80&w=1600",
+    description: "On-demand mechanical support for minor repairs and troubleshooting at your location.",
+    bullets: ["Minor repairs on-site", "Battery & tyre support", "Quick diagnostics"]
+  }
+];
+
 const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange: (tab: string) => void }) => {
   const [carouselApi, setCarouselApi] = useState<CarouselApi>();
+  const [summerCarouselApi, setSummerCarouselApi] = useState<CarouselApi>();
+  const [curatedCarouselApi, setCuratedCarouselApi] = useState<CarouselApi>();
   const [apiActiveTab, setApiActiveTab] = useState("Our Services");
 
+  // Autoplay for luxury brands carousel
   useEffect(() => {
     if (!carouselApi) return;
 
@@ -170,6 +207,76 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
       element.removeEventListener('mouseleave', handleMouseLeave);
     };
   }, [carouselApi]);
+
+  // Autoplay for summer services carousel
+  useEffect(() => {
+    if (!summerCarouselApi) return;
+
+    let intervalId: NodeJS.Timeout | null = null;
+
+    const startAutoplay = () => {
+      intervalId = setInterval(() => {
+        summerCarouselApi.scrollNext();
+      }, 3000);
+    };
+
+    const stopAutoplay = () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+      }
+    };
+
+    const handleMouseEnter = () => stopAutoplay();
+    const handleMouseLeave = () => startAutoplay();
+
+    const element = summerCarouselApi.rootNode();
+    element.addEventListener('mouseenter', handleMouseEnter);
+    element.addEventListener('mouseleave', handleMouseLeave);
+
+    startAutoplay();
+
+    return () => {
+      stopAutoplay();
+      element.removeEventListener('mouseenter', handleMouseEnter);
+      element.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, [summerCarouselApi]);
+
+  // Autoplay for curated services carousel
+  useEffect(() => {
+    if (!curatedCarouselApi) return;
+
+    let intervalId: NodeJS.Timeout | null = null;
+
+    const startAutoplay = () => {
+      intervalId = setInterval(() => {
+        curatedCarouselApi.scrollNext();
+      }, 3000);
+    };
+
+    const stopAutoplay = () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+      }
+    };
+
+    const handleMouseEnter = () => stopAutoplay();
+    const handleMouseLeave = () => startAutoplay();
+
+    const element = curatedCarouselApi.rootNode();
+    element.addEventListener('mouseenter', handleMouseEnter);
+    element.addEventListener('mouseleave', handleMouseLeave);
+
+    startAutoplay();
+
+    return () => {
+      stopAutoplay();
+      element.removeEventListener('mouseenter', handleMouseEnter);
+      element.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, [curatedCarouselApi]);
   
   const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
@@ -206,46 +313,7 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
 
   return (
     <div>
-      {/* Navigation Bar */}
-      <nav className="bg-white/95 backdrop-blur-sm sticky top-[28px] z-40 shadow-md">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="shrink-0 text-gray-600 hover:text-gray-900"
-            >
-              <ChevronLeft className="h-5 w-5" />
-            </Button>
-            
-            <div className="flex items-center gap-1 md:gap-4 overflow-x-auto scrollbar-hide py-2">
-              {tabs.map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => scrollToSection(tab)}
-                  className={`py-2 px-4 text-sm font-medium rounded-full transition-all duration-200 ${
-                    activeTab === tab
-                      ? "bg-primary text-white shadow-md transform scale-105"
-                      : "text-gray-600 hover:bg-gray-100"
-                  }`}
-                >
-                  {tab}
-                </button>
-              ))}
-            </div>
-
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="shrink-0 text-gray-600 hover:text-gray-900"
-            >
-              <ChevronRight className="h-5 w-5" />
-            </Button>
-          </div>
-        </div>
-      </nav>
-
-      {/* Content Sections */}
+      {/* Navigation Bar - hidden to remove white space below header */}      {/* Content Sections */}
       <div>
         {/* Our Services Section */}
         <div 
@@ -254,8 +322,9 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
         >
           <div className="container mx-auto px-4">
             {/* Header */}
-            <div className="text-center mb-10">
-              <h2 className="text-4xl font-bold mb-4">Premium Car Services in Bhubaneswar</h2>
+            <div className="mb-6">
+              <div className="text-center mb-10 mt-6">
+                <h2 className="text-4xl font-bold mb-4">Premium Car Services in Bhubaneswar</h2>
               <p className="text-gray-600 max-w-3xl mx-auto">
                 Specialized service center for luxury vehicles including BMW, Mercedes-Benz, and Audi. Our certified technicians provide comprehensive maintenance, 
                 repairs, and premium care services using state-of-the-art equipment and genuine parts.
@@ -302,7 +371,7 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
                     <CarouselItem className="md:basis-1/2 lg:basis-1/3">
                       <div className="relative group aspect-[16/9] overflow-hidden rounded-xl">
                         <img 
-                          src="https://images.unsplash.com/photo-1635944095210-23114a1fb7c0?auto=format&fit=crop&q=80" 
+                          src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80" 
                           alt="Porsche 911"
                           className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" 
                         />
@@ -335,6 +404,7 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
                 </Carousel>
               </div>
             </div>
+          </div>
 
             {/* Services Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
@@ -404,99 +474,6 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Summer Services Section */}
-        <div 
-          ref={el => sectionRefs.current["Summer Services"] = el}
-          className="py-8 bg-gradient-to-b from-sky-50 to-white min-h-screen"
-        >
-          <div className="container mx-auto px-4">
-            {/* Header Section */}
-            <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold mb-4">Get Summer Ready With AutoMex</h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">
-                Keep your car in perfect condition this summer with our specialized services
-              </p>
-            </div>
-
-            {/* Services Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {summerServices.map((service, index) => (
-                <Card 
-                  key={index} 
-                  className="group overflow-hidden hover:shadow-xl transition-all duration-300 bg-white"
-                >
-                  {/* Image Container */}
-                  <div className="relative h-48 overflow-hidden">
-                    <img 
-                      src={service.image} 
-                      alt={service.title}
-                      className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent" />
-                    <h3 className="absolute bottom-4 left-4 text-white font-semibold text-xl">
-                      {service.title}
-                    </h3>
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-6">
-                    <p className="text-gray-600 mb-4 text-sm">
-                      {service.description}
-                    </p>
-
-                    {/* Features */}
-                    <ul className="space-y-2 mb-6">
-                      {service.features.map((feature, idx) => (
-                        <li key={idx} className="flex items-center text-sm text-gray-700">
-                          <span className="h-1.5 w-1.5 rounded-full bg-primary mr-2"></span>
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-
-                    {/* Price and CTA */}
-                    <div className="flex items-center justify-between pt-4 border-t">
-                      <div>
-                        <p className="text-sm text-gray-500">Starting from</p>
-                        <p className="text-2xl font-bold text-primary">{service.price}</p>
-                      </div>
-                      <Button 
-                        variant="outline"
-                        className="border-primary text-primary hover:bg-primary hover:text-white transition-colors"
-                      >
-                        Book Now
-                      </Button>
-                    </div>
-                  </div>
-                </Card>
-              ))}
-            </div>
-
-            {/* Summer Special Banner */}
-            <div className="mt-16 bg-gradient-to-r from-blue-600 to-blue-400 rounded-2xl overflow-hidden">
-              <div className="px-8 py-12 flex flex-col md:flex-row items-center justify-between">
-                <div className="text-white mb-6 md:mb-0">
-                  <h3 className="text-2xl font-bold mb-2">Summer Special Offer!</h3>
-                  <p className="opacity-90">Get 20% off on all summer services package bookings</p>
-                </div>
-                <Button 
-                  size="lg" 
-                  className="bg-white text-blue-600 hover:bg-blue-50"
-                >
-                  Claim Offer
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div 
-          ref={el => sectionRefs.current["Curated Custom Service"] = el} 
-          className="min-h-screen bg-gray-50"
-        >
-          {/* Curated Custom Service content */}
         </div>
 
         {/* Add remaining sections */}
