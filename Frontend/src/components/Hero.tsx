@@ -19,23 +19,50 @@ const Hero = () => {
       <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-black/30 to-transparent"></div>
       
       <div className="container mx-auto px-4 relative z-10 h-full flex items-center py-8 md:py-12">
-        <div className="grid md:grid-cols-2 gap-8 items-center w-full">
+        <div className="grid md:grid-cols-[1fr_auto] gap-8 items-center w-full">
           {/* Left side - Text content */}
-          <div className="relative text-white animate-fade-in">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Professional Car Service</h2>
-            <p className="text-xl opacity-90">Expert mechanics working with premium tools and genuine parts for your luxury vehicle.</p>
+          <div className="relative text-white animate-fade-in max-w-2xl">
+            <div className="mb-3">
+              <span className="inline-block bg-orange-500/90 text-white px-4 py-2 rounded-full text-sm font-semibold mb-4">
+                AutoMex - Your Trusted Car Care Partner
+              </span>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
+              Professional Car Service & Maintenance Excellence
+            </h2>
+            <p className="text-xl opacity-90 mb-4 leading-relaxed">
+              Expert mechanics working with premium tools and genuine parts for your luxury vehicle. 
+              We bring the service center to your doorstep with free pick-up and drop facility.
+            </p>
+            <div className="space-y-2 text-base opacity-90">
+              <p className="flex items-center gap-2">
+                <span className="text-orange-400">✓</span>
+                <span>Certified Technicians with 10+ Years Experience</span>
+              </p>
+              <p className="flex items-center gap-2">
+                <span className="text-orange-400">✓</span>
+                <span>100% Genuine Parts & Transparent Pricing</span>
+              </p>
+              <p className="flex items-center gap-2">
+                <span className="text-orange-400">✓</span>
+                <span>Real-Time Service Tracking & 24/7 Support</span>
+              </p>
+            </div>
+            <p className="mt-6 text-2xl font-semibold text-orange-400 italic">
+              "Your Car's Health, Our Priority"
+            </p>
           </div>
 
           {/* Right side - Form with falling animation */}
-          <div className="bg-white rounded-lg p-6 md:p-8 shadow-2xl animate-slide-in-right">
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
+          <div className="bg-white rounded-lg p-6 md:p-8 shadow-2xl animate-slide-in-right w-full md:w-80 lg:w-96">
+            <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-3">
               Experience The Best Car Services In Bhubaneswar
             </h1>
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-600 text-sm mb-6">
               Get instant quotes for your car service
             </p>
 
-            <div className="space-y-4">
+            <div className="space-y-5">
               <Select>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="BHUBANESWAR" />
@@ -63,22 +90,22 @@ const Hero = () => {
                 className="w-full"
               />
 
-              <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-6 text-base">
+              <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-5 text-sm">
                 CHECK PRICES FOR FREE
               </Button>
             </div>
 
             <div className="flex items-center justify-between mt-6 pt-6 border-t border-gray-200">
               <div className="flex items-center gap-2">
-                <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                 <div>
-                  <p className="font-bold text-lg text-gray-900">4.0/5</p>
-                  <p className="text-xs text-gray-600">Based on 150000+ Reviews</p>
+                  <p className="font-bold text-base text-gray-900">4.0/5</p>
+                  <p className="text-[10px] text-gray-600">Based on 150000+ Reviews</p>
                 </div>
               </div>
               <div className="text-right">
-                <p className="font-bold text-lg text-gray-900">2 Million+</p>
-                <p className="text-xs text-gray-600">Happy Customers</p>
+                <p className="font-bold text-base text-gray-900">2 Million+</p>
+                <p className="text-[10px] text-gray-600">Happy Customers</p>
               </div>
             </div>
           </div>

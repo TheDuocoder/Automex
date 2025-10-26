@@ -21,12 +21,54 @@ const Header = () => {
           </div>
 
           <div className="flex items-center gap-6">
-            <a href="#" className="text-base hover:text-primary transition-colors hidden md:block">
-              Blog
+            <a 
+              href="#about-us" 
+              className="text-base hover:text-primary transition-colors hidden md:block"
+              onClick={(e) => {
+                e.preventDefault();
+                const element = document.getElementById('about-us');
+                if (element) {
+                  element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+              }}
+            >
+              About Us
             </a>
-            <button className="text-base hover:text-primary transition-colors hidden md:block">
-              More
-            </button>
+            
+            {/* More Dropdown */}
+            <div className="relative group hidden md:block">
+              <button className="flex items-center gap-1 text-base hover:text-primary transition-colors">
+                More <ChevronDown className="w-4 h-4" />
+              </button>
+              
+              {/* Dropdown Menu */}
+              <div className="absolute top-full right-0 mt-2 w-48 bg-white text-gray-900 rounded-lg shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top scale-95 group-hover:scale-100">
+                {/* Arrow pointer */}
+                <div className="absolute -top-2 right-6 w-4 h-4 bg-white transform rotate-45"></div>
+                
+                <div className="relative bg-white rounded-lg overflow-hidden">
+                  <a href="#faq" className="block px-5 py-3 hover:bg-gray-100 transition-colors border-b border-gray-100 text-sm font-medium">
+                    FAQ
+                  </a>
+                  <a href="#contact" className="block px-5 py-3 hover:bg-gray-100 transition-colors border-b border-gray-100 text-sm font-medium">
+                    Contact Us
+                  </a>
+                  <a href="#terms" className="block px-5 py-3 hover:bg-gray-100 transition-colors border-b border-gray-100 text-sm font-medium">
+                    Terms
+                  </a>
+                  <a href="#privacy" className="block px-5 py-3 hover:bg-gray-100 transition-colors border-b border-gray-100 text-sm font-medium">
+                    Privacy
+                  </a>
+                  <a href="#offers" className="block px-5 py-3 hover:bg-gray-100 transition-colors border-b border-gray-100 text-sm font-medium">
+                    Offers
+                  </a>
+                  <a href="#reviews" className="block px-5 py-3 hover:bg-gray-100 transition-colors text-sm font-medium">
+                    Reviews
+                  </a>
+                </div>
+              </div>
+            </div>
+            
             <Button variant="destructive" size="lg" className="bg-primary hover:bg-primary/90">
               Login
             </Button>

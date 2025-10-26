@@ -7,15 +7,26 @@ import SummerServices from "@/components/SummerServices";
 import HowItWorks from "@/components/HowItWorks";
 import Reviews from "@/components/Reviews";
 import FAQ from "@/components/FAQ";
+import AboutUs from "@/components/AboutUs";
 import Footer from "@/components/Footer";
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState("Our Services");
   const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+  const aboutUsRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY + 200; // Offset for header and tabs
+
+      // Check if we're in the About Us section - if so, clear active tab
+      if (aboutUsRef.current) {
+        const aboutUsTop = aboutUsRef.current.offsetTop;
+        if (scrollPosition >= aboutUsTop) {
+          setActiveTab("");
+          return;
+        }
+      }
 
       // Find the section that is currently in view
       const sections = Object.entries(sectionRefs.current);
@@ -69,6 +80,9 @@ const Index = () => {
         <div ref={el => sectionRefs.current["FAQ"] = el}>
           <FAQ />
         </div>
+      </div>
+      <div ref={aboutUsRef}>
+        <AboutUs />
       </div>
       <Footer />
     </div>
