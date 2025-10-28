@@ -156,6 +156,7 @@ const SummerServices = () => {
         </div>
 
         {/* Special Offer Carousel - Smaller Size */}
+        <div id="offers">
         <Carousel
           plugins={[autoplayPlugin.current]}
           className="w-full animate-fade-in"
@@ -235,6 +236,7 @@ const SummerServices = () => {
             ))}
           </CarouselContent>
         </Carousel>
+        </div>
       </div>
 
       {/* CSS Animations */}

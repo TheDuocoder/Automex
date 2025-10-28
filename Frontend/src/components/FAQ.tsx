@@ -34,7 +34,7 @@ const FAQ = () => {
   ];
 
   return (
-    <section className="py-16 bg-accent/30">
+    <section id="faq" className="py-16 bg-accent/30">
       <div className="container mx-auto px-4 max-w-4xl">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
           Frequently Asked Questions
