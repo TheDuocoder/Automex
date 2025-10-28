@@ -21,13 +21,6 @@ const HowItWorks = () => {
       icon: "⚙️",
       image: "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&q=80&w=400",
     },
-    {
-      number: "4",
-      title: "Earn While We Service",
-      description: "Spread the word! You get Rs.750. Your friends get Rs.750!",
-      icon: "🎁",
-      image: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&q=80&w=400",
-    },
   ];
 
   return (
