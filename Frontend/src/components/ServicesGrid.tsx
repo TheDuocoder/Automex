@@ -11,9 +11,10 @@ import serviceInspection from "@/assets/service-inspection.png";
 const ServicesGrid = () => {
   const services = [
     { title: "Car Services", icon: serviceGeneral },
-    { title: "AC Service & Repair", icon: serviceAc },
+    // Use the AC repair image from public/Images folder
+    { title: "AC Service & Repair", icon: "/Images/Ac repair.png", fallbackIcon: serviceAc },
     { title: "Batteries", icon: serviceBattery },
-    { title: "Tyres & Wheel Care", icon: serviceTyres },
+    { title: "Tyres & Wheel Care", icon: "/Images/Services/Tyre service.png", fallbackIcon: serviceTyres },
     { title: "Denting & Painting", icon: servicePainting },
     { title: "Detailing Services", icon: serviceDetailing },
     { title: "Car Spa & Cleaning", icon: serviceSpa },
@@ -29,6 +30,7 @@ const ServicesGrid = () => {
             title={service.title}
             icon={service.icon}
             isNew={service.isNew}
+            fallbackIcon={(service as any).fallbackIcon}
           />
         ))}
       </div>

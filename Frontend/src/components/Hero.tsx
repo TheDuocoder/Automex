@@ -22,11 +22,6 @@ const Hero = () => {
         <div className="grid md:grid-cols-[1fr_auto] gap-6 md:gap-8 items-center w-full">
           {/* Left side - Text content */}
           <div className="relative text-white animate-fade-in max-w-2xl hidden md:block">
-            <div className="mb-3">
-              <span className="inline-block bg-orange-500/90 text-white px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-semibold mb-3 md:mb-4">
-                AutoMex - Your Trusted Car Care Partner
-              </span>
-            </div>
             <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4 leading-tight">
               Professional Car Service & Maintenance Excellence
             </h2>
@@ -45,12 +40,14 @@ const Hero = () => {
               </p>
               <p className="flex items-center gap-2">
                 <span className="text-orange-400">✓</span>
-                <span>Real-Time Service Tracking & 24/7 Support</span>
+                <span>Real-Time Service Tracking</span>
               </p>
             </div>
-            <p className="mt-4 md:mt-6 text-lg md:text-2xl font-semibold text-orange-400 italic">
-              "Your Car's Health, Our Priority"
-            </p>
+            <div className="mt-4 md:mt-6">
+              <span className="inline-block bg-orange-500/90 text-white px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-semibold">
+                Crafted for Quality. Built on Trust
+              </span>
+            </div>
           </div>
 
           {/* Right side - Form with falling animation */}

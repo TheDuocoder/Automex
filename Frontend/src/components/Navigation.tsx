@@ -342,12 +342,12 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
                       <div className="relative group aspect-[16/9] overflow-hidden rounded-xl">
                         <img 
                           src="https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&q=80" 
-                          alt="BMW M4"
+                          alt="BMW"
                           className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" 
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent">
                           <div className="absolute bottom-4 left-4">
-                            <h3 className="text-white text-xl font-semibold">BMW M4</h3>
+                            <h3 className="text-white text-xl font-semibold">BMW</h3>
                             <p className="text-white/80 text-sm">Ultimate Driving Machine</p>
                           </div>
                         </div>
@@ -356,13 +356,13 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
                     <CarouselItem className="md:basis-1/2 lg:basis-1/3">
                       <div className="relative group aspect-[16/9] overflow-hidden rounded-xl">
                         <img 
-                          src="https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&q=80" 
-                          alt="Audi RS"
+                          src="https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?auto=format&fit=crop&q=80" 
+                          alt="Audi"
                           className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" 
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent">
                           <div className="absolute bottom-4 left-4">
-                            <h3 className="text-white text-xl font-semibold">Audi RS</h3>
+                            <h3 className="text-white text-xl font-semibold">Audi</h3>
                             <p className="text-white/80 text-sm">Vorsprung durch Technik</p>
                           </div>
                         </div>
@@ -372,12 +372,12 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
                       <div className="relative group aspect-[16/9] overflow-hidden rounded-xl">
                         <img 
                           src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80" 
-                          alt="Porsche 911"
+                          alt="Porsche"
                           className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" 
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent">
                           <div className="absolute bottom-4 left-4">
-                            <h3 className="text-white text-xl font-semibold">Porsche 911</h3>
+                            <h3 className="text-white text-xl font-semibold">Porsche</h3>
                             <p className="text-white/80 text-sm">Timeless Machine</p>
                           </div>
                         </div>
@@ -386,14 +386,85 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
                     <CarouselItem className="md:basis-1/2 lg:basis-1/3">
                       <div className="relative group aspect-[16/9] overflow-hidden rounded-xl">
                         <img 
-                          src="https://images.unsplash.com/photo-1632548260498-b7246fa466ea?auto=format&fit=crop&q=80" 
-                          alt="Bentley"
+                          src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&q=80" 
+                          alt="Mercedes"
                           className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" 
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent">
                           <div className="absolute bottom-4 left-4">
-                            <h3 className="text-white text-xl font-semibold">Bentley</h3>
+                            <h3 className="text-white text-xl font-semibold">Mercedes</h3>
                             <p className="text-white/80 text-sm">Extraordinary Journey</p>
+                          </div>
+                        </div>
+                      </div>
+                    </CarouselItem>
+                    <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                      <div className="relative group aspect-[16/9] overflow-hidden rounded-xl">
+                        <img 
+                          src="https://images.unsplash.com/photo-1580274455191-1c62238fa333?auto=format&fit=crop&q=80" 
+                          alt="Jaguar"
+                          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" 
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent">
+                          <div className="absolute bottom-4 left-4">
+                            <h3 className="text-white text-xl font-semibold">Jaguar</h3>
+                            <p className="text-white/80 text-sm">Grace, Space, Pace</p>
+                          </div>
+                        </div>
+                      </div>
+                    </CarouselItem>
+                    <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                      <div className="relative group aspect-[16/9] overflow-hidden rounded-xl">
+                        <img 
+                          src="https://images.unsplash.com/photo-1606152421802-db97b9c7a11b?auto=format&fit=crop&q=80" 
+                          alt="Volvo"
+                          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" 
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent">
+                          <div className="absolute bottom-4 left-4">
+                            <h3 className="text-white text-xl font-semibold">Volvo</h3>
+                            <p className="text-white/80 text-sm">For Life</p>
+                          </div>
+                        </div>
+                      </div>
+                    </CarouselItem>
+                    <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                      <div className="relative group aspect-[16/9] overflow-hidden rounded-xl">
+                        <img
+                          src="/Images/Skoda/skoda.png"
+                          alt="Skoda Octavia"
+                          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                          onError={(e) => {
+                            const img = e.currentTarget as HTMLImageElement;
+                            // Fallback to a known Skoda brand image if local file is missing
+                            img.onerror = null;
+                            img.src = "https://images.unsplash.com/photo-1619767886558-efdc259cde1a?auto=format&fit=crop&q=80&w=1200";
+                          }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent">
+                          <div className="absolute bottom-4 left-4">
+                            <h3 className="text-white text-xl font-semibold">Skoda</h3>
+                            <p className="text-white/80 text-sm">Simply Clever</p>
+                          </div>
+                        </div>
+                      </div>
+                    </CarouselItem>
+                    <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                      <div className="relative group aspect-[16/9] overflow-hidden rounded-xl">
+                        <img
+                          src="/Images/Volkswagen/volkswagen.jpg"
+                          alt="Volkswagen"
+                          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                          onError={(e) => {
+                            const img = e.currentTarget as HTMLImageElement;
+                            img.onerror = null;
+                            img.src = "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&q=80&w=1200";
+                          }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent">
+                          <div className="absolute bottom-4 left-4">
+                            <h3 className="text-white text-xl font-semibold">Volkswagen</h3>
+                            <p className="text-white/80 text-sm">Drive Bigger</p>
                           </div>
                         </div>
                       </div>

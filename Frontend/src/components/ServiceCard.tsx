@@ -3,10 +3,11 @@ import { Badge } from "@/components/ui/badge";
 interface ServiceCardProps {
   title: string;
   icon: string;
+  fallbackIcon?: string;
   isNew?: boolean;
 }
 
-const ServiceCard = ({ title, icon, isNew }: ServiceCardProps) => {
+const ServiceCard = ({ title, icon, fallbackIcon, isNew }: ServiceCardProps) => {
   return (
     <div className="relative group cursor-pointer">
       <div 
@@ -35,6 +36,11 @@ const ServiceCard = ({ title, icon, isNew }: ServiceCardProps) => {
             src={icon} 
             alt={title} 
             className="w-24 h-24 object-contain"
+            onError={(e) => {
+              if (fallbackIcon && e.currentTarget.src !== fallbackIcon) {
+                e.currentTarget.src = fallbackIcon;
+              }
+            }}
           />
         </div>
         

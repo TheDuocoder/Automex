@@ -6,15 +6,15 @@ const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="bg-black text-white py-2 sticky top-0 z-50 shadow-lg">
-      <div className="container mx-auto px-3">
+    <header className="bg-black text-white py-4 sticky top-0 z-50 shadow-lg">
+      <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3 md:gap-6">
             <div className="flex items-center">
               <img 
-                src="/images/AUTOMEX.png" 
+                src="/Images/AUTOMEX/Logo/AutoMex-1.png" 
                 alt="AutoMex Logo" 
-                className="h-8 md:h-10 w-auto object-contain"
+                className="h-6 md:h-8 w-auto object-contain"
               />
             </div>
             
