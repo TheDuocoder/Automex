@@ -99,11 +99,9 @@ const Header = () => {
               Privacy
             </a>
             
-            {isHomePage && (
-              <Button variant="destructive" size="default" className="bg-primary hover:bg-primary/90 text-sm md:text-base px-4 md:px-6">
-                Login
-              </Button>
-            )}
+            <Button variant="destructive" size="default" className="bg-primary hover:bg-primary/90 text-sm md:text-base px-4 md:px-6">
+              Login
+            </Button>
 
             {/* Mobile Menu Button */}
             <button
