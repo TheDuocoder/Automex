@@ -2,7 +2,7 @@ const Footer = () => {
   return (
     <footer className="bg-slate-900 text-white py-12">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* About Us Section */}
           <div>
             <h3 className="text-lg font-bold mb-4 text-white">ABOUT US</h3>
@@ -71,21 +71,6 @@ const Footer = () => {
               <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Kia</a></li>
               <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Skoda</a></li>
               <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Volkswagen</a></li>
-            </ul>
-          </div>
-
-          {/* Popular Areas Section */}
-          <div>
-            <h3 className="text-lg font-bold mb-4 text-white">POPULAR AREAS NEAR YOU</h3>
-            <ul className="space-y-2">
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Garage near me in Electronic City</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Garage near me in Whitefield</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Garage near me in Indiranagar</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Garage near me in Vijaynagar</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Garage near me in HSR Layout</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Garage near me in Koramangala</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Garage near me in Jaya Nagar</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Garage near me in Marathahalli</a></li>
             </ul>
           </div>
         </div>
