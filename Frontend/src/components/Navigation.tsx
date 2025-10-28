@@ -37,44 +37,44 @@ const tabs = [
 const carServices = [
   {
     title: "Premium Car Services",
-    image: "https://images.unsplash.com/photo-1625047509168-a7026f36de04?auto=format&fit=crop&q=80&w=600",
+    image: "/images/Services/Premium car service.png",
     description: "Specialized maintenance for luxury vehicles including BMW, Mercedes-Benz, and Audi. Our certified technicians use advanced diagnostic tools and genuine parts to ensure premium performance. Services include engine diagnostics, transmission service, brake systems, and electronic systems calibration."
   },
   {
     title: "AC Service & Repair",
-    image: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&q=80&w=600",
+    image: "/images/Ac repair.png",
     description: "Expert AC system diagnosis, repair, and maintenance. We handle gas refilling, component replacement, and ensure optimal cooling performance for your comfort."
   },
   {
     title: "Batteries",
-    image: "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&q=80&w=600",
+    image: "/images/Services/Battery service.png",
     isIcon: false,
     description: "Complete battery solutions including health check, charging system diagnosis, replacement with genuine batteries, and warranty support for all car models."
   },
   {
     title: "Tyres & Wheel Care",
-    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&q=80&w=600",
+    image: "/images/Services/Tyre service.png",
     isIcon: false,
     description: "Professional wheel alignment, balancing, rotation, and tyre replacement services. We ensure optimal tyre pressure and tread life for safe driving."
   },
   {
     title: "Denting & Painting",
-    image: "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&q=80&w=600",
+    image: "/images/Services/denting and painting service.png",
     description: "Expert dent removal, scratch repair, and premium paint jobs. Our skilled technicians use advanced techniques and quality materials for a factory-like finish."
   },
   {
     title: "Detailing Services",
-    image: "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&q=80&w=600",
+    image: "/images/Services/detailing service.png",
     description: "Premium car detailing including paint correction, ceramic coating, interior deep cleaning, and exterior protection for that showroom-like appearance."
   },
   {
     title: "Car Spa & Cleaning",
-    image: "https://images.unsplash.com/photo-1601362840469-51e4d8d58785?auto=format&fit=crop&q=80&w=600",
+    image: "/images/Services/Car spa.png",
     description: "Thorough interior and exterior cleaning, steam wash, upholstery care, and protective coating. We restore your car's shine and freshness."
   },
   {
     title: "Car Inspections",
-    image: "https://images.unsplash.com/photo-1487754180451-c456f719a1fc?auto=format&fit=crop&q=80&w=600",
+    image: "/images/Services/inspection service.png",
     description: "Detailed 50-point inspection covering safety, performance, and compliance checks. Get a comprehensive report of your vehicle's condition.",
     isNew: true
   }
@@ -91,7 +91,7 @@ const summerServices: SummerService[] = [
   {
     title: "Front Bumper Paint",
     description: "Restore your bumper to a factory-fresh look with precision prep, priming, and multi‑stage paint matching. We remove scuffs and micro-dents for a seamless finish that blends perfectly with the body color.",
-    image: "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&q=80&w=1600",
+    image: "/images/Services/front bomper paint service.png",
     features: [
       "Computerized color matching",
       "Premium base + clear coat system",
@@ -102,7 +102,7 @@ const summerServices: SummerService[] = [
   {
     title: "Rubbing & Polishing",
     description: "Two-stage cut and refine process that removes oxidation, swirl marks, and light scratches to reveal a deep, glossy finish with added protection.",
-    image: "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&q=80&w=1600",
+    image: "/images/Services/rubbing and polish service.png",
     features: [
       "Dual-action machine polishing",
       "Swirl and haze reduction",
@@ -113,7 +113,7 @@ const summerServices: SummerService[] = [
   {
     title: "Deep All Round Spa",
     description: "Thorough interior and exterior spa that sanitizes the cabin, rejuvenates upholstery, and restores the exterior sheen for a showroom-ready appearance.",
-    image: "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&q=80&w=1600",
+    image: "/images/Services/deep all round spa service.png",
     features: [
       "Steam sanitization of touchpoints",
       "Upholstery shampoo and vacuum",
@@ -124,7 +124,7 @@ const summerServices: SummerService[] = [
   {
     title: "Periodic Service",
     description: "Seasonal maintenance package covering fluids, filters, and safety systems to keep your car reliable through the heat.",
-    image: "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&q=80&w=1600",
+    image: "/images/Services/Premium car service.png",
     features: [
       "AC performance check",
       "Coolant top-up",

@@ -5,19 +5,19 @@ const CuratedServices = () => {
   const services = [
     {
       title: "Front Bumper Paint",
-      image: "https://gomechprod.blob.core.windows.net/websiteasset/New%20Website/components/Admin/carouselPlaceholder.png",
+      image: "/images/Services/front bomper paint service.png",
     },
     {
       title: "Rubbing & Polishing",
-      image: "https://gomechprod.blob.core.windows.net/websiteasset/New%20Website/components/Admin/carouselPlaceholder.png",
+      image: "/images/Services/rubbing and polish service.png",
     },
     {
       title: "Deep All Round Spa",
-      image: "https://gomechprod.blob.core.windows.net/websiteasset/New%20Website/components/Admin/carouselPlaceholder.png",
+      image: "/images/Services/deep all round spa service.png",
     },
     {
       title: "Periodic Service",
-      image: "https://gomechprod.blob.core.windows.net/websiteasset/New%20Website/components/Admin/carouselPlaceholder.png",
+      image: "/images/Services/Premium car service.png",
     },
   ];
 

@@ -14,25 +14,25 @@ const SummerServices = () => {
     {
       title: "Front Bumper Paint",
       description: "Restore your bumper to a factory-fresh look with precision prep, priming, and multi‑stage paint matching.",
-      image: "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&q=80&w=600",
+      image: "/images/Services/front bomper paint service.png",
       features: ["Color matching", "Premium coating", "UV protection"]
     },
     {
       title: "Rubbing & Polishing",
       description: "Remove oxidation, swirl marks, and light scratches to reveal a deep, glossy finish.",
-      image: "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&q=80&w=600",
+      image: "/images/Services/rubbing and polish service.png",
       features: ["Machine polishing", "Swirl reduction", "Mirror finish"]
     },
     {
       title: "Deep All Round Spa",
       description: "Thorough interior and exterior spa that sanitizes the cabin and restores the exterior sheen.",
-      image: "https://images.unsplash.com/photo-1601362840469-51e4d8d58785?auto=format&fit=crop&q=80&w=600",
+      image: "/images/Services/deep all round spa service.png",
       features: ["Steam sanitization", "Deep cleaning", "Wax protection"]
     },
     {
       title: "Periodic Service",
       description: "Seasonal maintenance package covering fluids, filters, and safety systems for summer reliability.",
-      image: "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&q=80&w=600",
+      image: "/images/Services/Premium car service.png",
       features: ["AC check", "Coolant top-up", "Battery health"]
     }
   ];
@@ -52,7 +52,7 @@ const SummerServices = () => {
       originalPrice: "₹5,999",
       discount: "42%",
       buttonText: "Save 42% - Book Now",
-      image: "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&q=80&w=800",
+      image: "/images/Services/detailing service.png",
       gradient: "from-blue-900 via-blue-800 to-slate-900"
     },
     {
@@ -69,7 +69,7 @@ const SummerServices = () => {
       originalPrice: "₹2,999",
       discount: "40%",
       buttonText: "Save 40% - Book Now",
-      image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&q=80&w=800",
+      image: "/images/Services/Tyre service.png",
       gradient: "from-purple-900 via-purple-800 to-slate-900"
     },
     {
@@ -86,7 +86,7 @@ const SummerServices = () => {
       originalPrice: "₹3,499",
       discount: "37%",
       buttonText: "Save 37% - Book Now",
-      image: "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&q=80&w=800",
+      image: "/images/Services/Premium car service.png",
       gradient: "from-orange-900 via-red-800 to-slate-900"
     }
   ];

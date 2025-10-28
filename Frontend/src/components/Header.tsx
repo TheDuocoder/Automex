@@ -12,7 +12,7 @@ const Header = () => {
           <div className="flex items-center gap-3 md:gap-6">
             <div className="flex items-center">
               <img 
-                src="/Images/AUTOMEX/Logo/AutoMex-1.png" 
+                src="/images/AUTOMEX.png" 
                 alt="AutoMex Logo" 
                 className="h-6 md:h-8 w-auto object-contain"
               />

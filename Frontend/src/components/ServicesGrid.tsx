@@ -10,15 +10,14 @@ import serviceInspection from "@/assets/service-inspection.png";
 
 const ServicesGrid = () => {
   const services = [
-    { title: "Car Services", icon: serviceGeneral },
-    // Use the AC repair image from public/Images folder
-    { title: "AC Service & Repair", icon: "/Images/Ac repair.png", fallbackIcon: serviceAc },
-    { title: "Batteries", icon: serviceBattery },
-    { title: "Tyres & Wheel Care", icon: "/Images/Services/Tyre service.png", fallbackIcon: serviceTyres },
-    { title: "Denting & Painting", icon: servicePainting },
-    { title: "Detailing Services", icon: serviceDetailing },
-    { title: "Car Spa & Cleaning", icon: serviceSpa },
-    { title: "Car Inspections", icon: serviceInspection, isNew: true },
+    { title: "Car Services", icon: "/images/Services/Premium car service.png", fallbackIcon: serviceGeneral },
+    { title: "AC Service & Repair", icon: "/images/Ac repair.png", fallbackIcon: serviceAc },
+    { title: "Batteries", icon: "/images/Services/Battery service.png", fallbackIcon: serviceBattery },
+    { title: "Tyres & Wheel Care", icon: "/images/Services/Tyre service.png", fallbackIcon: serviceTyres },
+    { title: "Denting & Painting", icon: "/images/Services/denting and painting service.png", fallbackIcon: servicePainting },
+    { title: "Detailing Services", icon: "/images/Services/detailing service.png", fallbackIcon: serviceDetailing },
+    { title: "Car Spa & Cleaning", icon: "/images/Services/Car spa.png", fallbackIcon: serviceSpa },
+    { title: "Car Inspections", icon: "/images/Services/inspection service.png", fallbackIcon: serviceInspection, isNew: true },
   ];
 
   return (
