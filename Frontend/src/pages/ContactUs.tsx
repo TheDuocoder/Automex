@@ -54,8 +54,8 @@ const ContactUs = () => {
       <section className="bg-gradient-to-br from-primary/90 to-primary text-white py-16 md:py-20">
         <div className="container mx-auto px-4">
           <Button
-            variant="ghost"
-            className="text-white hover:text-white hover:bg-white/10 mb-6"
+            variant="outline"
+            className="bg-white/20 backdrop-blur-sm text-white border-white/40 hover:bg-white hover:text-primary hover:border-white shadow-lg transition-all duration-300 mb-6 font-semibold"
             onClick={() => navigate("/")}
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
