@@ -84,12 +84,12 @@ const ContactUs = () => {
                 <p className="text-muted-foreground mb-2">
                   Call us for immediate assistance
                 </p>
-                <a href="tel:+919876543210" className="text-primary hover:underline font-semibold">
-                  +91 98765 43210
+                <a href="tel:+918249614004" className="text-primary hover:underline font-semibold">
+                  +91 8249614004
                 </a>
                 <br />
-                <a href="tel:+916742123456" className="text-primary hover:underline font-semibold">
-                  +91 674 212 3456
+                <a href="tel:+919776433334" className="text-primary hover:underline font-semibold">
+                  +91 9776433334
                 </a>
               </CardContent>
             </Card>
@@ -103,12 +103,8 @@ const ContactUs = () => {
                 <p className="text-muted-foreground mb-2">
                   Send us an email anytime
                 </p>
-                <a href="mailto:support@automex.in" className="text-primary hover:underline font-semibold">
-                  support@automex.in
-                </a>
-                <br />
-                <a href="mailto:info@automex.in" className="text-primary hover:underline font-semibold">
-                  info@automex.in
+                <a href="mailto:sales@automex.in" className="text-primary hover:underline font-semibold">
+                  sales@automex.in
                 </a>
               </CardContent>
             </Card>

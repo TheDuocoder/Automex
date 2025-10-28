@@ -62,24 +62,25 @@ const Hero = () => {
             <div className="space-y-5">
               <Select>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="BHUBANESWAR" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="bhubaneswar">Bhubaneswar</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Select>
-                <SelectTrigger className="w-full">
                   <SelectValue placeholder="SELECT YOUR CAR" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="maruti">Maruti Suzuki</SelectItem>
-                  <SelectItem value="hyundai">Hyundai</SelectItem>
-                  <SelectItem value="honda">Honda</SelectItem>
-                  <SelectItem value="tata">Tata</SelectItem>
+                  <SelectItem value="bmw">BMW</SelectItem>
+                  <SelectItem value="mercedes">Mercedes-Benz</SelectItem>
+                  <SelectItem value="audi">Audi</SelectItem>
+                  <SelectItem value="porsche">Porsche</SelectItem>
+                  <SelectItem value="jaguar">Jaguar</SelectItem>
+                  <SelectItem value="volvo">Volvo</SelectItem>
+                  <SelectItem value="volkswagen">Volkswagen</SelectItem>
+                  <SelectItem value="skoda">Skoda</SelectItem>
                 </SelectContent>
               </Select>
+
+              <Input 
+                type="email" 
+                placeholder="ENTER YOUR EMAIL ID" 
+                className="w-full"
+              />
 
               <Input 
                 type="tel" 

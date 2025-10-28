@@ -21,10 +21,6 @@ const Header = () => {
                 className="h-6 md:h-8 w-auto object-contain"
               />
             </div>
-            
-            <button className="hidden sm:flex items-center gap-1 text-sm md:text-base hover:text-primary transition-colors">
-              Bhubaneswar <ChevronDown className="w-4 md:w-5 h-4 md:h-5" />
-            </button>
           </div>
 
           <div className="flex items-center gap-3 md:gap-4 lg:gap-6">
