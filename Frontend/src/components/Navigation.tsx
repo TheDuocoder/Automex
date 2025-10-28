@@ -416,7 +416,7 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
                     <CarouselItem className="md:basis-1/2 lg:basis-1/3">
                       <div className="relative group aspect-[16/9] overflow-hidden rounded-xl">
                         <img 
-                          src="https://images.unsplash.com/photo-1606152421802-db97b9c7a11b?auto=format&fit=crop&q=80" 
+                          src="/images/Volve car.png" 
                           alt="Volvo"
                           className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" 
                         />
@@ -431,7 +431,7 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
                     <CarouselItem className="md:basis-1/2 lg:basis-1/3">
                       <div className="relative group aspect-[16/9] overflow-hidden rounded-xl">
                         <img
-                          src="/Images/Skoda car.png"
+                          src="/images/Skoda car.png"
                           alt="Skoda Octavia"
                           className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
                           onError={(e) => {
