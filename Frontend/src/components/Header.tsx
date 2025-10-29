@@ -114,7 +114,7 @@ const Header = () => {
               <DropdownMenu open={customerDropdownOpen} onOpenChange={setCustomerDropdownOpen}>
                 <DropdownMenuTrigger asChild>
                   <Button variant="destructive" size="default" className="bg-primary hover:bg-primary/90 text-sm md:text-base px-4 md:px-6">
-                    Customer
+                    Login
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-64 bg-white shadow-xl rounded-2xl p-4 space-y-3 border-0">
