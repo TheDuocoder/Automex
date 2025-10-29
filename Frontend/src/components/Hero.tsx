@@ -2,23 +2,68 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Star } from "lucide-react";
+import { useState, useEffect } from "react";
 
 const Hero = () => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  
+  // Array of car service background images
+  const backgroundImages = [
+    "https://images.unsplash.com/photo-1625047509168-a7026f36de04?auto=format&fit=crop&q=80", // Car engine maintenance
+    "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&q=80", // Mechanic working on car
+    "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&q=80", // Car interior detailing
+    "https://images.unsplash.com/photo-1632823469850-1b5f8cd49d4d?auto=format&fit=crop&q=80", // Car tire service
+    "https://images.unsplash.com/photo-1615906655593-ad0386982a0f?auto=format&fit=crop&q=80", // Professional car wash
+    "https://images.unsplash.com/photo-1487754180451-c456f719a1fc?auto=format&fit=crop&q=80"  // Luxury car service
+  ];
+
+  // Auto-rotate images every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => 
+        (prevIndex + 1) % backgroundImages.length
+      );
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [backgroundImages.length]);
+
   return (
     <section className="relative min-h-[500px] md:min-h-[600px] lg:min-h-[calc(100vh-3.5rem)] overflow-hidden bg-white">
-      {/* Background Image - Full width */}
-      <div 
-        className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat" 
-        style={{
-          backgroundImage: 'url("https://images.unsplash.com/photo-1625047509168-a7026f36de04?auto=format&fit=crop&q=80")',
-          filter: 'brightness(0.5)'
-        }}
-      ></div>
+      {/* Background Images - Full width with fade transition */}
+      {backgroundImages.map((image, index) => (
+        <div
+          key={index}
+          className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-opacity duration-1000"
+          style={{
+            backgroundImage: `url("${image}")`,
+            filter: 'brightness(0.5)',
+            opacity: currentImageIndex === index ? 1 : 0,
+            zIndex: currentImageIndex === index ? 1 : 0
+          }}
+        ></div>
+      ))}
       
       {/* Overlay gradient for better text readability */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-black/30 to-transparent"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-black/30 to-transparent z-[2]"></div>
       
-      <div className="container mx-auto px-4 relative z-10 h-full flex items-center py-6 md:py-8 lg:py-12">
+      {/* Image Indicators */}
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-[3] flex gap-2">
+        {backgroundImages.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentImageIndex(index)}
+            className={`w-2 h-2 rounded-full transition-all duration-300 ${
+              currentImageIndex === index 
+                ? 'bg-primary w-8' 
+                : 'bg-white/50 hover:bg-white/75'
+            }`}
+            aria-label={`Go to image ${index + 1}`}
+          />
+        ))}
+      </div>
+      
+      <div className="container mx-auto px-4 relative z-[4] h-full flex items-center py-6 md:py-8 lg:py-12">
         <div className="grid md:grid-cols-[1fr_auto] gap-6 md:gap-8 items-center w-full">
           {/* Left side - Text content */}
           <div className="relative text-white animate-fade-in max-w-2xl hidden md:block">
@@ -31,20 +76,20 @@ const Hero = () => {
             </p>
             <div className="space-y-2 text-sm md:text-base opacity-90">
               <p className="flex items-center gap-2">
-                <span className="text-orange-400">✓</span>
+                <span className="text-primary">✓</span>
                 <span>Certified Technicians with 10+ Years Experience</span>
               </p>
               <p className="flex items-center gap-2">
-                <span className="text-orange-400">✓</span>
+                <span className="text-primary">✓</span>
                 <span>100% Genuine Parts & Transparent Pricing</span>
               </p>
               <p className="flex items-center gap-2">
-                <span className="text-orange-400">✓</span>
+                <span className="text-primary">✓</span>
                 <span>Real-Time Service Tracking</span>
               </p>
             </div>
             <div className="mt-4 md:mt-6">
-              <span className="inline-block bg-orange-500/90 text-white px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-semibold">
+              <span className="inline-block bg-primary/90 text-white px-3 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-semibold shadow-lg">
                 Crafted for Quality. Built on Trust
               </span>
             </div>
