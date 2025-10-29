@@ -2,9 +2,16 @@ import { Button } from "@/components/ui/button";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [customerDropdownOpen, setCustomerDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const isHomePage = location.pathname === '/';
@@ -99,9 +106,33 @@ const Header = () => {
               Privacy
             </a>
             
-            <Button variant="destructive" size="default" className="bg-primary hover:bg-primary/90 text-sm md:text-base px-4 md:px-6">
-              Login
-            </Button>
+            <div 
+              className="relative"
+              onMouseEnter={() => setCustomerDropdownOpen(true)}
+              onMouseLeave={() => setCustomerDropdownOpen(false)}
+            >
+              <DropdownMenu open={customerDropdownOpen} onOpenChange={setCustomerDropdownOpen}>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="destructive" size="default" className="bg-primary hover:bg-primary/90 text-sm md:text-base px-4 md:px-6">
+                    Customer
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-64 bg-white shadow-xl rounded-2xl p-4 space-y-3 border-0">
+                  <DropdownMenuItem className="cursor-pointer bg-[#F8BFBF] hover:bg-[#F6AEAE] py-4 px-5 rounded-xl focus:bg-[#F6AEAE] transition-colors">
+                    <span className="text-lg font-semibold text-gray-900">Profile</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer bg-[#F8BFBF] hover:bg-[#F6AEAE] py-4 px-5 rounded-xl focus:bg-[#F6AEAE] transition-colors">
+                    <span className="text-lg font-semibold text-gray-900">Order History</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer bg-[#F8BFBF] hover:bg-[#F6AEAE] py-4 px-5 rounded-xl focus:bg-[#F6AEAE] transition-colors">
+                    <span className="text-lg font-semibold text-gray-900">My Cars</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer bg-[#F8BFBF] hover:bg-[#F6AEAE] py-4 px-5 rounded-xl focus:bg-[#F6AEAE] transition-colors">
+                    <span className="text-lg font-semibold text-gray-900">Logout</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
 
             {/* Mobile Menu Button */}
             <button

@@ -5,21 +5,21 @@ const HowItWorks = () => {
       title: "Select The Perfect Car Service",
       description: "From AutoMex's broad portfolio of services",
       icon: "🚗",
-      image: "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&q=80&w=400",
+      image: "/images/selecttheperfectcarservice.png",
     },
     {
       number: "2",
       title: "Schedule Free Doorstep Pick-up",
       description: "We offer free pick up and drop for all services booked",
       icon: "🚙",
-      image: "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&q=80&w=400",
+      image: "/images/schedulefreedoorsteppick-up.png",
     },
     {
       number: "3",
       title: "Track Your Car Service Real-Time",
       description: "We will take care of everything from here!",
       icon: "⚙️",
-      image: "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&q=80&w=400",
+      image: "/images/tackyourcarservicereal-time.png",
     },
   ];
 
@@ -65,11 +65,8 @@ const HowItWorks = () => {
                       className="w-full h-24 md:h-28 object-cover rounded-md shadow-sm transform group-hover:scale-105 transition-transform duration-300"
                       onError={(e) => {
                         const target = e.currentTarget as HTMLImageElement;
-                        target.style.display = 'none';
-                        const parent = target.parentElement;
-                        if (parent) {
-                          parent.innerHTML = `<div class="w-full h-24 md:h-28 bg-gradient-to-br from-blue-100 to-blue-200 rounded-md flex items-center justify-center text-4xl">${step.icon}</div>`;
-                        }
+                        console.log('Image failed to load:', step.image);
+                        target.src = `https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&q=80&w=400`;
                       }}
                     />
                   </div>

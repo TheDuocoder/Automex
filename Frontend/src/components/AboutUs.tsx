@@ -43,9 +43,12 @@ const AboutUs = () => {
           <div className="relative mb-8 md:mb-0">
             <div className="absolute inset-0 bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-xl md:rounded-2xl blur-2xl"></div>
             <img
-              src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&q=80&w=800"
+              src="/images/aboutautomex.png"
               alt="AutoMex Service Center"
               className="relative w-full h-auto rounded-xl md:rounded-2xl shadow-2xl"
+              onError={(e) => {
+                e.currentTarget.src = "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&q=80&w=800";
+              }}
             />
             <div className="absolute -bottom-4 -right-4 md:-bottom-6 md:-right-6 bg-gradient-to-br from-orange-500 to-red-600 text-white rounded-lg md:rounded-xl p-4 md:p-6 shadow-xl">
               <p className="text-2xl md:text-4xl font-bold">10+</p>
