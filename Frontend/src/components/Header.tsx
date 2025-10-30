@@ -8,10 +8,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Login from "./Login";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [customerDropdownOpen, setCustomerDropdownOpen] = useState(false);
+  const [loginOpen, setLoginOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const isHomePage = location.pathname === '/';
@@ -25,7 +27,7 @@ const Header = () => {
               <img 
                 src="/images/AUTOMEX.png" 
                 alt="AutoMex Logo" 
-                className="h-6 md:h-8 w-auto object-contain"
+                className="h-12 md:h-16 w-auto object-contain"
               />
             </div>
           </div>
@@ -106,33 +108,14 @@ const Header = () => {
               Privacy
             </a>
             
-            <div 
-              className="relative"
-              onMouseEnter={() => setCustomerDropdownOpen(true)}
-              onMouseLeave={() => setCustomerDropdownOpen(false)}
+            <Button 
+              variant="destructive" 
+              size="default" 
+              className="bg-primary hover:bg-primary/90 text-sm md:text-base px-4 md:px-6"
+              onClick={() => setLoginOpen(true)}
             >
-              <DropdownMenu open={customerDropdownOpen} onOpenChange={setCustomerDropdownOpen}>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="destructive" size="default" className="bg-primary hover:bg-primary/90 text-sm md:text-base px-4 md:px-6">
-                    Login
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-64 bg-white shadow-xl rounded-2xl p-4 space-y-3 border-0">
-                  <DropdownMenuItem className="cursor-pointer bg-[#F8BFBF] hover:bg-[#F6AEAE] py-4 px-5 rounded-xl focus:bg-[#F6AEAE] transition-colors">
-                    <span className="text-lg font-semibold text-gray-900">Profile</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer bg-[#F8BFBF] hover:bg-[#F6AEAE] py-4 px-5 rounded-xl focus:bg-[#F6AEAE] transition-colors">
-                    <span className="text-lg font-semibold text-gray-900">Order History</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer bg-[#F8BFBF] hover:bg-[#F6AEAE] py-4 px-5 rounded-xl focus:bg-[#F6AEAE] transition-colors">
-                    <span className="text-lg font-semibold text-gray-900">My Cars</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer bg-[#F8BFBF] hover:bg-[#F6AEAE] py-4 px-5 rounded-xl focus:bg-[#F6AEAE] transition-colors">
-                    <span className="text-lg font-semibold text-gray-900">Logout</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
+              Login
+            </Button>
 
             {/* Mobile Menu Button */}
             <button
@@ -226,6 +209,24 @@ const Header = () => {
           </div>
         )}
       </div>
+
+      {/* Login Modal with Backdrop */}
+      {loginOpen && (
+        <>
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 bg-black/50 z-50"
+            onClick={() => setLoginOpen(false)}
+          />
+          
+          {/* Modal */}
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="relative">
+              <Login />
+            </div>
+          </div>
+        </>
+      )}
     </header>
   );
 };
