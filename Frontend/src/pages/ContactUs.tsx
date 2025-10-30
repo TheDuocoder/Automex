@@ -51,23 +51,22 @@ const ContactUs = () => {
       <Header />
       
       {/* Hero Section */}
-      <section className="bg-black text-white pt-24 pb-6 sm:pt-28 sm:pb-8 md:pt-32 md:pb-10 lg:pt-36 lg:pb-12">
-        <div className="container mx-auto px-4 sm:px-6 md:px-8 max-w-7xl">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6 mb-4 sm:mb-6">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight order-2 sm:order-1">
+      <section className="bg-black text-white pt-24 pb-6 sm:pt-28 sm:pb-8 md:pt-32 md:pb-8 lg:pt-36 lg:pb-10">
+        <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-10 max-w-7xl">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 md:gap-6 mb-3 sm:mb-4 md:mb-5">
+            <h1 className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tight order-2 sm:order-1">
               Get In Touch
             </h1>
             <Button
               variant="outline"
-              className="bg-white/10 backdrop-blur-sm text-white border-white/30 hover:bg-white hover:text-black hover:border-white shadow-lg transition-all duration-300 font-semibold text-xs sm:text-sm px-4 py-2 whitespace-nowrap order-1 sm:order-2 self-end sm:self-auto"
+              className="bg-white/10 backdrop-blur-sm text-white border-white/30 hover:bg-white hover:text-black hover:border-white shadow-lg transition-all duration-300 font-semibold text-xs sm:text-sm px-3 sm:px-4 py-2 whitespace-nowrap order-1 sm:order-2 self-end sm:self-auto flex-shrink-0"
               onClick={() => navigate("/")}
             >
               <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-              <span className="hidden xs:inline">Back to Home</span>
-              <span className="xs:hidden">Back</span>
+              Back to Home
             </Button>
           </div>
-          <p className="text-xs sm:text-sm md:text-base lg:text-lg text-white/80 max-w-3xl leading-relaxed">
+          <p className="text-xs sm:text-sm md:text-sm lg:text-base xl:text-lg text-white/80 max-w-2xl md:max-w-3xl leading-relaxed">
             Have questions about our services? We're here to help!<br className="hidden sm:block" />
             <span className="sm:hidden"> </span>Reach out to us and we'll respond as soon as possible.
           </p>
@@ -75,17 +74,17 @@ const ContactUs = () => {
       </section>
 
       {/* Contact Section */}
-      <section className="py-6 sm:py-8 md:py-10 lg:py-12">
-        <div className="container mx-auto px-4 sm:px-6 md:px-8 max-w-7xl">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12">
+      <section className="py-6 sm:py-8 md:py-8 lg:py-10 xl:py-12">
+        <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-10 max-w-7xl">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6 mb-6 sm:mb-8 md:mb-10 lg:mb-12">
             {/* Contact Information Cards */}
             <Card className="hover:shadow-lg transition-shadow sm:col-span-2 lg:col-span-1">
-              <CardContent className="p-4 sm:p-5 md:p-6">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-full flex items-center justify-center mb-3">
-                  <Phone className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+              <CardContent className="p-4 sm:p-5 md:p-5 lg:p-6">
+                <div className="w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 bg-primary/10 rounded-full flex items-center justify-center mb-2 sm:mb-3">
+                  <Phone className="w-5 h-5 sm:w-5 sm:h-5 md:w-6 md:h-6 text-primary" />
                 </div>
-                <h3 className="text-base sm:text-lg md:text-xl font-bold mb-1.5 sm:mb-2">Phone</h3>
-                <p className="text-muted-foreground mb-2 sm:mb-3 text-xs sm:text-sm">
+                <h3 className="text-base sm:text-lg md:text-lg lg:text-xl font-bold mb-1 sm:mb-1.5 md:mb-2">Phone</h3>
+                <p className="text-muted-foreground mb-2 text-xs sm:text-sm">
                   Call us for immediate assistance
                 </p>
                 <div className="space-y-1">
@@ -100,12 +99,12 @@ const ContactUs = () => {
             </Card>
 
             <Card className="hover:shadow-lg transition-shadow">
-              <CardContent className="p-4 sm:p-5 md:p-6">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-full flex items-center justify-center mb-3">
-                  <Mail className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+              <CardContent className="p-4 sm:p-5 md:p-5 lg:p-6">
+                <div className="w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 bg-primary/10 rounded-full flex items-center justify-center mb-2 sm:mb-3">
+                  <Mail className="w-5 h-5 sm:w-5 sm:h-5 md:w-6 md:h-6 text-primary" />
                 </div>
-                <h3 className="text-base sm:text-lg md:text-xl font-bold mb-1.5 sm:mb-2">Email</h3>
-                <p className="text-muted-foreground mb-2 sm:mb-3 text-xs sm:text-sm">
+                <h3 className="text-base sm:text-lg md:text-lg lg:text-xl font-bold mb-1 sm:mb-1.5 md:mb-2">Email</h3>
+                <p className="text-muted-foreground mb-2 text-xs sm:text-sm">
                   Send us an email anytime
                 </p>
                 <a href="mailto:sales@automex.in" className="text-primary hover:underline font-semibold text-xs sm:text-sm break-all">
@@ -115,12 +114,12 @@ const ContactUs = () => {
             </Card>
 
             <Card className="hover:shadow-lg transition-shadow">
-              <CardContent className="p-4 sm:p-5 md:p-6">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-full flex items-center justify-center mb-3">
-                  <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+              <CardContent className="p-4 sm:p-5 md:p-5 lg:p-6">
+                <div className="w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 bg-primary/10 rounded-full flex items-center justify-center mb-2 sm:mb-3">
+                  <MapPin className="w-5 h-5 sm:w-5 sm:h-5 md:w-6 md:h-6 text-primary" />
                 </div>
-                <h3 className="text-base sm:text-lg md:text-xl font-bold mb-1.5 sm:mb-2">Location</h3>
-                <p className="text-muted-foreground mb-2 sm:mb-3 text-xs sm:text-sm">
+                <h3 className="text-base sm:text-lg md:text-lg lg:text-xl font-bold mb-1 sm:mb-1.5 md:mb-2">Location</h3>
+                <p className="text-muted-foreground mb-2 text-xs sm:text-sm">
                   Visit our main office
                 </p>
                 <p className="font-semibold text-xs sm:text-sm leading-relaxed">
@@ -128,7 +127,7 @@ const ContactUs = () => {
                   Hanspal puri, colony, Balianta road<br />
                   Bhubaneswar, Odisha - 752101
                 </p>
-                <p className="text-xs text-muted-foreground mt-1.5 sm:mt-2">
+                <p className="text-xs text-muted-foreground mt-1.5">
                   Contact: Tapas Parida
                 </p>
               </CardContent>
@@ -136,10 +135,10 @@ const ContactUs = () => {
           </div>
 
           {/* Contact Form and Additional Info */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 md:gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 md:gap-8 lg:gap-10 xl:gap-12">
             {/* Contact Form */}
             <div>
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">Send Us a Message</h2>
+              <h2 className="text-lg sm:text-xl md:text-2xl lg:text-2xl xl:text-3xl font-bold mb-3 sm:mb-4 md:mb-5 lg:mb-6">Send Us a Message</h2>
               <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                 <div>
                   <label htmlFor="name" className="block text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">
@@ -230,15 +229,15 @@ const ContactUs = () => {
 
             {/* Additional Information */}
             <div>
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6">Why Choose AutoMex?</h2>
+              <h2 className="text-lg sm:text-xl md:text-2xl lg:text-2xl xl:text-3xl font-bold mb-3 sm:mb-4 md:mb-5 lg:mb-6">Why Choose AutoMex?</h2>
               
-              <div className="space-y-4 sm:space-y-6 mb-6 sm:mb-8">
-                <div className="flex gap-3 sm:gap-4">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-green-500/10 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-green-500" />
+              <div className="space-y-3 sm:space-y-4 md:space-y-5 lg:space-y-6 mb-6 sm:mb-8">
+                <div className="flex gap-2 sm:gap-3 md:gap-4">
+                  <div className="w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 bg-green-500/10 rounded-full flex items-center justify-center flex-shrink-0">
+                    <Clock className="w-5 h-5 sm:w-5 sm:h-5 md:w-6 md:h-6 text-green-500" />
                   </div>
                   <div>
-                    <h3 className="text-base sm:text-lg font-bold mb-1 sm:mb-2">Business Hours</h3>
+                    <h3 className="text-sm sm:text-base md:text-lg font-bold mb-1">Business Hours</h3>
                     <p className="text-muted-foreground text-xs sm:text-sm">
                       Monday - Saturday: 8:00 AM - 8:00 PM<br />
                       Sunday: 9:00 AM - 6:00 PM
@@ -247,9 +246,9 @@ const ContactUs = () => {
                 </div>
 
                 <Card className="bg-primary/5 border-primary/20">
-                  <CardContent className="p-4 sm:p-5 md:p-6">
-                    <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4">Our Services</h3>
-                    <ul className="space-y-1.5 sm:space-y-2 text-muted-foreground text-xs sm:text-sm">
+                  <CardContent className="p-4 sm:p-4 md:p-5 lg:p-6">
+                    <h3 className="text-base sm:text-lg md:text-lg lg:text-xl font-bold mb-2 sm:mb-3 md:mb-4">Our Services</h3>
+                    <ul className="space-y-1 sm:space-y-1.5 md:space-y-2 text-muted-foreground text-xs sm:text-sm">
                       <li>✓ Premium Car Services</li>
                       <li>✓ AC Service & Repair</li>
                       <li>✓ Battery Replacement</li>
@@ -262,8 +261,8 @@ const ContactUs = () => {
                 </Card>
 
                 <Card className="bg-orange-500/5 border-orange-500/20">
-                  <CardContent className="p-4 sm:p-5 md:p-6">
-                    <h3 className="text-lg sm:text-xl font-bold mb-2">Emergency Support</h3>
+                  <CardContent className="p-4 sm:p-4 md:p-5 lg:p-6">
+                    <h3 className="text-base sm:text-lg md:text-lg lg:text-xl font-bold mb-2">Emergency Support</h3>
                     <p className="text-muted-foreground mb-3 text-xs sm:text-sm">
                       Need immediate roadside assistance? We're available 24/7 for emergency support.
                     </p>
@@ -277,8 +276,8 @@ const ContactUs = () => {
           </div>
 
           {/* Map Section */}
-          <div className="mt-8 sm:mt-12 md:mt-16">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6 text-center">Find Us Here</h2>
+          <div className="mt-6 sm:mt-8 md:mt-10 lg:mt-12 xl:mt-16">
+            <h2 className="text-lg sm:text-xl md:text-2xl lg:text-2xl xl:text-3xl font-bold mb-3 sm:mb-4 md:mb-5 lg:mb-6 text-center">Find Us Here</h2>
             <Card>
               <CardContent className="p-0">
                 <div className="w-full h-[250px] sm:h-[300px] md:h-[350px] lg:h-[400px] bg-gray-200 rounded-lg overflow-hidden">
