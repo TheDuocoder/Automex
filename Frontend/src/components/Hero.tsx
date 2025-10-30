@@ -9,12 +9,8 @@ const Hero = () => {
   
   // Array of car service background images
   const backgroundImages = [
-    "https://images.unsplash.com/photo-1625047509168-a7026f36de04?auto=format&fit=crop&q=80", // Car engine maintenance
-    "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&q=80", // Mechanic working on car
-    "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&q=80", // Car interior detailing
-    "https://images.unsplash.com/photo-1632823469850-1b5f8cd49d4d?auto=format&fit=crop&q=80", // Car tire service
-    "https://images.unsplash.com/photo-1615906655593-ad0386982a0f?auto=format&fit=crop&q=80", // Professional car wash
-    "https://images.unsplash.com/photo-1487754180451-c456f719a1fc?auto=format&fit=crop&q=80"  // Luxury car service
+    "/images/frontpage1.jpg", // Professional luxury car service center
+    "/images/frontpage2.jpg"  // Professional luxury car service center
   ];
 
   // Auto-rotate images every 5 seconds
