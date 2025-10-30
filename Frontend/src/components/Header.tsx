@@ -8,31 +8,32 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Login from "./Login";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [customerDropdownOpen, setCustomerDropdownOpen] = useState(false);
-  const [loginOpen, setLoginOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const isHomePage = location.pathname === '/';
 
   return (
-    <header className="bg-black text-white py-4 sticky top-0 z-50 shadow-lg">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between">
+    <header className="bg-transparent text-white py-3 md:py-4 lg:py-5 absolute top-0 left-0 right-0 z-50">
+      <div className="container mx-auto px-4 md:px-6">
+        <div className="flex items-start justify-between">
           <div className="flex items-center gap-3 md:gap-6">
             <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
               <img 
-                src="/images/AUTOMEX.png" 
+                src="/images/automex_circle_img.png" 
                 alt="AutoMex Logo" 
-                className="h-12 md:h-16 w-auto object-contain"
+                className="h-16 md:h-20 lg:h-24 w-auto object-contain"
+                onError={(e) => {
+                  e.currentTarget.src = "/images/AUTOMEX.png";
+                }}
               />
             </div>
           </div>
 
-          <div className="flex items-center gap-3 md:gap-4 lg:gap-6">
+          <div className="flex items-start gap-3 md:gap-4 lg:gap-6 pt-2">
             <a 
               href="#about-us" 
               className="text-sm hover:text-primary transition-colors hidden lg:block"
@@ -107,15 +108,6 @@ const Header = () => {
             <a href="#privacy" className="text-sm hover:text-primary transition-colors hidden lg:block">
               Privacy
             </a>
-            
-            <Button 
-              variant="destructive" 
-              size="default" 
-              className="bg-primary hover:bg-primary/90 text-sm md:text-base px-4 md:px-6"
-              onClick={() => setLoginOpen(true)}
-            >
-              Login
-            </Button>
 
             {/* Mobile Menu Button */}
             <button
@@ -130,7 +122,7 @@ const Header = () => {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden mt-3 pb-3 border-t border-gray-700">
+          <div className="md:hidden mt-3 pb-3 border-t border-white/20 bg-black/80 backdrop-blur-md rounded-lg">
             <nav className="flex flex-col space-y-3 pt-3">
               <a 
                 href="#about-us" 
@@ -209,24 +201,6 @@ const Header = () => {
           </div>
         )}
       </div>
-
-      {/* Login Modal with Backdrop */}
-      {loginOpen && (
-        <>
-          {/* Backdrop */}
-          <div 
-            className="fixed inset-0 bg-black/50 z-50"
-            onClick={() => setLoginOpen(false)}
-          />
-          
-          {/* Modal */}
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div className="relative">
-              <Login />
-            </div>
-          </div>
-        </>
-      )}
     </header>
   );
 };

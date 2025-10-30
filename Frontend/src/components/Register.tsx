@@ -4,22 +4,23 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Eye, EyeOff, X } from "lucide-react";
 import { useState } from "react";
 
-interface LoginProps {
+interface RegisterProps {
   onClose?: () => void;
-  onSwitchToRegister?: () => void;
+  onSwitchToLogin?: () => void;
 }
 
-const Login = ({ onClose, onSwitchToRegister }: LoginProps) => {
+const Register = ({ onClose, onSwitchToLogin }: RegisterProps) => {
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [acceptTerms, setAcceptTerms] = useState(false);
 
   return (
-    <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-6 relative">
+    <div className="w-full max-w-md mx-auto bg-white rounded-2xl shadow-2xl p-6 relative">
       {/* Close Button */}
       {onClose && (
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors z-10"
           aria-label="Close"
         >
           <X className="w-5 h-5" />
@@ -41,9 +42,21 @@ const Login = ({ onClose, onSwitchToRegister }: LoginProps) => {
       {/* Title */}
       <div className="bg-gradient-to-r from-gray-100 via-gray-50 to-gray-100 rounded-lg py-2 px-3 mb-3">
         <h2 className="text-lg font-bold mb-0.5 text-center text-black">
-          Welcome to AutoMex
+          Create Your Account
         </h2>
-        <p className="text-xs text-gray-600 text-center">Enter to get unlimited access to data & information.</p>
+        <p className="text-xs text-gray-600 text-center">Join AutoMex for premium car services</p>
+      </div>
+
+      {/* Full Name Input */}
+      <div className="mb-2">
+        <label className="block text-xs font-semibold text-gray-900 mb-1">
+          Full Name <span className="text-red-500">*</span>
+        </label>
+        <Input
+          type="text"
+          placeholder="Enter your full name"
+          className="w-full h-9 px-3 text-sm border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+        />
       </div>
 
       {/* Email Input */}
@@ -53,7 +66,19 @@ const Login = ({ onClose, onSwitchToRegister }: LoginProps) => {
         </label>
         <Input
           type="email"
-          placeholder="Enter your mail address"
+          placeholder="Enter your email address"
+          className="w-full h-9 px-3 text-sm border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+        />
+      </div>
+
+      {/* Phone Number Input */}
+      <div className="mb-2">
+        <label className="block text-xs font-semibold text-gray-900 mb-1">
+          Phone Number <span className="text-red-500">*</span>
+        </label>
+        <Input
+          type="tel"
+          placeholder="Enter your phone number"
           className="w-full h-9 px-3 text-sm border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
         />
       </div>
@@ -66,7 +91,7 @@ const Login = ({ onClose, onSwitchToRegister }: LoginProps) => {
         <div className="relative">
           <Input
             type={showPassword ? "text" : "password"}
-            placeholder="Enter password"
+            placeholder="Create a password"
             className="w-full h-9 px-3 pr-10 text-sm border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
           />
           <button
@@ -79,27 +104,50 @@ const Login = ({ onClose, onSwitchToRegister }: LoginProps) => {
         </div>
       </div>
 
-      {/* Remember Me & Forgot Password */}
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center space-x-2">
-          <Checkbox
-            id="remember"
-            checked={rememberMe}
-            onCheckedChange={(checked) => setRememberMe(checked as boolean)}
-            className="border-primary data-[state=checked]:bg-primary w-4 h-4"
+      {/* Confirm Password Input */}
+      <div className="mb-2">
+        <label className="block text-xs font-semibold text-gray-900 mb-1">
+          Confirm Password <span className="text-red-500">*</span>
+        </label>
+        <div className="relative">
+          <Input
+            type={showConfirmPassword ? "text" : "password"}
+            placeholder="Confirm your password"
+            className="w-full h-9 px-3 pr-10 text-sm border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
           />
-          <label htmlFor="remember" className="text-xs text-gray-700 cursor-pointer">
-            Remember me
-          </label>
+          <button
+            type="button"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+          >
+            {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+          </button>
         </div>
-        <a href="#" className="text-xs text-primary hover:text-primary/80 font-medium">
-          Forgot your password ?
-        </a>
       </div>
 
-      {/* Login Button */}
+      {/* Terms & Conditions */}
+      <div className="flex items-start space-x-2 mb-3">
+        <Checkbox
+          id="terms"
+          checked={acceptTerms}
+          onCheckedChange={(checked) => setAcceptTerms(checked as boolean)}
+          className="border-primary data-[state=checked]:bg-primary w-4 h-4 mt-0.5"
+        />
+        <label htmlFor="terms" className="text-xs text-gray-700 cursor-pointer leading-relaxed">
+          I agree to the{" "}
+          <a href="#" className="text-primary hover:text-primary/80 font-medium">
+            Terms & Conditions
+          </a>{" "}
+          and{" "}
+          <a href="#" className="text-primary hover:text-primary/80 font-medium">
+            Privacy Policy
+          </a>
+        </label>
+      </div>
+
+      {/* Register Button */}
       <Button className="w-full h-9 bg-primary hover:bg-primary/90 text-white text-sm font-semibold rounded-lg mb-3">
-        Log In
+        Create Account
       </Button>
 
       {/* Divider */}
@@ -108,7 +156,7 @@ const Login = ({ onClose, onSwitchToRegister }: LoginProps) => {
           <div className="w-full border-t border-gray-300"></div>
         </div>
         <div className="relative flex justify-center text-xs">
-          <span className="px-3 bg-white text-gray-500">Or, Login with</span>
+          <span className="px-3 bg-white text-gray-500">Or, Register with</span>
         </div>
       </div>
 
@@ -138,18 +186,19 @@ const Login = ({ onClose, onSwitchToRegister }: LoginProps) => {
         <span className="text-sm font-medium text-gray-700">Sign up with google</span>
       </Button>
 
-      {/* Register Link */}
+      {/* Login Link */}
       <p className="text-center text-xs text-gray-700">
-        Don't have an account ?{" "}
+        Already have an account?{" "}
         <button 
-          onClick={onSwitchToRegister}
+          onClick={onSwitchToLogin}
           className="text-primary hover:text-primary/80 font-semibold"
         >
-          Register here
+          Login here
         </button>
       </p>
     </div>
   );
 };
 
-export default Login;
+export default Register;
+

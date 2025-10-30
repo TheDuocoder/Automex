@@ -1,76 +1,76 @@
 const Footer = () => {
   return (
-    <footer className="bg-slate-900 text-white py-12">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+    <footer className="bg-slate-900 text-white py-12 md:py-16">
+      <div className="container mx-auto px-4 md:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* About Us Section */}
-          <div>
-            <h3 className="text-lg font-bold mb-4 text-white">ABOUT US</h3>
-            <ul className="space-y-2">
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">FAQs</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Contact Us</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Terms and Conditions</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Privacy Policy</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Customer Grievance Policy</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">AutoMex Partners</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Workshop Locator</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Offers</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Reviews</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Directory</a></li>
+          <div className="flex flex-col">
+            <h3 className="text-base md:text-lg font-bold mb-4 md:mb-6 text-white tracking-wide">ABOUT US</h3>
+            <ul className="space-y-2.5">
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">FAQs</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Contact Us</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Terms and Conditions</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Privacy Policy</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Customer Grievance Policy</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">AutoMex Partners</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Workshop Locator</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Offers</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Reviews</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Directory</a></li>
             </ul>
           </div>
 
           {/* Our Services Section */}
-          <div>
-            <h3 className="text-lg font-bold mb-4 text-white">OUR SERVICES</h3>
-            <ul className="space-y-2">
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Scheduled Services</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">AC Services</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Cleaning & Detailing</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Lights & Fitments</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Denting Painting</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Insurance Services</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Custom Repair</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Batteries</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Tyres</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Detailing Services</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Windshields & Glass</a></li>
+          <div className="flex flex-col">
+            <h3 className="text-base md:text-lg font-bold mb-4 md:mb-6 text-white tracking-wide">OUR SERVICES</h3>
+            <ul className="space-y-2.5">
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Scheduled Services</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">AC Services</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Cleaning & Detailing</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Lights & Fitments</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Denting Painting</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Insurance Services</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Custom Repair</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Batteries</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Tyres</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Detailing Services</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Windshields & Glass</a></li>
             </ul>
           </div>
 
           {/* Luxury Brands Section */}
-          <div>
-            <h3 className="text-lg font-bold mb-4 text-white">LUXURY BRANDS</h3>
-            <ul className="space-y-2">
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Mercedes</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">BMW</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Audi</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Volvo</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Mitsubishi</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Jaguar</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Porsche</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Rolls Royce</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Ferrari</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Land Rover</a></li>
+          <div className="flex flex-col">
+            <h3 className="text-base md:text-lg font-bold mb-4 md:mb-6 text-white tracking-wide">LUXURY BRANDS</h3>
+            <ul className="space-y-2.5">
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Mercedes</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">BMW</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Audi</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Volvo</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Mitsubishi</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Jaguar</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Porsche</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Rolls Royce</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Ferrari</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Land Rover</a></li>
             </ul>
           </div>
 
           {/* Popular Brands Section */}
-          <div>
-            <h3 className="text-lg font-bold mb-4 text-white">POPULAR BRANDS</h3>
-            <ul className="space-y-2">
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Maruti Suzuki</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Hyundai</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Honda</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Toyota</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Tata</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Mahindra</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Chevrolet</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Fiat</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Renault</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Kia</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Skoda</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">Volkswagen</a></li>
+          <div className="flex flex-col">
+            <h3 className="text-base md:text-lg font-bold mb-4 md:mb-6 text-white tracking-wide">POPULAR BRANDS</h3>
+            <ul className="space-y-2.5">
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Maruti Suzuki</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Hyundai</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Honda</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Toyota</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Tata</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Mahindra</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Chevrolet</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Fiat</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Renault</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Kia</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Skoda</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Volkswagen</a></li>
             </ul>
           </div>
         </div>

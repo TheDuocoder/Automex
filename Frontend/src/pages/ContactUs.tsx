@@ -51,79 +51,81 @@ const ContactUs = () => {
       <Header />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary/90 to-primary text-white py-16 md:py-20">
-        <div className="container mx-auto px-4">
-          <Button
-            variant="outline"
-            className="bg-white/20 backdrop-blur-sm text-white border-white/40 hover:bg-white hover:text-primary hover:border-white shadow-lg transition-all duration-300 mb-6 font-semibold"
-            onClick={() => navigate("/")}
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Home
-          </Button>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
-            Get In Touch
-          </h1>
-          <p className="text-lg md:text-xl text-white/90 max-w-2xl">
-            Have questions about our services? We're here to help! Reach out to us and we'll respond as soon as possible.
+      <section className="bg-black text-white pt-28 md:pt-32 lg:pt-36 pb-6 md:pb-8 lg:pb-10">
+        <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-7xl">
+          <div className="flex items-center justify-between mb-4">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">
+              Get In Touch
+            </h1>
+            <Button
+              variant="outline"
+              className="bg-white/10 backdrop-blur-sm text-white border-white/30 hover:bg-white hover:text-black hover:border-white shadow-lg transition-all duration-300 font-semibold text-sm"
+              onClick={() => navigate("/")}
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Home
+            </Button>
+          </div>
+          <p className="text-sm md:text-base lg:text-lg text-white/80 max-w-3xl leading-relaxed">
+            Have questions about our services? We're here to help!<br />
+            Reach out to us and we'll respond as soon as possible.
           </p>
         </div>
       </section>
 
       {/* Contact Section */}
-      <section className="py-16 md:py-20">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+      <section className="py-6 md:py-8">
+        <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-7xl">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
             {/* Contact Information Cards */}
             <Card className="hover:shadow-lg transition-shadow">
-              <CardContent className="p-6">
-                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                  <Phone className="w-6 h-6 text-primary" />
+              <CardContent className="p-4 md:p-5">
+                <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center mb-3">
+                  <Phone className="w-5 h-5 text-primary" />
                 </div>
-                <h3 className="text-xl font-bold mb-2">Phone</h3>
-                <p className="text-muted-foreground mb-2">
+                <h3 className="text-lg font-bold mb-1.5">Phone</h3>
+                <p className="text-muted-foreground mb-2 text-sm">
                   Call us for immediate assistance
                 </p>
-                <a href="tel:+918249614004" className="text-primary hover:underline font-semibold">
+                <a href="tel:+918249614004" className="text-primary hover:underline font-semibold text-sm block">
                   +91 8249614004
                 </a>
-                <br />
-                <a href="tel:+919776433334" className="text-primary hover:underline font-semibold">
+                <a href="tel:+919776433334" className="text-primary hover:underline font-semibold text-sm block">
                   +91 9776433334
                 </a>
               </CardContent>
             </Card>
 
             <Card className="hover:shadow-lg transition-shadow">
-              <CardContent className="p-6">
-                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                  <Mail className="w-6 h-6 text-primary" />
+              <CardContent className="p-4 md:p-5">
+                <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center mb-3">
+                  <Mail className="w-5 h-5 text-primary" />
                 </div>
-                <h3 className="text-xl font-bold mb-2">Email</h3>
-                <p className="text-muted-foreground mb-2">
+                <h3 className="text-lg font-bold mb-1.5">Email</h3>
+                <p className="text-muted-foreground mb-2 text-sm">
                   Send us an email anytime
                 </p>
-                <a href="mailto:sales@automex.in" className="text-primary hover:underline font-semibold">
+                <a href="mailto:sales@automex.in" className="text-primary hover:underline font-semibold text-sm">
                   sales@automex.in
                 </a>
               </CardContent>
             </Card>
 
             <Card className="hover:shadow-lg transition-shadow">
-              <CardContent className="p-6">
-                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                  <MapPin className="w-6 h-6 text-primary" />
+              <CardContent className="p-4 md:p-5">
+                <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center mb-3">
+                  <MapPin className="w-5 h-5 text-primary" />
                 </div>
-                <h3 className="text-xl font-bold mb-2">Location</h3>
-                <p className="text-muted-foreground mb-2">
+                <h3 className="text-lg font-bold mb-1.5">Location</h3>
+                <p className="text-muted-foreground mb-2 text-sm">
                   Visit our main office
                 </p>
-                <p className="font-semibold">
+                <p className="font-semibold text-sm leading-relaxed">
                   AUTOMEX,<br />
                   Hanspal puri, colony, Balianta road<br />
                   Bhubaneswar, Odisha - 752101
                 </p>
-                <p className="text-sm text-muted-foreground mt-2">
+                <p className="text-xs text-muted-foreground mt-1.5">
                   Contact: Tapas Parida
                 </p>
               </CardContent>
