@@ -15,6 +15,10 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     
     __tablename__ = "user"
     
+    # Additional user fields
+    full_name: Mapped[Optional[str]] = mapped_column(String(255), nullable=True, default=None)
+    phone_number: Mapped[Optional[str]] = mapped_column(String(20), nullable=True, default=None)
+    
     def __repr__(self) -> str:
         return f"<User(id={self.id}, email={self.email})>"
 

@@ -52,7 +52,7 @@ app = FastAPI(
 )
 
 # Configure CORS
-cors_origins = settings.CORS_ORIGINS if isinstance(settings.CORS_ORIGINS, list) else [settings.CORS_ORIGINS]
+cors_origins = settings.get_cors_origins()
 print(f"[INFO] CORS Origins configured: {cors_origins}")
 app.add_middleware(
     CORSMiddleware,
@@ -60,6 +60,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 # Include API routes
@@ -84,6 +85,18 @@ async def health_check():
         "status": "healthy",
         "service": "AutoMex Backend"
     }
+
+
+@app.get("/test-db")
+async def test_database():
+    """Test database connectivity"""
+    try:
+        from automex_backend.database import engine
+        async with engine.connect() as conn:
+            result = await conn.execute("SELECT 1")
+            return {"status": "database_connected", "test": "passed"}
+    except Exception as e:
+        return {"status": "database_error", "error": str(e)}
 
 
 def main():

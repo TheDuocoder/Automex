@@ -9,15 +9,18 @@ from fastapi_users import schemas
 
 class UserRead(schemas.BaseUser[int]):
     """Schema for reading user data"""
-    pass
+    full_name: Optional[str] = None
+    phone_number: Optional[str] = None
 
 
 class UserCreate(schemas.BaseUserCreate):
     """Schema for creating a new user"""
-    pass
+    full_name: Optional[str] = None
+    phone_number: Optional[str] = None
 
 
 class UserUpdate(schemas.BaseUserUpdate):
     """Schema for updating user data"""
-    pass
+    full_name: Optional[str] = None
+    phone_number: Optional[str] = None
 

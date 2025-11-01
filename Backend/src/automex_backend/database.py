@@ -43,8 +43,5 @@ async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
     Dependency to get async database session
     """
     async with async_session_maker() as session:
-        try:
-            yield session
-        finally:
-            await session.close()
+        yield session
 
