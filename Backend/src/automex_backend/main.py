@@ -7,19 +7,65 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import Response
 from contextlib import asynccontextmanager
 import os
+from pathlib import Path
 from dotenv import load_dotenv
-
-# Load environment variables FIRST
-load_dotenv()
-
-from automex_backend.config import settings
-from automex_backend.database import init_db
-from automex_backend.api import api_router
 
 # Print startup message
 print("\n" + "="*60)
 print("Starting AutoMex Backend...")
 print("="*60)
+
+# Smart .env loading with Google Drive fallback
+def load_env_with_fallback():
+    """
+    Load .env file with automatic Google Drive fallback
+    
+    Logic:
+    1. Try to load local .env file
+    2. If it doesn't exist or is empty, download from Google Drive
+    3. Try loading again after download
+    """
+    env_path = Path(__file__).parent.parent.parent / ".env"
+    
+    # Check if .env exists and is not empty
+    if env_path.exists() and env_path.stat().st_size > 0:
+        print("[INFO] Loading local .env file...")
+        load_dotenv()
+        print("[SUCCESS] Local .env file loaded successfully")
+        return True
+    
+    # .env is missing or empty - try Google Drive
+    print("[WARNING] Local .env file not found or is empty")
+    print("[INFO] Attempting to download from Google Drive...")
+    
+    try:
+        from automex_backend.services.gdrive_config import setup_env_from_gdrive
+        
+        success = setup_env_from_gdrive()
+        
+        if success:
+            # Try loading again after download
+            load_dotenv()
+            print("[SUCCESS] .env file loaded from Google Drive")
+            return True
+        else:
+            print("[WARNING] Could not download .env from Google Drive")
+            # Try loading anyway in case there's a local file
+            load_dotenv()
+            return False
+    
+    except Exception as e:
+        print(f"[ERROR] Error during Google Drive sync: {e}")
+        # Try loading local file anyway
+        load_dotenv()
+        return False
+
+# Load environment variables with smart fallback
+load_env_with_fallback()
+
+from automex_backend.config import settings
+from automex_backend.database import init_db
+from automex_backend.api import api_router
 
 
 # Custom CORS Middleware - Manually add headers to EVERY response
