@@ -26,7 +26,7 @@ class ServiceCategory(str, PyEnum):
 class Service(Base):
     """Service model for car maintenance services"""
     
-    __tablename__ = "services"
+    __tablename__ = "service"
     
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
     name: Mapped[str] = mapped_column(String(length=255), nullable=False)

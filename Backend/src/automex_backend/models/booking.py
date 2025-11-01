@@ -28,8 +28,8 @@ class Booking(Base):
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
     
     # Foreign keys
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
-    service_id: Mapped[int] = mapped_column(ForeignKey("services.id"), nullable=False)
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)
+    service_id: Mapped[int] = mapped_column(ForeignKey("service.id"), nullable=False)
     
     # Booking details
     booking_date: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)

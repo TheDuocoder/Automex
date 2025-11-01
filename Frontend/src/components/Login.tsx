@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Eye, EyeOff, X } from "lucide-react";
-import { useState } from "react";
+import { Eye, EyeOff, X, Loader2 } from "lucide-react";
+import { useState, FormEvent } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 interface LoginProps {
   onClose?: () => void;
@@ -12,6 +14,90 @@ interface LoginProps {
 const Login = ({ onClose, onSwitchToRegister }: LoginProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { login } = useAuth();
+  const { toast } = useToast();
+
+  // Form state
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  // Form errors
+  const [errors, setErrors] = useState({
+    email: "",
+    password: "",
+  });
+
+  // Handle input changes
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    // Clear error when user starts typing
+    setErrors((prev) => ({ ...prev, [name]: "" }));
+  };
+
+  // Validate form
+  const validateForm = () => {
+    const newErrors = {
+      email: "",
+      password: "",
+    };
+
+    let isValid = true;
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Email is invalid";
+      isValid = false;
+    }
+
+    if (!formData.password) {
+      newErrors.password = "Password is required";
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      await login(formData.email, formData.password);
+
+      toast({
+        title: "Login Successful!",
+        description: "Welcome back to AutoMex.",
+      });
+
+      // Close the form after successful login
+      if (onClose) {
+        setTimeout(() => {
+          onClose();
+        }, 1000);
+      }
+    } catch (error) {
+      toast({
+        title: "Login Failed",
+        description: error instanceof Error ? error.message : "Invalid email or password",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-6 relative">
@@ -46,61 +132,90 @@ const Login = ({ onClose, onSwitchToRegister }: LoginProps) => {
         <p className="text-xs text-gray-600 text-center">Enter to get unlimited access to data & information.</p>
       </div>
 
-      {/* Email Input */}
-      <div className="mb-2">
-        <label className="block text-xs font-semibold text-gray-900 mb-1">
-          Email <span className="text-red-500">*</span>
-        </label>
-        <Input
-          type="email"
-          placeholder="Enter your mail address"
-          className="w-full h-9 px-3 text-sm border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-        />
-      </div>
-
-      {/* Password Input */}
-      <div className="mb-2">
-        <label className="block text-xs font-semibold text-gray-900 mb-1">
-          Password <span className="text-red-500">*</span>
-        </label>
-        <div className="relative">
-          <Input
-            type={showPassword ? "text" : "password"}
-            placeholder="Enter password"
-            className="w-full h-9 px-3 pr-10 text-sm border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-          />
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-          >
-            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-          </button>
-        </div>
-      </div>
-
-      {/* Remember Me & Forgot Password */}
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center space-x-2">
-          <Checkbox
-            id="remember"
-            checked={rememberMe}
-            onCheckedChange={(checked) => setRememberMe(checked as boolean)}
-            className="border-primary data-[state=checked]:bg-primary w-4 h-4"
-          />
-          <label htmlFor="remember" className="text-xs text-gray-700 cursor-pointer">
-            Remember me
+      <form onSubmit={handleSubmit}>
+        {/* Email Input */}
+        <div className="mb-2">
+          <label className="block text-xs font-semibold text-gray-900 mb-1">
+            Email <span className="text-red-500">*</span>
           </label>
+          <Input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="Enter your mail address"
+            className={`w-full h-9 px-3 text-sm rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent ${
+              errors.email ? "border-red-500" : "border-gray-300"
+            }`}
+          />
+          {errors.email && (
+            <p className="text-xs text-red-500 mt-1">{errors.email}</p>
+          )}
         </div>
-        <a href="#" className="text-xs text-primary hover:text-primary/80 font-medium">
-          Forgot your password ?
-        </a>
-      </div>
 
-      {/* Login Button */}
-      <Button className="w-full h-9 bg-primary hover:bg-primary/90 text-white text-sm font-semibold rounded-lg mb-3">
-        Log In
-      </Button>
+        {/* Password Input */}
+        <div className="mb-2">
+          <label className="block text-xs font-semibold text-gray-900 mb-1">
+            Password <span className="text-red-500">*</span>
+          </label>
+          <div className="relative">
+            <Input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Enter password"
+              className={`w-full h-9 px-3 pr-10 text-sm rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent ${
+                errors.password ? "border-red-500" : "border-gray-300"
+              }`}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+            >
+              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+            </button>
+          </div>
+          {errors.password && (
+            <p className="text-xs text-red-500 mt-1">{errors.password}</p>
+          )}
+        </div>
+
+        {/* Remember Me & Forgot Password */}
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="remember"
+              checked={rememberMe}
+              onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+              className="border-primary data-[state=checked]:bg-primary w-4 h-4"
+            />
+            <label htmlFor="remember" className="text-xs text-gray-700 cursor-pointer">
+              Remember me
+            </label>
+          </div>
+          <a href="#" className="text-xs text-primary hover:text-primary/80 font-medium">
+            Forgot your password ?
+          </a>
+        </div>
+
+        {/* Login Button */}
+        <Button 
+          type="submit"
+          disabled={isLoading}
+          className="w-full h-9 bg-primary hover:bg-primary/90 text-white text-sm font-semibold rounded-lg mb-3 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isLoading ? (
+            <>
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              Logging in...
+            </>
+          ) : (
+            "Log In"
+          )}
+        </Button>
+      </form>
 
       {/* Divider */}
       <div className="relative mb-3">

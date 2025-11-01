@@ -1,8 +1,9 @@
 """
 Authentication routes using FastAPI Users
 """
-from fastapi import APIRouter, Depends
-from fastapi_users import FastAPIUsers
+from typing import Optional
+from fastapi import APIRouter, Depends, Request
+from fastapi_users import FastAPIUsers, BaseUserManager, IntegerIDMixin
 from fastapi_users.authentication import (
     AuthenticationBackend,
     BearerTransport,
@@ -17,6 +18,25 @@ from automex_backend.models.user import User
 from automex_backend.schemas.user import UserRead, UserCreate, UserUpdate
 
 router = APIRouter()
+
+
+class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
+    """User manager for handling user operations"""
+    reset_password_token_secret = settings.SECRET_KEY
+    verification_token_secret = settings.SECRET_KEY
+
+    async def on_after_register(self, user: User, request: Optional[Request] = None):
+        print(f"[INFO] User {user.id} has registered: {user.email}")
+
+    async def on_after_forgot_password(
+        self, user: User, token: str, request: Optional[Request] = None
+    ):
+        print(f"[INFO] User {user.id} has forgot their password. Reset token: {token}")
+
+    async def on_after_request_verify(
+        self, user: User, token: str, request: Optional[Request] = None
+    ):
+        print(f"[INFO] Verification requested for user {user.id}. Verification token: {token}")
 
 
 # Bearer token transport
@@ -44,9 +64,14 @@ async def get_user_db(session: AsyncSession = Depends(get_async_session)):
     yield SQLAlchemyUserDatabase(session, User)
 
 
+async def get_user_manager(user_db: SQLAlchemyUserDatabase = Depends(get_user_db)):
+    """Get user manager dependency"""
+    yield UserManager(user_db)
+
+
 # FastAPI Users instance
 fastapi_users = FastAPIUsers[User, int](
-    get_user_db,
+    get_user_manager,
     [auth_backend],
 )
 
