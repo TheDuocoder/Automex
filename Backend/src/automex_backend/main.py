@@ -1,8 +1,10 @@
 """
 Main FastAPI application entry point for AutoMex Backend
 """
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.responses import Response
 from contextlib import asynccontextmanager
 import os
 from dotenv import load_dotenv
@@ -18,6 +20,32 @@ from automex_backend.api import api_router
 print("\n" + "="*60)
 print("Starting AutoMex Backend...")
 print("="*60)
+
+
+# Custom CORS Middleware - Manually add headers to EVERY response
+class CORSHeaderMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        # Handle preflight OPTIONS request
+        if request.method == "OPTIONS":
+            response = Response(
+                status_code=200,
+                headers={
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "*",
+                    "Access-Control-Allow-Headers": "*",
+                    "Access-Control-Max-Age": "3600",
+                }
+            )
+            return response
+        
+        # For all other requests, process and add CORS headers
+        response = await call_next(request)
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Methods"] = "*"
+        response.headers["Access-Control-Allow-Headers"] = "*"
+        response.headers["Access-Control-Max-Age"] = "3600"
+        
+        return response
 
 
 @asynccontextmanager
@@ -47,15 +75,9 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# Configure CORS - Allow all for development
-print("[INFO] CORS: Allowing ALL origins (*)")
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=False,  # Can't use credentials with *
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# Add Custom CORS Middleware - This will add headers to EVERY response
+print("[INFO] CORS: Using custom middleware - ALL origins (*)")
+app.add_middleware(CORSHeaderMiddleware)
 
 # Include API routes
 app.include_router(api_router, prefix="/api/v1")
@@ -79,12 +101,6 @@ async def health_check():
         "status": "healthy",
         "service": "AutoMex Backend"
     }
-
-
-@app.options("/{rest_of_path:path}")
-async def preflight_handler(rest_of_path: str):
-    """Handle CORS preflight requests explicitly"""
-    return {"status": "ok"}
 
 
 @app.get("/test-db")

@@ -9,7 +9,7 @@ from fastapi_users.authentication import (
     BearerTransport,
     JWTStrategy,
 )
-from fastapi_users.db import SQLAlchemyUserDatabase
+from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from automex_backend.config import settings
@@ -26,7 +26,7 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
     verification_token_secret = settings.SECRET_KEY
 
     async def on_after_register(self, user: User, request: Optional[Request] = None):
-        print(f"[INFO] User {user.id} has registered: {user.email}")
+        print(f"[INFO] User {user.id} has registered: {user.email} with role_id: {user.role_id}")
 
     async def on_after_forgot_password(
         self, user: User, token: str, request: Optional[Request] = None
@@ -37,6 +37,22 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
         self, user: User, token: str, request: Optional[Request] = None
     ):
         print(f"[INFO] Verification requested for user {user.id}. Verification token: {token}")
+    
+    async def create(self, user_create, safe: bool = False, request: Optional[Request] = None):
+        """Create a new user with default role"""
+        # Call the parent create method
+        user = await super().create(user_create, safe=safe, request=request)
+        
+        # Reload user with role relationship to avoid lazy loading issues
+        from sqlalchemy import select
+        from sqlalchemy.orm import selectinload
+        
+        result = await self.user_db.session.execute(
+            select(User).where(User.id == user.id).options(selectinload(User.role))
+        )
+        user_with_role = result.scalar_one()
+        
+        return user_with_role
 
 
 # Bearer token transport
@@ -79,6 +95,21 @@ fastapi_users = FastAPIUsers[User, int](
 current_active_user = fastapi_users.current_user(active=True)
 
 
+# Custom dependency to get user with role loaded
+async def get_current_user_with_role(
+    user: User = Depends(current_active_user),
+    session: AsyncSession = Depends(get_async_session)
+) -> User:
+    """Get current user with role relationship loaded"""
+    from sqlalchemy import select
+    from sqlalchemy.orm import selectinload
+    
+    result = await session.execute(
+        select(User).where(User.id == user.id).options(selectinload(User.role))
+    )
+    return result.scalar_one()
+
+
 # Include auth routes
 router.include_router(
     fastapi_users.get_auth_router(auth_backend),
@@ -104,7 +135,18 @@ router.include_router(
 
 
 @router.get("/me", response_model=UserRead)
-async def get_current_user(user: User = Depends(current_active_user)):
-    """Get current authenticated user"""
-    return user
+async def get_current_user(
+    user: User = Depends(current_active_user),
+    session: AsyncSession = Depends(get_async_session)
+):
+    """Get current authenticated user with role information"""
+    from sqlalchemy import select
+    from sqlalchemy.orm import selectinload
+    
+    # Reload user with role relationship
+    result = await session.execute(
+        select(User).where(User.id == user.id).options(selectinload(User.role))
+    )
+    user_with_role = result.scalar_one()
+    return user_with_role
 

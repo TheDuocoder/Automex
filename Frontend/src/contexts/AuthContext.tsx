@@ -4,7 +4,8 @@
  */
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User, loginUser, logoutUser, getCurrentUser, isAuthenticated } from '@/services/authService';
+import { User, loginUser, logoutUser, getCurrentUser } from '@/services/authService';
+import { removeAuthToken } from '@/services/api';
 
 interface AuthContextType {
   user: User | null;
@@ -25,22 +26,30 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check authentication status on mount
+  // DISABLED: Automatic authentication check on mount to prevent auto API calls
   useEffect(() => {
-    checkAuth();
+    // Skip automatic authentication check
+    setIsLoading(false);
+    
+    // If you want to enable auto-login, uncomment the code below:
+    // const token = localStorage.getItem('auth_token');
+    // if (token) {
+    //   checkAuth();
+    // }
   }, []);
 
   async function checkAuth() {
-    if (isAuthenticated()) {
-      try {
-        const userData = await getCurrentUser();
-        setUser(userData || null);
-      } catch (error) {
-        console.error('Failed to get user:', error);
-        setUser(null);
-      }
+    try {
+      const userData = await getCurrentUser();
+      setUser(userData || null);
+    } catch (error) {
+      console.error('Failed to get user:', error);
+      // Clear invalid token on any error
+      removeAuthToken();
+      setUser(null);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   }
 
   async function login(email: string, password: string) {
