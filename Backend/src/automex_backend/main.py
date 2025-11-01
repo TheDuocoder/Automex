@@ -7,12 +7,21 @@ from contextlib import asynccontextmanager
 import os
 from dotenv import load_dotenv
 
-from automex_backend.config import settings
-from automex_backend.database import init_db
-from automex_backend.api import api_router
+# Import Google Drive config service
+from automex_backend.services.gdrive_config import setup_env_from_gdrive
+
+# Try to sync .env from Google Drive before loading
+print("\n" + "="*60)
+print("Starting AutoMex Backend...")
+print("="*60)
+setup_env_from_gdrive()
 
 # Load environment variables
 load_dotenv()
+
+from automex_backend.config import settings
+from automex_backend.database import init_db
+from automex_backend.api import api_router
 
 
 @asynccontextmanager
@@ -23,12 +32,12 @@ async def lifespan(app: FastAPI):
     """
     # Startup: Initialize database
     await init_db()
-    print("🚀 Database initialized successfully")
+    print("Database initialized successfully")
     
     yield
     
     # Shutdown: Cleanup
-    print("👋 Shutting down AutoMex Backend...")
+    print("Shutting down AutoMex Backend...")
 
 
 # Create FastAPI application

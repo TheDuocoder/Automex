@@ -1,0 +1,73 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║         Google Drive .env Configuration - QUICK START GUIDE                ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+📋 WHAT YOU NEED TO DO:
+
+1. Upload .env file to Google Drive (account: techduocoders@gmail.com)
+2. Right-click → Share → "Anyone with the link can view"
+3. Copy the share link
+4. Extract FILE_ID from the link
+5. Set environment variable
+6. Start backend
+
+──────────────────────────────────────────────────────────────────────────────
+
+🔗 EXAMPLE GOOGLE DRIVE LINK:
+https://drive.google.com/file/d/1ABC123xyz456DEF789/view?usp=sharing
+                                ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+                            THIS IS YOUR FILE_ID
+
+──────────────────────────────────────────────────────────────────────────────
+
+⚡ QUICK SETUP (Windows PowerShell):
+
+# Set the file ID (replace with your actual FILE_ID)
+$env:GDRIVE_ENV_FILE_ID="1ABC123xyz456DEF789"
+
+# OR make it permanent (requires restart)
+[System.Environment]::SetEnvironmentVariable('GDRIVE_ENV_FILE_ID', '1ABC123xyz456DEF789', 'User')
+
+# Test it
+cd D:\Automex\Backend
+python setup_gdrive.py
+
+# Start backend
+python -m automex_backend.main
+
+──────────────────────────────────────────────────────────────────────────────
+
+✅ WHAT HAPPENS:
+
+1. Backend starts
+2. Checks for GDRIVE_ENV_FILE_ID
+3. Downloads .env from Google Drive
+4. If download fails → Uses local .env (fallback)
+5. Backend continues startup normally
+
+──────────────────────────────────────────────────────────────────────────────
+
+🔧 ALTERNATIVE: Manual Setup
+
+If you don't want to use Google Drive sync:
+1. Just keep your local .env file
+2. Don't set GDRIVE_ENV_FILE_ID
+3. Backend will use local .env automatically
+
+──────────────────────────────────────────────────────────────────────────────
+
+📚 FULL DOCUMENTATION:
+- Complete guide: GDRIVE_ENV_SETUP.md
+- Setup wizard: python setup_gdrive.py
+- Test command: python -c "from automex_backend.services.gdrive_config import setup_env_from_gdrive; setup_env_from_gdrive()"
+
+──────────────────────────────────────────────────────────────────────────────
+
+🎯 CURRENT STATUS:
+- ✅ Google Drive download service created
+- ✅ Backend configured to sync on startup
+- ⏳ Waiting for you to set GDRIVE_ENV_FILE_ID
+- ⏳ Upload .env to Google Drive and share it
+
+──────────────────────────────────────────────────────────────────────────────
+
