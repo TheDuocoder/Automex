@@ -7,21 +7,17 @@ from contextlib import asynccontextmanager
 import os
 from dotenv import load_dotenv
 
-# Import Google Drive config service
-from automex_backend.services.gdrive_config import setup_env_from_gdrive
-
-# Try to sync .env from Google Drive before loading
-print("\n" + "="*60)
-print("Starting AutoMex Backend...")
-print("="*60)
-setup_env_from_gdrive()
-
-# Load environment variables
+# Load environment variables FIRST
 load_dotenv()
 
 from automex_backend.config import settings
 from automex_backend.database import init_db
 from automex_backend.api import api_router
+
+# Print startup message
+print("\n" + "="*60)
+print("Starting AutoMex Backend...")
+print("="*60)
 
 
 @asynccontextmanager
@@ -51,16 +47,14 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# Configure CORS
-cors_origins = settings.get_cors_origins()
-print(f"[INFO] CORS Origins configured: {cors_origins}")
+# Configure CORS - Allow all for development
+print("[INFO] CORS: Allowing ALL origins (*)")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=cors_origins,
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,  # Can't use credentials with *
     allow_methods=["*"],
     allow_headers=["*"],
-    expose_headers=["*"],
 )
 
 # Include API routes
@@ -85,6 +79,12 @@ async def health_check():
         "status": "healthy",
         "service": "AutoMex Backend"
     }
+
+
+@app.options("/{rest_of_path:path}")
+async def preflight_handler(rest_of_path: str):
+    """Handle CORS preflight requests explicitly"""
+    return {"status": "ok"}
 
 
 @app.get("/test-db")
