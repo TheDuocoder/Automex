@@ -113,7 +113,24 @@ async def lifespan(app: FastAPI):
 # Create FastAPI application
 app = FastAPI(
     title="AutoMex API",
-    description="Premium Car Service & Maintenance Platform API",
+    description="""
+    Premium Car Service & Maintenance Platform API
+    
+    ## Features
+    - **Authentication**: JWT-based authentication
+    - **Services**: Manage car services (AC repair, car spa, etc.)
+    - **Bookings**: Create and manage service bookings
+    - **Roles**: User role management
+    - **File Uploads**: Image and file upload management
+    
+    ## Authentication
+    1. Use `POST /api/v1/auth/login` with email and password to get a JWT token
+    2. Click "Authorize" button and paste your token (Bearer authentication)
+    3. All endpoints will be available for testing
+    
+    **Note**: All endpoints are visible in Swagger UI regardless of authentication status.
+    Authentication is only required to successfully CALL protected endpoints.
+    """,
     version="1.0.0",
     docs_url="/api/docs",
     redoc_url="/api/redoc",
@@ -121,12 +138,75 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+
+# Configure OpenAPI schema for Bearer token authentication in Swagger UI
+def custom_openapi():
+    """Custom OpenAPI schema with Bearer token authentication"""
+    if app.openapi_schema:
+        return app.openapi_schema
+    
+    from fastapi.openapi.utils import get_openapi
+    
+    # Get all routes - this includes all registered endpoints
+    openapi_schema = get_openapi(
+        title=app.title,
+        version=app.version,
+        description=app.description,
+        routes=app.routes,
+        servers=[
+            {"url": "http://localhost:8000", "description": "Development server"},
+        ],
+    )
+    
+    # Ensure components exist
+    if "components" not in openapi_schema:
+        openapi_schema["components"] = {}
+    
+    # Add Bearer token security scheme
+    openapi_schema["components"]["securitySchemes"] = {
+        "Bearer": {
+            "type": "http",
+            "scheme": "bearer",
+            "bearerFormat": "JWT",
+            "description": "Enter JWT token (get it from /api/v1/auth/login endpoint). Paste your token here (without 'Bearer' prefix, just the token)."
+        },
+        "OAuth2PasswordBearer": {
+            "type": "oauth2",
+            "flows": {
+                "password": {
+                    "tokenUrl": "/api/v1/auth/jwt/login",
+                    "scopes": {}
+                }
+            },
+            "description": "OAuth2 password flow for authentication"
+        }
+    }
+    
+    # Ensure all paths are visible - don't filter anything
+    # Count paths for debugging
+    path_count = len(openapi_schema.get("paths", {}))
+    print(f"\n[INFO] OpenAPI schema generated with {path_count} endpoint paths\n")
+    
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+
+app.openapi = custom_openapi
+
 # Add Custom CORS Middleware - This will add headers to EVERY response
 print("[INFO] CORS: Using custom middleware - ALL origins (*)")
 app.add_middleware(CORSHeaderMiddleware)
 
 # Include API routes
 app.include_router(api_router, prefix="/api/v1")
+
+# Debug: Print all registered routes
+print("\n[INFO] Registered API Routes:")
+for route in app.routes:
+    if hasattr(route, 'path') and hasattr(route, 'methods'):
+        methods = ', '.join(sorted(route.methods)) if route.methods else 'N/A'
+        print(f"  {methods:20s} {route.path}")
+print(f"\n[INFO] Total routes registered: {len([r for r in app.routes if hasattr(r, 'path')])}\n")
 
 
 @app.get("/")
