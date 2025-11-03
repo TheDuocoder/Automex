@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Eye, EyeOff, X, Loader2 } from "lucide-react";
 import { useState, FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
@@ -17,6 +18,7 @@ const Login = ({ onClose, onSwitchToRegister }: LoginProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   // Form state
   const [formData, setFormData] = useState({
@@ -82,12 +84,12 @@ const Login = ({ onClose, onSwitchToRegister }: LoginProps) => {
         description: "Welcome back to AutoMex.",
       });
 
-      // Close the form after successful login
+      // Close the form and redirect to services page
       if (onClose) {
-        setTimeout(() => {
-          onClose();
-        }, 1000);
+        onClose();
       }
+      // Redirect to services page after successful login
+      navigate('/services');
     } catch (error) {
       toast({
         title: "Login Failed",

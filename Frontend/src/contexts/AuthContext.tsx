@@ -6,6 +6,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, loginUser, logoutUser, getCurrentUser } from '@/services/authService';
 import { removeAuthToken } from '@/services/api';
+import { useAuthStore } from '@/stores/authStore';
 
 interface AuthContextType {
   user: User | null;
@@ -26,16 +27,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // DISABLED: Automatic authentication check on mount to prevent auto API calls
+  // Restore user data from Zustand store on mount
   useEffect(() => {
-    // Skip automatic authentication check
-    setIsLoading(false);
+    const store = useAuthStore.getState();
     
-    // If you want to enable auto-login, uncomment the code below:
-    // const token = localStorage.getItem('auth_token');
-    // if (token) {
-    //   checkAuth();
-    // }
+    // Restore from Zustand (which persists to localStorage)
+    if (store.user && store.token) {
+      setUser(store.user);
+    }
+    
+    setIsLoading(false);
   }, []);
 
   async function checkAuth() {
@@ -53,8 +54,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }
 
   async function login(email: string, password: string) {
-    await loginUser(email, password);
-    await refreshUser();
+    const loginResponse = await loginUser(email, password);
+    // Set user from login response (includes role information)
+    setUser(loginResponse.user);
+    // Zustand store is already updated in loginUser function
   }
 
   async function logout() {

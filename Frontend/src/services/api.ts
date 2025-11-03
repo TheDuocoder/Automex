@@ -16,6 +16,7 @@ export interface ApiResponse<T> {
 
 /**
  * Generic API call handler with error handling
+ * Automatically includes JWT token in Authorization header
  */
 export async function apiCall<T>(
   endpoint: string,
@@ -24,10 +25,14 @@ export async function apiCall<T>(
   try {
     const url = `${API_BASE_URL}${endpoint}`;
     
+    // Get auth token and include it in headers
+    const authHeader = getAuthHeader();
+    
     const response = await fetch(url, {
       ...options,
       headers: {
         'Content-Type': 'application/json',
+        ...authHeader,
         ...options.headers,
       },
     });

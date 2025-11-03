@@ -4,6 +4,16 @@
  */
 
 import { apiCall, setAuthToken, removeAuthToken, getAuthHeader, API_BASE_URL } from './api';
+import { useAuthStore } from '@/stores/authStore';
+
+/**
+ * Role interface
+ */
+export interface Role {
+  id: number;
+  name: string;
+  description?: string;
+}
 
 /**
  * User interface
@@ -16,6 +26,8 @@ export interface User {
   is_active: boolean;
   is_verified: boolean;
   is_superuser: boolean;
+  role_id?: number;
+  role?: Role;
 }
 
 /**
@@ -37,11 +49,21 @@ export interface LoginData {
 }
 
 /**
+ * User interface with role
+ */
+export interface UserWithRole extends User {
+  role_id: number;
+  role: Role;
+}
+
+/**
  * Login response interface
  */
 export interface LoginResponse {
   access_token: string;
   token_type: string;
+  user: UserWithRole;
+  role: Role;
 }
 
 /**
@@ -62,22 +84,21 @@ export async function registerUser(data: RegisterData) {
 
 /**
  * Login user
+ * Uses the custom login endpoint that accepts email and password as JSON
  */
-export async function loginUser(email: string, password: string) {
-  // FastAPI Users expects form data for login
-  const formData = new URLSearchParams();
-  formData.append('username', email); // FastAPI Users uses 'username' field
-  formData.append('password', password);
-
+export async function loginUser(email: string, password: string): Promise<LoginResponse> {
   try {
-    const url = `${API_BASE_URL}/api/v1/auth/jwt/login`;
+    const url = `${API_BASE_URL}/api/v1/auth/login`;
     
     const response = await fetch(url, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/json',
       },
-      body: formData,
+      body: JSON.stringify({
+        email,
+        password,
+      }),
     });
 
     if (!response.ok) {
@@ -87,8 +108,15 @@ export async function loginUser(email: string, password: string) {
 
     const data: LoginResponse = await response.json();
     
-    // Store the access token
+    // Store the access token in localStorage
     setAuthToken(data.access_token);
+    
+    // Store user data in localStorage for persistence
+    localStorage.setItem('user_data', JSON.stringify(data.user));
+    
+    // Store in Zustand store
+    const store = useAuthStore.getState();
+    store.setAuthData(data.user, data.access_token, data.role);
     
     return data;
   } catch (error) {
@@ -106,29 +134,40 @@ export async function logoutUser() {
   try {
     await apiCall('/api/v1/auth/jwt/logout', {
       method: 'POST',
-      headers: getAuthHeader(),
     });
   } catch (error) {
     console.error('Logout error:', error);
   } finally {
+    // Remove token and user data from localStorage
     removeAuthToken();
+    localStorage.removeItem('user_data');
+    
+    // Clear Zustand store
+    useAuthStore.getState().clearAuth();
   }
 }
 
 /**
  * Get current user
  */
-export async function getCurrentUser() {
-  const response = await apiCall<User>('/api/v1/auth/me', {
+export async function getCurrentUser(): Promise<User | null> {
+  const response = await apiCall<UserWithRole>('/api/v1/auth/me', {
     method: 'GET',
-    headers: getAuthHeader(),
   });
 
   if (response.error) {
     throw new Error(response.error);
   }
 
-  return response.data;
+  // Store updated user data in localStorage and Zustand
+  if (response.data) {
+    localStorage.setItem('user_data', JSON.stringify(response.data));
+    // Update Zustand store
+    const store = useAuthStore.getState();
+    store.setUser(response.data);
+  }
+
+  return response.data || null;
 }
 
 /**
