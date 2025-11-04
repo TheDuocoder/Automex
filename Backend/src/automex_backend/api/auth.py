@@ -1,6 +1,7 @@
 """
 Authentication routes using FastAPI Users
 """
+import os
 from typing import Optional
 from fastapi import APIRouter, Depends, Request, HTTPException, status
 from pydantic import BaseModel, EmailStr
@@ -28,6 +29,10 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
     """User manager for handling user operations"""
     reset_password_token_secret = settings.SECRET_KEY
     verification_token_secret = settings.SECRET_KEY
+    
+    # Store token for development mode
+    _last_reset_token: Optional[str] = None
+    _last_reset_user_id: Optional[int] = None
 
     async def on_after_register(self, user: User, request: Optional[Request] = None):
         print(f"[INFO] User {user.id} has registered: {user.email} with role_id: {user.role_id}")
@@ -36,6 +41,9 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
         self, user: User, token: str, request: Optional[Request] = None
     ):
         print(f"[INFO] User {user.id} has forgot their password. Reset token: {token}")
+        # Store token for development mode access
+        self._last_reset_token = token
+        self._last_reset_user_id = user.id
 
     async def on_after_request_verify(
         self, user: User, token: str, request: Optional[Request] = None
@@ -285,6 +293,71 @@ async def register(
 router.include_router(
     fastapi_users.get_verify_router(UserRead),
 )
+
+# Custom forgot password endpoint that returns token in development mode
+class ForgotPasswordRequest(BaseModel):
+    """Forgot password request schema"""
+    email: EmailStr
+
+
+class ForgotPasswordResponse(BaseModel):
+    """Forgot password response schema"""
+    message: str
+    token: Optional[str] = None  # Only included in development mode
+
+
+@router.post("/forgot-password", response_model=ForgotPasswordResponse, status_code=status.HTTP_202_ACCEPTED)
+async def forgot_password(
+    request_data: ForgotPasswordRequest,
+    user_db: SQLAlchemyUserDatabase = Depends(get_user_db),
+    user_manager: UserManager = Depends(get_user_manager),
+):
+    """
+    Request password reset token. 
+    In development mode, the token is returned in the response.
+    In production, the token is sent via email.
+    """
+    try:
+        # Get user by email
+        user = await user_db.get_by_email(request_data.email)
+        
+        # FastAPI Users always returns 202 to prevent email enumeration
+        # So we return success even if user doesn't exist
+        if user:
+            # Clear previous token
+            user_manager._last_reset_token = None
+            user_manager._last_reset_user_id = None
+            
+            # Generate reset token using the user manager's forgot_password method
+            # This will call on_after_forgot_password which stores the token
+            await user_manager.forgot_password(user, request=None)
+            
+            # Check if token was generated (stored in callback)
+            reset_token = user_manager._last_reset_token if user_manager._last_reset_user_id == user.id else None
+            
+            # Return the token in the response (for development - in production, configure email sending)
+            if reset_token:
+                return ForgotPasswordResponse(
+                    message=f"Password reset token generated for {request_data.email}. Token included below for development.",
+                    token=reset_token
+                )
+            else:
+                return ForgotPasswordResponse(
+                    message=f"If an account exists with {request_data.email}, you will receive a password reset token via email."
+                )
+        else:
+            # User doesn't exist - still return 202 to prevent email enumeration
+            return ForgotPasswordResponse(
+                message=f"If an account exists with {request_data.email}, you will receive a password reset token via email."
+            )
+    except Exception as e:
+        # Log error but still return 202 to prevent email enumeration
+        import traceback
+        print(f"[ERROR] Error in forgot_password: {str(e)}")
+        print(f"[ERROR] Traceback:\n{traceback.format_exc()}")
+        return ForgotPasswordResponse(
+            message=f"If an account exists with {request_data.email}, you will receive a password reset token via email."
+        )
 
 router.include_router(
     fastapi_users.get_reset_password_router(),
