@@ -241,9 +241,46 @@ router.include_router(
     prefix="/jwt"
 )
 
-router.include_router(
-    fastapi_users.get_register_router(UserRead, UserCreate),
-)
+# Custom register endpoint that doesn't require authentication
+@router.post("/register", response_model=UserRead, status_code=status.HTTP_201_CREATED, name="auth:register")
+async def register(
+    user_create: UserCreate,
+    user_manager: UserManager = Depends(get_user_manager),
+    session: AsyncSession = Depends(get_async_session),
+):
+    """
+    Register a new user (public endpoint - no authentication required)
+    
+    This endpoint allows users to create a new account without being authenticated.
+    """
+    try:
+        # Create user using the user manager (safe=True means it won't create superusers)
+        user = await user_manager.create(user_create, safe=True)
+        
+        # Load user with role relationship
+        result = await session.execute(
+            select(User).where(User.id == user.id).options(selectinload(User.role))
+        )
+        user_with_role = result.scalar_one()
+        
+        # Return UserRead model
+        return UserRead.model_validate(user_with_role)
+    except ValueError as e:
+        # Handle validation errors (e.g., user already exists)
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+    except Exception as e:
+        # Handle any other unexpected errors
+        import traceback
+        error_trace = traceback.format_exc()
+        print(f"[ERROR] Registration error: {str(e)}")
+        print(f"[ERROR] Traceback:\n{error_trace}")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Registration failed: {str(e)}"
+        )
 
 router.include_router(
     fastapi_users.get_verify_router(UserRead),
