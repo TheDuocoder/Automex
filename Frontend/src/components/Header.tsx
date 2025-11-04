@@ -29,7 +29,7 @@ const Header = () => {
   const isTransparent = location.pathname === '/';
   
   return (
-    <header className={`${isTransparent ? 'bg-transparent absolute' : 'bg-white shadow-md relative'} text-${isTransparent ? 'white' : 'gray-900'} py-3 md:py-4 lg:py-5 ${isTransparent ? 'top-0 left-0 right-0' : ''} z-50`}>
+    <header className={`${isTransparent ? 'bg-transparent absolute' : 'bg-black shadow-md relative'} text-${isTransparent ? 'white' : 'white'} py-3 md:py-4 lg:py-5 ${isTransparent ? 'top-0 left-0 right-0' : ''} z-50`}>
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3 md:gap-6">
@@ -48,7 +48,7 @@ const Header = () => {
           <div className="flex items-start gap-3 md:gap-4 lg:gap-6 pt-2">
             <a 
               href="#about-us" 
-              className={`text-sm hover:text-primary transition-colors hidden lg:block ${!isTransparent ? 'text-gray-700' : ''}`}
+              className="text-sm text-white hover:text-primary transition-colors hidden lg:block"
               onClick={(e) => {
                 e.preventDefault();
                 const element = document.getElementById('about-us');
@@ -62,7 +62,7 @@ const Header = () => {
             
             <a 
               href="/contact-us" 
-              className={`text-sm hover:text-primary transition-colors hidden lg:block cursor-pointer ${!isTransparent ? 'text-gray-700' : ''}`}
+              className="text-sm text-white hover:text-primary transition-colors hidden lg:block cursor-pointer"
               onClick={(e) => {
                 e.preventDefault();
                 navigate('/contact-us');
@@ -73,7 +73,7 @@ const Header = () => {
             
             <a 
               href="#faq" 
-              className="text-sm hover:text-primary transition-colors hidden lg:block"
+              className="text-sm text-white hover:text-primary transition-colors hidden lg:block"
               onClick={(e) => {
                 e.preventDefault();
                 const element = document.getElementById('faq');
@@ -87,7 +87,7 @@ const Header = () => {
             
             <a 
               href="#offers" 
-              className="text-sm hover:text-primary transition-colors hidden lg:block"
+              className="text-sm text-white hover:text-primary transition-colors hidden lg:block"
               onClick={(e) => {
                 e.preventDefault();
                 const element = document.getElementById('offers');
@@ -101,7 +101,7 @@ const Header = () => {
             
             <a 
               href="#reviews" 
-              className="text-sm hover:text-primary transition-colors hidden lg:block"
+              className="text-sm text-white hover:text-primary transition-colors hidden lg:block"
               onClick={(e) => {
                 e.preventDefault();
                 const element = document.getElementById('reviews');
@@ -113,11 +113,11 @@ const Header = () => {
               Reviews
             </a>
             
-            <a href="#terms" className="text-sm hover:text-primary transition-colors hidden lg:block">
+            <a href="#terms" className="text-sm text-white hover:text-primary transition-colors hidden lg:block">
               Terms
             </a>
             
-            <a href="#privacy" className="text-sm hover:text-primary transition-colors hidden lg:block">
+            <a href="#privacy" className="text-sm text-white hover:text-primary transition-colors hidden lg:block">
               Privacy
             </a>
 
@@ -125,7 +125,7 @@ const Header = () => {
             {isAuthenticated && (
               <a 
                 href="/services" 
-                className="text-sm hover:text-primary transition-colors hidden lg:block cursor-pointer"
+                className="text-sm text-white hover:text-primary transition-colors hidden lg:block cursor-pointer"
                 onClick={(e) => {
                   e.preventDefault();
                   navigate('/services');
@@ -141,10 +141,10 @@ const Header = () => {
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
-                    className={`hidden lg:flex items-center gap-2 ${isTransparent ? 'text-white hover:bg-white/10' : 'text-gray-900 hover:bg-gray-100'} h-9 px-3`}
+                    className="hidden lg:flex items-center gap-2 text-white hover:bg-white/10 h-9 px-3"
                   >
-                    <div className={`h-8 w-8 rounded-full ${isTransparent ? 'bg-white/20' : 'bg-primary/10'} flex items-center justify-center`}>
-                      <User className={`h-5 w-5 ${isTransparent ? 'text-white' : 'text-primary'}`} />
+                    <div className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center">
+                      <User className="h-5 w-5 text-white" />
                     </div>
                     <span className="text-sm font-medium">
                       {user?.full_name || user?.email?.split('@')[0] || 'User'}
@@ -224,7 +224,7 @@ const Header = () => {
             <nav className="flex flex-col space-y-3 pt-3">
               <a 
                 href="#about-us" 
-                className="text-sm hover:text-primary transition-colors py-2"
+                className="text-sm text-white hover:text-primary transition-colors py-2"
                 onClick={(e) => {
                   e.preventDefault();
                   const element = document.getElementById('about-us');
@@ -238,7 +238,7 @@ const Header = () => {
               </a>
               <a 
                 href="/contact-us" 
-                className="text-sm hover:text-primary transition-colors py-2 cursor-pointer"
+                className="text-sm text-white hover:text-primary transition-colors py-2 cursor-pointer"
                 onClick={(e) => {
                   e.preventDefault();
                   navigate('/contact-us');
@@ -249,7 +249,7 @@ const Header = () => {
               </a>
               <a 
                 href="#faq" 
-                className="text-sm hover:text-primary transition-colors py-2"
+                className="text-sm text-white hover:text-primary transition-colors py-2"
                 onClick={(e) => {
                   e.preventDefault();
                   const element = document.getElementById('faq');
@@ -263,7 +263,7 @@ const Header = () => {
               </a>
               <a 
                 href="#offers" 
-                className="text-sm hover:text-primary transition-colors py-2"
+                className="text-sm text-white hover:text-primary transition-colors py-2"
                 onClick={(e) => {
                   e.preventDefault();
                   const element = document.getElementById('offers');
@@ -277,7 +277,7 @@ const Header = () => {
               </a>
               <a 
                 href="#reviews" 
-                className="text-sm hover:text-primary transition-colors py-2"
+                className="text-sm text-white hover:text-primary transition-colors py-2"
                 onClick={(e) => {
                   e.preventDefault();
                   const element = document.getElementById('reviews');
@@ -289,17 +289,17 @@ const Header = () => {
               >
                 Reviews
               </a>
-              <a href="#terms" className="text-sm hover:text-primary transition-colors py-2" onClick={() => setMobileMenuOpen(false)}>
+              <a href="#terms" className="text-sm text-white hover:text-primary transition-colors py-2" onClick={() => setMobileMenuOpen(false)}>
                 Terms
               </a>
-              <a href="#privacy" className="text-sm hover:text-primary transition-colors py-2" onClick={() => setMobileMenuOpen(false)}>
+              <a href="#privacy" className="text-sm text-white hover:text-primary transition-colors py-2" onClick={() => setMobileMenuOpen(false)}>
                 Privacy
               </a>
               {isAuthenticated && (
                 <>
                   <a 
                     href="/services" 
-                    className="text-sm hover:text-primary transition-colors py-2 cursor-pointer"
+                    className="text-sm text-white hover:text-primary transition-colors py-2 cursor-pointer"
                     onClick={(e) => {
                       e.preventDefault();
                       navigate('/services');
@@ -317,7 +317,7 @@ const Header = () => {
                         await handleLogout();
                         setMobileMenuOpen(false);
                       }}
-                      className="text-sm hover:text-primary transition-colors py-2 text-red-400 w-full text-left"
+                      className="text-sm text-white hover:text-primary transition-colors py-2 text-red-400 w-full text-left"
                     >
                       Logout
                     </button>

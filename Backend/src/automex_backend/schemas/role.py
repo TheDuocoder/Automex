@@ -1,13 +1,14 @@
 """
 Pydantic schemas for Role model
 """
+from typing import Optional
 from pydantic import BaseModel, ConfigDict
 
 
 class RoleBase(BaseModel):
     """Base role schema"""
     name: str
-    description: str | None = None
+    description: Optional[str] = None
 
 
 class RoleCreate(RoleBase):
@@ -17,8 +18,8 @@ class RoleCreate(RoleBase):
 
 class RoleUpdate(BaseModel):
     """Schema for updating a role"""
-    name: str | None = None
-    description: str | None = None
+    name: Optional[str] = None
+    description: Optional[str] = None
 
 
 class RoleRead(RoleBase):
