@@ -73,20 +73,21 @@ const ContactUs = () => {
         />
         
         {/* Content */}
-        <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-10 max-w-7xl relative z-[2]">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 md:gap-6 mb-3 sm:mb-4 md:mb-5">
+        <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-10 max-w-4xl relative z-[2]">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 md:gap-6 mb-3 sm:mb-4 md:mb-5 max-w-3xl mx-auto">
             <h1 
-              className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tight order-2 sm:order-1 relative inline-block pb-3"
+              className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl xl:text-4xl font-bold tracking-tight order-2 sm:order-1 relative inline-block pb-3"
               style={{
-                textShadow: '0 0 20px rgba(255, 0, 0, 0.5), 0 0 40px rgba(255, 0, 0, 0.3)'
+                textShadow: '0 0 20px rgba(244, 208, 63, 0.5), 0 0 40px rgba(244, 208, 63, 0.3)'
               }}
             >
               Get In Touch
-              {/* Red Accent Underline */}
+              {/* Custom Accent Underline */}
               <span 
-                className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-red-600 to-transparent"
+                className="absolute bottom-0 left-0 w-full h-1"
                 style={{
-                  boxShadow: '0 2px 8px rgba(255, 0, 0, 0.6)'
+                  background: `linear-gradient(to right, transparent, #F4D03F, transparent)`,
+                  boxShadow: '0 2px 8px rgba(244, 208, 63, 0.6)'
                 }}
               />
             </h1>
@@ -99,7 +100,7 @@ const ContactUs = () => {
               Back to Home
             </Button>
           </div>
-          <p className="text-xs sm:text-sm md:text-sm lg:text-base xl:text-lg max-w-2xl md:max-w-3xl leading-relaxed" style={{ color: '#F2F2F2' }}>
+          <p className="text-xs sm:text-sm md:text-sm lg:text-base xl:text-lg max-w-xl mx-auto text-center leading-relaxed" style={{ color: '#F2F2F2' }}>
             Have questions about our services? We're here to help!<br className="hidden sm:block" />
             <span className="sm:hidden"> </span>Reach out to us and we'll respond as soon as possible.
           </p>
@@ -114,24 +115,24 @@ const ContactUs = () => {
             <Card 
               className="sm:col-span-2 lg:col-span-1 transition-all duration-300 hover:-translate-y-1 cursor-pointer group"
               style={{
-                boxShadow: '0 8px 20px rgba(255, 0, 0, 0.1)',
+                boxShadow: '0 8px 20px rgba(244, 208, 63, 0.1)',
                 borderRadius: '20px'
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-5px)';
-                e.currentTarget.style.boxShadow = '0 10px 25px rgba(255, 0, 0, 0.2)';
+                e.currentTarget.style.boxShadow = '0 10px 25px rgba(244, 208, 63, 0.2)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 8px 20px rgba(255, 0, 0, 0.1)';
+                e.currentTarget.style.boxShadow = '0 8px 20px rgba(244, 208, 63, 0.1)';
               }}
             >
               <CardContent className="p-8">
                 <div 
                   className="w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110"
                   style={{
-                    background: 'linear-gradient(135deg, #FF2D2D 0%, #B30000 50%, #C0C0C0 100%)',
-                    boxShadow: '0 4px 15px rgba(255, 45, 45, 0.3)'
+                    background: 'linear-gradient(135deg, #F4D03F 0%, #F1C40F 50%, #C0C0C0 100%)',
+                    boxShadow: '0 4px 15px rgba(244, 208, 63, 0.3)'
                   }}
                 >
                   <Phone className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
@@ -141,10 +142,10 @@ const ContactUs = () => {
                   Call us for immediate assistance
                 </p>
                 <div className="space-y-2">
-                  <a href="tel:+918249614004" className="text-[#FF2D2D] hover:underline font-semibold text-sm block break-all transition-colors hover:text-[#B30000]">
+                  <a href="tel:+918249614004" className="font-semibold text-sm block break-all transition-colors hover:underline" style={{ color: '#F4D03F' }}>
                     +91 8249614004
                   </a>
-                  <a href="tel:+919776433334" className="text-[#FF2D2D] hover:underline font-semibold text-sm block break-all transition-colors hover:text-[#B30000]">
+                  <a href="tel:+919776433334" className="font-semibold text-sm block break-all transition-colors hover:underline" style={{ color: '#F4D03F' }}>
                     +91 9776433334
                   </a>
                 </div>
@@ -154,24 +155,24 @@ const ContactUs = () => {
             <Card 
               className="transition-all duration-300 hover:-translate-y-1 cursor-pointer group"
               style={{
-                boxShadow: '0 8px 20px rgba(255, 0, 0, 0.1)',
+                boxShadow: '0 8px 20px rgba(244, 208, 63, 0.1)',
                 borderRadius: '20px'
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-5px)';
-                e.currentTarget.style.boxShadow = '0 10px 25px rgba(255, 0, 0, 0.2)';
+                e.currentTarget.style.boxShadow = '0 10px 25px rgba(244, 208, 63, 0.2)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 8px 20px rgba(255, 0, 0, 0.1)';
+                e.currentTarget.style.boxShadow = '0 8px 20px rgba(244, 208, 63, 0.1)';
               }}
             >
               <CardContent className="p-8">
                 <div 
                   className="w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110"
                   style={{
-                    background: 'linear-gradient(135deg, #FF2D2D 0%, #B30000 50%, #C0C0C0 100%)',
-                    boxShadow: '0 4px 15px rgba(255, 45, 45, 0.3)'
+                    background: 'linear-gradient(135deg, #F4D03F 0%, #F1C40F 50%, #C0C0C0 100%)',
+                    boxShadow: '0 4px 15px rgba(244, 208, 63, 0.3)'
                   }}
                 >
                   <Mail className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
@@ -180,7 +181,7 @@ const ContactUs = () => {
                 <p className="mb-4 text-sm" style={{ color: '#888' }}>
                   Send us an email anytime
                 </p>
-                <a href="mailto:sales@automex.in" className="text-[#FF2D2D] hover:underline font-semibold text-sm break-all transition-colors hover:text-[#B30000]">
+                <a href="mailto:sales@automex.in" className="font-semibold text-sm break-all transition-colors hover:underline" style={{ color: '#F4D03F' }}>
                   sales@automex.in
                 </a>
               </CardContent>
@@ -189,24 +190,24 @@ const ContactUs = () => {
             <Card 
               className="transition-all duration-300 hover:-translate-y-1 cursor-pointer group"
               style={{
-                boxShadow: '0 8px 20px rgba(255, 0, 0, 0.1)',
+                boxShadow: '0 8px 20px rgba(244, 208, 63, 0.1)',
                 borderRadius: '20px'
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-5px)';
-                e.currentTarget.style.boxShadow = '0 10px 25px rgba(255, 0, 0, 0.2)';
+                e.currentTarget.style.boxShadow = '0 10px 25px rgba(244, 208, 63, 0.2)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 8px 20px rgba(255, 0, 0, 0.1)';
+                e.currentTarget.style.boxShadow = '0 8px 20px rgba(244, 208, 63, 0.1)';
               }}
             >
               <CardContent className="p-8">
                 <div 
                   className="w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110"
                   style={{
-                    background: 'linear-gradient(135deg, #FF2D2D 0%, #B30000 50%, #C0C0C0 100%)',
-                    boxShadow: '0 4px 15px rgba(255, 45, 45, 0.3)'
+                    background: 'linear-gradient(135deg, #F4D03F 0%, #F1C40F 50%, #C0C0C0 100%)',
+                    boxShadow: '0 4px 15px rgba(244, 208, 63, 0.3)'
                   }}
                 >
                   <MapPin className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
@@ -237,7 +238,7 @@ const ContactUs = () => {
                   <label 
                     className={`absolute left-3 transition-all duration-300 pointer-events-none ${
                       focusedField === 'name' || formData.name 
-                        ? 'top-1 text-xs text-[#FF2D2D]' 
+                        ? 'top-1 text-xs text-[#F4D03F]' 
                         : 'top-1/2 -translate-y-1/2 text-sm text-gray-400'
                     }`}
                     htmlFor="name"
@@ -258,11 +259,11 @@ const ContactUs = () => {
                       required
                       className={`w-full pl-10 pr-4 py-3 text-base rounded-xl transition-all duration-300 ${
                         focusedField === 'name' 
-                          ? 'border-[#FF2D2D] ring-2 ring-[#FF2D2D]/20 bg-white/90' 
+                          ? 'border-[#F4D03F] ring-2 ring-[#F4D03F]/20 bg-white/90' 
                           : 'border-gray-300/50 bg-white/80'
                       }`}
                       style={{
-                        borderColor: focusedField === 'name' ? '#FF2D2D' : 'rgba(0,0,0,0.1)',
+                        borderColor: focusedField === 'name' ? '#F4D03F' : 'rgba(0,0,0,0.1)',
                         boxShadow: focusedField === 'name' ? '0 0 10px rgba(255, 45, 45, 0.4)' : '0 2px 8px rgba(0,0,0,0.05)',
                         borderRadius: '20px'
                       }}
@@ -275,7 +276,7 @@ const ContactUs = () => {
                     <label 
                       className={`absolute left-3 transition-all duration-300 pointer-events-none ${
                         focusedField === 'email' || formData.email 
-                          ? 'top-1 text-xs text-[#FF2D2D]' 
+                          ? 'top-1 text-xs text-[#F4D03F]' 
                           : 'top-1/2 -translate-y-1/2 text-sm text-gray-400'
                       }`}
                       htmlFor="email"
@@ -296,11 +297,11 @@ const ContactUs = () => {
                         required
                         className={`w-full pl-10 pr-4 py-3 text-base rounded-xl transition-all duration-300 ${
                           focusedField === 'email' 
-                            ? 'border-[#FF2D2D] ring-2 ring-[#FF2D2D]/20 bg-white/90' 
+                            ? 'border-[#F4D03F] ring-2 ring-[#F4D03F]/20 bg-white/90' 
                             : 'border-gray-300/50 bg-white/80'
                         }`}
                         style={{
-                          borderColor: focusedField === 'email' ? '#FF2D2D' : 'rgba(0,0,0,0.1)',
+                          borderColor: focusedField === 'email' ? '#F4D03F' : 'rgba(0,0,0,0.1)',
                           boxShadow: focusedField === 'email' ? '0 0 10px rgba(255, 45, 45, 0.4)' : '0 2px 8px rgba(0,0,0,0.05)',
                           borderRadius: '20px'
                         }}
@@ -311,7 +312,7 @@ const ContactUs = () => {
                     <label 
                       className={`absolute left-3 transition-all duration-300 pointer-events-none ${
                         focusedField === 'phone' || formData.phone 
-                          ? 'top-1 text-xs text-[#FF2D2D]' 
+                          ? 'top-1 text-xs text-[#F4D03F]' 
                           : 'top-1/2 -translate-y-1/2 text-sm text-gray-400'
                       }`}
                       htmlFor="phone"
@@ -332,11 +333,11 @@ const ContactUs = () => {
                         required
                         className={`w-full pl-10 pr-4 py-3 text-base rounded-xl transition-all duration-300 ${
                           focusedField === 'phone' 
-                            ? 'border-[#FF2D2D] ring-2 ring-[#FF2D2D]/20 bg-white/90' 
+                            ? 'border-[#F4D03F] ring-2 ring-[#F4D03F]/20 bg-white/90' 
                             : 'border-gray-300/50 bg-white/80'
                         }`}
                         style={{
-                          borderColor: focusedField === 'phone' ? '#FF2D2D' : 'rgba(0,0,0,0.1)',
+                          borderColor: focusedField === 'phone' ? '#F4D03F' : 'rgba(0,0,0,0.1)',
                           boxShadow: focusedField === 'phone' ? '0 0 10px rgba(255, 45, 45, 0.4)' : '0 2px 8px rgba(0,0,0,0.05)',
                           borderRadius: '20px'
                         }}
@@ -349,7 +350,7 @@ const ContactUs = () => {
                   <label 
                     className={`absolute left-3 transition-all duration-300 pointer-events-none ${
                       focusedField === 'subject' || formData.subject 
-                        ? 'top-1 text-xs text-[#FF2D2D]' 
+                        ? 'top-1 text-xs text-[#F4D03F]' 
                         : 'top-1/2 -translate-y-1/2 text-sm text-gray-400'
                     }`}
                     htmlFor="subject"
@@ -370,11 +371,11 @@ const ContactUs = () => {
                       required
                       className={`w-full pl-10 pr-4 py-3 text-base rounded-xl transition-all duration-300 ${
                         focusedField === 'subject' 
-                          ? 'border-[#FF2D2D] ring-2 ring-[#FF2D2D]/20 bg-white/90' 
+                          ? 'border-[#F4D03F] ring-2 ring-[#F4D03F]/20 bg-white/90' 
                           : 'border-gray-300/50 bg-white/80'
                       }`}
                       style={{
-                        borderColor: focusedField === 'subject' ? '#FF2D2D' : 'rgba(0,0,0,0.1)',
+                        borderColor: focusedField === 'subject' ? '#F4D03F' : 'rgba(0,0,0,0.1)',
                         boxShadow: focusedField === 'subject' ? '0 0 10px rgba(255, 45, 45, 0.4)' : '0 2px 8px rgba(0,0,0,0.05)',
                         borderRadius: '20px'
                       }}
@@ -386,7 +387,7 @@ const ContactUs = () => {
                   <label 
                     className={`absolute left-3 top-2 transition-all duration-300 pointer-events-none ${
                       focusedField === 'message' || formData.message 
-                        ? 'text-xs text-[#FF2D2D]' 
+                        ? 'text-xs text-[#F4D03F]' 
                         : 'text-sm text-gray-400'
                     }`}
                     htmlFor="message"
@@ -404,11 +405,11 @@ const ContactUs = () => {
                     required
                     className={`w-full min-h-[150px] text-base rounded-xl transition-all duration-300 resize-none pt-6 ${
                       focusedField === 'message' 
-                        ? 'border-[#FF2D2D] ring-2 ring-[#FF2D2D]/20 bg-white/90' 
+                        ? 'border-[#F4D03F] ring-2 ring-[#F4D03F]/20 bg-white/90' 
                         : 'border-gray-300/50 bg-white/80'
                     }`}
                     style={{
-                      borderColor: focusedField === 'message' ? '#FF2D2D' : 'rgba(0,0,0,0.1)',
+                      borderColor: focusedField === 'message' ? '#F4D03F' : 'rgba(0,0,0,0.1)',
                       boxShadow: focusedField === 'message' ? '0 0 10px rgba(255, 45, 45, 0.4)' : '0 2px 8px rgba(0,0,0,0.05)',
                       borderRadius: '20px'
                     }}
@@ -420,9 +421,9 @@ const ContactUs = () => {
                   size="lg" 
                   className="w-full sm:w-auto text-base sm:text-lg px-8 py-6 font-bold rounded-xl transition-all duration-300 hover:shadow-xl hover:scale-105 text-white"
                   style={{
-                    background: 'linear-gradient(90deg, #FF2D2D, #B30000)',
+                    background: 'linear-gradient(90deg, #F4D03F, #F1C40F)',
                     borderRadius: '20px',
-                    boxShadow: '0 4px 15px rgba(255, 45, 45, 0.4)'
+                    boxShadow: '0 4px 15px rgba(244, 208, 63, 0.4)'
                   }}
                 >
                   <Send className="w-5 h-5 mr-2" />
@@ -448,9 +449,9 @@ const ContactUs = () => {
                   <div 
                     className="w-16 h-16 rounded-full flex items-center justify-center mb-4 transition-transform duration-300 hover:scale-110"
                     style={{
-                      background: 'linear-gradient(135deg, #FF2D2D 0%, #B30000 50%, #C0C0C0 100%)',
-                      boxShadow: '0 4px 15px rgba(255, 45, 45, 0.4)',
-                      animation: 'redPulse 3s ease-in-out infinite'
+                      background: 'linear-gradient(135deg, #F4D03F 0%, #F1C40F 50%, #C0C0C0 100%)',
+                      boxShadow: '0 4px 15px rgba(244, 208, 63, 0.4)',
+                      animation: 'yellowPulse 3s ease-in-out infinite'
                     }}
                   >
                     <Clock className="w-8 h-8 text-white" />
@@ -468,9 +469,9 @@ const ContactUs = () => {
                   <div 
                     className="w-16 h-16 rounded-full flex items-center justify-center mb-4 transition-transform duration-300 hover:scale-110"
                     style={{
-                      background: 'linear-gradient(135deg, #FF2D2D 0%, #B30000 50%, #C0C0C0 100%)',
-                      boxShadow: '0 4px 15px rgba(255, 45, 45, 0.4)',
-                      animation: 'redPulse 3s ease-in-out infinite',
+                      background: 'linear-gradient(135deg, #F4D03F 0%, #F1C40F 50%, #C0C0C0 100%)',
+                      boxShadow: '0 4px 15px rgba(244, 208, 63, 0.4)',
+                      animation: 'yellowPulse 3s ease-in-out infinite',
                       animationDelay: '0.5s'
                     }}
                   >
@@ -489,9 +490,9 @@ const ContactUs = () => {
                   <div 
                     className="w-16 h-16 rounded-full flex items-center justify-center mb-4 transition-transform duration-300 hover:scale-110"
                     style={{
-                      background: 'linear-gradient(135deg, #FF2D2D 0%, #B30000 50%, #C0C0C0 100%)',
-                      boxShadow: '0 4px 15px rgba(255, 45, 45, 0.4)',
-                      animation: 'redPulse 3s ease-in-out infinite',
+                      background: 'linear-gradient(135deg, #F4D03F 0%, #F1C40F 50%, #C0C0C0 100%)',
+                      boxShadow: '0 4px 15px rgba(244, 208, 63, 0.4)',
+                      animation: 'yellowPulse 3s ease-in-out infinite',
                       animationDelay: '1s'
                     }}
                   >
@@ -510,7 +511,7 @@ const ContactUs = () => {
               <Card 
                 className="mt-8"
                 style={{
-                  boxShadow: '0 8px 20px rgba(255, 0, 0, 0.1)',
+                  boxShadow: '0 8px 20px rgba(244, 208, 63, 0.1)',
                   borderRadius: '20px'
                 }}
               >
@@ -518,31 +519,31 @@ const ContactUs = () => {
                   <h3 className="text-xl font-bold mb-4">Our Services</h3>
                   <ul className="space-y-2 text-sm" style={{ color: '#888' }}>
                     <li className="flex items-center gap-2">
-                      <span className="text-[#FF2D2D] text-lg">✓</span>
+                      <span className="text-[#F4D03F] text-lg">✓</span>
                       <span>Premium Car Services</span>
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-[#FF2D2D] text-lg">✓</span>
+                      <span className="text-[#F4D03F] text-lg">✓</span>
                       <span>AC Service & Repair</span>
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-[#FF2D2D] text-lg">✓</span>
+                      <span className="text-[#F4D03F] text-lg">✓</span>
                       <span>Battery Replacement</span>
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-[#FF2D2D] text-lg">✓</span>
+                      <span className="text-[#F4D03F] text-lg">✓</span>
                       <span>Tyres & Wheel Care</span>
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-[#FF2D2D] text-lg">✓</span>
+                      <span className="text-[#F4D03F] text-lg">✓</span>
                       <span>Denting & Painting</span>
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-[#FF2D2D] text-lg">✓</span>
+                      <span className="text-[#F4D03F] text-lg">✓</span>
                       <span>Car Detailing & Spa</span>
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-[#FF2D2D] text-lg">✓</span>
+                      <span className="text-[#F4D03F] text-lg">✓</span>
                       <span>Car Inspections</span>
                     </li>
                   </ul>
@@ -556,7 +557,7 @@ const ContactUs = () => {
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 sm:mb-8 text-center" style={{ fontSize: '2.2rem' }}>Find Us Here</h2>
             <Card
               style={{
-                boxShadow: '0 8px 20px rgba(255, 0, 0, 0.1)',
+                boxShadow: '0 8px 20px rgba(244, 208, 63, 0.1)',
                 borderRadius: '20px',
                 overflow: 'hidden'
               }}
@@ -584,12 +585,12 @@ const ContactUs = () => {
       
       {/* CSS Animations */}
       <style>{`
-        @keyframes redPulse {
+        @keyframes yellowPulse {
           0%, 100% {
-            box-shadow: 0 4px 15px rgba(255, 45, 45, 0.4);
+            box-shadow: 0 4px 15px rgba(244, 208, 63, 0.4);
           }
           50% {
-            box-shadow: 0 4px 25px rgba(255, 45, 45, 0.7), 0 0 30px rgba(255, 45, 45, 0.3);
+            box-shadow: 0 4px 25px rgba(244, 208, 63, 0.7), 0 0 30px rgba(244, 208, 63, 0.3);
           }
         }
         

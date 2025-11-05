@@ -72,20 +72,25 @@ const Hero = () => {
             </p>
             <div className="space-y-4 md:space-y-5 text-sm md:text-base lg:text-lg opacity-95 mb-10 md:mb-12">
               <div className="flex items-start gap-3 md:gap-4">
-                <span className="text-primary text-xl md:text-2xl flex-shrink-0 mt-0.5">✓</span>
+                <span className="flex-shrink-0 mt-0.5 text-xl md:text-2xl" style={{color: '#F4D03F'}}>✓</span>
                 <span className="leading-relaxed">Certified Technicians with 10+ Years Experience</span>
               </div>
               <div className="flex items-start gap-3 md:gap-4">
-                <span className="text-primary text-xl md:text-2xl flex-shrink-0 mt-0.5">✓</span>
+                <span className="flex-shrink-0 mt-0.5 text-xl md:text-2xl" style={{color: '#F4D03F'}}>✓</span>
                 <span className="leading-relaxed">100% Genuine Parts & Transparent Pricing</span>
               </div>
               <div className="flex items-start gap-3 md:gap-4">
-                <span className="text-primary text-xl md:text-2xl flex-shrink-0 mt-0.5">✓</span>
+                <span className="flex-shrink-0 mt-0.5 text-xl md:text-2xl" style={{color: '#F4D03F'}}>✓</span>
                 <span className="leading-relaxed">Real-Time Service Tracking</span>
               </div>
             </div>
             <div>
-              <span className="inline-block bg-primary text-white px-6 md:px-8 py-3 md:py-4 rounded-full text-sm md:text-base font-bold shadow-xl hover:bg-primary/90 transition-all">
+              <span 
+                className="inline-block text-black px-6 md:px-8 py-3 md:py-4 rounded-full text-sm md:text-base font-bold shadow-xl transition-all cursor-pointer" 
+                style={{backgroundColor: '#F4D03F'}}
+                onMouseEnter={(e) => (e.target as HTMLElement).style.backgroundColor = '#F1C40F'} 
+                onMouseLeave={(e) => (e.target as HTMLElement).style.backgroundColor = '#F4D03F'}
+              >
                 Crafted for Quality. Built on Trust
               </span>
             </div>

@@ -4,6 +4,14 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom hover color for AutoMex brand */
+.hover-automex {
+  transition: color 0.3s ease;
+}
+.hover-automex:hover {
+  color: #F4D03F !important;
+}
+
 /* AutoMex Brand Design System - Automotive Excellence Color Theme
 All colors MUST be HSL.
 */

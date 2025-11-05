@@ -1,141 +1,168 @@
-import { useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import Header from "@/components/Header";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Wrench, Sparkles, Droplet, Paintbrush, Battery, Shield } from "lucide-react";
+import ServiceCard from "@/components/ServiceCard";
+import CategoryTabs from "@/components/CategoryTabs";
+import BrandSelectorModal from "@/components/BrandSelectorModal";
+import { 
+  Car, 
+  Wind, 
+  Battery, 
+  Settings, 
+  Paintbrush, 
+  Sparkles
+} from "lucide-react";
 
 const Services = () => {
-  const { user, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  
+  const [selectedCategory, setSelectedCategory] = useState("car-services");
+  const [selectedBrand, setSelectedBrand] = useState("");
 
-  // Redirect to home if not authenticated
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate('/');
-    }
-  }, [isAuthenticated, navigate]);
+  // Service categories data
+  const serviceCategories = [
+    { id: "car-services", name: "Car Services", icon: <Car className="h-6 w-6" /> },
+    { id: "ac-service", name: "AC Service & Repair", icon: <Wind className="h-6 w-6" /> },
+    { id: "batteries", name: "Batteries", icon: <Battery className="h-6 w-6" /> },
+    { id: "tyres", name: "Tyres & Wheel Care", icon: <Settings className="h-6 w-6" /> },
+    { id: "denting", name: "Denting & Painting", icon: <Paintbrush className="h-6 w-6" /> },
+    { id: "detailing", name: "Detailing Services", icon: <Sparkles className="h-6 w-6" /> },
+  ];
 
-  if (!isAuthenticated) {
-    return null;
-  }
-
-  const services = [
+  // Mock service packages data
+  const servicePackages = [
     {
-      id: 1,
-      name: "AC Service",
-      description: "Complete AC system check and repair",
-      icon: Sparkles,
-      price: "₹899",
-      duration: "2-3 hours"
+      id: "basic-service",
+      name: "Basic Service",
+      thumbnail: "",
+      warranty: "1000 Kms or 3 Months Warranty",
+      recommended: "Every 5000 Kms or 6 Months (Recommended)",
+      features: [
+        { name: "Wiper Fluid Replacement", included: true },
+        { name: "Car Wash", included: true },
+        { name: "Engine Oil Replacement", included: true },
+        { name: "Battery Water Top Up", included: true },
+        { name: "Interior Vacuuming (Carpet & Seats)", included: true },
+      ],
+      moreServicesCount: 4,
+      originalPrice: 3559,
+      discountedPrice: 2669,
+      duration: "4 Hrs Taken",
+      offer: {
+        price: 2169,
+        discount: "Extra ₹500 OFF",
+        badgeColor: "bg-green-500"
+      },
+      isRecommended: false
     },
     {
-      id: 2,
-      name: "Car Spa",
-      description: "Premium interior and exterior cleaning",
-      icon: Droplet,
-      price: "₹1,299",
-      duration: "3-4 hours"
-    },
-    {
-      id: 3,
-      name: "Denting & Painting",
-      description: "Professional body repair and painting",
-      icon: Paintbrush,
-      price: "₹2,999",
-      duration: "1-2 days"
-    },
-    {
-      id: 4,
-      name: "Battery Replacement",
-      description: "Car battery check and replacement",
-      icon: Battery,
-      price: "₹3,499",
-      duration: "1 hour"
-    },
-    {
-      id: 5,
-      name: "General Service",
-      description: "Comprehensive vehicle servicing",
-      icon: Wrench,
-      price: "₹1,999",
-      duration: "4-5 hours"
-    },
-    {
-      id: 6,
-      name: "Insurance Support",
-      description: "Insurance claim assistance",
-      icon: Shield,
-      price: "Free",
-      duration: "N/A"
+      id: "standard-service",
+      name: "Standard Service",
+      thumbnail: "",
+      warranty: "1000 Kms or 3 Months Warranty",
+      recommended: "Every 10,000 Kms or 6 Months (Recommended)",
+      features: [
+        { name: "Car Scanning", included: true },
+        { name: "Battery Water Top up", included: true },
+        { name: "Interior Vacuuming (Carpet & Seats)", included: true },
+        { name: "Wiper Fluid Replacement", included: true },
+        { name: "Car Wash", included: true },
+      ],
+      moreServicesCount: 10,
+      originalPrice: 4813,
+      discountedPrice: 3369,
+      duration: "6 Hrs Taken",
+      isRecommended: true
     }
   ];
 
+  const handleAddToCart = (serviceId: string, serviceName: string) => {
+    console.log(`Adding to cart: ${serviceName} (ID: ${serviceId})`);
+    
+    if (!isAuthenticated) {
+      navigate('/', { state: { showAuth: true } });
+      return;
+    }
+    
+    // Handle authenticated user cart logic here
+    alert(`${serviceName} added to cart!`);
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <div className="min-h-screen bg-white font-inter">
       <Header />
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-primary to-primary/90 text-white py-16">
-        <div className="container mx-auto px-4">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Welcome back, {user?.full_name || user?.email}!
-          </h1>
-          <p className="text-xl text-white/90">
-            Choose from our premium car services
-          </p>
-        </div>
-      </div>
-
-      {/* Services Grid */}
-      <div className="container mx-auto px-4 py-12">
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Our Services</h2>
-          <p className="text-gray-600">Select a service to book an appointment</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {services.map((service) => {
-            const Icon = service.icon;
-            return (
-              <Card key={service.id} className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <div className="flex items-center justify-between mb-2">
-                    <Icon className="h-8 w-8 text-primary" />
-                    <span className="text-2xl font-bold text-primary">{service.price}</span>
-                  </div>
-                  <CardTitle className="text-xl">{service.name}</CardTitle>
-                  <CardDescription>{service.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">Duration: {service.duration}</span>
-                    <Button className="bg-primary hover:bg-primary/90">
-                      Book Now
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Info Section */}
-      <div className="bg-gray-100 py-12">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">150+ Services</h3>
-              <p className="text-gray-600">Comprehensive car care solutions</p>
+      
+      {/* Main Content */}
+      <div className="pt-20 pb-8">
+        {/* Service Categories and Brand Selection */}
+        <div className="container mx-auto px-4 mb-8">
+          <div className="flex items-center gap-4">
+            {/* Service Categories */}
+            <div className="flex-1">
+              <CategoryTabs
+                categories={serviceCategories}
+                activeCategory={selectedCategory}
+                onCategoryChange={setSelectedCategory}
+              />
             </div>
-            <div className="text-center">
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">Free Pickup</h3>
-              <p className="text-gray-600">Doorstep service at your convenience</p>
+
+            {/* Brand Selector */}
+            <div className="flex-shrink-0">
+              <BrandSelectorModal
+                selectedBrand={selectedBrand}
+                onBrandSelect={setSelectedBrand}
+              />
             </div>
-            <div className="text-center">
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">40% Off</h3>
-              <p className="text-gray-600">Best prices guaranteed</p>
+          </div>
+        </div>
+
+        {/* Scheduled Packages Section */}
+        <div className="container mx-auto px-4">
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-gray-900">Scheduled Packages</h2>
+          </div>
+
+          {/* Service Cards */}
+          <div className="space-y-6">
+            {servicePackages.map((pkg) => (
+              <ServiceCard
+                key={pkg.id}
+                id={pkg.id}
+                name={pkg.name}
+                thumbnail={pkg.thumbnail}
+                warranty={pkg.warranty}
+                recommended={pkg.recommended}
+                features={pkg.features}
+                moreServicesCount={pkg.moreServicesCount}
+                originalPrice={pkg.originalPrice}
+                discountedPrice={pkg.discountedPrice}
+                duration={pkg.duration}
+                offer={pkg.offer}
+                isRecommended={pkg.isRecommended}
+                onAddToCart={handleAddToCart}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Info Section */}
+        <div className="bg-gray-100 py-12 mt-12">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="text-center">
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">150+ Services</h3>
+                <p className="text-gray-600">Comprehensive car care solutions</p>
+              </div>
+              <div className="text-center">
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Free Pickup</h3>
+                <p className="text-gray-600">Doorstep service at your convenience</p>
+              </div>
+              <div className="text-center">
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">40% Off</h3>
+                <p className="text-gray-600">Best prices guaranteed</p>
+              </div>
             </div>
           </div>
         </div>
@@ -145,4 +172,3 @@ const Services = () => {
 };
 
 export default Services;
-
