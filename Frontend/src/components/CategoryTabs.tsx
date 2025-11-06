@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 interface CategoryTab {
   id: string;
@@ -14,100 +14,131 @@ interface CategoryTabsProps {
 }
 
 const CategoryTabs = ({ categories, activeCategory, onCategoryChange }: CategoryTabsProps) => {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [showLeftArrow, setShowLeftArrow] = useState(false);
-  const [showRightArrow, setShowRightArrow] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+  const CATEGORIES_PER_PAGE = 6;
+  const totalPages = Math.ceil(categories.length / CATEGORIES_PER_PAGE);
 
-  const checkScrollability = () => {
-    if (scrollContainerRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
-      setShowLeftArrow(scrollLeft > 0);
-      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 5);
-    }
-  };
-
+  // Auto-navigate to page containing active category
   useEffect(() => {
-    // Check scrollability on mount and when categories change
-    setTimeout(checkScrollability, 100);
-  }, [categories]);
+    const activeIndex = categories.findIndex(cat => cat.id === activeCategory);
+    if (activeIndex !== -1) {
+      const activePage = Math.floor(activeIndex / CATEGORIES_PER_PAGE);
+      setCurrentPage(activePage);
+    }
+  }, [activeCategory, categories]);
 
-  const scrollLeft = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: -250, behavior: 'smooth' });
+  const getCurrentPageCategories = () => {
+    const startIndex = currentPage * CATEGORIES_PER_PAGE;
+    return categories.slice(startIndex, startIndex + CATEGORIES_PER_PAGE);
+  };
+
+  const goToPreviousPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
     }
   };
 
-  const scrollRight = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: 250, behavior: 'smooth' });
+  const goToNextPage = () => {
+    if (currentPage < totalPages - 1) {
+      setCurrentPage(currentPage + 1);
     }
   };
 
-  const handleScroll = () => {
-    checkScrollability();
-  };
+  const showLeftArrow = currentPage > 0;
+  const showRightArrow = currentPage < totalPages - 1;
 
   return (
-    <div className="relative bg-white py-3 px-4">
+    <div className="relative bg-white py-4 px-4">
       {/* Left Arrow */}
       {showLeftArrow && (
         <button 
-          onClick={scrollLeft}
-          className="absolute left-2 top-1/2 transform -translate-y-1/2 z-20 bg-gray-100 hover:bg-gray-200 rounded-full p-2 shadow-sm transition-all"
+          onClick={goToPreviousPage}
+          className="absolute left-2 top-1/2 transform -translate-y-1/2 z-20 bg-gray-100 hover:bg-gray-200 rounded-full p-3 shadow-lg transition-all duration-200 hover:shadow-xl"
         >
-          <ChevronLeft className="h-4 w-4 text-gray-600" />
+          <ChevronLeft className="h-4 w-4 text-gray-700" />
         </button>
       )}
       
       {/* Categories Container */}
-      <div 
-        ref={scrollContainerRef}
-        className="flex gap-4 overflow-x-auto scroll-smooth snap-x [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] px-8"
-        onScroll={handleScroll}
-      >
-        {categories.map((category) => {
-          const isActive = category.id === activeCategory;
-          return (
-            <button
-              key={category.id}
-              onClick={() => onCategoryChange(category.id)}
-              className={`flex flex-col items-center min-w-[120px] max-w-[140px] py-4 px-3 rounded-xl transition-all duration-200 snap-center relative ${
-                isActive 
-                  ? 'bg-red-50' 
-                  : 'bg-white hover:bg-gray-50'
-              }`}
-            >
-              {/* Icon Container */}
-              <div className="w-12 h-12 flex items-center justify-center mb-3">
-                <div className={`transition-colors ${isActive ? 'text-red-600' : 'text-gray-600 hover:text-gray-700'}`}>
-                  {category.icon}
+      <div className="px-12">
+        <div className="grid grid-cols-6 gap-4 transition-all duration-500 ease-in-out">
+          {getCurrentPageCategories().map((category) => {
+            const isActive = category.id === activeCategory;
+            return (
+              <button
+                key={category.id}
+                onClick={() => onCategoryChange(category.id)}
+                className={`flex flex-col items-center py-5 px-3 rounded-xl transition-all duration-300 relative ${
+                  isActive 
+                    ? 'bg-red-50' 
+                    : 'bg-white hover:bg-gray-50'
+                }`}
+                style={isActive ? { backgroundColor: '#FFF5F5' } : {}}
+              >
+                {/* Icon Container */}
+                <div className={`w-20 h-20 flex items-center justify-center mb-3 transition-all duration-300 ${
+                  isActive ? 'transform scale-110' : 'transform scale-100 hover:scale-105'
+                }`}>
+                  <div 
+                    className={`transition-all duration-300 ${
+                      isActive ? 'text-red-600' : 'text-gray-600 hover:text-gray-700'
+                    }`}
+                    style={isActive ? {
+                      filter: 'hue-rotate(0deg) saturate(1.5) brightness(1.1) drop-shadow(0 2px 4px rgba(220, 38, 38, 0.25))',
+                      transform: 'scale(1)'
+                    } : {}}
+                  >
+                    {category.icon}
+                  </div>
                 </div>
-              </div>
-              
-              {/* Category Name */}
-              <span className={`text-sm text-center leading-tight transition-colors font-inter ${
-                isActive ? 'text-gray-900 font-bold' : 'text-gray-700 font-medium hover:text-gray-900'
-              }`}>
-                {category.name}
-              </span>
-              
-              {/* Active Underline */}
-              {isActive && (
-                <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-red-600 rounded-t-full"></div>
-              )}
-            </button>
-          );
-        })}
+                
+                {/* Category Name */}
+                <span className={`text-sm text-center leading-tight transition-all duration-300 font-inter whitespace-nowrap overflow-hidden text-ellipsis max-w-full ${
+                  isActive ? 'text-black font-bold' : 'text-gray-700 font-medium hover:text-gray-900'
+                }`}>
+                  {category.name}
+                </span>
+                
+                {/* Active Underline */}
+                {isActive && (
+                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-red-600 rounded-t-full transition-all duration-300 animate-in slide-in-from-bottom-2"></div>
+                )}
+              </button>
+            );
+          })}
+          
+          {/* Fill empty slots if less than 6 categories on current page */}
+          {getCurrentPageCategories().length < CATEGORIES_PER_PAGE && 
+            Array.from({ length: CATEGORIES_PER_PAGE - getCurrentPageCategories().length }).map((_, index) => (
+              <div key={`empty-${index}`} className="invisible"></div>
+            ))
+          }
+        </div>
       </div>
       
       {/* Right Arrow */}
       {showRightArrow && (
         <button 
-          onClick={scrollRight}
-          className="absolute right-2 top-1/2 transform -translate-y-1/2 z-20 bg-gray-100 hover:bg-gray-200 rounded-full p-2 shadow-sm transition-all"
+          onClick={goToNextPage}
+          className="absolute right-2 top-1/2 transform -translate-y-1/2 z-20 bg-gray-100 hover:bg-gray-200 rounded-full p-3 shadow-lg transition-all duration-200 hover:shadow-xl"
         >
-          <ChevronRight className="h-4 w-4 text-gray-600" />
+          <ChevronRight className="h-4 w-4 text-gray-700" />
         </button>
+      )}
+      
+      {/* Page Indicators */}
+      {totalPages > 1 && (
+        <div className="flex justify-center mt-4 gap-2">
+          {Array.from({ length: totalPages }).map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentPage(index)}
+              className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                index === currentPage ? 'bg-red-600' : 'bg-gray-300 hover:bg-gray-400'
+              }`}
+            />
+          ))}
+        </div>
       )}
     </div>
   );

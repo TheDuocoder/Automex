@@ -18,62 +18,62 @@ const Services = () => {
     { 
       id: "car-services", 
       name: "Car Services", 
-      icon: <img src="/images/service_icons/car_service.png" alt="Car Services" className="h-7 w-7 object-contain" /> 
+      icon: <img src="/images/service_icons/car_service.png" alt="Car Services" className="h-14 w-14 object-contain" /> 
     },
     { 
       id: "ac-service", 
       name: "AC Service & Repair", 
-      icon: <img src="/images/service_icons/car_ac_services.png" alt="AC Service & Repair" className="h-7 w-7 object-contain" /> 
+      icon: <img src="/images/service_icons/car_ac_services.png" alt="AC Service & Repair" className="h-14 w-14 object-contain" /> 
     },
     { 
       id: "batteries", 
       name: "Batteries", 
-      icon: <img src="/images/service_icons/battery.png" alt="Batteries" className="h-7 w-7 object-contain" /> 
+      icon: <img src="/images/service_icons/battery.png" alt="Batteries" className="h-14 w-14 object-contain" /> 
     },
     { 
       id: "tyres", 
       name: "Tyres & Wheel Care", 
-      icon: <img src="/images/service_icons/tyres_and_wheels_care.png" alt="Tyres & Wheel Care" className="h-7 w-7 object-contain" /> 
+      icon: <img src="/images/service_icons/car_tyre and wheels_care.png" alt="Tyres & Wheel Care" className="h-14 w-14 object-contain" /> 
     },
     { 
       id: "denting", 
       name: "Denting & Painting", 
-      icon: <img src="/images/service_icons/car_denting and painting1.png" alt="Denting & Painting" className="h-7 w-7 object-contain" /> 
+      icon: <img src="/images/service_icons/car_denting and painting1.png" alt="Denting & Painting" className="h-14 w-14 object-contain" /> 
     },
     { 
       id: "detailing", 
       name: "Detailing Services", 
-      icon: <img src="/images/service_icons/car_detailing_services.png" alt="Detailing Services" className="h-7 w-7 object-contain" /> 
+      icon: <img src="/images/service_icons/car_detailing_services.png" alt="Detailing Services" className="h-14 w-14 object-contain" /> 
     },
     { 
       id: "suspension-fitting", 
       name: "Suspension and Fitting", 
-      icon: <img src="/images/service_icons/car_suspensions and fitments.png" alt="Suspension and Fitting" className="h-7 w-7 object-contain" /> 
+      icon: <img src="/images/service_icons/car_suspensions and fitments.png" alt="Suspension and Fitting" className="h-14 w-14 object-contain" /> 
     },
     { 
       id: "car-spa", 
       name: "Spa and Cleaning", 
-      icon: <img src="/images/service_icons/car_spa and cleaning.png" alt="Spa and Cleaning" className="h-7 w-7 object-contain" /> 
+      icon: <img src="/images/service_icons/car_spa and cleaning.png" alt="Spa and Cleaning" className="h-14 w-14 object-contain" /> 
     },
     { 
       id: "clutch-body-parts", 
       name: "Clutch and Body Parts", 
-      icon: <img src="/images/service_icons/clutch and body_parts.png" alt="Clutch and Body Parts" className="h-7 w-7 object-contain" /> 
+      icon: <img src="/images/service_icons/car_clutch and body_parts.png" alt="Clutch and Body Parts" className="h-14 w-14 object-contain" /> 
     },
     { 
       id: "windshield-lights", 
       name: "Windshield and Lights", 
-      icon: <img src="/images/service_icons/car_windshiled and lights2.png" alt="Windshield and Lights" className="h-7 w-7 object-contain" /> 
+      icon: <img src="/images/service_icons/car_windshiled and lights2.png" alt="Windshield and Lights" className="h-14 w-14 object-contain" /> 
     },
     { 
       id: "car-inspections", 
-      name: "Car Inspections", 
-      icon: <img src="/images/service_icons/car-inspection.png" alt="Car Inspections" className="h-7 w-7 object-contain" /> 
+      name: "Inspection", 
+      icon: <img src="/images/service_icons/car-inspection.png" alt="Inspection" className="h-14 w-14 object-contain" /> 
     },
     { 
       id: "car-insurance", 
-      name: "Car Insurance", 
-      icon: <img src="/images/service_icons/car_insurance.png" alt="Car Insurance" className="h-7 w-7 object-contain" /> 
+      name: "Insurance", 
+      icon: <img src="/images/service_icons/car_insurance1.png" alt="Insurance" className="h-14 w-14 object-contain" /> 
     },
   ];
 
