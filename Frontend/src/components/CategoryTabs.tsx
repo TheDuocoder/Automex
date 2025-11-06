@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 interface CategoryTab {
   id: string;
@@ -16,21 +16,9 @@ interface CategoryTabsProps {
 const CategoryTabs = ({ categories, activeCategory, onCategoryChange }: CategoryTabsProps) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
-  const [showRightArrow, setShowRightArrow] = useState(true);
+  const [showRightArrow, setShowRightArrow] = useState(false);
 
-  const scrollLeft = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: -200, behavior: 'smooth' });
-    }
-  };
-
-  const scrollRight = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: 200, behavior: 'smooth' });
-    }
-  };
-
-  const handleScroll = () => {
+  const checkScrollability = () => {
     if (scrollContainerRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
       setShowLeftArrow(scrollLeft > 0);
@@ -38,22 +26,43 @@ const CategoryTabs = ({ categories, activeCategory, onCategoryChange }: Category
     }
   };
 
+  useEffect(() => {
+    // Check scrollability on mount and when categories change
+    setTimeout(checkScrollability, 100);
+  }, [categories]);
+
+  const scrollLeft = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: -250, behavior: 'smooth' });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: 250, behavior: 'smooth' });
+    }
+  };
+
+  const handleScroll = () => {
+    checkScrollability();
+  };
+
   return (
-    <div className="relative">
+    <div className="relative bg-white py-3 px-4">
       {/* Left Arrow */}
       {showLeftArrow && (
         <button 
           onClick={scrollLeft}
-          className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full p-2 shadow-lg hover:shadow-xl transition-shadow"
+          className="absolute left-2 top-1/2 transform -translate-y-1/2 z-20 bg-gray-100 hover:bg-gray-200 rounded-full p-2 shadow-sm transition-all"
         >
-          <ChevronLeft className="h-5 w-5 text-gray-600" />
+          <ChevronLeft className="h-4 w-4 text-gray-600" />
         </button>
       )}
       
       {/* Categories Container */}
       <div 
         ref={scrollContainerRef}
-        className="flex gap-1 overflow-x-auto pb-2 bg-gray-50 rounded-lg p-2 mx-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+        className="flex gap-4 overflow-x-auto scroll-smooth snap-x [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] px-8"
         onScroll={handleScroll}
       >
         {categories.map((category) => {
@@ -62,24 +71,30 @@ const CategoryTabs = ({ categories, activeCategory, onCategoryChange }: Category
             <button
               key={category.id}
               onClick={() => onCategoryChange(category.id)}
-              className={`flex flex-col items-center min-w-[140px] p-4 rounded-lg transition-all duration-200 ${
+              className={`flex flex-col items-center min-w-[120px] max-w-[140px] py-4 px-3 rounded-xl transition-all duration-200 snap-center relative ${
                 isActive 
-                  ? 'bg-white shadow-sm border-b-2 border-red-500' 
-                  : 'hover:bg-white/50'
+                  ? 'bg-red-50' 
+                  : 'bg-white hover:bg-gray-50'
               }`}
             >
-              <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-2 ${
-                isActive ? 'bg-red-50' : 'bg-gray-100'
-              }`}>
-                <div className={`${isActive ? 'text-red-500' : 'text-gray-600'}`}>
+              {/* Icon Container */}
+              <div className="w-12 h-12 flex items-center justify-center mb-3">
+                <div className={`transition-colors ${isActive ? 'text-red-600' : 'text-gray-600 hover:text-gray-700'}`}>
                   {category.icon}
                 </div>
               </div>
-              <span className={`text-sm font-medium text-center leading-tight ${
-                isActive ? 'text-red-600' : 'text-gray-700'
+              
+              {/* Category Name */}
+              <span className={`text-sm text-center leading-tight transition-colors font-inter ${
+                isActive ? 'text-gray-900 font-bold' : 'text-gray-700 font-medium hover:text-gray-900'
               }`}>
                 {category.name}
               </span>
+              
+              {/* Active Underline */}
+              {isActive && (
+                <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-red-600 rounded-t-full"></div>
+              )}
             </button>
           );
         })}
@@ -89,9 +104,9 @@ const CategoryTabs = ({ categories, activeCategory, onCategoryChange }: Category
       {showRightArrow && (
         <button 
           onClick={scrollRight}
-          className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full p-2 shadow-lg hover:shadow-xl transition-shadow"
+          className="absolute right-2 top-1/2 transform -translate-y-1/2 z-20 bg-gray-100 hover:bg-gray-200 rounded-full p-2 shadow-sm transition-all"
         >
-          <ChevronRight className="h-5 w-5 text-gray-600" />
+          <ChevronRight className="h-4 w-4 text-gray-600" />
         </button>
       )}
     </div>

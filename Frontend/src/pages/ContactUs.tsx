@@ -73,10 +73,10 @@ const ContactUs = () => {
         />
         
         {/* Content */}
-        <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-10 max-w-4xl relative z-[2]">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 md:gap-6 mb-3 sm:mb-4 md:mb-5 max-w-3xl mx-auto">
+        <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-10 max-w-7xl relative z-[2]">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 md:gap-6 mb-3 sm:mb-4 md:mb-5">
             <h1 
-              className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl xl:text-4xl font-bold tracking-tight order-2 sm:order-1 relative inline-block pb-3"
+              className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tight order-2 sm:order-1 relative inline-block pb-3"
               style={{
                 textShadow: '0 0 20px rgba(244, 208, 63, 0.5), 0 0 40px rgba(244, 208, 63, 0.3)'
               }}
@@ -100,7 +100,7 @@ const ContactUs = () => {
               Back to Home
             </Button>
           </div>
-          <p className="text-xs sm:text-sm md:text-sm lg:text-base xl:text-lg max-w-xl mx-auto text-center leading-relaxed" style={{ color: '#F2F2F2' }}>
+          <p className="text-xs sm:text-sm md:text-sm lg:text-base xl:text-lg max-w-2xl md:max-w-3xl leading-relaxed" style={{ color: '#F2F2F2' }}>
             Have questions about our services? We're here to help!<br className="hidden sm:block" />
             <span className="sm:hidden"> </span>Reach out to us and we'll respond as soon as possible.
           </p>

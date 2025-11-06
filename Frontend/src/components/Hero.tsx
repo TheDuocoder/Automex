@@ -86,7 +86,7 @@ const Hero = () => {
             </div>
             <div>
               <span 
-                className="inline-block text-black px-6 md:px-8 py-3 md:py-4 rounded-full text-sm md:text-base font-bold shadow-xl transition-all cursor-pointer" 
+                className="inline-block text-black px-4 md:px-6 py-2 md:py-3 rounded-full text-sm md:text-base font-bold shadow-xl transition-all cursor-pointer" 
                 style={{backgroundColor: '#F4D03F'}}
                 onMouseEnter={(e) => (e.target as HTMLElement).style.backgroundColor = '#F1C40F'} 
                 onMouseLeave={(e) => (e.target as HTMLElement).style.backgroundColor = '#F4D03F'}

@@ -94,7 +94,7 @@ const BrandSelectorModal = ({ selectedBrand, onBrandSelect }: BrandSelectorModal
               <button
                 key={brand.id}
                 onClick={() => handleBrandSelect(brand.name)}
-                className="flex flex-col items-center p-3 rounded-lg border border-gray-200 hover:border-red-300 hover:bg-red-50 transition-all duration-200 hover:scale-105"
+                className="flex flex-col items-center p-3 rounded-lg border border-gray-200 hover:border-[#D32F2F] hover:bg-red-50 transition-all duration-200 hover:scale-105 cursor-pointer"
               >
                 <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mb-2 text-xl">
                   {brand.logo}
