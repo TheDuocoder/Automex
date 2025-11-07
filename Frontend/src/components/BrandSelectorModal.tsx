@@ -1,15 +1,10 @@
-import { useMemo, useState } from "react";
-import { Search, X, Car } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Search, X, Car, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-
-interface CarBrand {
-  id: string;
-  name: string;
-  logo: string;
-}
+import { useCarSelectionStore, type FuelType } from "@/stores/carSelectionStore";
 
 interface BrandSelectorModalProps {
   selectedBrand?: string;
@@ -26,39 +21,301 @@ const BrandSelectorModal = ({
 }: BrandSelectorModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const {
+    catalog,
+    selectedBrandId,
+    selectedModelId,
+    selectedFuelType,
+    selectBrand,
+    selectModel,
+    selectFuelType,
+    clearBrand,
+    clearModel,
+  } = useCarSelectionStore();
 
-  const carBrands: CarBrand[] = [
-    { id: "audi", name: "Audi", logo: "/images/car_brands/audicarlogo.png" },
-    { id: "bmw", name: "BMW", logo: "/images/car_brands/bmwcarlogo.png" },
-    { id: "fiat", name: "Fiat", logo: "/images/car_brands/fiatcarlogo.png" },
-    { id: "ford", name: "Ford", logo: "/images/car_brands/fordcarlogo.png" },
-    { id: "hyundai", name: "Hyundai", logo: "/images/car_brands/hundaicarlogo.png" },
-    { id: "kia", name: "Kia", logo: "/images/car_brands/kiacarlogo.png" },
-    { id: "land-rover", name: "Land Rover", logo: "/images/car_brands/landrover.png" },
-    { id: "lexus", name: "Lexus", logo: "/images/car_brands/lexuscarlogo.png" },
-    { id: "maruti-suzuki", name: "Maruti Suzuki", logo: "/images/car_brands/suzukicarlogo.png" },
-    { id: "mercedes", name: "Mercedes-Benz", logo: "/images/car_brands/mercidiescarlogo.png" },
-    { id: "mg", name: "MG", logo: "/images/car_brands/mgcarlogo.png" },
-    { id: "nissan", name: "Nissan", logo: "/images/car_brands/nissancarlogo.png" },
-    { id: "skoda", name: "Skoda", logo: "/images/car_brands/skoda.png" },
-    { id: "tata", name: "Tata Motors", logo: "/images/car_brands/tatacarlogo.png" },
-    { id: "toyota", name: "Toyota", logo: "/images/car_brands/toyotacarlogo.png" },
-    { id: "volkswagen", name: "Volkswagen", logo: "/images/car_brands/volkswagancarlogo.png" },
-    { id: "volvo", name: "Volvo", logo: "/images/car_brands/volvocarlogo.png" },
-  ];
-
-  const filteredBrands = useMemo(() => {
-    return carBrands.filter((brand) =>
-    brand.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const selectedBrandEntity = useMemo(
+    () => catalog.find((brand) => brand.id === selectedBrandId),
+    [catalog, selectedBrandId]
   );
-  }, [searchTerm]);
 
-  const handleBrandSelect = (brandName: string) => {
-    onBrandSelect(brandName);
-    if (variant === "modal") {
-    setIsOpen(false);
+  const selectedModelEntity = useMemo(
+    () => selectedBrandEntity?.models.find((model) => model.id === selectedModelId),
+    [selectedBrandEntity, selectedModelId]
+  );
+
+  type Stage = "brand" | "model" | "fuel";
+
+  const stage: Stage = selectedBrandEntity
+    ? selectedModelEntity
+      ? "fuel"
+      : "model"
+    : "brand";
+
+  useEffect(() => {
     setSearchTerm("");
+  }, [stage]);
+
+  const normalizedSearch = searchTerm.trim().toLowerCase();
+
+  const filteredBrandList = useMemo(
+    () =>
+      catalog.filter((brand) =>
+        brand.name.toLowerCase().includes(normalizedSearch)
+      ),
+    [catalog, normalizedSearch]
+  );
+
+  const filteredModelList = useMemo(
+    () =>
+      selectedBrandEntity
+        ? selectedBrandEntity.models.filter((model) =>
+            model.name.toLowerCase().includes(normalizedSearch)
+          )
+        : [],
+    [selectedBrandEntity, normalizedSearch]
+  );
+
+  const searchPlaceholder =
+    stage === "brand"
+      ? "Search Brands"
+      : stage === "model"
+        ? "Search Models"
+        : "";
+
+  const showSearch = stage !== "fuel";
+
+  const handleBrandClick = (brandId: string, brandName: string) => {
+    selectBrand(brandId);
+    onBrandSelect(brandName);
+  };
+
+  const handleModelClick = (modelId: string) => {
+    selectModel(modelId);
+  };
+
+  const handleFuelClick = (fuel: FuelType) => {
+    selectFuelType(fuel);
+    if (variant === "modal") {
+      setIsOpen(false);
     }
+  };
+
+  const handleBack = () => {
+    if (stage === "fuel") {
+      clearModel();
+    } else if (stage === "model") {
+      clearBrand();
+      onBrandSelect("");
+    }
+  };
+
+  const renderEmptyState = (
+    title: string,
+    subtitle: string,
+    layout: "sidebar" | "modal"
+  ) => (
+    <div
+      className={cn(
+        "text-center py-8 text-gray-500",
+        layout === "sidebar" ? "col-span-2" : "col-span-3"
+      )}
+    >
+      <Car className="h-10 w-10 mx-auto mb-2 text-gray-300" />
+      <p className="text-sm">{title}</p>
+      <p className="text-xs text-gray-400">{subtitle}</p>
+    </div>
+  );
+
+  const renderBrandGrid = (layout: "sidebar" | "modal") => (
+    <div
+      className={cn(
+        layout === "sidebar"
+          ? "grid grid-cols-2 gap-3 max-h-[calc(100vh-16rem)] overflow-y-auto pr-1"
+          : "grid grid-cols-3 gap-4 max-h-60 overflow-y-auto"
+      )}
+    >
+      {filteredBrandList.map((brand) => {
+        const isSelected = selectedBrandId === brand.id;
+        return (
+          <button
+            key={brand.id}
+            onClick={() => handleBrandClick(brand.id, brand.name)}
+            className={cn(
+              "flex flex-col items-center p-2.5 rounded-xl border transition-all duration-200 bg-white",
+              isSelected
+                ? "border-[#D32F2F] bg-red-50 text-[#D32F2F] shadow-sm"
+                : "border-gray-200 hover:border-[#D32F2F] hover:bg-red-50 hover:shadow"
+            )}
+          >
+            <div className="w-11 h-11 bg-gray-100 rounded-full flex items-center justify-center mb-2 overflow-hidden">
+              <img
+                src={brand.logo}
+                alt={`${brand.name} logo`}
+                className="h-9 w-9 object-contain"
+                loading="lazy"
+                onError={(e) => {
+                  e.currentTarget.src = "/placeholder.svg";
+                }}
+              />
+            </div>
+            <span className="text-xs text-center font-medium text-gray-700 leading-tight">
+              {brand.name}
+            </span>
+          </button>
+        );
+      })}
+
+      {filteredBrandList.length === 0 &&
+        renderEmptyState("No brands found", "Try adjusting your search", layout)}
+    </div>
+  );
+
+  const renderModelGrid = (layout: "sidebar" | "modal") => (
+    <div
+      className={cn(
+        layout === "sidebar"
+          ? "grid grid-cols-2 gap-3 max-h-[calc(100vh-16rem)] overflow-y-auto pr-1"
+          : "grid grid-cols-3 gap-4 max-h-60 overflow-y-auto"
+      )}
+    >
+      {filteredModelList.map((model) => {
+        const isSelected = selectedModelId === model.id;
+        return (
+          <button
+            key={model.id}
+            onClick={() => handleModelClick(model.id)}
+            className={cn(
+              "flex flex-col items-center justify-center p-3 rounded-xl border transition-all duration-200 text-sm font-medium",
+              isSelected
+                ? "border-[#D32F2F] bg-red-50 text-[#D32F2F] shadow-sm"
+                : "border-gray-200 hover:border-[#D32F2F] hover:bg-red-50 hover:shadow"
+            )}
+          >
+            <span className="text-xs sm:text-sm text-center leading-tight">
+              {model.name}
+            </span>
+          </button>
+        );
+      })}
+
+      {filteredModelList.length === 0 &&
+        renderEmptyState("No models found", "Try another brand or search", layout)}
+    </div>
+  );
+
+  const renderFuelOptions = (layout: "sidebar" | "modal") => (
+    <div className="space-y-4">
+      <div className="text-xs text-gray-500 uppercase tracking-wide">
+        Preferred fuel type
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        {selectedModelEntity?.fuelTypes.map((fuel) => {
+          const isSelected = selectedFuelType === fuel;
+          return (
+            <button
+              key={fuel}
+              onClick={() => handleFuelClick(fuel)}
+              className={cn(
+                "rounded-lg border py-3 text-sm font-semibold transition-all duration-200",
+                isSelected
+                  ? "border-[#D32F2F] bg-red-50 text-[#D32F2F] shadow-sm"
+                  : "border-gray-200 text-gray-700 hover:border-[#D32F2F] hover:bg-red-50"
+              )}
+            >
+              {fuel}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+
+  const renderSelectionContent = (layout: "sidebar" | "modal") => {
+    const paddingX = layout === "sidebar" ? "px-5" : "px-6";
+    const searchContainerClasses = cn(
+      paddingX,
+      layout === "sidebar" ? "py-3" : "pb-4",
+      "border-b border-gray-100"
+    );
+    const summaryContainerClasses = cn(
+      paddingX,
+      layout === "sidebar" ? "py-3" : "py-4",
+      "border-b border-gray-100 flex items-center justify-between gap-3"
+    );
+    const gridWrapperClasses = cn(
+      paddingX,
+      layout === "sidebar" ? "py-3" : "pb-6"
+    );
+
+    return (
+      <>
+        {showSearch && (
+          <div className={searchContainerClasses}>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input
+                placeholder={searchPlaceholder}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className={cn(
+                  "pl-10 border-gray-300 focus:border-red-500 focus:ring-red-500",
+                  layout === "sidebar" ? "h-10" : "h-12"
+                )}
+              />
+            </div>
+          </div>
+        )}
+
+        {stage !== "brand" && selectedBrandEntity && (
+          <div className={summaryContainerClasses}>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden">
+                <img
+                  src={selectedBrandEntity.logo}
+                  alt={`${selectedBrandEntity.name} logo`}
+                  className="h-8 w-8 object-contain"
+                />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-sm font-semibold text-gray-900 leading-tight">
+                  {selectedBrandEntity.name}
+                </span>
+                {selectedModelEntity && (
+                  <span className="text-xs text-gray-500">
+                    {selectedModelEntity.name}
+                  </span>
+                )}
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              {stage === "fuel" && (
+                <button
+                  onClick={() => clearModel()}
+                  className="text-xs font-semibold text-gray-600 hover:text-gray-900"
+                >
+                  Change model
+                </button>
+              )}
+              <button
+                onClick={() => {
+                  clearBrand();
+                  onBrandSelect("");
+                }}
+                className="text-xs font-semibold text-gray-600 hover:text-gray-900"
+              >
+                Change brand
+              </button>
+            </div>
+          </div>
+        )}
+
+        <div className={gridWrapperClasses}>
+          {stage === "brand" && renderBrandGrid(layout)}
+          {stage === "model" && renderModelGrid(layout)}
+          {stage === "fuel" && renderFuelOptions(layout)}
+        </div>
+      </>
+    );
   };
 
   if (variant === "sidebar") {
@@ -71,88 +328,67 @@ const BrandSelectorModal = ({
         )}
       >
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-          <h3 className="text-lg font-semibold text-gray-900">Select Model</h3>
-        </div>
-
-        <div className="px-5 py-3 border-b border-gray-100">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />
-            <Input
-              placeholder="Search Brands"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 h-10 border-gray-300 focus:border-red-500 focus:ring-red-500"
-            />
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900">Select Model</h3>
+            <p className="text-xs text-gray-500 mt-1">
+              {stage === "brand"
+                ? "Choose the car brand to continue."
+                : stage === "model"
+                  ? "Select a model from the chosen brand."
+                  : "Pick your preferred fuel type."}
+            </p>
           </div>
+          {stage !== "brand" && (
+            <button
+              onClick={handleBack}
+              className="inline-flex items-center gap-1 text-xs font-semibold text-gray-600 hover:text-gray-900"
+            >
+              <ChevronLeft className="h-4 w-4" />
+              Back
+            </button>
+          )}
         </div>
 
-        <div className="px-5 py-3">
-          <div className="grid grid-cols-2 gap-3 max-h-[calc(100vh-14rem)] overflow-y-auto pr-1">
-            {filteredBrands.map((brand) => {
-              const isSelected = selectedBrand === brand.name;
-              return (
-                <button
-                  key={brand.id}
-                  onClick={() => handleBrandSelect(brand.name)}
-                  className={cn(
-                    "flex flex-col items-center p-2.5 rounded-xl border transition-all duration-200",
-                    "bg-white",
-                    isSelected
-                      ? "border-red-500 bg-red-50 shadow-sm"
-                      : "border-gray-200 hover:border-red-400 hover:bg-red-50 hover:shadow"
-                  )}
-                >
-                  <div className="w-11 h-11 bg-gray-100 rounded-full flex items-center justify-center mb-2 overflow-hidden">
-                    <img
-                      src={brand.logo}
-                      alt={`${brand.name} logo`}
-                      className="h-9 w-9 object-contain"
-                      loading="lazy"
-                      onError={(e) => {
-                        e.currentTarget.src = "/placeholder.svg";
-                      }}
-                    />
-                  </div>
-                  <span className="text-xs text-center font-medium text-gray-700 leading-tight">
-                    {brand.name}
-                  </span>
-                </button>
-              );
-            })}
-
-            {filteredBrands.length === 0 && (
-              <div className="col-span-2 text-center py-8 text-gray-500">
-                <Car className="h-10 w-10 mx-auto mb-2 text-gray-300" />
-                <p className="text-sm">No brands found</p>
-                <p className="text-xs text-gray-400">Try adjusting your search</p>
-              </div>
-            )}
-          </div>
-        </div>
+        {renderSelectionContent("sidebar")}
       </aside>
     );
   }
 
+  const triggerLabel = selectedBrandEntity?.name || selectedBrand || "Select Model";
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button 
-          variant="outline" 
+        <Button
+          variant="outline"
           className="flex items-center gap-2 h-12 px-4 font-medium border-gray-300 hover:border-gray-400"
         >
           <Car className="h-4 w-4 text-gray-600" />
-          <span className="text-gray-700">
-            {selectedBrand || "Select Manufacturer"}
-          </span>
+          <span className="text-gray-700">{triggerLabel}</span>
         </Button>
       </DialogTrigger>
-      
+
       <DialogContent className="max-w-md p-0 gap-0">
         <DialogHeader className="p-6 pb-4">
           <div className="flex items-center justify-between">
-            <DialogTitle className="text-xl font-bold text-gray-900">
-              Select Model
-            </DialogTitle>
+            <div className="flex items-center gap-3">
+              {stage !== "brand" && (
+                <button
+                  onClick={handleBack}
+                  className="inline-flex items-center gap-1 text-sm font-semibold text-gray-600 hover:text-gray-900"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  Back
+                </button>
+              )}
+              <DialogTitle className="text-xl font-bold text-gray-900">
+                {stage === "brand"
+                  ? "Select Brand"
+                  : stage === "model"
+                    ? "Select Model"
+                    : "Select Fuel"}
+              </DialogTitle>
+            </div>
             <button
               onClick={() => setIsOpen(false)}
               className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -161,55 +397,8 @@ const BrandSelectorModal = ({
             </button>
           </div>
         </DialogHeader>
-        
-        {/* Search Input */}
-        <div className="px-6 pb-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-            <Input
-              placeholder="Search Brands"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 h-12 border-gray-300 focus:border-red-500 focus:ring-red-500"
-            />
-          </div>
-        </div>
-        
-        {/* Brand Grid */}
-        <div className="px-6 pb-6">
-          <div className="grid grid-cols-3 gap-4 max-h-60 overflow-y-auto">
-            {filteredBrands.map((brand) => (
-              <button
-                key={brand.id}
-                onClick={() => handleBrandSelect(brand.name)}
-                className="flex flex-col items-center p-3 rounded-lg border border-gray-200 hover:border-[#D32F2F] hover:bg-red-50 transition-all duration-200 hover:scale-105 cursor-pointer"
-              >
-                <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mb-2 overflow-hidden">
-                  <img
-                    src={brand.logo}
-                    alt={`${brand.name} logo`}
-                    className="h-9 w-9 object-contain"
-                    loading="lazy"
-                    onError={(e) => {
-                      e.currentTarget.src = "/placeholder.svg";
-                    }}
-                  />
-                </div>
-                <span className="text-xs text-center font-medium text-gray-700 leading-tight">
-                  {brand.name}
-                </span>
-              </button>
-            ))}
-          </div>
-          
-          {filteredBrands.length === 0 && (
-            <div className="text-center py-8 text-gray-500">
-              <Car className="h-12 w-12 mx-auto mb-2 text-gray-300" />
-              <p className="text-sm">No brands found</p>
-              <p className="text-xs text-gray-400">Try adjusting your search</p>
-            </div>
-          )}
-        </div>
+
+        {renderSelectionContent("modal")}
       </DialogContent>
     </Dialog>
   );
