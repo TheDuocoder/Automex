@@ -38,62 +38,62 @@ const Services = () => {
     { 
       id: "car-services", 
       name: "Car Services", 
-      icon: <img src="/images/service_icons/car_service.png" alt="Car Services" className="h-7 w-7 object-contain" /> 
+      icon: <img src="/images/service_icons/car_service.png" alt="Car Services" className="h-10 w-10 object-contain" /> 
     },
     { 
       id: "ac-service", 
       name: "AC Service & Repair", 
-      icon: <img src="/images/service_icons/car_ac_services.png" alt="AC Service & Repair" className="h-7 w-7 object-contain" /> 
+      icon: <img src="/images/service_icons/car_ac_services.png" alt="AC Service & Repair" className="h-10 w-10 object-contain" /> 
     },
     { 
       id: "batteries", 
       name: "Batteries", 
-      icon: <img src="/images/service_icons/battery.png" alt="Batteries" className="h-7 w-7 object-contain" /> 
+      icon: <img src="/images/service_icons/battery.png" alt="Batteries" className="h-10 w-10 object-contain" /> 
     },
     { 
       id: "tyres", 
       name: "Tyres & Wheel Care", 
-      icon: <img src="/images/service_icons/car_tyre and wheels_care.png" alt="Tyres & Wheel Care" className="h-7 w-7 object-contain" /> 
+      icon: <img src="/images/service_icons/car_tyre and wheels_care.png" alt="Tyres & Wheel Care" className="h-10 w-10 object-contain" /> 
     },
     { 
       id: "denting", 
       name: "Denting & Painting", 
-      icon: <img src="/images/service_icons/car_denting and painting1.png" alt="Denting & Painting" className="h-7 w-7 object-contain" /> 
+      icon: <img src="/images/service_icons/car_denting and painting1.png" alt="Denting & Painting" className="h-10 w-10 object-contain" /> 
     },
     { 
       id: "detailing", 
       name: "Detailing Services", 
-      icon: <img src="/images/service_icons/car_detailing_services.png" alt="Detailing Services" className="h-7 w-7 object-contain" /> 
+      icon: <img src="/images/service_icons/car_detailing_services.png" alt="Detailing Services" className="h-10 w-10 object-contain" /> 
     },
     { 
       id: "suspension-fitting", 
       name: "Suspension and Fitting", 
-      icon: <img src="/images/service_icons/car_suspensions and fitments.png" alt="Suspension and Fitting" className="h-7 w-7 object-contain" /> 
+      icon: <img src="/images/service_icons/car_suspensions and fitments.png" alt="Suspension and Fitting" className="h-10 w-10 object-contain" /> 
     },
     { 
       id: "car-spa", 
       name: "Spa and Cleaning", 
-      icon: <img src="/images/service_icons/car_spa and cleaning.png" alt="Spa and Cleaning" className="h-7 w-7 object-contain" /> 
+      icon: <img src="/images/service_icons/car_spa and cleaning.png" alt="Spa and Cleaning" className="h-10 w-10 object-contain" /> 
     },
     { 
       id: "clutch-body-parts", 
       name: "Clutch and Body Parts", 
-      icon: <img src="/images/service_icons/car_clutch and body_parts.png" alt="Clutch and Body Parts" className="h-7 w-7 object-contain" /> 
+      icon: <img src="/images/service_icons/car_clutch and body_parts.png" alt="Clutch and Body Parts" className="h-10 w-10 object-contain" /> 
     },
     { 
       id: "windshield-lights", 
       name: "Windshield and Lights", 
-      icon: <img src="/images/service_icons/car_windshiled and lights2.png" alt="Windshield and Lights" className="h-7 w-7 object-contain" /> 
+      icon: <img src="/images/service_icons/car_windshiled and lights2.png" alt="Windshield and Lights" className="h-10 w-10 object-contain" /> 
     },
     { 
       id: "car-inspections", 
       name: "Inspection", 
-      icon: <img src="/images/service_icons/car-inspection.png" alt="Inspection" className="h-7 w-7 object-contain" /> 
+      icon: <img src="/images/service_icons/car-inspection.png" alt="Inspection" className="h-10 w-10 object-contain" /> 
     },
     { 
       id: "car-insurance", 
       name: "Insurance", 
-      icon: <img src="/images/service_icons/car_insurance1.png" alt="Insurance" className="h-7 w-7 object-contain" /> 
+      icon: <img src="/images/service_icons/car_insurance1.png" alt="Insurance" className="h-10 w-10 object-contain" /> 
     },
   ];
 
@@ -324,6 +324,162 @@ const Services = () => {
         specialLabel: "",
         offer: undefined,
         isRecommended: false
+      }
+    ],
+    "car-inspections": [
+      {
+        id: "basic-inspection",
+        name: "Basic Car Inspection",
+        thumbnail: "/images/Services/car_inspection.png",
+        warranty: "1 Month Inspection Report",
+        recommended: "For Used Car Purchase or Regular Check-up",
+        features: [
+          { name: "Engine Performance Check", included: true },
+          { name: "Brake System Inspection", included: true },
+          { name: "Tyre Condition Assessment", included: true },
+          { name: "Light & Electrical Check", included: true },
+          { name: "Basic Safety Check", included: true },
+        ],
+        moreServicesCount: 3,
+        originalPrice: 1999,
+        discountedPrice: 1499,
+        duration: "Takes 2 hours",
+        specialLabel: "FREE PICKUP & DROP",
+        offer: {
+          price: 1199,
+          discount: "Extra ₹300 OFF",
+          badgeColor: "bg-blue-500"
+        },
+        isRecommended: false
+      },
+      {
+        id: "comprehensive-inspection",
+        name: "Comprehensive Inspection",
+        thumbnail: "/images/Services/car_inspection.png",
+        warranty: "3 Month Inspection Report",
+        recommended: "For Pre-Purchase or Complete Health Check",
+        features: [
+          { name: "Complete Engine Diagnostics", included: true },
+          { name: "Brake & Suspension Check", included: true },
+          { name: "AC System Inspection", included: true },
+          { name: "Electrical System Check", included: true },
+          { name: "Body & Paint Assessment", included: true },
+          { name: "Interior & Exterior Check", included: true },
+        ],
+        moreServicesCount: 8,
+        originalPrice: 3499,
+        discountedPrice: 2699,
+        duration: "Takes 4 hours",
+        specialLabel: "DETAILED REPORT",
+        offer: {
+          price: 2299,
+          discount: "Extra ₹400 OFF",
+          badgeColor: "bg-blue-500"
+        },
+        isRecommended: true
+      },
+      {
+        id: "pre-purchase-inspection",
+        name: "Pre-Purchase Inspection",
+        thumbnail: "/images/Services/car_inspection.png",
+        warranty: "6 Month Inspection Report",
+        recommended: "Before Buying a Used Car",
+        features: [
+          { name: "Complete Vehicle History", included: true },
+          { name: "Engine & Transmission Check", included: true },
+          { name: "Accident & Flood Check", included: true },
+          { name: "Legal Document Verification", included: true },
+          { name: "Market Value Assessment", included: true },
+          { name: "Expert Recommendation", included: true },
+        ],
+        moreServicesCount: 12,
+        originalPrice: 4999,
+        discountedPrice: 3799,
+        duration: "Takes 6 hours",
+        specialLabel: "EXPERT CERTIFIED",
+        offer: {
+          price: 3299,
+          discount: "Extra ₹500 OFF",
+          badgeColor: "bg-blue-500"
+        },
+        isRecommended: true
+      }
+    ],
+    "car-insurance": [
+      {
+        id: "comprehensive-insurance",
+        name: "Comprehensive Car Insurance",
+        thumbnail: "/images/Services/car_insurance.png",
+        warranty: "1 Year Policy Coverage",
+        recommended: "Complete Protection for Your Car",
+        features: [
+          { name: "Accident Coverage", included: true },
+          { name: "Theft Protection", included: true },
+          { name: "Natural Disaster Coverage", included: true },
+          { name: "Third Party Coverage", included: true },
+          { name: "Personal Accident Cover", included: true },
+        ],
+        moreServicesCount: 5,
+        originalPrice: 25999,
+        discountedPrice: 19499,
+        duration: "Instant Policy",
+        specialLabel: "ZERO DEPRECIATION",
+        offer: {
+          price: 16999,
+          discount: "Extra ₹2500 OFF",
+          badgeColor: "bg-green-500"
+        },
+        isRecommended: true
+      },
+      {
+        id: "third-party-insurance",
+        name: "Third Party Insurance",
+        thumbnail: "/images/Services/car_insurance.png",
+        warranty: "1 Year Policy Coverage",
+        recommended: "Legal Mandatory Coverage",
+        features: [
+          { name: "Third Party Liability", included: true },
+          { name: "Legal Compliance", included: true },
+          { name: "Court Case Protection", included: true },
+          { name: "Instant Policy Issuance", included: true },
+        ],
+        moreServicesCount: 2,
+        originalPrice: 3999,
+        discountedPrice: 2999,
+        duration: "Instant Policy",
+        specialLabel: "MANDATORY COVERAGE",
+        offer: {
+          price: 2499,
+          discount: "Extra ₹500 OFF",
+          badgeColor: "bg-orange-500"
+        },
+        isRecommended: false
+      },
+      {
+        id: "zero-dep-insurance",
+        name: "Zero Depreciation Insurance",
+        thumbnail: "/images/Services/car_insurance.png",
+        warranty: "1 Year Policy Coverage",
+        recommended: "Maximum Coverage for New Cars",
+        features: [
+          { name: "Zero Depreciation Claims", included: true },
+          { name: "Complete Accident Coverage", included: true },
+          { name: "Engine Protection", included: true },
+          { name: "Roadside Assistance", included: true },
+          { name: "Cashless Garage Network", included: true },
+          { name: "Personal Accident Cover", included: true },
+        ],
+        moreServicesCount: 8,
+        originalPrice: 35999,
+        discountedPrice: 27999,
+        duration: "Instant Policy",
+        specialLabel: "PREMIUM PROTECTION",
+        offer: {
+          price: 24999,
+          discount: "Extra ₹3000 OFF",
+          badgeColor: "bg-purple-500"
+        },
+        isRecommended: true
       }
     ]
   };

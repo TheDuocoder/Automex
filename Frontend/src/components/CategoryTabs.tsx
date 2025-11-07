@@ -50,12 +50,12 @@ const CategoryTabs = ({ categories, activeCategory, onCategoryChange }: Category
   };
 
   return (
-    <div className="relative bg-white py-4 px-4">
+    <div className="relative bg-white py-6 px-6">
       {/* Left Arrow */}
       <button
         onClick={goToPrevious}
         disabled={!canGoPrev}
-        className={`absolute left-2 top-1/2 transform -translate-y-1/2 z-20 rounded-full p-3 shadow-lg transition-all duration-200 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500 ${
+        className={`absolute left-3 top-1/2 transform -translate-y-1/2 z-20 rounded-full p-3 shadow-lg transition-all duration-200 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500 ${
           canGoPrev ? "bg-gray-100 hover:bg-gray-200" : "bg-gray-100/60 cursor-not-allowed shadow-none"
         }`}
         aria-label="Previous category"
@@ -64,48 +64,23 @@ const CategoryTabs = ({ categories, activeCategory, onCategoryChange }: Category
       </button>
       
       {/* Categories Container */}
-      <div 
-        className="px-12 overflow-x-auto overflow-y-visible" 
-        style={{
-          scrollSnapType: 'x mandatory',
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none'
-        }}
-      >
-        <style>{`
-          .px-12::-webkit-scrollbar {
-            display: none;
-          }
-        `}</style>
-        <div 
-          className="flex transition-transform duration-300 ease-out" 
-          style={{ 
-            transform: `translateX(0)`,
-            gap: '20px',
-            minWidth: 'fit-content',
-            paddingBottom: '8px'
-          }}
-        >
+      <div className="px-14 overflow-hidden">
+        <div className="grid grid-cols-6 gap-6 transition-transform duration-300 ease-out" style={{ transform: `translateX(0)` }}>
           {visibleCategories.map((category) => {
             const isActive = category.id === activeCategory;
             return (
               <button
                 key={category.id}
                 onClick={() => onCategoryChange(category.id)}
-                className={`flex flex-col items-center justify-between py-3 px-3 rounded-xl transition-all duration-300 relative min-h-[120px] ${
+                className={`flex flex-col items-center py-6 px-4 rounded-xl transition-all duration-300 relative ${
                   isActive 
                     ? 'bg-red-50' 
                     : 'bg-white hover:bg-gray-50'
                 }`}
-                style={{ 
-                  minWidth: 'fit-content',
-                  width: 'auto',
-                  maxWidth: '180px',
-                  ...(isActive ? { backgroundColor: '#FFF5F5' } : {})
-                }}
+                style={isActive ? { backgroundColor: '#FFF5F5' } : {}}
               >
                 {/* Icon Container */}
-                <div className={`w-10 h-10 flex items-center justify-center mb-2 transition-all duration-300 ${
+                <div className={`w-28 h-28 flex items-center justify-center mb-3 transition-all duration-300 ${
                   isActive ? 'transform scale-110' : 'transform scale-100 hover:scale-105'
                 }`}>
                   <div 
@@ -122,35 +97,15 @@ const CategoryTabs = ({ categories, activeCategory, onCategoryChange }: Category
                 </div>
                 
                 {/* Category Name */}
-                <span 
-                  className={`text-center leading-tight transition-all duration-300 font-inter whitespace-nowrap ${
-                    isActive ? 'text-black font-bold' : 'text-gray-700 font-medium hover:text-gray-900'
-                  }`}
-                  style={{
-                    fontSize: '14px',
-                    fontWeight: isActive ? 'bold' : '500',
-                    color: isActive ? '#000000' : '#2C2C2C',
-                    textAlign: 'center',
-                    lineHeight: '1.2',
-                    width: 'max-content',
-                    minHeight: '20px',
-                    display: 'block',
-                    padding: '0 4px'
-                  }}
-                >
+                <span className={`text-sm text-center leading-tight transition-all duration-300 font-inter whitespace-nowrap overflow-hidden text-ellipsis max-w-full ${
+                  isActive ? 'text-black font-bold' : 'text-gray-700 font-medium hover:text-gray-900'
+                }`}>
                   {category.name}
                 </span>
                 
                 {/* Active Underline */}
                 {isActive && (
-                  <div 
-                    className="absolute bottom-0 left-1/2 transform -translate-x-1/2 rounded-t-full transition-all duration-300 animate-in slide-in-from-bottom-2"
-                    style={{
-                      width: '64px',
-                      height: '4px',
-                      backgroundColor: '#E74A3B'
-                    }}
-                  ></div>
+                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-red-600 rounded-t-full transition-all duration-300 animate-in slide-in-from-bottom-2"></div>
                 )}
               </button>
             );
@@ -169,7 +124,7 @@ const CategoryTabs = ({ categories, activeCategory, onCategoryChange }: Category
       <button
         onClick={goToNext}
         disabled={!canGoNext}
-        className={`absolute right-2 top-1/2 transform -translate-y-1/2 z-20 rounded-full p-3 shadow-lg transition-all duration-200 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500 ${
+        className={`absolute right-3 top-1/2 transform -translate-y-1/2 z-20 rounded-full p-3 shadow-lg transition-all duration-200 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500 ${
           canGoNext ? "bg-gray-100 hover:bg-gray-200" : "bg-gray-100/60 cursor-not-allowed shadow-none"
         }`}
         aria-label="Next category"
@@ -178,7 +133,7 @@ const CategoryTabs = ({ categories, activeCategory, onCategoryChange }: Category
       </button>
       
       {/* Page Indicators */}
-      <div className="mt-4 h-2" aria-hidden="true"></div>
+      <div className="mt-5 h-2" aria-hidden="true"></div>
     </div>
   );
 };
