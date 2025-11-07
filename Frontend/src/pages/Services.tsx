@@ -501,14 +501,14 @@ const Services = () => {
       <Header />
       
       {/* Main Content */}
-      <div className="pt-2 pb-8">
+      <div className="pt-0 pb-8">
         <div className="max-w-[1400px] mx-auto pl-2 pr-6">
           <div className="flex gap-8">
             {/* Left Content Area */}
             <div className="flex-1 max-w-[880px]">
               {/* Category Navigation */}
-              <div className="mb-2 -ml-2">
-                <div className="bg-white rounded-xl shadow-[0_2px_12px_rgba(0,0,0,0.06)] border border-gray-100/50 px-3 py-2">
+              <div className="mb-1 -ml-2">
+                <div className="bg-white rounded-xl shadow-[0_2px_12px_rgba(0,0,0,0.06)] border border-gray-100/50 px-3 py-1">
                   <CategoryTabs
                     categories={serviceCategories}
                     activeCategory={selectedCategory}
@@ -525,7 +525,7 @@ const Services = () => {
                    selectedCategory === "tyres" ? "Premium Tyres" : "Scheduled Packages"}
                 </h2>
                 
-                <div className="space-y-6">
+                <div className="space-y-8">
                   {(servicePackages[selectedCategory as keyof typeof servicePackages] || servicePackages["car-services"]).map((pkg) => (
                     <ServiceCard
                       key={pkg.id}
@@ -568,7 +568,7 @@ const Services = () => {
             </div>
 
             {/* Right Sidebar - Select Manufacturer */}
-            <div className="w-[450px] flex-shrink-0">
+            <div className="w-[400px] flex-shrink-0 ml-32">
               <div className="sticky top-20">
                 <BrandSelectorModal
                   variant="sidebar"

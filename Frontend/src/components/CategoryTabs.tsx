@@ -65,14 +65,14 @@ const CategoryTabs = ({ categories, activeCategory, onCategoryChange }: Category
       
       {/* Categories Container */}
       <div className="px-14 overflow-hidden">
-        <div className="grid grid-cols-6 gap-6 transition-transform duration-300 ease-out" style={{ transform: `translateX(0)` }}>
+        <div className="grid grid-cols-6 gap-4 transition-transform duration-300 ease-out" style={{ transform: `translateX(0)` }}>
           {visibleCategories.map((category) => {
             const isActive = category.id === activeCategory;
             return (
               <button
                 key={category.id}
                 onClick={() => onCategoryChange(category.id)}
-                className={`flex flex-col items-center py-6 px-4 rounded-xl transition-all duration-300 relative ${
+                className={`flex flex-col items-center py-6 px-1 rounded-xl transition-all duration-300 relative w-full min-w-0 ${
                   isActive 
                     ? 'bg-red-50' 
                     : 'bg-white hover:bg-gray-50'
@@ -80,7 +80,7 @@ const CategoryTabs = ({ categories, activeCategory, onCategoryChange }: Category
                 style={isActive ? { backgroundColor: '#FFF5F5' } : {}}
               >
                 {/* Icon Container */}
-                <div className={`w-28 h-28 flex items-center justify-center mb-3 transition-all duration-300 ${
+                <div className={`w-28 h-28 flex items-center justify-center mb-1.5 p-3 transition-all duration-300 ${
                   isActive ? 'transform scale-110' : 'transform scale-100 hover:scale-105'
                 }`}>
                   <div 
@@ -97,11 +97,13 @@ const CategoryTabs = ({ categories, activeCategory, onCategoryChange }: Category
                 </div>
                 
                 {/* Category Name */}
-                <span className={`text-sm text-center leading-tight transition-all duration-300 font-inter whitespace-nowrap overflow-hidden text-ellipsis max-w-full ${
-                  isActive ? 'text-black font-bold' : 'text-gray-700 font-medium hover:text-gray-900'
-                }`}>
-                  {category.name}
-                </span>
+                <div className="w-full px-1">
+                  <span className={`text-xs text-center leading-tight transition-all duration-300 font-inter block ${
+                    isActive ? 'text-black font-bold' : 'text-gray-700 font-medium hover:text-gray-900'
+                  }`}>
+                    {category.name}
+                  </span>
+                </div>
                 
                 {/* Active Underline */}
                 {isActive && (

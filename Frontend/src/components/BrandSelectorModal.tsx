@@ -145,21 +145,36 @@ const BrandSelectorModal = ({
             key={brand.id}
             onClick={() => handleBrandClick(brand.id, brand.name)}
             className={cn(
-              "flex flex-col items-center justify-center bg-white border border-[#f0f0f0] transition-all duration-200",
-              "w-[100px] h-[100px] rounded-xl hover:border-gray-300",
+              "flex flex-col items-center justify-center bg-white",
+              "w-[100px] h-[100px] md:w-[100px] md:h-[100px] max-md:w-[90px] max-md:h-[90px] rounded-xl relative overflow-hidden",
+              // Hover state with red theme
+              "hover:border-[#E74A3B] hover:border-2 hover:shadow-[0_4px_25px_rgba(0,0,0,0.06)] hover:scale-[1.03]",
+              "active:scale-[0.98] active:shadow-sm",
+              // Selection state with red border and warm background
               isSelected
-                ? "shadow-[0_6px_18px_rgba(0,0,0,0.06)] border-blue-400 ring-2 ring-blue-200"
-                : "hover:shadow-sm"
+                ? "border-[#E74A3B] border-2 bg-[#FFF9E5] shadow-[0_4px_25px_rgba(0,0,0,0.06)] scale-[1.02]"
+                : "border border-gray-200"
             )}
+            style={{ transition: 'all 0.10s ease' }}
           >
-            <div className="w-16 h-16 bg-white rounded-lg flex items-center justify-center mb-2">
+            <div className={cn(
+              "w-16 h-16 max-md:w-14 max-md:h-14 rounded-lg flex items-center justify-center mb-2 transition-all duration-300",
+              isSelected 
+                ? "bg-white shadow-sm" 
+                : "bg-white"
+            )} style={{ backgroundColor: '#FFFFFF' }}>
               <img
                 src={brand.logo}
                 alt={`${brand.name} logo`}
-                className="h-12 w-12 object-contain"
+                className={cn(
+                  "h-12 w-12 max-md:h-10 max-md:w-10 object-contain transition-all duration-300",
+                  isSelected ? "scale-110" : "scale-100"
+                )}
                 style={{ 
-                  filter: 'none',
-                  background: 'white'
+                  filter: isSelected ? 'brightness(1.1) contrast(1.2)' : 'brightness(1.05) contrast(1.1)',
+                  background: '#FFFFFF',
+                  borderRadius: '4px',
+                  padding: '2px'
                 }}
                 loading="lazy"
                 onError={(e) => {
@@ -167,7 +182,10 @@ const BrandSelectorModal = ({
                 }}
               />
             </div>
-            <span className="text-[10px] text-center font-medium text-gray-700 leading-tight px-1">
+            <span className={cn(
+              "text-[10px] text-center font-medium leading-tight px-1 transition-all duration-300",
+              isSelected ? "text-[#E74A3B] font-semibold" : "text-gray-700"
+            )}>
               {brand.name}
             </span>
           </button>
@@ -243,7 +261,7 @@ const BrandSelectorModal = ({
     const paddingX = layout === "sidebar" ? "px-5" : "px-6";
     const searchContainerClasses = cn(
       paddingX,
-      layout === "sidebar" ? "py-3" : "pb-4",
+      layout === "sidebar" ? "py-3" : "pb-2",
       "border-b border-gray-100"
     );
     const summaryContainerClasses = cn(
@@ -261,15 +279,32 @@ const BrandSelectorModal = ({
         {showSearch && (
           <div className={searchContainerClasses}>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <svg 
+                className="absolute top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4"
+                style={{ left: '12px' }}
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
+              </svg>
               <Input
-                placeholder="Search Brands"
+                placeholder={searchPlaceholder}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className={cn(
-                  "pl-10 border-gray-200 focus:border-blue-400 focus:ring-0 rounded-xl bg-white",
+                  "pl-10 border-gray-200 rounded-xl bg-white transition-all duration-200",
+                  "focus:outline-none focus:ring-2 focus:ring-[#E74A3B] focus:border-[#E74A3B] focus:bg-white",
+                  "hover:border-gray-300 hover:shadow-sm",
                   layout === "sidebar" ? "h-11" : "h-12"
                 )}
+                style={{
+                  outline: 'none'
+                }}
               />
             </div>
           </div>
@@ -278,11 +313,17 @@ const BrandSelectorModal = ({
         {stage !== "brand" && selectedBrandEntity && (
           <div className={summaryContainerClasses}>
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden">
+              <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center overflow-hidden" style={{ backgroundColor: '#FFFFFF' }}>
                 <img
                   src={selectedBrandEntity.logo}
                   alt={`${selectedBrandEntity.name} logo`}
                   className="h-8 w-8 object-contain"
+                  style={{ 
+                    filter: 'brightness(1.05) contrast(1.1)',
+                    background: '#FFFFFF',
+                    borderRadius: '50%',
+                    padding: '1px'
+                  }}
                 />
               </div>
               <div className="flex flex-col">
@@ -331,13 +372,15 @@ const BrandSelectorModal = ({
     return (
       <aside
         className={cn(
-          "w-full h-full bg-white",
-          "overflow-hidden",
+          "w-full h-full overflow-hidden",
           className
         )}
+        style={{
+          background: 'linear-gradient(to bottom, #FFFFFF, #FAFAFA)'
+        }}
       >
         <div className="px-5 pt-6 pb-4 border-b border-gray-100">
-          <h3 className="text-lg font-semibold text-gray-900">Select Manufacturer</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Select Manufacturer</h3>
           {stage !== "brand" && (
             <button
               onClick={handleBack}
@@ -368,8 +411,13 @@ const BrandSelectorModal = ({
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-md p-0 gap-0">
-        <DialogHeader className="p-6 pb-4">
+      <DialogContent 
+        className="w-[400px] max-w-[400px] p-0 gap-0"
+        style={{
+          background: 'linear-gradient(to bottom, #FFFFFF, #FAFAFA)'
+        }}
+      >
+        <DialogHeader className="px-6 py-6" style={{paddingBottom: '6px'}}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               {stage !== "brand" && (
@@ -381,7 +429,7 @@ const BrandSelectorModal = ({
                   Back
                 </button>
               )}
-              <DialogTitle className="text-xl font-bold text-gray-900">
+              <DialogTitle className="text-xl font-bold text-gray-900 mb-4">
                 {stage === "brand"
                   ? "Select Brand"
                   : stage === "model"
