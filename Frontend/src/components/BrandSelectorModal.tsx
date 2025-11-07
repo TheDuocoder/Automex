@@ -130,9 +130,13 @@ const BrandSelectorModal = ({
     <div
       className={cn(
         layout === "sidebar"
-          ? "grid grid-cols-2 gap-3 max-h-[calc(100vh-16rem)] overflow-y-auto pr-1"
+          ? "grid grid-cols-3 gap-5 max-h-[580px] overflow-y-auto pr-2"
           : "grid grid-cols-3 gap-4 max-h-60 overflow-y-auto"
       )}
+      style={{
+        scrollbarWidth: 'thin',
+        scrollbarColor: '#cbd5e1 #f8fafc'
+      }}
     >
       {filteredBrandList.map((brand) => {
         const isSelected = selectedBrandId === brand.id;
@@ -141,24 +145,29 @@ const BrandSelectorModal = ({
             key={brand.id}
             onClick={() => handleBrandClick(brand.id, brand.name)}
             className={cn(
-              "flex flex-col items-center p-2.5 rounded-xl border transition-all duration-200 bg-white",
+              "flex flex-col items-center justify-center bg-white border border-[#f0f0f0] transition-all duration-200",
+              "w-[100px] h-[100px] rounded-xl hover:border-gray-300",
               isSelected
-                ? "border-[#D32F2F] bg-red-50 text-[#D32F2F] shadow-sm"
-                : "border-gray-200 hover:border-[#D32F2F] hover:bg-red-50 hover:shadow"
+                ? "shadow-[0_6px_18px_rgba(0,0,0,0.06)] border-blue-400 ring-2 ring-blue-200"
+                : "hover:shadow-sm"
             )}
           >
-            <div className="w-11 h-11 bg-gray-100 rounded-full flex items-center justify-center mb-2 overflow-hidden">
+            <div className="w-16 h-16 bg-white rounded-lg flex items-center justify-center mb-2">
               <img
                 src={brand.logo}
                 alt={`${brand.name} logo`}
-                className="h-9 w-9 object-contain"
+                className="h-12 w-12 object-contain"
+                style={{ 
+                  filter: 'none',
+                  background: 'white'
+                }}
                 loading="lazy"
                 onError={(e) => {
                   e.currentTarget.src = "/placeholder.svg";
                 }}
               />
             </div>
-            <span className="text-xs text-center font-medium text-gray-700 leading-tight">
+            <span className="text-[10px] text-center font-medium text-gray-700 leading-tight px-1">
               {brand.name}
             </span>
           </button>
@@ -244,7 +253,7 @@ const BrandSelectorModal = ({
     );
     const gridWrapperClasses = cn(
       paddingX,
-      layout === "sidebar" ? "py-3" : "pb-6"
+      layout === "sidebar" ? "py-5" : "pb-6"
     );
 
     return (
@@ -254,12 +263,12 @@ const BrandSelectorModal = ({
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input
-                placeholder={searchPlaceholder}
+                placeholder="Search Brands"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className={cn(
-                  "pl-10 border-gray-300 focus:border-red-500 focus:ring-red-500",
-                  layout === "sidebar" ? "h-10" : "h-12"
+                  "pl-10 border-gray-200 focus:border-blue-400 focus:ring-0 rounded-xl bg-white",
+                  layout === "sidebar" ? "h-11" : "h-12"
                 )}
               />
             </div>
@@ -322,26 +331,17 @@ const BrandSelectorModal = ({
     return (
       <aside
         className={cn(
-          "w-full rounded-2xl border border-gray-200 bg-white shadow-lg",
+          "w-full h-full bg-white",
           "overflow-hidden",
           className
         )}
       >
-        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900">Select Model</h3>
-            <p className="text-xs text-gray-500 mt-1">
-              {stage === "brand"
-                ? "Choose the car brand to continue."
-                : stage === "model"
-                  ? "Select a model from the chosen brand."
-                  : "Pick your preferred fuel type."}
-            </p>
-          </div>
+        <div className="px-5 pt-6 pb-4 border-b border-gray-100">
+          <h3 className="text-lg font-semibold text-gray-900">Select Manufacturer</h3>
           {stage !== "brand" && (
             <button
               onClick={handleBack}
-              className="inline-flex items-center gap-1 text-xs font-semibold text-gray-600 hover:text-gray-900"
+              className="inline-flex items-center gap-1 text-xs font-semibold text-gray-600 hover:text-gray-900 mt-2"
             >
               <ChevronLeft className="h-4 w-4" />
               Back
@@ -354,7 +354,7 @@ const BrandSelectorModal = ({
     );
   }
 
-  const triggerLabel = selectedBrandEntity?.name || selectedBrand || "Select Model";
+  const triggerLabel = (selectedBrandEntity?.name || selectedBrand) ? "Select Model" : "Select Brand";
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
