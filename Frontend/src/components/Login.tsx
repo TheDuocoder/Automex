@@ -6,6 +6,7 @@ import { useState, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import ForgotPassword from "./ForgotPassword";
 
 interface LoginProps {
   onClose?: () => void;
@@ -16,6 +17,7 @@ const Login = ({ onClose, onSwitchToRegister }: LoginProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
   const { login } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -100,6 +102,16 @@ const Login = ({ onClose, onSwitchToRegister }: LoginProps) => {
       setIsLoading(false);
     }
   };
+
+  // Show ForgotPassword component if requested
+  if (showForgotPassword) {
+    return (
+      <ForgotPassword
+        onClose={onClose}
+        onBackToLogin={() => setShowForgotPassword(false)}
+      />
+    );
+  }
 
   return (
     <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-6 relative">
@@ -197,9 +209,13 @@ const Login = ({ onClose, onSwitchToRegister }: LoginProps) => {
               Remember me
             </label>
           </div>
-          <a href="#" className="text-xs text-primary hover:text-primary/80 font-medium">
+          <button
+            type="button"
+            onClick={() => setShowForgotPassword(true)}
+            className="text-xs text-primary hover:text-primary/80 font-medium"
+          >
             Forgot your password ?
-          </a>
+          </button>
         </div>
 
         {/* Login Button */}

@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 interface CategoryTab {
   id: string;
@@ -14,55 +14,59 @@ interface CategoryTabsProps {
 }
 
 const CategoryTabs = ({ categories, activeCategory, onCategoryChange }: CategoryTabsProps) => {
-  const [currentPage, setCurrentPage] = useState(0);
-  const CATEGORIES_PER_PAGE = 6;
-  const totalPages = Math.ceil(categories.length / CATEGORIES_PER_PAGE);
+  const VISIBLE_COUNT = 6;
+  const [startIndex, setStartIndex] = useState(0);
 
-  // Auto-navigate to page containing active category
   useEffect(() => {
-    const activeIndex = categories.findIndex(cat => cat.id === activeCategory);
-    if (activeIndex !== -1) {
-      const activePage = Math.floor(activeIndex / CATEGORIES_PER_PAGE);
-      setCurrentPage(activePage);
-    }
+    const activeIndex = categories.findIndex((cat) => cat.id === activeCategory);
+    if (activeIndex === -1) return;
+
+    setStartIndex((prev) => {
+      if (activeIndex < prev) {
+        return activeIndex;
+      }
+      if (activeIndex >= prev + VISIBLE_COUNT) {
+        return Math.min(activeIndex - VISIBLE_COUNT + 1, Math.max(categories.length - VISIBLE_COUNT, 0));
+      }
+      return prev;
+    });
   }, [activeCategory, categories]);
 
-  const getCurrentPageCategories = () => {
-    const startIndex = currentPage * CATEGORIES_PER_PAGE;
-    return categories.slice(startIndex, startIndex + CATEGORIES_PER_PAGE);
+  const visibleCategories = useMemo(() => {
+    return categories.slice(startIndex, startIndex + VISIBLE_COUNT);
+  }, [categories, startIndex]);
+
+  const canGoPrev = startIndex > 0;
+  const canGoNext = startIndex + VISIBLE_COUNT < categories.length;
+
+  const goToPrevious = () => {
+    if (!canGoPrev) return;
+    setStartIndex((prev) => Math.max(prev - 1, 0));
   };
 
-  const goToPreviousPage = () => {
-    if (currentPage > 0) {
-      setCurrentPage(currentPage - 1);
-    }
+  const goToNext = () => {
+    if (!canGoNext) return;
+    setStartIndex((prev) => Math.min(prev + 1, categories.length - VISIBLE_COUNT));
   };
-
-  const goToNextPage = () => {
-    if (currentPage < totalPages - 1) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const showLeftArrow = currentPage > 0;
-  const showRightArrow = currentPage < totalPages - 1;
 
   return (
     <div className="relative bg-white py-4 px-4">
       {/* Left Arrow */}
-      {showLeftArrow && (
-        <button 
-          onClick={goToPreviousPage}
-          className="absolute left-2 top-1/2 transform -translate-y-1/2 z-20 bg-gray-100 hover:bg-gray-200 rounded-full p-3 shadow-lg transition-all duration-200 hover:shadow-xl"
-        >
-          <ChevronLeft className="h-4 w-4 text-gray-700" />
-        </button>
-      )}
+      <button
+        onClick={goToPrevious}
+        disabled={!canGoPrev}
+        className={`absolute left-2 top-1/2 transform -translate-y-1/2 z-20 rounded-full p-3 shadow-lg transition-all duration-200 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500 ${
+          canGoPrev ? "bg-gray-100 hover:bg-gray-200" : "bg-gray-100/60 cursor-not-allowed shadow-none"
+        }`}
+        aria-label="Previous category"
+      >
+        <ChevronLeft className={`h-4 w-4 ${canGoPrev ? "text-gray-700" : "text-gray-400"}`} />
+      </button>
       
       {/* Categories Container */}
-      <div className="px-12">
-        <div className="grid grid-cols-6 gap-4 transition-all duration-500 ease-in-out">
-          {getCurrentPageCategories().map((category) => {
+      <div className="px-12 overflow-hidden">
+        <div className="grid grid-cols-6 gap-4 transition-transform duration-300 ease-out" style={{ transform: `translateX(0)` }}>
+          {visibleCategories.map((category) => {
             const isActive = category.id === activeCategory;
             return (
               <button
@@ -108,8 +112,8 @@ const CategoryTabs = ({ categories, activeCategory, onCategoryChange }: Category
           })}
           
           {/* Fill empty slots if less than 6 categories on current page */}
-          {getCurrentPageCategories().length < CATEGORIES_PER_PAGE && 
-            Array.from({ length: CATEGORIES_PER_PAGE - getCurrentPageCategories().length }).map((_, index) => (
+          {visibleCategories.length < VISIBLE_COUNT &&
+            Array.from({ length: VISIBLE_COUNT - visibleCategories.length }).map((_, index) => (
               <div key={`empty-${index}`} className="invisible"></div>
             ))
           }
@@ -117,29 +121,19 @@ const CategoryTabs = ({ categories, activeCategory, onCategoryChange }: Category
       </div>
       
       {/* Right Arrow */}
-      {showRightArrow && (
-        <button 
-          onClick={goToNextPage}
-          className="absolute right-2 top-1/2 transform -translate-y-1/2 z-20 bg-gray-100 hover:bg-gray-200 rounded-full p-3 shadow-lg transition-all duration-200 hover:shadow-xl"
-        >
-          <ChevronRight className="h-4 w-4 text-gray-700" />
-        </button>
-      )}
+      <button
+        onClick={goToNext}
+        disabled={!canGoNext}
+        className={`absolute right-2 top-1/2 transform -translate-y-1/2 z-20 rounded-full p-3 shadow-lg transition-all duration-200 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500 ${
+          canGoNext ? "bg-gray-100 hover:bg-gray-200" : "bg-gray-100/60 cursor-not-allowed shadow-none"
+        }`}
+        aria-label="Next category"
+      >
+        <ChevronRight className={`h-4 w-4 ${canGoNext ? "text-gray-700" : "text-gray-400"}`} />
+      </button>
       
       {/* Page Indicators */}
-      {totalPages > 1 && (
-        <div className="flex justify-center mt-4 gap-2">
-          {Array.from({ length: totalPages }).map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentPage(index)}
-              className={`w-2 h-2 rounded-full transition-all duration-200 ${
-                index === currentPage ? 'bg-red-600' : 'bg-gray-300 hover:bg-gray-400'
-              }`}
-            />
-          ))}
-        </div>
-      )}
+      <div className="mt-4 h-2" aria-hidden="true"></div>
     </div>
   );
 };

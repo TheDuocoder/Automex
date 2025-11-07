@@ -1,0 +1,481 @@
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Eye, EyeOff, X, Loader2, ArrowLeft, Mail, Lock } from "lucide-react";
+import { useState, FormEvent } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { usePasswordResetStore } from "@/stores/passwordResetStore";
+
+interface ForgotPasswordProps {
+  onClose?: () => void;
+  onBackToLogin?: () => void;
+}
+
+const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
+  const [step, setStep] = useState<1 | 2>(1); // Step 1: Email, Step 2: Token + New Password
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+  const { setResetToken, resetToken, clearResetToken } = usePasswordResetStore();
+
+  // Form state for step 1 (email)
+  const [emailData, setEmailData] = useState({
+    email: "",
+  });
+
+  // Form state for step 2 (password only - token is in store)
+  const [resetData, setResetData] = useState({
+    newPassword: "",
+    confirmPassword: "",
+  });
+
+  // Form errors
+  const [errors, setErrors] = useState({
+    email: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+
+  // Handle input changes for step 1
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setEmailData({ email: value });
+    setErrors((prev) => ({ ...prev, email: "" }));
+  };
+
+  // Handle input changes for step 2 (only password fields)
+  const handleResetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setResetData((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
+  };
+
+  // Validate step 1 (email)
+  const validateEmail = () => {
+    if (!emailData.email.trim()) {
+      setErrors((prev) => ({ ...prev, email: "Email is required" }));
+      return false;
+    }
+    if (!/\S+@\S+\.\S+/.test(emailData.email)) {
+      setErrors((prev) => ({ ...prev, email: "Email is invalid" }));
+      return false;
+    }
+    return true;
+  };
+
+  // Validate step 2 (password only - token is in store)
+  const validateReset = () => {
+    if (!resetToken) {
+      toast({
+        title: "Token Missing",
+        description: "Reset token is missing. Please request a new token.",
+        variant: "destructive",
+      });
+      return false;
+    }
+
+    let isValid = true;
+    const newErrors = { ...errors };
+
+    if (!resetData.newPassword) {
+      newErrors.newPassword = "New password is required";
+      isValid = false;
+    } else if (resetData.newPassword.length < 8) {
+      newErrors.newPassword = "Password must be at least 8 characters";
+      isValid = false;
+    }
+
+    if (!resetData.confirmPassword) {
+      newErrors.confirmPassword = "Please confirm your password";
+      isValid = false;
+    } else if (resetData.newPassword !== resetData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  // Handle step 1 submission (request reset token)
+  // This function can be called both from form submit and from resend button
+  const handleEmailSubmit = async (e?: FormEvent) => {
+    if (e) {
+      e.preventDefault();
+    }
+
+    if (!validateEmail()) {
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("/api/v1/auth/forgot-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: emailData.email }),
+      });
+
+      // FastAPI Users returns 202 Accepted for forgot-password
+      if (response.ok || response.status === 202) {
+        const isResend = step === 2;
+        
+        // Try to get response data (may include token in development mode)
+        let responseData: any = null;
+        try {
+          responseData = await response.json();
+        } catch {
+          // Response might be empty
+        }
+        
+        // If token is returned (development mode), store it in Zustand
+        if (responseData?.token) {
+          setResetToken(responseData.token, emailData.email);
+          toast({
+            title: isResend ? "Token Resent!" : "Reset Token Generated!",
+            description: `Token has been generated. You can now set your new password.`,
+          });
+        } else {
+          toast({
+            title: isResend ? "Token Resent!" : "Reset Token Sent!",
+            description: responseData?.message || `If an account exists with ${emailData.email}, you will receive a password reset token. Please check your email.`,
+          });
+        }
+        
+        // Move to step 2 after successful request (only if not already there)
+        if (step === 1) {
+          setStep(2);
+        }
+      } else {
+        // Try to parse error response
+        let errorMessage = "Failed to send reset email. Please try again.";
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.detail || errorData.message || errorMessage;
+        } catch {
+          // If JSON parsing fails, use status text
+          errorMessage = response.statusText || errorMessage;
+        }
+        throw new Error(errorMessage);
+      }
+    } catch (error) {
+      // Handle network errors
+      if (error instanceof TypeError && error.message.includes("fetch")) {
+        toast({
+          title: "Connection Error",
+          description: "Unable to connect to the server. Please check your internet connection and try again.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: error instanceof Error ? error.message : "Failed to send reset email. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Handle step 2 submission (reset password)
+  const handleResetSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+
+    if (!validateReset()) {
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("/api/v1/auth/reset-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          token: resetToken,
+          password: resetData.newPassword,
+        }),
+      });
+
+      if (response.ok || response.status === 200 || response.status === 204) {
+        toast({
+          title: "Password Reset Successful!",
+          description: "Your password has been reset. You can now login with your new password.",
+        });
+        
+        // Reset form and clear store, then go back to login
+        clearResetToken();
+        setTimeout(() => {
+          setStep(1);
+          setEmailData({ email: "" });
+          setResetData({ newPassword: "", confirmPassword: "" });
+          if (onBackToLogin) {
+            onBackToLogin();
+          }
+        }, 1500);
+      } else {
+        // Try to parse error response
+        let errorMessage = "Failed to reset password. Please check your token and try again.";
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.detail || errorData.message || errorMessage;
+        } catch {
+          // If JSON parsing fails, use status text
+          errorMessage = response.statusText || errorMessage;
+        }
+        throw new Error(errorMessage);
+      }
+    } catch (error) {
+      // Handle network errors
+      if (error instanceof TypeError && error.message.includes("fetch")) {
+        toast({
+          title: "Connection Error",
+          description: "Unable to connect to the server. Please check your internet connection and try again.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Reset Failed",
+          description: error instanceof Error ? error.message : "Invalid token or password reset failed. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-6 relative">
+      {/* Close Button */}
+      {onClose && (
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+          aria-label="Close"
+        >
+          <X className="w-5 h-5" />
+        </button>
+      )}
+
+      {/* Logo/Icon */}
+      <div className="flex justify-center mb-2">
+        <img
+          src="/images/automexloginlogo.png"
+          alt="AutoMex Logo"
+          className="h-16 w-auto object-contain"
+          onError={(e) => {
+            e.currentTarget.src = "/images/AUTOMEX.png";
+          }}
+        />
+      </div>
+
+      {/* Title */}
+      <div className="bg-gradient-to-r from-gray-100 via-gray-50 to-gray-100 rounded-lg py-2 px-3 mb-3">
+        <h2 className="text-lg font-bold mb-0.5 text-center text-black">
+          {step === 1 ? "Forgot Password" : "Reset Password"}
+        </h2>
+        <p className="text-xs text-gray-600 text-center">
+          {step === 1
+            ? "Enter your email to receive a reset token"
+            : "Enter the token from your email and your new password"}
+        </p>
+      </div>
+
+      {/* Step 1: Email Form */}
+      {step === 1 && (
+        <form onSubmit={handleEmailSubmit}>
+          <div className="mb-4">
+            <label className="block text-xs font-semibold text-gray-900 mb-1">
+              Email <span className="text-red-500">*</span>
+            </label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Input
+                type="email"
+                value={emailData.email}
+                onChange={handleEmailChange}
+                placeholder="Enter your email address"
+                className={`w-full h-9 pl-10 pr-3 text-sm rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent ${
+                  errors.email ? "border-red-500" : "border-gray-300"
+                }`}
+              />
+            </div>
+            {errors.email && (
+              <p className="text-xs text-red-500 mt-1">{errors.email}</p>
+            )}
+          </div>
+
+          <Button
+            type="submit"
+            disabled={isLoading}
+            className="w-full h-9 bg-primary hover:bg-primary/90 text-white text-sm font-semibold rounded-lg mb-3 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Sending...
+              </>
+            ) : (
+              "Send Reset Token"
+            )}
+          </Button>
+
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={onBackToLogin}
+            className="w-full h-9 text-sm text-gray-600 hover:text-gray-900 flex items-center justify-center gap-2"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Login
+          </Button>
+        </form>
+      )}
+
+      {/* Step 2: Token + New Password Form */}
+      {step === 2 && (
+        <form onSubmit={handleResetSubmit}>
+                    {/* Info Message */}
+          <div className="mb-3 p-2 bg-blue-50 border border-blue-200 rounded-lg">
+            <p className="text-xs text-blue-800">
+              <strong>Password Reset Token:</strong> The token has been generated for{" "}
+              <span className="font-semibold">{emailData.email}</span>. 
+              {resetToken ? (
+                <span className="block mt-1 text-green-700 font-semibold">
+                  ✓ Token received! You can now set your new password below.
+                </span>
+              ) : (
+                <span> Please check your email for the token.</span>
+              )}
+            </p>
+          </div>
+
+          {/* New Password Input */}
+          <div className="mb-3">
+            <label className="block text-xs font-semibold text-gray-900 mb-1">
+              New Password <span className="text-red-500">*</span>
+            </label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Input
+                type={showPassword ? "text" : "password"}
+                name="newPassword"
+                value={resetData.newPassword}
+                onChange={handleResetChange}
+                placeholder="Enter new password (min. 8 characters)"
+                className={`w-full h-9 pl-10 pr-10 text-sm rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent ${
+                  errors.newPassword ? "border-red-500" : "border-gray-300"
+                }`}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              >
+                {showPassword ? (
+                  <EyeOff className="w-4 h-4" />
+                ) : (
+                  <Eye className="w-4 h-4" />
+                )}
+              </button>
+            </div>
+            {errors.newPassword && (
+              <p className="text-xs text-red-500 mt-1">{errors.newPassword}</p>
+            )}
+          </div>
+
+          {/* Confirm Password Input */}
+          <div className="mb-4">
+            <label className="block text-xs font-semibold text-gray-900 mb-1">
+              Confirm Password <span className="text-red-500">*</span>
+            </label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Input
+                type={showConfirmPassword ? "text" : "password"}
+                name="confirmPassword"
+                value={resetData.confirmPassword}
+                onChange={handleResetChange}
+                placeholder="Confirm new password"
+                className={`w-full h-9 pl-10 pr-10 text-sm rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent ${
+                  errors.confirmPassword ? "border-red-500" : "border-gray-300"
+                }`}
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              >
+                {showConfirmPassword ? (
+                  <EyeOff className="w-4 h-4" />
+                ) : (
+                  <Eye className="w-4 h-4" />
+                )}
+              </button>
+            </div>
+            {errors.confirmPassword && (
+              <p className="text-xs text-red-500 mt-1">
+                {errors.confirmPassword}
+              </p>
+            )}
+          </div>
+
+          <Button
+            type="submit"
+            disabled={isLoading}
+            className="w-full h-9 bg-primary hover:bg-primary/90 text-white text-sm font-semibold rounded-lg mb-3 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Resetting...
+              </>
+            ) : (
+              "Reset Password"
+            )}
+          </Button>
+
+          <div className="space-y-2">
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => {
+                  setStep(1);
+                  clearResetToken();
+                  setResetData({ newPassword: "", confirmPassword: "" });
+                }}
+                className="flex-1 h-9 text-sm text-gray-600 hover:text-gray-900 flex items-center justify-center gap-2"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Change Email
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => {
+                  clearResetToken();
+                  if (onBackToLogin) {
+                    onBackToLogin();
+                  }
+                }}
+                className="flex-1 h-9 text-sm text-gray-600 hover:text-gray-900"
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </form>
+      )}
+    </div>
+  );
+};
+
+export default ForgotPassword;

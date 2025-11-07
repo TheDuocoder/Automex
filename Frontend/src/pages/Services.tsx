@@ -142,74 +142,68 @@ const Services = () => {
       
       {/* Main Content */}
       <div className="pt-20 pb-8">
-        {/* Service Categories and Brand Selection */}
-        <div className="container mx-auto px-4 mb-8">
-          <div className="flex items-center gap-4">
-            {/* Service Categories */}
-            <div className="flex-1">
-              <CategoryTabs
-                categories={serviceCategories}
-                activeCategory={selectedCategory}
-                onCategoryChange={setSelectedCategory}
-              />
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col lg:flex-row gap-6 items-start">
+            <div className="flex-1 w-full">
+              <div className="mb-6">
+                <CategoryTabs
+                  categories={serviceCategories}
+                  activeCategory={selectedCategory}
+                  onCategoryChange={setSelectedCategory}
+                />
+              </div>
+
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-gray-900">Scheduled Packages</h2>
+              </div>
+
+              <div className="space-y-6">
+                {servicePackages.map((pkg) => (
+                  <ServiceCard
+                    key={pkg.id}
+                    id={pkg.id}
+                    name={pkg.name}
+                    thumbnail={pkg.thumbnail}
+                    warranty={pkg.warranty}
+                    recommended={pkg.recommended}
+                    features={pkg.features}
+                    moreServicesCount={pkg.moreServicesCount}
+                    originalPrice={pkg.originalPrice}
+                    discountedPrice={pkg.discountedPrice}
+                    duration={pkg.duration}
+                    offer={pkg.offer}
+                    isRecommended={pkg.isRecommended}
+                    onAddToCart={handleAddToCart}
+                  />
+                ))}
+              </div>
+
+              <div className="bg-gray-100 rounded-2xl mt-12 py-12 px-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                  <div>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">150+ Services</h3>
+                    <p className="text-gray-600">Comprehensive car care solutions</p>
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Free Pickup</h3>
+                    <p className="text-gray-600">Doorstep service at your convenience</p>
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">40% Off</h3>
+                    <p className="text-gray-600">Best prices guaranteed</p>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            {/* Brand Selector */}
-            <div className="flex-shrink-0">
+            <aside className="w-full lg:max-w-sm lg:w-96 sticky top-20 self-start">
               <BrandSelectorModal
+                variant="sidebar"
                 selectedBrand={selectedBrand}
                 onBrandSelect={setSelectedBrand}
+                className="h-[calc(100vh-6rem)] overflow-y-auto"
               />
-            </div>
-          </div>
-        </div>
-
-        {/* Scheduled Packages Section */}
-        <div className="container mx-auto px-4">
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Scheduled Packages</h2>
-          </div>
-
-          {/* Service Cards */}
-          <div className="space-y-6">
-            {servicePackages.map((pkg) => (
-              <ServiceCard
-                key={pkg.id}
-                id={pkg.id}
-                name={pkg.name}
-                thumbnail={pkg.thumbnail}
-                warranty={pkg.warranty}
-                recommended={pkg.recommended}
-                features={pkg.features}
-                moreServicesCount={pkg.moreServicesCount}
-                originalPrice={pkg.originalPrice}
-                discountedPrice={pkg.discountedPrice}
-                duration={pkg.duration}
-                offer={pkg.offer}
-                isRecommended={pkg.isRecommended}
-                onAddToCart={handleAddToCart}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Info Section */}
-        <div className="bg-gray-100 py-12 mt-12">
-          <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="text-center">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">150+ Services</h3>
-                <p className="text-gray-600">Comprehensive car care solutions</p>
-              </div>
-              <div className="text-center">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">Free Pickup</h3>
-                <p className="text-gray-600">Doorstep service at your convenience</p>
-              </div>
-              <div className="text-center">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">40% Off</h3>
-                <p className="text-gray-600">Best prices guaranteed</p>
-              </div>
-            </div>
+            </aside>
           </div>
         </div>
       </div>

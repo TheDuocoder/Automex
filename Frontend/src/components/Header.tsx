@@ -3,6 +3,7 @@ import { ChevronDown, Menu, X, User, LogOut, Settings, ShoppingBag } from "lucid
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,8 +29,19 @@ const Header = () => {
   // Determine if header should be transparent (home page) or solid (other pages)
   const isTransparent = location.pathname === '/';
   
+  const headerPadding = isTransparent ? "py-3 md:py-4 lg:py-5" : "py-2 md:py-3 lg:py-4";
+  const logoHeights = isTransparent ? "h-16 md:h-20 lg:h-24" : "h-12 md:h-14 lg:h-16";
+
   return (
-    <header className={`${isTransparent ? 'bg-transparent absolute' : 'bg-black shadow-md relative'} text-${isTransparent ? 'white' : 'white'} py-3 md:py-4 lg:py-5 ${isTransparent ? 'top-0 left-0 right-0' : ''} z-50`}>
+    <header
+      className={cn(
+        "text-white z-50",
+        headerPadding,
+        isTransparent
+          ? "bg-transparent absolute top-0 left-0 right-0"
+          : "bg-black shadow-md relative"
+      )}
+    >
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3 md:gap-6">
@@ -37,7 +49,7 @@ const Header = () => {
               <img 
                 src="/images/automex_circle_img.png" 
                 alt="AutoMex Logo" 
-                className="h-16 md:h-20 lg:h-24 w-auto object-contain"
+                className={cn("w-auto object-contain", logoHeights)}
                 onError={(e) => {
                   e.currentTarget.src = "/images/AUTOMEX.png";
                 }}
