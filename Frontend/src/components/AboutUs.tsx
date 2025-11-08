@@ -42,8 +42,8 @@ const AboutUs = () => {
           {/* Left side - Image */}
           <div className="relative mb-8 md:mb-0">
             <div className="absolute inset-0 bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-xl md:rounded-2xl blur-2xl"></div>
-            <img
-              src="/images/aboutautomex.png"
+            <img 
+              src="/images/Landing_page_images/aboutautomex.png"
               alt="AutoMex Service Center"
               className="relative w-full h-auto rounded-xl md:rounded-2xl shadow-2xl"
               onError={(e) => {

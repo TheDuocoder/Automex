@@ -47,11 +47,11 @@ const Header = () => {
           <div className="flex items-center gap-3 md:gap-6">
             <div className={cn("flex items-center cursor-pointer", isTransparent && "-mt-2 md:-mt-3 lg:-mt-4")} onClick={() => navigate('/')}>
               <img 
-                src="/images/Red_Automex.png" 
+                src="/images/Landing_page_images/Red_Automex.png" 
                 alt="AutoMex Logo" 
                 className={cn("w-auto object-contain", logoHeights)}
                 onError={(e) => {
-                  e.currentTarget.src = "/images/AUTOMEX.png";
+                  e.currentTarget.src = "/images/Landing_page_images/AUTOMEX.png";
                 }}
               />
             </div>

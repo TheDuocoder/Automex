@@ -5,21 +5,21 @@ const HowItWorks = () => {
       title: "Select The Perfect Car Service",
       description: "From AutoMex's broad portfolio of services",
       icon: "🚗",
-      image: "/images/selecttheperfectcarservice.png",
+      image: "/images/Landing_page_images/selecttheperfectcarservice.png",
     },
     {
       number: "2",
       title: "Schedule Free Doorstep Pick-up",
       description: "We offer free pick up and drop for all services booked",
       icon: "🚙",
-      image: "/images/schedulefreedoorsteppick-up.png",
+      image: "/images/Landing_page_images/schedulefreedoorsteppick-up.png",
     },
     {
       number: "3",
       title: "Track Your Car Service Real-Time",
       description: "We will take care of everything from here!",
       icon: "⚙️",
-      image: "/images/tackyourcarservicereal-time.png",
+      image: "/images/Landing_page_images/tackyourcarservicereal-time.png",
     },
   ];
 

@@ -8,9 +8,9 @@ const Hero = () => {
   
   // Array of car service background images
   const backgroundImages = [
-    "/images/frontpage1.jpg", // Professional luxury car service center
-    "/images/frontpage2.jpg", // Professional luxury car service center
-    "/images/automexfrontpage3.jpg" // Professional luxury car service center
+    "/images/Landing_page_images/frontpage1.jpg", // Professional luxury car service center
+    "/images/Landing_page_images/frontpage2.jpg", // Professional luxury car service center
+    "/images/Landing_page_images/automexfrontpage3.jpg" // Professional luxury car service center
   ];
 
   // Auto-rotate images every 5 seconds

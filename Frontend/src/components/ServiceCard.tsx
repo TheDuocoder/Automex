@@ -66,8 +66,8 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   const displayImage = (
     <div
       className={`${variant === "gom"
-        ? "w-[115px] h-[115px] rounded-[6px]"
-        : "h-36 w-full rounded-xl"} overflow-hidden bg-white flex items-center justify-center border border-gray-200`}
+        ? "w-[150px] h-[150px] rounded-[6px]"
+        : "h-48 w-full rounded-xl"} overflow-hidden bg-white flex items-center justify-center border border-gray-200`}
       style={{ backgroundColor: '#ffffff' }}
     >
       {thumbnail ? (
@@ -76,7 +76,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         <img
           src="/images/service_icons/car_service.png"
           alt="Service"
-          className={`${variant === "gom" ? "h-[48px] w-[48px]" : "h-20 w-20"} object-contain opacity-90 bg-white`}
+          className={`${variant === "gom" ? "h-[60px] w-[60px]" : "h-24 w-24"} object-contain opacity-90 bg-white`}
           style={{ backgroundColor: '#ffffff' }}
         />
       )}
@@ -109,8 +109,8 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 
         <CardContent className={`${variant === "gom" ? "p-4" : "p-4 md:p-5"}`}>
           <div className="flex flex-col md:flex-row gap-4 md:gap-6">
-            <div className={`w-full ${variant === "gom" ? "md:w-[150px]" : "md:w-[200px]"} flex-shrink-0 h-full`}>
-              <div className={`${variant === "gom" ? "h-auto" : "h-32"}`}>{displayImage}</div>
+            <div className={`w-full ${variant === "gom" ? "md:w-[170px]" : "md:w-[220px]"} flex-shrink-0 h-full`}>
+              <div className={`${variant === "gom" ? "h-auto" : "h-48"}`}>{displayImage}</div>
             </div>
 
             <div className="flex-1 space-y-3">

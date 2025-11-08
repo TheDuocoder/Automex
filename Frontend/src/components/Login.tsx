@@ -129,11 +129,11 @@ const Login = ({ onClose, onSwitchToRegister }: LoginProps) => {
       {/* Logo/Icon */}
       <div className="flex justify-center mb-2">
         <img 
-          src="/images/Red_circle_Automex.png" 
+          src="/images/Landing_page_images/Red_circle_Automex.png" 
           alt="AutoMex Logo" 
           className="h-32 w-auto object-contain"
           onError={(e) => {
-            e.currentTarget.src = "/images/Red_Automex.png";
+            e.currentTarget.src = "/images/Landing_page_images/Red_Automex.png";
           }}
         />
       </div>

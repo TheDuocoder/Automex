@@ -65,7 +65,7 @@ const ContactUs = () => {
         <div 
           className="absolute inset-0 z-[1] opacity-30"
           style={{
-            backgroundImage: 'url("/images/automexfrontpage3.jpg")',
+            backgroundImage: 'url("/images/Landing_page_images/automexfrontpage3.jpg")',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             filter: 'blur(8px) brightness(0.4)'

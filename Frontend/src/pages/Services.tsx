@@ -224,20 +224,20 @@ const Services = () => {
     {
       id: "front-brake-pads",
       name: "Front Brake Pads",
-      thumbnail: "/images/service_icons/car_inspection.png",
+      thumbnail: "/images/product_images/frontbrakes.png",
       warranty: "1 Month Warranty",
       recommended: "Every 20,000 Kms or 12 Months (Recommended)",
       features: [
         { name: "Opening & Fitting of Front Brake Pads", included: true },
         { name: "Applicable for Set of 2 Front Brake Pads", included: true },
         { name: "Front Brake Disc Cleaning", included: true },
-        { name: "Front Brake Pads Replacement (Mechanics)", included: true },
+        { name: "Front Brake Pads Replacement (OES)", included: true },
         { name: "Inspection of Front Brake Calipers", included: true }
       ],
       moreServicesCount: 1,
-      originalPrice: 2599,
-      discountedPrice: 2199,
-      duration: "90 Mins",
+      originalPrice: 2374,
+      discountedPrice: 1899,
+      duration: "3 Hours",
       specialLabel: "OEM/BRAND INCLUDED",
       isRecommended: false,
       descriptions: [
@@ -248,7 +248,7 @@ const Services = () => {
     {
       id: "rear-brake-shoes",
       name: "Rear Brake Shoes",
-      thumbnail: "/images/service_icons/car-inspection.png",
+      thumbnail: "/images/product_images/rearbreak_shoes.png",
       warranty: "1 Month Warranty",
       recommended: "Every 20,000 Kms or 12 Months (Recommended)",
       features: [
@@ -272,7 +272,7 @@ const Services = () => {
     {
       id: "front-brake-discs",
       name: "Front Brake Discs",
-      thumbnail: "/images/service_icons/tyres_and_wheels_care.png",
+      thumbnail: "/images/product_images/frontbrake_disk.png",
       warranty: "1 Month Warranty • Corrosion Resistance",
       recommended: "Best Performance (Single OE Unit)",
       features: [
@@ -295,7 +295,7 @@ const Services = () => {
     {
       id: "caliper-pin-replacement",
       name: "Caliper Pin Replacement",
-      thumbnail: "/images/service_icons/car_denting and painting1.png",
+      thumbnail: "/images/product_images/caliperpin_replacement.png",
       warranty: "Recommended in case of noise from brakes",
       recommended: "Caliper Pin Replacement (OES) • Caliper Assembly Cost Additional",
       features: [
@@ -315,15 +315,15 @@ const Services = () => {
       ]
     },
     {
-      id: "disc-turning",
-      name: "Disc Turning",
-      thumbnail: "/images/service_icons/car_tyre and wheels_care.png",
+      id: "brake-drums-turning",
+      name: "Brake Drums Turning",
+      thumbnail: "/images/product_images/break_drums_turning.png",
       warranty: "1 Month Warranty on Labour",
-      recommended: "Applicable for Set of 2 Discs (Wheels) • Opening & Fitting of Brake Discs",
+      recommended: "Applicable for Set of 2 Brake Drums • Professional Drum Machining",
       features: [
-        { name: "Inspection of Brake Discs", included: true },
-        { name: "Resurfacing of Brake Discs/Rotors", included: true },
-        { name: "Brake Pad Cleaning", included: true }
+        { name: "Inspection of Brake Drums", included: true },
+        { name: "Precision Brake Drums Turning", included: true },
+        { name: "Brake Shoes Cleaning & Adjustment", included: true }
       ],
       moreServicesCount: 0,
       originalPrice: 2199,
@@ -332,14 +332,14 @@ const Services = () => {
       specialLabel: "LABOUR INCLUDED",
       isRecommended: false,
       descriptions: [
-        "On-car disc turning restores smooth braking and reduces pedal pulsation.",
-        "Includes rotor runout measurement and brake bed-in procedure."
+        "Professional brake drums turning restores smooth braking performance.",
+        "Includes drum runout measurement and brake shoes adjustment procedure."
       ]
     },
     {
       id: "handbrake-wire-replacement",
       name: "Handbrake Wire Replacement",
-      thumbnail: "/images/service_icons/car_detailing_services.png",
+      thumbnail: "/images/product_images/handbrack_wire.png",
       warranty: "1 Month Warranty",
       recommended: "Restores handbrake bite & safety",
       features: [
