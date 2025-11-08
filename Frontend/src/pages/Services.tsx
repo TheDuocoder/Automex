@@ -505,27 +505,27 @@ const Services = () => {
         <div className="max-w-[1400px] mx-auto pl-2 pr-6">
           <div className="flex gap-8">
             {/* Left Content Area */}
-            <div className="flex-1 max-w-[880px]">
+            <div className="flex-1 max-w-[1280px]">
               {/* Category Navigation */}
-              <div className="mb-1 -ml-2">
-                <div className="bg-white rounded-xl shadow-[0_2px_12px_rgba(0,0,0,0.06)] border border-gray-100/50 px-3 py-1">
-                  <CategoryTabs
-                    categories={serviceCategories}
-                    activeCategory={selectedCategory}
-                    onCategoryChange={setSelectedCategory}
-                  />
-                </div>
+              <div className="mb-6">
+                <CategoryTabs
+                  categories={serviceCategories}
+                  activeCategory={selectedCategory}
+                  onCategoryChange={setSelectedCategory}
+                />
               </div>
 
               {/* Service Packages Section */}
-              <div className="mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              <div className="mb-8">
+                <h2 className="text-2xl font-bold text-gray-900 mb-8">
                   {selectedCategory === "ac-service" ? "Service Packages" : 
                    selectedCategory === "batteries" ? "Amaron" :
-                   selectedCategory === "tyres" ? "Premium Tyres" : "Scheduled Packages"}
+                   selectedCategory === "tyres" ? "Premium Tyres" : 
+                   selectedCategory === "car-inspections" ? "Inspection Services" :
+                   selectedCategory === "car-insurance" ? "Insurance Plans" : "Scheduled Packages"}
                 </h2>
                 
-                <div className="space-y-8">
+                <div className="space-y-6">
                   {(servicePackages[selectedCategory as keyof typeof servicePackages] || servicePackages["car-services"]).map((pkg) => (
                     <ServiceCard
                       key={pkg.id}
@@ -549,7 +549,7 @@ const Services = () => {
               </div>
 
               {/* Statistics Section */}
-              <div className="bg-gray-100 rounded-2xl mt-12 py-12 px-6">
+              <div className="bg-gray-100 rounded-2xl mt-16 py-12 px-8">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
                   <div>
                     <h3 className="text-2xl font-bold text-gray-900 mb-2">150+ Services</h3>

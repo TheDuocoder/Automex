@@ -379,12 +379,12 @@ const BrandSelectorModal = ({
           background: 'linear-gradient(to bottom, #FFFFFF, #FAFAFA)'
         }}
       >
-        <div className="px-5 pt-6 pb-4 border-b border-gray-100">
+        <div className="px-5 pt-3 pb-4 border-b border-gray-100">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Select Manufacturer</h3>
           {stage !== "brand" && (
             <button
               onClick={handleBack}
-              className="inline-flex items-center gap-1 text-xs font-semibold text-gray-600 hover:text-gray-900 mt-2"
+              className="inline-flex items-center gap-1 text-xs font-semibold text-gray-600 hover:text-gray-900 mt-1"
             >
               <ChevronLeft className="h-4 w-4" />
               Back

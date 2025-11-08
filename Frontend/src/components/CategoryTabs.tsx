@@ -50,64 +50,52 @@ const CategoryTabs = ({ categories, activeCategory, onCategoryChange }: Category
   };
 
   return (
-    <div className="relative bg-white py-6 px-6">
+    <div className="relative py-4 w-full overflow-hidden">
       {/* Left Arrow */}
       <button
         onClick={goToPrevious}
         disabled={!canGoPrev}
-        className={`absolute left-3 top-1/2 transform -translate-y-1/2 z-20 rounded-full p-3 shadow-lg transition-all duration-200 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500 ${
-          canGoPrev ? "bg-gray-100 hover:bg-gray-200" : "bg-gray-100/60 cursor-not-allowed shadow-none"
+        className={`absolute left-0 top-1/2 transform -translate-y-1/2 z-20 rounded-full p-2 transition-all duration-200 ${
+          canGoPrev ? "bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-gray-800" : "invisible"
         }`}
         aria-label="Previous category"
       >
-        <ChevronLeft className={`h-4 w-4 ${canGoPrev ? "text-gray-700" : "text-gray-400"}`} />
+        <ChevronLeft className="h-5 w-5" />
       </button>
       
       {/* Categories Container */}
-      <div className="px-14 overflow-hidden">
-        <div className="grid grid-cols-6 gap-4 transition-transform duration-300 ease-out" style={{ transform: `translateX(0)` }}>
+      <div className="px-6">
+        <div className="grid grid-cols-6 gap-4">
           {visibleCategories.map((category) => {
             const isActive = category.id === activeCategory;
             return (
               <button
                 key={category.id}
                 onClick={() => onCategoryChange(category.id)}
-                className={`flex flex-col items-center py-6 px-1 rounded-xl transition-all duration-300 relative w-full min-w-0 ${
-                  isActive 
-                    ? 'bg-red-50' 
-                    : 'bg-white hover:bg-gray-50'
+                className={`flex flex-col items-center py-2 px-2 transition-all duration-200 relative w-full min-w-0 ${
+                  isActive ? 'transform scale-105' : 'hover:scale-102'
                 }`}
-                style={isActive ? { backgroundColor: '#FFF5F5' } : {}}
+                style={{ minWidth: '140px' }}
               >
                 {/* Icon Container */}
-                <div className={`w-28 h-28 flex items-center justify-center mb-1.5 p-3 transition-all duration-300 ${
-                  isActive ? 'transform scale-110' : 'transform scale-100 hover:scale-105'
-                }`}>
-                  <div 
-                    className={`transition-all duration-300 ${
-                      isActive ? 'text-red-600' : 'text-gray-600 hover:text-gray-700'
-                    }`}
-                    style={isActive ? {
-                      filter: 'hue-rotate(0deg) saturate(1.5) brightness(1.1) drop-shadow(0 2px 4px rgba(220, 38, 38, 0.25))',
-                      transform: 'scale(1)'
-                    } : {}}
-                  >
+                <div className="w-16 h-16 flex items-center justify-center mb-2">
+                  <div className={`w-12 h-12 ${isActive ? 'text-red-500' : 'text-gray-500'}`}>
                     {category.icon}
                   </div>
                 </div>
                 
                 {/* Category Name */}
-                <div className="w-full px-1">
-                  <span className={`text-xs text-center leading-tight transition-all duration-300 font-inter block ${
-                    isActive ? 'text-black font-bold' : 'text-gray-700 font-medium hover:text-gray-900'
-                  }`}>
+                <div className="w-full flex justify-center px-1">
+                  <span className={`text-xs font-medium text-center leading-tight transition-colors duration-200 whitespace-nowrap overflow-hidden text-ellipsis max-w-full ${
+                    isActive ? 'text-gray-900' : 'text-gray-600 hover:text-gray-800'
+                  }`} style={{fontSize: '11px', textAlign: 'center', display: 'block', maxWidth: '120px'}}>
                     {category.name}
                   </span>
                 </div>
                 
                 {/* Active Underline */}
                 {isActive && (
-                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-red-600 rounded-t-full transition-all duration-300 animate-in slide-in-from-bottom-2"></div>
+                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full h-1 bg-red-500 rounded-t"></div>
                 )}
               </button>
             );
@@ -126,16 +114,13 @@ const CategoryTabs = ({ categories, activeCategory, onCategoryChange }: Category
       <button
         onClick={goToNext}
         disabled={!canGoNext}
-        className={`absolute right-3 top-1/2 transform -translate-y-1/2 z-20 rounded-full p-3 shadow-lg transition-all duration-200 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500 ${
-          canGoNext ? "bg-gray-100 hover:bg-gray-200" : "bg-gray-100/60 cursor-not-allowed shadow-none"
+        className={`absolute right-0 top-1/2 transform -translate-y-1/2 z-20 rounded-full p-2 transition-all duration-200 ${
+          canGoNext ? "bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-gray-800" : "invisible"
         }`}
         aria-label="Next category"
       >
-        <ChevronRight className={`h-4 w-4 ${canGoNext ? "text-gray-700" : "text-gray-400"}`} />
+        <ChevronRight className="h-5 w-5" />
       </button>
-      
-      {/* Page Indicators */}
-      <div className="mt-5 h-2" aria-hidden="true"></div>
     </div>
   );
 };
