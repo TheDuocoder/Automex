@@ -318,17 +318,19 @@ const Services = () => {
       id: "brake-drums-turning",
       name: "Brake Drums Turning",
       thumbnail: "/images/product_images/break_drums_turning.png",
-      warranty: "1 Month Warranty on Labour",
-      recommended: "Applicable for Set of 2 Brake Drums • Professional Drum Machining",
+      warranty: "1 Month Warranty",
+      recommended: "Recommended : In Case of Screeching Noise from Brakes",
       features: [
-        { name: "Inspection of Brake Drums", included: true },
-        { name: "Precision Brake Drums Turning", included: true },
-        { name: "Brake Shoes Cleaning & Adjustment", included: true }
+        { name: "Brake Drums Turning", included: true },
+        { name: "Refacing of Brake Drums", included: true },
+        { name: "Free Pickup & Drop", included: true },
+        { name: "Opening & Fitting of Brake Drums", included: true },
+        { name: "Applicable for Set of 2 Brake Drums", included: true }
       ],
       moreServicesCount: 0,
-      originalPrice: 2199,
-      discountedPrice: 1799,
-      duration: "75 Mins",
+      originalPrice: 1124,
+      discountedPrice: 899,
+      duration: "4 Hours",
       specialLabel: "LABOUR INCLUDED",
       isRecommended: false,
       descriptions: [
@@ -357,6 +359,29 @@ const Services = () => {
       descriptions: [
         "Ensures optimal parking brake hold with fresh OEM cables and adjusters.",
         "Includes underbody inspection and corrosion protection for linkages."
+      ]
+    },
+    {
+      id: "wheel-cylinder-replacement",
+      name: "Wheel Cylinder Replacement",
+      thumbnail: "/images/product_images/wheel_cylinder_replacement.png",
+      warranty: "Recommended : In case of Poor Braking",
+      recommended: "Wheel Cylinder Replacement (OES)",
+      features: [
+        { name: "Wheel Cylinder Replacement (OES)", included: true },
+        { name: "Brake Shoe & Brake Fluid Cost Additional", included: true },
+        { name: "Spare Part Price Only", included: true },
+        { name: "Free Pickup & Drop", included: true }
+      ],
+      moreServicesCount: 0,
+      originalPrice: 1476,
+      discountedPrice: 1181,
+      duration: "6 Hours",
+      specialLabel: "LABOUR INCLUDED",
+      isRecommended: false,
+      descriptions: [
+        "Professional wheel cylinder replacement service with OES parts.",
+        "Includes brake system inspection and performance verification."
       ]
       }
     ],
