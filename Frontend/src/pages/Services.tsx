@@ -1137,9 +1137,15 @@ const Services = () => {
                 duration={pkg.duration}
                 offer={pkg.offer}
                 isRecommended={pkg.isRecommended}
-                          specialLabel={pkg.specialLabel}
-                          descriptions={pkg.descriptions}
-                variant={["car-services", "batteries"].includes(selectedCategory) ? "gom" : "default"}
+                specialLabel={pkg.specialLabel}
+                descriptions={pkg.descriptions}
+                variant={
+                  pkg.id === "front-brake-pads" 
+                    ? "reference" 
+                    : ["car-services", "batteries"].includes(selectedCategory) 
+                    ? "gom" 
+                    : "default"
+                }
                 onAddToCart={handleAddToCart}
               />
                       )}

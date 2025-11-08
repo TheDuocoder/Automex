@@ -33,7 +33,7 @@ interface ServiceCardProps {
   onAddToCart: (id: string, name: string) => void;
   descriptions?: string[];
   // Visual variant to match external reference exactly for Car Services section
-  variant?: "default" | "gom";
+  variant?: "default" | "gom" | "reference";
 }
 
 const ServiceCard: React.FC<ServiceCardProps> = ({
@@ -65,9 +65,13 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 
   const displayImage = (
     <div
-      className={`${variant === "gom"
-        ? "w-[150px] h-[150px] rounded-[6px]"
-        : "h-48 w-full rounded-xl"} overflow-hidden bg-white flex items-center justify-center border border-gray-200`}
+      className={`${
+        variant === "gom"
+          ? "w-[150px] h-[150px] rounded-[6px]"
+          : variant === "reference"
+          ? "w-[180px] h-[120px] rounded-lg"
+          : "h-48 w-full rounded-xl"
+      } overflow-hidden bg-white flex items-center justify-center border border-gray-200`}
       style={{ backgroundColor: '#ffffff' }}
     >
       {thumbnail ? (
@@ -76,7 +80,13 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         <img
           src="/images/service_icons/car_service.png"
           alt="Service"
-          className={`${variant === "gom" ? "h-[60px] w-[60px]" : "h-24 w-24"} object-contain opacity-90 bg-white`}
+          className={`${
+            variant === "gom" 
+              ? "h-[60px] w-[60px]" 
+              : variant === "reference"
+              ? "h-16 w-16"
+              : "h-24 w-24"
+          } object-contain opacity-90 bg-white`}
           style={{ backgroundColor: '#ffffff' }}
         />
       )}
@@ -85,98 +95,175 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 
   return (
     <div className="space-y-4">
-      <Card className={`relative overflow-hidden border border-gray-200 bg-white ${variant === "gom" ? "rounded-[6px] shadow-sm" : "rounded-xl"}`}>
-        {isRecommended && (
-          <div className="absolute -top-4 left-0">
-            <div className="bg-[#3BAA2A] text-white text-xs font-semibold px-4 py-1 rounded-t-md rounded-br-md shadow-sm">
-              RECOMMENDED
-            </div>
+      <Card className={`relative overflow-hidden border border-gray-200 bg-white ${
+        variant === "gom" 
+          ? "rounded-[6px] shadow-sm" 
+          : variant === "reference"
+          ? "rounded-xl shadow-sm"
+          : "rounded-xl"
+      }`}>
+        {variant === "reference" ? (
+          <div className="absolute top-4 right-4 flex items-center gap-1 text-sm text-gray-600">
+            <Clock className="h-4 w-4" />
+            <span>Takes {duration}</span>
+          </div>
+        ) : (
+          <div className="absolute top-4 right-6 text-xs text-gray-700 bg-gray-100 px-3 py-1 rounded-full flex items-center gap-1">
+            <Clock className="h-3.5 w-3.5" />
+            <span className="tracking-wide">{duration}</span>
           </div>
         )}
 
-        {specialLabel && !isRecommended && (
-          <div className="absolute -top-4 left-0">
-            <div className="bg-[#3BAA2A] text-white text-xs font-semibold px-4 py-1 rounded-t-md rounded-br-md shadow-sm">
-              {specialLabel}
-            </div>
-          </div>
-        )}
-
-        <div className="absolute top-4 right-6 text-xs text-gray-700 bg-gray-100 px-3 py-1 rounded-full flex items-center gap-1">
-          <Clock className="h-3.5 w-3.5" />
-          <span className="tracking-wide">{duration}</span>
-        </div>
-
-        <CardContent className={`${variant === "gom" ? "p-4" : "p-4 md:p-5"}`}>
-          <div className="flex flex-col md:flex-row gap-4 md:gap-6">
-            <div className={`w-full ${variant === "gom" ? "md:w-[170px]" : "md:w-[220px]"} flex-shrink-0 h-full`}>
-              <div className={`${variant === "gom" ? "h-auto" : "h-48"}`}>{displayImage}</div>
-            </div>
-
-            <div className="flex-1 space-y-3">
-              <h3 className={`${variant === "gom" ? "text-[17px]" : "text-[20px]"} font-bold text-gray-900 leading-tight`}>{name}</h3>
-
-              <div className={`flex flex-wrap items-center gap-4 ${variant === "gom" ? "text-[13px]" : "text-[14px]"} text-gray-700`}>
-                <span className="whitespace-nowrap">• {warranty}</span>
-                <span className="whitespace-nowrap">• {recommended}</span>
+        <CardContent className={`${
+          variant === "gom" 
+            ? "p-4" 
+            : variant === "reference"
+            ? "p-6"
+            : "p-4 md:p-5"
+        }`}>
+          {variant === "reference" ? (
+            // Reference layout matching the first image exactly
+            <div className="flex gap-6">
+              <div className="flex-shrink-0">
+                {displayImage}
               </div>
+              
+              <div className="flex-1 space-y-4">
+                <h3 className="text-xl font-semibold text-[#212121] leading-tight">{name}</h3>
 
-              <div className={`grid grid-cols-1 md:grid-cols-2 gap-1 ${variant === "gom" ? "text-[13px]" : "text-[14px]"} text-gray-700`}>
-                {visibleFeatures.map((feature, index) => (
-                  <div key={index} className="flex items-center gap-1.5 whitespace-nowrap">
-                    <div className="w-4 h-4 bg-[#CBF2CB] rounded-full flex items-center justify-center text-green-600 text-xs">
-                      ✓
+                <div className="flex items-center gap-6 text-sm text-[#757575]">
+                  <span>• {warranty}</span>
+                  <span>• {recommended}</span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-y-2 gap-x-4 text-sm text-[#212121]">
+                  {visibleFeatures.map((feature, index) => (
+                    <div key={index} className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-[#4CAF50] rounded-full flex items-center justify-center text-white text-xs font-bold">
+                        ✓
+                      </div>
+                      <span>{feature.name}</span>
                     </div>
-                    {feature.name}
-                  </div>
-                ))}
-              </div>
-
-              {shouldShowButton && (
-                <button
-                  className="text-green-600 text-sm font-semibold flex items-center gap-1 underline underline-offset-2 hover:text-green-700 transition-colors"
-                  onClick={() => setShowMore((prev) => !prev)}
-                >
-                  {!showMore && <Plus className="h-4 w-4" />}
-                  {showMore
-                    ? "Show Less"
-                    : remainingCount > 0
-                      ? `+ ${remainingCount} more View All`
-                      : "View More"}
-                </button>
-              )}
-
-              {showMore && descriptions.length > 0 && (
-                <div className="space-y-2 text-sm text-gray-700 border border-gray-200 rounded-lg p-3 bg-gray-50/70">
-                  {descriptions.map((text, idx) => (
-                    <p key={idx} className="leading-relaxed">
-                      {text}
-                    </p>
                   ))}
                 </div>
-              )}
 
-              <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 pt-1">
-                {showPrice && (
-                  <div className="text-gray-700 space-y-1 md:space-y-2">
-                    <div className={`${variant === "gom" ? "text-[13px]" : "text-sm"} text-gray-400 line-through whitespace-nowrap`}>
-                      Rs. {originalPrice.toLocaleString()}
-                    </div>
-                    <div className={`${variant === "gom" ? "text-[16px] font-semibold" : "text-[24px] font-bold"} text-gray-900 whitespace-nowrap`}>
-                      ₹ {discountedPrice.toLocaleString()}
-                    </div>
+                {shouldShowButton && (
+                  <button
+                    className="text-[#4CAF50] text-sm font-medium flex items-center gap-1 hover:text-[#45A049] transition-colors"
+                    onClick={() => setShowMore((prev) => !prev)}
+                  >
+                    {!showMore && <Plus className="h-4 w-4" />}
+                    {showMore
+                      ? "Show Less"
+                      : remainingCount > 0
+                        ? `+ ${remainingCount} more View All`
+                        : "View More"}
+                  </button>
+                )}
+
+                {showMore && descriptions.length > 0 && (
+                  <div className="space-y-2 text-sm text-gray-700 border border-gray-200 rounded-lg p-3 bg-gray-50/70">
+                    {descriptions.map((text, idx) => (
+                      <p key={idx} className="leading-relaxed">
+                        {text}
+                      </p>
+                    ))}
                   </div>
                 )}
 
-                <Button
-                  className={`${variant === "gom" ? "uppercase tracking-wider text-[14px] font-semibold border border-red-500 text-red-500 bg-white hover:bg-red-50 hover:text-red-600 w-[127px] h-[40px] rounded" : "uppercase tracking-wider text-sm font-semibold border-2 border-red-500 text-red-500 bg-white hover:bg-red-50 hover:text-red-600 px-5 py-2 rounded-md"}`}
-                  onClick={() => onAddToCart(id, name)}
-                >
-                  Select Car
-                </Button>
+                <div className="flex items-end justify-between pt-2">
+                  {showPrice && (
+                    <div className="space-y-1">
+                      <div className="text-sm text-[#757575] line-through">
+                        Rs. {originalPrice.toLocaleString()}
+                      </div>
+                      <div className="text-2xl font-semibold text-[#212121]">
+                        ₹ {discountedPrice.toLocaleString()}
+                      </div>
+                    </div>
+                  )}
+
+                  <Button
+                    className="bg-white border border-[#E53935] text-[#E53935] hover:bg-[#E53935] hover:text-white px-6 py-2 rounded font-medium transition-colors"
+                    onClick={() => onAddToCart(id, name)}
+                  >
+                    + ADD TO CART
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
+          ) : (
+            // Original layout for other variants
+            <div className="flex flex-col md:flex-row gap-4 md:gap-6">
+              <div className={`w-full ${variant === "gom" ? "md:w-[170px]" : "md:w-[220px]"} flex-shrink-0 h-full`}>
+                <div className={`${variant === "gom" ? "h-auto" : "h-48"}`}>{displayImage}</div>
+              </div>
+
+              <div className="flex-1 space-y-3">
+                <h3 className={`${variant === "gom" ? "text-[17px]" : "text-[20px]"} font-bold text-gray-900 leading-tight`}>{name}</h3>
+
+                <div className={`flex flex-wrap items-center gap-4 ${variant === "gom" ? "text-[13px]" : "text-[14px]"} text-gray-700`}>
+                  <span className="whitespace-nowrap">• {warranty}</span>
+                  <span className="whitespace-nowrap">• {recommended}</span>
+                </div>
+
+                <div className={`grid grid-cols-1 md:grid-cols-2 gap-1 ${variant === "gom" ? "text-[13px]" : "text-[14px]"} text-gray-700`}>
+                  {visibleFeatures.map((feature, index) => (
+                    <div key={index} className="flex items-center gap-1.5 whitespace-nowrap">
+                      <div className="w-4 h-4 bg-[#4CAF50] rounded-full flex items-center justify-center text-white text-xs font-bold">
+                        ✓
+                      </div>
+                      {feature.name}
+                    </div>
+                  ))}
+                </div>
+
+                {shouldShowButton && (
+                  <button
+                    className="text-green-600 text-sm font-semibold flex items-center gap-1 underline underline-offset-2 hover:text-green-700 transition-colors"
+                    onClick={() => setShowMore((prev) => !prev)}
+                  >
+                    {!showMore && <Plus className="h-4 w-4" />}
+                    {showMore
+                      ? "Show Less"
+                      : remainingCount > 0
+                        ? `+ ${remainingCount} more View All`
+                        : "View More"}
+                  </button>
+                )}
+
+                {showMore && descriptions.length > 0 && (
+                  <div className="space-y-2 text-sm text-gray-700 border border-gray-200 rounded-lg p-3 bg-gray-50/70">
+                    {descriptions.map((text, idx) => (
+                      <p key={idx} className="leading-relaxed">
+                        {text}
+                      </p>
+                    ))}
+                  </div>
+                )}
+
+                <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 pt-1">
+                  {showPrice && (
+                    <div className="text-gray-700 space-y-1 md:space-y-2">
+                      <div className={`${variant === "gom" ? "text-[13px]" : "text-sm"} text-gray-400 line-through whitespace-nowrap`}>
+                        Rs. {originalPrice.toLocaleString()}
+                      </div>
+                      <div className={`${variant === "gom" ? "text-[16px] font-semibold" : "text-[24px] font-bold"} text-gray-900 whitespace-nowrap`}>
+                        ₹ {discountedPrice.toLocaleString()}
+                      </div>
+                    </div>
+                  )}
+
+                  <Button
+                    className={`${variant === "gom" ? "uppercase tracking-wider text-[14px] font-semibold border border-red-500 text-red-500 bg-white hover:bg-red-50 hover:text-red-600 w-[127px] h-[40px] rounded" : "uppercase tracking-wider text-sm font-semibold border-2 border-red-500 text-red-500 bg-white hover:bg-red-50 hover:text-red-600 px-5 py-2 rounded-md"}`}
+                    onClick={() => onAddToCart(id, name)}
+                  >
+                    Select Car
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
 
