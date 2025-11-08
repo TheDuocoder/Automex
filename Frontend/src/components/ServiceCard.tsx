@@ -59,14 +59,15 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   const shouldShowButton = hasMoreFeatures || descriptions.length > 0;
 
   const displayImage = (
-    <div className="h-48 w-full rounded-xl overflow-hidden bg-gray-100 flex items-center justify-center border border-gray-200">
+    <div className="h-48 w-full rounded-xl overflow-hidden bg-white flex items-center justify-center border border-gray-200" style={{ backgroundColor: '#ffffff' }}>
       {thumbnail ? (
-        <img src={thumbnail} alt={name} className="w-full h-full object-cover" />
+        <img src={thumbnail} alt={name} className="w-full h-full object-contain bg-white" style={{ backgroundColor: '#ffffff' }} />
       ) : (
         <img
           src="/images/service_icons/car_service.png"
           alt="Service"
-          className="h-24 w-24 object-contain opacity-90"
+          className="h-24 w-24 object-contain opacity-90 bg-white"
+          style={{ backgroundColor: '#ffffff' }}
         />
       )}
     </div>

@@ -395,70 +395,33 @@ const Services = () => {
         isRecommended: false
       },
       {
-        id: "complete-ac-service",
-        name: "Complete AC Service",
-        thumbnail: "/images/Services/detailing service.png",
-        warranty: "1000 Kms or 2 Months Warranty",
-        recommended: "Every 8,000 Kms or 6 Months (Recommended)",
+        id: "high-performance-ac-service",
+        name: "High Performance AC Service",
+        thumbnail: "/images/Services/ac_service_technician.png",
+        warranty: "1,000 kms or 1 Month Warranty",
+        recommended: "Every 10,000 Kms or 1 Year (Recommended)",
         features: [
-          { name: "Complete AC Gas Refill", included: true },
-          { name: "AC Filter Replacement", included: true },
-          { name: "Condenser Deep Cleaning", included: true },
-          { name: "Evaporator Coil Cleaning", included: true },
-          { name: "Compressor Check & Service", included: true },
-          { name: "AC Vent Sanitization", included: true },
-          { name: "Thermostat Calibration", included: true },
-          { name: "Leak Seal Replacement", included: true }
+          { name: "AC Vent Cleaning", included: true },
+          { name: "AC Leak Test", included: true },
+          { name: "Dashboard Removing Refitting", included: true },
+          { name: "Dashboard Cleaning", included: true },
+          { name: "AC Gas (Upto 600gms)", included: true }
         ],
         moreServicesCount: 4,
-        descriptions: [
-          "AC evacuation, vacuuming and refill with OEM specified refrigerant.",
-          "Replacement of O-rings, valve cores and seals wherever necessary.",
-          "Electrical inspection of relays, blower resistors and control unit.",
-          "Cabin filter replacement with pollen filter upgrade."
-        ],
-        originalPrice: 2999,
-        discountedPrice: 2299,
-        duration: "Takes 6 hours",
+        originalPrice: 4570,
+        discountedPrice: 3199,
+        duration: "Takes 8 Hours",
         specialLabel: "FREE AC GAS",
         offer: {
-          price: 1899,
-          discount: "Extra ₹400 OFF",
-          badgeColor: "bg-green-500"
-        },
-        isRecommended: true
-      },
-      {
-        id: "ac-repair-service",
-        name: "AC Repair & Diagnosis",
-        thumbnail: "/images/Services/inspection service.png",
-        warranty: "1500 Kms or 3 Months Warranty",
-        recommended: "When AC issues arise",
-        features: [
-          { name: "Complete AC Diagnosis", included: true },
-          { name: "Compressor Repair/Replace", included: true },
-          { name: "AC Leak Detection & Fix", included: true },
-          { name: "Thermostat Check & Fix", included: true },
-          { name: "Electrical Circuit Check", included: true },
-          { name: "Cabin Vent Sterilisation", included: true },
-          { name: "Expansion Valve Replacement", included: true }
-        ],
-        moreServicesCount: 3,
-        descriptions: [
-          "Detailed scan tool diagnostics covering pressure sensors and evaporator temperature.",
-          "Custom repair plan with OEM parts for compressor and clutch assembly.",
-          "Leak repair followed by refrigerant refill and performance validation.",
-          "Warranty-backed service with complimentary follow-up inspection."
-        ],
-        originalPrice: 4599,
-        discountedPrice: 3499,
-        duration: "Takes 8 hours",
-        specialLabel: "FREE DIAGNOSIS",
-        offer: {
-          price: 2999,
+          price: 2699,
           discount: "Extra ₹500 OFF",
           badgeColor: "bg-green-500"
         },
+        descriptions: [
+          "Comprehensive AC service including dashboard removal for deep cleaning.",
+          "Professional leak detection using UV dye and pressure testing.",
+          "Premium AC gas refill with moisture removal and system optimization."
+        ],
         isRecommended: false
       },
       {
@@ -476,26 +439,32 @@ const Services = () => {
         isRecommended: false
       },
       {
-        id: "ac-condenser-replacement",
-        name: "Condenser Replacement",
-        thumbnail: "/images/service_icons/car_ac_services.png",
+        id: "cooling-coil-replacement",
+        name: "Cooling Coil Replacement",
+        thumbnail: "/images/product_images/coiling_coil1.png",
         warranty: "3 Months Warranty",
-        recommended: "Recommended in case of condenser leakage or less cooling",
+        recommended: "In Case of No / Less Cooling",
         features: [
-          { name: "Condenser Replacement (OES)", included: true },
-          { name: "AC Gas Refill", included: true },
-          { name: "AC Pipes, Valves Sensors Cost Additional", included: true },
+          { name: "Cooling Coil Replacement ( OES )", included: true },
+          { name: "Spare Part Cost Only", included: true },
+          { name: "AC Pipe, Valve, Sensors Cost Additional", included: true },
+          { name: "AC Gas, Compressor Oil Cost Additional", included: true },
           { name: "Free Pickup & Drop", included: true }
         ],
         moreServicesCount: 0,
-        originalPrice: 7299,
-        discountedPrice: 5899,
-        duration: "6 Hrs taken",
-        specialLabel: "FREE AC GAS TOP UP",
+        originalPrice: 4143,
+        discountedPrice: 2900,
+        duration: "Takes 8 Hours",
+        specialLabel: "BESTSELLER",
+        offer: {
+          price: 2900,
+          discount: "",
+          badgeColor: "bg-green-500"
+        },
         descriptions: [
-          "High-quality condenser replacement with OEM fitment.",
-          "Includes comprehensive leak test and system vacuuming.",
-          "Final cooling performance inspection with temperature drop report."
+          "High-quality cooling coil replacement with OEM specifications.",
+          "Includes comprehensive leak test and system optimization.",
+          "Post-replacement performance validation with temperature monitoring."
         ],
         isRecommended: false
       },
