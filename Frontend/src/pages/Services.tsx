@@ -31,71 +31,71 @@ interface ServicePackage {
 const Services = () => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  
+
   const [selectedCategory, setSelectedCategory] = useState("car-services");
   const [selectedBrand, setSelectedBrand] = useState("");
 
   // Service categories data
   const serviceCategories = [
-    { 
-      id: "car-services", 
-      name: "Car Services", 
-      icon: <img src="/images/service_icons/car_service.png" alt="Car Services" className="h-10 w-10 object-contain" /> 
+    {
+      id: "car-services",
+      name: "Car Services",
+      icon: <img src="/images/service_icons/car_service.png" alt="Car Services" className="h-10 w-10 object-contain" />
     },
-    { 
-      id: "ac-service", 
-      name: "AC Service & Repair", 
-      icon: <img src="/images/service_icons/car_ac_services.png" alt="AC Service & Repair" className="h-10 w-10 object-contain" /> 
+    {
+      id: "ac-service",
+      name: "AC Service & Repair",
+      icon: <img src="/images/service_icons/car_ac_services.png" alt="AC Service & Repair" className="h-10 w-10 object-contain" />
     },
-    { 
-      id: "batteries", 
-      name: "Batteries", 
-      icon: <img src="/images/service_icons/battery.png" alt="Batteries" className="h-10 w-10 object-contain" /> 
+    {
+      id: "batteries",
+      name: "Batteries",
+      icon: <img src="/images/service_icons/battery.png" alt="Batteries" className="h-10 w-10 object-contain" />
     },
-    { 
-      id: "tyres", 
-      name: "Tyres & Wheel Care", 
-      icon: <img src="/images/service_icons/car_tyre and wheels_care.png" alt="Tyres & Wheel Care" className="h-10 w-10 object-contain" /> 
+    {
+      id: "tyres",
+      name: "Tyres & Wheel Care",
+      icon: <img src="/images/service_icons/car_tyre and wheels_care.png" alt="Tyres & Wheel Care" className="h-10 w-10 object-contain" />
     },
-    { 
-      id: "denting", 
-      name: "Denting & Painting", 
-      icon: <img src="/images/service_icons/car_denting and painting1.png" alt="Denting & Painting" className="h-10 w-10 object-contain" /> 
+    {
+      id: "denting",
+      name: "Denting & Painting",
+      icon: <img src="/images/service_icons/car_denting and painting1.png" alt="Denting & Painting" className="h-10 w-10 object-contain" />
     },
-    { 
-      id: "detailing", 
-      name: "Detailing Services", 
-      icon: <img src="/images/service_icons/car_detailing_services.png" alt="Detailing Services" className="h-10 w-10 object-contain" /> 
+    {
+      id: "detailing",
+      name: "Detailing Services",
+      icon: <img src="/images/service_icons/car_detailing_services.png" alt="Detailing Services" className="h-10 w-10 object-contain" />
     },
-    { 
-      id: "suspension-fitting", 
-      name: "Suspension and Fitting", 
-      icon: <img src="/images/service_icons/car_suspensions and fitments.png" alt="Suspension and Fitting" className="h-10 w-10 object-contain" /> 
+    {
+      id: "suspension-fitting",
+      name: "Suspension and Fitting",
+      icon: <img src="/images/service_icons/car_suspensions and fitments.png" alt="Suspension and Fitting" className="h-10 w-10 object-contain" />
     },
-    { 
-      id: "car-spa", 
-      name: "Spa and Cleaning", 
-      icon: <img src="/images/service_icons/car_spa and cleaning.png" alt="Spa and Cleaning" className="h-10 w-10 object-contain" /> 
+    {
+      id: "car-spa",
+      name: "Spa and Cleaning",
+      icon: <img src="/images/service_icons/car_spa and cleaning.png" alt="Spa and Cleaning" className="h-10 w-10 object-contain" />
     },
-    { 
-      id: "clutch-body-parts", 
-      name: "Clutch and Body Parts", 
-      icon: <img src="/images/service_icons/car_clutch and body_parts.png" alt="Clutch and Body Parts" className="h-10 w-10 object-contain" /> 
+    {
+      id: "clutch-body-parts",
+      name: "Clutch and Body Parts",
+      icon: <img src="/images/service_icons/car_clutch and body_parts.png" alt="Clutch and Body Parts" className="h-10 w-10 object-contain" />
     },
-    { 
-      id: "windshield-lights", 
-      name: "Windshield and Lights", 
-      icon: <img src="/images/service_icons/car_windshiled and lights2.png" alt="Windshield and Lights" className="h-10 w-10 object-contain" /> 
+    {
+      id: "windshield-lights",
+      name: "Windshield and Lights",
+      icon: <img src="/images/service_icons/car_windshiled and lights2.png" alt="Windshield and Lights" className="h-10 w-10 object-contain" />
     },
-    { 
-      id: "car-inspections", 
-      name: "Inspection", 
-      icon: <img src="/images/service_icons/car-inspection.png" alt="Inspection" className="h-10 w-10 object-contain" /> 
+    {
+      id: "car-inspections",
+      name: "Inspection",
+      icon: <img src="/images/service_icons/car-inspection.png" alt="Inspection" className="h-10 w-10 object-contain" />
     },
-    { 
-      id: "car-insurance", 
-      name: "Insurance", 
-      icon: <img src="/images/service_icons/car_insurance1.png" alt="Insurance" className="h-10 w-10 object-contain" /> 
+    {
+      id: "car-insurance",
+      name: "Insurance",
+      icon: <img src="/images/service_icons/car_insurance1.png" alt="Insurance" className="h-10 w-10 object-contain" />
     },
   ];
 
@@ -678,12 +678,13 @@ const Services = () => {
       }
     ],
     "batteries": [
+      { sectionTitle: "Amaron" },
       {
-        id: "amaron-go-35-amp",
-        name: "Amaron Go 35 Amp",
-        thumbnail: "/images/Services/Battery service.png",
-        warranty: "Right Layout",
-        recommended: "60 Months Warranty • Free of Cost Installation",
+        id: "amaron-55-35ah",
+        name: "Amaron (55 Months Warranty)",
+        thumbnail: "https://gomechprod.blob.core.windows.net/websiteasset/New Website/video/thumbnails/1*1/Battery Service.jpg",
+        warranty: "55 Months Warranty",
+        recommended: "35 Amp Hour • 55 Months Warranty • Free of Cost Installation",
         features: [
           { name: "Free Pickup & Drop", included: true },
           { name: "Old Battery Price Included", included: true },
@@ -692,19 +693,19 @@ const Services = () => {
           { name: "Immediate Jump Start Help", included: true }
         ],
         moreServicesCount: 0,
-        originalPrice: 5171,
-        discountedPrice: 3888,
-        duration: "Expert Rating: 4.7",
+        originalPrice: 0,
+        discountedPrice: 0,
+        duration: "",
         specialLabel: "",
         offer: undefined,
-        isRecommended: false
+        isRecommended: true
       },
       {
-        id: "amaron-flo-35-amp",
-        name: "Amaron Flo 35 Amp",
-        thumbnail: "/images/Services/Battery service.png",
-        warranty: "Right Layout",
-        recommended: "72 Months Warranty • Free of Cost Installation",
+        id: "amaron-72-35ah",
+        name: "Amaron (72 Months Warranty)",
+        thumbnail: "https://gomechprod.blob.core.windows.net/websiteasset/New Website/video/thumbnails/1*1/Battery Service.jpg",
+        warranty: "72 Months Warranty",
+        recommended: "35 Amp Hour • 72 Months Warranty • Free of Cost Installation",
         features: [
           { name: "Free Pickup & Drop", included: true },
           { name: "Old Battery Price Included", included: true },
@@ -712,16 +713,136 @@ const Services = () => {
           { name: "Available at Doorstep", included: true },
           { name: "Immediate Jump Start Help", included: true }
         ],
-        moreServicesCount: 1,
-        descriptions: [
-          "High-crank output suitable for premium petrol and diesel sedans.",
-          "Double-layer heat shield for heavy summer usage in metro cities.",
-          "Zero-maintenance design with sealed calcium hybrid plates.",
-          "Includes eco-friendly disposal and recycling of old battery."
+        moreServicesCount: 0,
+        originalPrice: 0,
+        discountedPrice: 0,
+        duration: "",
+        specialLabel: "",
+        offer: undefined,
+        isRecommended: false
+      },
+
+      { sectionTitle: "Exide" },
+      {
+        id: "exide-55-35ah",
+        name: "Exide (55 Months Warranty)",
+        thumbnail: "/images/Services/Battery service.png",
+        warranty: "55 Months Warranty",
+        recommended: "35 Amp Hour • Free of Cost Installation",
+        features: [
+          { name: "Free Pickup & Drop", included: true },
+          { name: "Old Battery Price Included", included: true },
+          { name: "Free Installation", included: true },
+          { name: "Available at Doorstep", included: true },
+          { name: "Immediate Jump Start Help", included: true }
         ],
-        originalPrice: 5497,
-        discountedPrice: 4133,
-        duration: "Expert Rating: 4.2",
+        moreServicesCount: 0,
+        originalPrice: 0,
+        discountedPrice: 0,
+        duration: "",
+        specialLabel: "",
+        offer: undefined,
+        isRecommended: false
+      },
+      {
+        id: "exide-66-35ah",
+        name: "Exide (66 Months Warranty)",
+        thumbnail: "/images/Services/Battery service.png",
+        warranty: "66 Months Warranty",
+        recommended: "35 Amp Hour • Free of Cost Installation",
+        features: [
+          { name: "Free Pickup & Drop", included: true },
+          { name: "Old Battery Price Included", included: true },
+          { name: "Free Installation", included: true },
+          { name: "Available at Doorstep", included: true },
+          { name: "Immediate Jump Start Help", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 0,
+        discountedPrice: 0,
+        duration: "",
+        specialLabel: "",
+        offer: undefined,
+        isRecommended: false
+      },
+      { sectionTitle: "Livguard" },
+      {
+        id: "livguard-60-35ah",
+        name: "Livguard (60 Months Warranty)",
+        thumbnail: "/images/Services/Battery service.png",
+        warranty: "60 Months Warranty",
+        recommended: "35 Amp Hour • Free of Cost Installation",
+        features: [
+          { name: "Free Pickup & Drop", included: true },
+          { name: "Old Battery Price Included", included: true },
+          { name: "Free Installation", included: true },
+          { name: "Available at Doorstep", included: true },
+          { name: "Immediate Jump Start Help", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 0,
+        discountedPrice: 0,
+        duration: "",
+        specialLabel: "",
+        offer: undefined,
+        isRecommended: false
+      },
+      {
+        id: "livguard-72-35ah",
+        name: "Livguard (72 Months Warranty)",
+        thumbnail: "/images/Services/Battery service.png",
+        warranty: "72 Months Warranty",
+        recommended: "35 Amp Hour • Free of Cost Installation",
+        features: [
+          { name: "Free Pickup & Drop", included: true },
+          { name: "Old Battery Price Included", included: true },
+          { name: "Free Installation", included: true },
+          { name: "Available at Doorstep", included: true },
+          { name: "Immediate Jump Start Help", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 0,
+        discountedPrice: 0,
+        duration: "",
+        specialLabel: "",
+        offer: undefined,
+        isRecommended: false
+      },
+      { sectionTitle: "Alternator" },
+      {
+        id: "alternator-replacement",
+        name: "Alternator Replacement",
+        thumbnail: "/images/service_icons/car_inspection.png",
+        warranty: "1 Month Warranty",
+        recommended: "Recommended in case of frequently discharging battery",
+        features: [
+          { name: "Alternator Replacement", included: true },
+          { name: "Alternator Belt Adjusted", included: true },
+          { name: "Free Pickup & Drop", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 0,
+        discountedPrice: 0,
+        duration: "",
+        specialLabel: "",
+        offer: undefined,
+        isRecommended: false
+      },
+      {
+        id: "alternator-repair",
+        name: "Alternator Repair",
+        thumbnail: "/images/service_icons/car_inspection.png",
+        warranty: "3 Months Warranty",
+        recommended: "Recommended in case of frequently discharging battery",
+        features: [
+          { name: "Cleaning & Fitting of Alternator", included: true },
+          { name: "Alternator Belt Adjusted", included: true },
+          { name: "Free Pickup & Drop", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 0,
+        discountedPrice: 0,
+        duration: "",
         specialLabel: "",
         offer: undefined,
         isRecommended: false
@@ -949,12 +1070,12 @@ const Services = () => {
 
   const handleAddToCart = (serviceId: string, serviceName: string) => {
     console.log(`Adding to cart: ${serviceName} (ID: ${serviceId})`);
-    
+
     if (!isAuthenticated) {
       navigate('/', { state: { showAuth: true } });
       return;
     }
-    
+
     // Handle authenticated user cart logic here
     alert(`${serviceName} added to cart!`);
   };
@@ -962,7 +1083,7 @@ const Services = () => {
   return (
     <div className="min-h-screen bg-white font-inter">
       <Header />
-      
+
       {/* Main Content */}
       <div className="pt-0 pb-8">
         <div className="max-w-[1400px] mx-auto pl-2 pr-6">
@@ -981,15 +1102,22 @@ const Services = () => {
               {/* Service Packages Section */}
               <div className="mb-8">
                 <h2 className="text-2xl font-bold text-gray-900 mb-8">
-                  {selectedCategory === "ac-service" ? "Service Packages" : 
-                   selectedCategory === "batteries" ? "Amaron" :
-                   selectedCategory === "tyres" ? "Premium Tyres" : 
+                  {selectedCategory === "ac-service" ? "Service Packages" :
+                   selectedCategory === "batteries" ? "Batteries" :
+                   selectedCategory === "tyres" ? "Premium Tyres" :
                    selectedCategory === "car-inspections" ? "Inspection Services" :
                    selectedCategory === "car-insurance" ? "Insurance Plans" : "Scheduled Packages"}
                 </h2>
-                
+
           <div className="space-y-6">
-                  {(servicePackages[selectedCategory as keyof typeof servicePackages] || servicePackages["car-services"]).map((pkg) => (
+                  {((servicePackages[selectedCategory as keyof typeof servicePackages] || servicePackages["car-services"])
+                      .filter((pkg) => !(
+                        selectedCategory === "batteries" && (
+                          (pkg.name?.includes("Cooling Coil Replacement")) ||
+                          (typeof (pkg as any).id === "string" && (pkg as any).id.includes("cooling-coil"))
+                        )
+                      )))
+                    .map((pkg) => (
                     <Fragment key={pkg.id}>
                       {pkg.sectionTitle ? (
                         <h3 className="text-lg font-semibold text-gray-700 uppercase tracking-wide mt-10">
@@ -1011,6 +1139,7 @@ const Services = () => {
                 isRecommended={pkg.isRecommended}
                           specialLabel={pkg.specialLabel}
                           descriptions={pkg.descriptions}
+                variant={["car-services", "batteries"].includes(selectedCategory) ? "gom" : "default"}
                 onAddToCart={handleAddToCart}
               />
                       )}
