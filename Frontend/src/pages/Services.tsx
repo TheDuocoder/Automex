@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import Header from "@/components/Header";
@@ -12,7 +12,7 @@ interface ServicePackage {
   thumbnail: string;
   warranty: string;
   recommended: string;
-  features: { name: string; included: boolean; }[];
+  features: { name: string; included: boolean; details?: string; }[];
   moreServicesCount: number;
   originalPrice: number;
   discountedPrice: number;
@@ -24,6 +24,8 @@ interface ServicePackage {
     badgeColor?: string;
   };
   isRecommended: boolean;
+  descriptions?: string[];
+  sectionTitle?: string;
 }
 
 const Services = () => {
@@ -100,48 +102,262 @@ const Services = () => {
   // Mock service packages data
   const servicePackages: Record<string, ServicePackage[]> = {
     "car-services": [
-      {
-        id: "basic-service",
-        name: "Basic Service",
-        thumbnail: "",
-        warranty: "1000 Kms or 3 Months Warranty",
-        recommended: "Every 5000 Kms or 6 Months (Recommended)",
-        features: [
-          { name: "Wiper Fluid Replacement", included: true },
-          { name: "Car Wash", included: true },
-          { name: "Engine Oil Replacement", included: true },
-          { name: "Battery Water Top Up", included: true },
-          { name: "Interior Vacuuming (Carpet & Seats)", included: true },
+    {
+      id: "basic-service",
+      name: "Basic Service",
+      thumbnail: "",
+      warranty: "1000 Kms or 3 Months Warranty",
+      recommended: "Every 5000 Kms or 6 Months (Recommended)",
+      features: [
+        { name: "Wiper Fluid Replacement", included: true },
+        { name: "Car Wash", included: true },
+        { name: "Engine Oil Replacement", included: true },
+        { name: "Battery Water Top Up", included: true },
+        { name: "Interior Vacuuming (Carpet & Seats)", included: true },
+          { name: "Air Filter Cleaning", included: true },
+          { name: "Spark Plug Inspection", included: true },
+          { name: "Coolant Top-Up 200ml", included: true }
+      ],
+      moreServicesCount: 4,
+        descriptions: [
+          "Complete 34-point inspection covering brakes, suspension, electricals, tyres and safety.",
+          "Top-up of all essential fluids including radiator coolant, power steering and windshield washer.",
+          "Detailed cabin sanitisation with dashboard polish and door-pad wipe down.",
+          "Road test with post-service quality checklist before final handover."
         ],
-        moreServicesCount: 4,
-        originalPrice: 3559,
-        discountedPrice: 2669,
-        duration: "4 Hrs Taken",
-        offer: {
-          price: 2169,
-          discount: "Extra ₹500 OFF",
-          badgeColor: "bg-green-500"
-        },
-        isRecommended: false
+      originalPrice: 3559,
+      discountedPrice: 2669,
+      duration: "4 Hrs Taken",
+      offer: {
+        price: 2169,
+        discount: "Extra ₹500 OFF",
+        badgeColor: "bg-green-500"
       },
-      {
-        id: "standard-service",
-        name: "Standard Service",
-        thumbnail: "",
-        warranty: "1000 Kms or 3 Months Warranty",
-        recommended: "Every 10,000 Kms or 6 Months (Recommended)",
-        features: [
-          { name: "Car Scanning", included: true },
-          { name: "Battery Water Top up", included: true },
-          { name: "Interior Vacuuming (Carpet & Seats)", included: true },
-          { name: "Wiper Fluid Replacement", included: true },
-          { name: "Car Wash", included: true },
+      isRecommended: false
+    },
+    {
+      id: "standard-service",
+      name: "Standard Service",
+      thumbnail: "",
+      warranty: "1000 Kms or 3 Months Warranty",
+      recommended: "Every 10,000 Kms or 6 Months (Recommended)",
+      features: [
+        { name: "Car Scanning", included: true },
+        { name: "Battery Water Top up", included: true },
+        { name: "Interior Vacuuming (Carpet & Seats)", included: true },
+        { name: "Wiper Fluid Replacement", included: true },
+        { name: "Car Wash", included: true },
+          { name: "Brake Cleaning & Adjustment", included: true },
+          { name: "Fuel Filter Replacement", included: true },
+          { name: "AC Filter Replacement", included: true },
+          { name: "Throttle Body Cleaning", included: true },
+          { name: "Wheel Alignment Check", included: true }
         ],
-        moreServicesCount: 10,
-        originalPrice: 4813,
-        discountedPrice: 3369,
-        duration: "6 Hrs Taken",
-        isRecommended: true
+        moreServicesCount: 6,
+        descriptions: [
+          "Premium service includes synthetic oil refill and OEM filter kit.",
+          "Comprehensive 50-point inspection with digital scan report.",
+          "Torque setting of suspension, steering and wheel components.",
+          "Exterior foam wash and interior germ cleaning with ozone treatment."
+        ],
+      originalPrice: 4813,
+      discountedPrice: 3369,
+      duration: "6 Hrs Taken",
+      isRecommended: true
+    },
+    {
+      id: "comprehensive-service",
+      name: "Comprehensive Service",
+      thumbnail: "/images/Services/Premium car service.png",
+      warranty: "1000 Kms or 1 Month Warranty",
+      recommended: "Every 20,000 Kms or 12 Months (Recommended)",
+      features: [
+        { name: "AC Filter Replacement", included: true },
+        { name: "Car Scanning", included: true },
+        { name: "Interior Vacuuming (Carpet & Seats)", included: true },
+        { name: "Front Brake Pads Serviced", included: true },
+        { name: "Wheel Alignment", included: true },
+        { name: "Engine Oil Replacement", included: true },
+        { name: "Air Filter Replacement", included: true },
+        { name: "Gear Oil Top Up", included: true },
+        { name: "Spark Plug Inspection", included: true },
+        { name: "Fuel Filter Cleaning", included: true },
+        { name: "Rear Brake Shoes Serviced", included: true },
+        { name: "Wheel Balancing", included: true },
+        { name: "Tyre Rotation", included: true },
+        { name: "Throttle Body Cleaning", included: true },
+        { name: "Coolant Top Up (200 ml)", included: true },
+        { name: "Brake Fluid Top Up", included: true }
+      ],
+      moreServicesCount: 8,
+      originalPrice: 5299,
+      discountedPrice: 4199,
+      duration: "8 Hrs Taken",
+      specialLabel: "FREE AC GAS TOP-UP",
+      offer: {
+        price: 3799,
+        discount: "Extra ₹400 OFF",
+        badgeColor: "bg-green-500"
+      },
+      isRecommended: false,
+      descriptions: [
+        "Full synthetic oil service with OEM filter kit and complete top-up of all fluids.",
+        "50-point health check covering suspension, steering, drivetrain and electrical systems.",
+        "Includes wheel alignment & balancing, throttle body cleaning and brake servicing.",
+        "Exterior foam wash + interior deep clean with deodorisation and ozone sanitation."
+      ]
+    },
+    {
+      id: "brake-maintenance-heading",
+      name: "Brake Maintenance",
+      thumbnail: "",
+      warranty: "",
+      recommended: "",
+      features: [],
+      moreServicesCount: 0,
+      originalPrice: 0,
+      discountedPrice: 0,
+      duration: "",
+      sectionTitle: "Brake Maintenance",
+      isRecommended: false
+    },
+    {
+      id: "front-brake-pads",
+      name: "Front Brake Pads",
+      thumbnail: "/images/service_icons/car_inspection.png",
+      warranty: "1 Month Warranty",
+      recommended: "Every 20,000 Kms or 12 Months (Recommended)",
+      features: [
+        { name: "Opening & Fitting of Front Brake Pads", included: true },
+        { name: "Applicable for Set of 2 Front Brake Pads", included: true },
+        { name: "Front Brake Disc Cleaning", included: true },
+        { name: "Front Brake Pads Replacement (Mechanics)", included: true },
+        { name: "Inspection of Front Brake Calipers", included: true }
+      ],
+      moreServicesCount: 1,
+      originalPrice: 2599,
+      discountedPrice: 2199,
+      duration: "90 Mins",
+      specialLabel: "OEM/BRAND INCLUDED",
+      isRecommended: false,
+      descriptions: [
+        "Premium ceramic brake pads with warranty on labour & fitment.",
+        "Includes disc brushing, caliper pin greasing and road test."
+      ]
+    },
+    {
+      id: "rear-brake-shoes",
+      name: "Rear Brake Shoes",
+      thumbnail: "/images/service_icons/car-inspection.png",
+      warranty: "1 Month Warranty",
+      recommended: "Every 20,000 Kms or 12 Months (Recommended)",
+      features: [
+        { name: "Opening & Fitting of Rear Brake Shoes", included: true },
+        { name: "Applicable for Set of 2 Rear Brake Shoes", included: true },
+        { name: "Rear Brake Disc Cleaning", included: true },
+        { name: "Rear Brake Shoes Replacement (OEM)", included: true },
+        { name: "Inspection of Rear Brake Calipers", included: true }
+      ],
+      moreServicesCount: 1,
+      originalPrice: 2499,
+      discountedPrice: 2099,
+      duration: "90 Mins",
+      specialLabel: "LABOUR INCLUDED",
+      isRecommended: false,
+      descriptions: [
+        "Original equipment rear brake shoe set with warranty on labour.",
+        "Includes handbrake adjustment, drum cleaning and final inspection."
+      ]
+    },
+    {
+      id: "front-brake-discs",
+      name: "Front Brake Discs",
+      thumbnail: "/images/service_icons/tyres_and_wheels_care.png",
+      warranty: "1 Month Warranty • Corrosion Resistance",
+      recommended: "Best Performance (Single OE Unit)",
+      features: [
+        { name: "Opening & Fitting of Front Brake Disc", included: true },
+        { name: "Reduces Vibrations and Brake Noise", included: true },
+        { name: "Free Pickup & Drop", included: true },
+        { name: "Front Brake Disc Replacement", included: true }
+      ],
+      moreServicesCount: 0,
+      originalPrice: 3599,
+      discountedPrice: 3099,
+      duration: "90 Mins",
+      specialLabel: "LABOUR INCLUDED",
+      isRecommended: false,
+      descriptions: [
+        "Replacement with OEM-spec rotors including torque tightening.",
+        "Brake bedding procedure and vibration test drive post fitment."
+      ]
+    },
+    {
+      id: "caliper-pin-replacement",
+      name: "Caliper Pin Replacement",
+      thumbnail: "/images/service_icons/car_denting and painting1.png",
+      warranty: "Recommended in case of noise from brakes",
+      recommended: "Caliper Pin Replacement (OES) • Caliper Assembly Cost Additional",
+      features: [
+        { name: "Opening & Fitting of Caliper Pin", included: true },
+        { name: "Free Pickup & Drop", included: true },
+        { name: "Caliper Pin Lubrication", included: true }
+      ],
+      moreServicesCount: 0,
+      originalPrice: 1899,
+      discountedPrice: 1599,
+      duration: "60 Mins",
+      specialLabel: "NEW",
+      isRecommended: false,
+      descriptions: [
+        "Eliminates brake squeal by replacing worn pins and lubricating bushings.",
+        "Complete inspection of caliper guide sleeves and dust boots."
+      ]
+    },
+    {
+      id: "disc-turning",
+      name: "Disc Turning",
+      thumbnail: "/images/service_icons/car_tyre and wheels_care.png",
+      warranty: "1 Month Warranty on Labour",
+      recommended: "Applicable for Set of 2 Discs (Wheels) • Opening & Fitting of Brake Discs",
+      features: [
+        { name: "Inspection of Brake Discs", included: true },
+        { name: "Resurfacing of Brake Discs/Rotors", included: true },
+        { name: "Brake Pad Cleaning", included: true }
+      ],
+      moreServicesCount: 0,
+      originalPrice: 2199,
+      discountedPrice: 1799,
+      duration: "75 Mins",
+      specialLabel: "LABOUR INCLUDED",
+      isRecommended: false,
+      descriptions: [
+        "On-car disc turning restores smooth braking and reduces pedal pulsation.",
+        "Includes rotor runout measurement and brake bed-in procedure."
+      ]
+    },
+    {
+      id: "handbrake-wire-replacement",
+      name: "Handbrake Wire Replacement",
+      thumbnail: "/images/service_icons/car_detailing_services.png",
+      warranty: "1 Month Warranty",
+      recommended: "Restores handbrake bite & safety",
+      features: [
+        { name: "Replacement with OEM Handbrake Cable", included: true },
+        { name: "Adjustment of Handbrake Lever", included: true },
+        { name: "Lubrication of Linkages", included: true },
+        { name: "Free Pickup & Drop", included: true }
+      ],
+      moreServicesCount: 0,
+      originalPrice: 1999,
+      discountedPrice: 1699,
+      duration: "90 Mins",
+      specialLabel: "NEW",
+      isRecommended: false,
+      descriptions: [
+        "Ensures optimal parking brake hold with fresh OEM cables and adjusters.",
+        "Includes underbody inspection and corrosion protection for linkages."
+      ]
       }
     ],
     "ac-service": [
@@ -157,8 +373,16 @@ const Services = () => {
           { name: "Condenser Cleaning", included: true },
           { name: "Evaporator Coil Check", included: true },
           { name: "Compressor Belt Check", included: true },
+          { name: "Vent Sanitisation", included: true },
+          { name: "Cabin Deodorising", included: true }
         ],
-        moreServicesCount: 4,
+        moreServicesCount: 3,
+        descriptions: [
+          "AC pressure testing with UV leak detection dye.",
+          "Deep cleaning of blower motor and vents for odour removal.",
+          "Dashboard and vents sanitisation with anti-bacterial spray.",
+          "Post-service temperature drop report and performance test."
+        ],
         originalPrice: 1799,
         discountedPrice: 1299,
         duration: "Takes 4 hours",
@@ -183,8 +407,16 @@ const Services = () => {
           { name: "Evaporator Coil Cleaning", included: true },
           { name: "Compressor Check & Service", included: true },
           { name: "AC Vent Sanitization", included: true },
+          { name: "Thermostat Calibration", included: true },
+          { name: "Leak Seal Replacement", included: true }
         ],
-        moreServicesCount: 6,
+        moreServicesCount: 4,
+        descriptions: [
+          "AC evacuation, vacuuming and refill with OEM specified refrigerant.",
+          "Replacement of O-rings, valve cores and seals wherever necessary.",
+          "Electrical inspection of relays, blower resistors and control unit.",
+          "Cabin filter replacement with pollen filter upgrade."
+        ],
         originalPrice: 2999,
         discountedPrice: 2299,
         duration: "Takes 6 hours",
@@ -208,8 +440,16 @@ const Services = () => {
           { name: "AC Leak Detection & Fix", included: true },
           { name: "Thermostat Check & Fix", included: true },
           { name: "Electrical Circuit Check", included: true },
+          { name: "Cabin Vent Sterilisation", included: true },
+          { name: "Expansion Valve Replacement", included: true }
         ],
-        moreServicesCount: 5,
+        moreServicesCount: 3,
+        descriptions: [
+          "Detailed scan tool diagnostics covering pressure sensors and evaporator temperature.",
+          "Custom repair plan with OEM parts for compressor and clutch assembly.",
+          "Leak repair followed by refrigerant refill and performance validation.",
+          "Warranty-backed service with complimentary follow-up inspection."
+        ],
         originalPrice: 4599,
         discountedPrice: 3499,
         duration: "Takes 8 hours",
@@ -219,6 +459,252 @@ const Services = () => {
           discount: "Extra ₹500 OFF",
           badgeColor: "bg-green-500"
         },
+        isRecommended: false
+      },
+      {
+        id: "ac-fitments-heading",
+        name: "AC Fitments",
+        thumbnail: "",
+        warranty: "",
+        recommended: "",
+        features: [],
+        moreServicesCount: 0,
+        originalPrice: 0,
+        discountedPrice: 0,
+        duration: "",
+        sectionTitle: "AC Fitments",
+        isRecommended: false
+      },
+      {
+        id: "ac-condenser-replacement",
+        name: "Condenser Replacement",
+        thumbnail: "/images/service_icons/car_ac_services.png",
+        warranty: "3 Months Warranty",
+        recommended: "Recommended in case of condenser leakage or less cooling",
+        features: [
+          { name: "Condenser Replacement (OES)", included: true },
+          { name: "AC Gas Refill", included: true },
+          { name: "AC Pipes, Valves Sensors Cost Additional", included: true },
+          { name: "Free Pickup & Drop", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 7299,
+        discountedPrice: 5899,
+        duration: "6 Hrs taken",
+        specialLabel: "FREE AC GAS TOP UP",
+        descriptions: [
+          "High-quality condenser replacement with OEM fitment.",
+          "Includes comprehensive leak test and system vacuuming.",
+          "Final cooling performance inspection with temperature drop report."
+        ],
+        isRecommended: false
+      },
+      {
+        id: "ac-compressor-replacement",
+        name: "Compressor Replacement",
+        thumbnail: "/images/service_icons/car_ac_services.png",
+        warranty: "3 Months Warranty",
+        recommended: "Recommended in case of compressor leakage or less cooling",
+        features: [
+          { name: "Compressor Replacement (OES)", included: true },
+          { name: "AC Gas Refill", included: true },
+          { name: "AC Pipes, Valves Sensors Cost Additional", included: true },
+          { name: "Free Pickup & Drop", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 9499,
+        discountedPrice: 7899,
+        duration: "6 Hrs taken",
+        specialLabel: "FREE AC GAS SERVICE",
+        descriptions: [
+          "Installation of OEM compressor with compressor oil charge.",
+          "Replacement of receiver-drier and necessary gaskets.",
+          "Includes flushing and recalibration of AC system."
+        ],
+        isRecommended: false
+      },
+      {
+        id: "ac-heating-coil-replacement",
+        name: "Heating Coil Replacement",
+        thumbnail: "/images/service_icons/car_ac_services.png",
+        warranty: "3 Months Warranty",
+        recommended: "Recommended in case of heater not working",
+        features: [
+          { name: "Heating Coil Replacement (OES)", included: true },
+          { name: "Spare Part Cost Only", included: true },
+          { name: "Free Pickup & Drop", included: true },
+          { name: "Hoses Additional (If Required)", included: true },
+          { name: "Coolant and Radiator Flush Cost Additional", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 5999,
+        discountedPrice: 4999,
+        duration: "6 Hrs taken",
+        specialLabel: "SPARE PART COST ONLY",
+        descriptions: [
+          "Core replacement for heaters with OEM grade components.",
+          "Includes inspection of coolant hoses and valves.",
+          "Fresh coolant refill and pressure test post replacement."
+        ],
+        isRecommended: false
+      },
+      {
+        id: "ac-vbelt-replacement",
+        name: "V Belt Replacement",
+        thumbnail: "/images/service_icons/car_ac_services.png",
+        warranty: "1 Month Warranty",
+        recommended: "Recommended in case of whining noise from engine",
+        features: [
+          { name: "V Belt Replacement (OES)", included: true },
+          { name: "Pulleys, Bearings Timing Cost Additional", included: true },
+          { name: "Free Pickup & Drop", included: true },
+          { name: "Opening & Fitting of V Belt", included: true },
+          { name: "Scanning Cost Additional", included: true }
+        ],
+        moreServicesCount: 0,
+        duration: "6 Hrs taken",
+        originalPrice: 2199,
+        discountedPrice: 1799,
+        specialLabel: "LABOUR INCLUDED",
+        descriptions: [
+          "Replacement of cracked or worn out belts to restore smooth operation.",
+          "Inspection of pulleys, tensioners and idlers for wear.",
+          "Includes belt adjustment and squeal elimination."
+        ],
+        isRecommended: false
+      },
+      {
+        id: "ac-blower-motor-replacement",
+        name: "AC Blower Motor Replacement",
+        thumbnail: "/images/service_icons/car_ac_services.png",
+        warranty: "1 Month Warranty",
+        recommended: "Recommended in case of rattling, humming noise from AC blower",
+        features: [
+          { name: "AC Blower Motor Replacement (OES)", included: true },
+          { name: "AC Filters, Vents Cleaning Cost Additional", included: true },
+          { name: "Free Pickup & Drop", included: true },
+          { name: "Spare Part Cost Only", included: true },
+          { name: "Wiring Cost Additional (If Needed)", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 4499,
+        discountedPrice: 3899,
+        duration: "6 Hrs taken",
+        specialLabel: "NEW",
+        descriptions: [
+          "OEM-spec blower motor installation with vibration testing.",
+          "Includes diagnostics of blower relay, resistor and control module.",
+          "Complimentary cleaning of blower housing and vents."
+        ],
+        isRecommended: false
+      },
+      {
+        id: "radiator-heading",
+        name: "Radiator",
+        thumbnail: "",
+        warranty: "",
+        recommended: "",
+        features: [],
+        moreServicesCount: 0,
+        originalPrice: 0,
+        discountedPrice: 0,
+        duration: "",
+        sectionTitle: "Radiator",
+        isRecommended: false
+      },
+      {
+        id: "radiator-replacement",
+        name: "Radiator Replacement",
+        thumbnail: "/images/service_icons/car_ac_services.png",
+        warranty: "1 Month Warranty",
+        recommended: "Recommended in case of blockage in the radiator vessels",
+        features: [
+          { name: "Radiator Replacement (OES)", included: true },
+          { name: "Radiator Hoses, Thermostats Valves Cost Additional", included: true },
+          { name: "Free Pickup & Drop", included: true },
+          { name: "Spare Part Cost Only", included: true },
+          { name: "Coolant Cost Additional", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 6299,
+        discountedPrice: 5299,
+        duration: "6 Hrs taken",
+        specialLabel: "SPARE PART COST ONLY",
+        descriptions: [
+          "Radiator replacement with thorough system flush and leak test.",
+          "Thermostat and hoses inspected with optional replacement on request.",
+          "Fresh coolant refill and temperature stability check."
+        ],
+        isRecommended: false
+      },
+      {
+        id: "radiator-fan-motor",
+        name: "Radiator Fan Motor Replacement",
+        thumbnail: "/images/service_icons/car_ac_services.png",
+        warranty: "1 Month Warranty",
+        recommended: "Recommended in case of radiator fan not working",
+        features: [
+          { name: "Radiator Fan Motor Replacement (OES)", included: true },
+          { name: "Coolant and Radiator Flush Cost Additional", included: true },
+          { name: "Free Pickup & Drop", included: true },
+          { name: "Opening & Fitting of Radiator Fan Motor", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 3499,
+        discountedPrice: 2999,
+        duration: "3 Hrs taken",
+        specialLabel: "LABOUR INCLUDED",
+        descriptions: [
+          "Install OEM fan motor to restore cooling efficiency during idling.",
+          "Includes relay and wiring inspection along with coolant flush."
+        ],
+        isRecommended: false
+      },
+      {
+        id: "radiator-flush-clean",
+        name: "Radiator Flush & Clean",
+        thumbnail: "/images/service_icons/car_ac_services.png",
+        warranty: "Protects Radiator from Corrosion",
+        recommended: "Free Pickup and Drop",
+        features: [
+          { name: "Radiator Flushing", included: true },
+          { name: "Radiator Cleaning", included: true },
+          { name: "Coolant Replacement (Additional)", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 1999,
+        discountedPrice: 1599,
+        duration: "2 Hrs taken",
+        specialLabel: "LABOUR INCLUDED",
+        descriptions: [
+          "Chemical flush removes rust deposits and sludge from radiator and block.",
+          "Improves coolant circulation and prevents overheating issues."
+        ],
+        isRecommended: false
+      },
+      {
+        id: "cooling-coil-replacement",
+        name: "Cooling Coil Replacement",
+        thumbnail: "/images/service_icons/car_ac_services.png",
+        warranty: "3 Months Warranty",
+        recommended: "Recommended in case of no/less cooling",
+        features: [
+          { name: "Cooling Coil Replacement (OES)", included: true },
+          { name: "AC Pipe, Valve, Sensors Cost Additional", included: true },
+          { name: "Free Pickup & Drop", included: true },
+          { name: "Spare Part Cost Only", included: true },
+          { name: "AC Gas, Compressor Oil Cost Additional", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 6399,
+        discountedPrice: 5199,
+        duration: "6 Hrs taken",
+        specialLabel: "FREE AC GAS TOP UP",
+        descriptions: [
+          "Cooling coil replacement with OEM-approved evaporator and seals.",
+          "Includes dashboard removal, heater inspection and leak testing.",
+          "AC system evac and recharge with recommended refrigerant."
+        ],
         isRecommended: false
       }
     ],
@@ -234,6 +720,7 @@ const Services = () => {
           { name: "Old Battery Price Included", included: true },
           { name: "Free Installation", included: true },
           { name: "Available at Doorstep", included: true },
+          { name: "Immediate Jump Start Help", included: true }
         ],
         moreServicesCount: 0,
         originalPrice: 5171,
@@ -254,8 +741,15 @@ const Services = () => {
           { name: "Old Battery Price Included", included: true },
           { name: "Free Installation", included: true },
           { name: "Available at Doorstep", included: true },
+          { name: "Immediate Jump Start Help", included: true }
         ],
-        moreServicesCount: 0,
+        moreServicesCount: 1,
+        descriptions: [
+          "High-crank output suitable for premium petrol and diesel sedans.",
+          "Double-layer heat shield for heavy summer usage in metro cities.",
+          "Zero-maintenance design with sealed calcium hybrid plates.",
+          "Includes eco-friendly disposal and recycling of old battery."
+        ],
         originalPrice: 5497,
         discountedPrice: 4133,
         duration: "Expert Rating: 4.2",
@@ -508,12 +1002,12 @@ const Services = () => {
             <div className="flex-1 max-w-[1280px]">
               {/* Category Navigation */}
               <div className="mb-6">
-                <CategoryTabs
-                  categories={serviceCategories}
-                  activeCategory={selectedCategory}
-                  onCategoryChange={setSelectedCategory}
-                />
-              </div>
+              <CategoryTabs
+                categories={serviceCategories}
+                activeCategory={selectedCategory}
+                onCategoryChange={setSelectedCategory}
+              />
+            </div>
 
               {/* Service Packages Section */}
               <div className="mb-8">
@@ -525,56 +1019,64 @@ const Services = () => {
                    selectedCategory === "car-insurance" ? "Insurance Plans" : "Scheduled Packages"}
                 </h2>
                 
-                <div className="space-y-6">
+          <div className="space-y-6">
                   {(servicePackages[selectedCategory as keyof typeof servicePackages] || servicePackages["car-services"]).map((pkg) => (
-                    <ServiceCard
-                      key={pkg.id}
-                      id={pkg.id}
-                      name={pkg.name}
-                      thumbnail={pkg.thumbnail}
-                      warranty={pkg.warranty}
-                      recommended={pkg.recommended}
-                      features={pkg.features}
-                      moreServicesCount={pkg.moreServicesCount}
-                      originalPrice={pkg.originalPrice}
-                      discountedPrice={pkg.discountedPrice}
-                      duration={pkg.duration}
-                      offer={pkg.offer}
-                      isRecommended={pkg.isRecommended}
-                      specialLabel={pkg.specialLabel}
-                      onAddToCart={handleAddToCart}
-                    />
-                  ))}
-                </div>
-              </div>
+                    <Fragment key={pkg.id}>
+                      {pkg.sectionTitle ? (
+                        <h3 className="text-lg font-semibold text-gray-700 uppercase tracking-wide mt-10">
+                          {pkg.sectionTitle}
+                        </h3>
+                      ) : (
+              <ServiceCard
+                id={pkg.id}
+                name={pkg.name}
+                thumbnail={pkg.thumbnail}
+                warranty={pkg.warranty}
+                recommended={pkg.recommended}
+                features={pkg.features}
+                moreServicesCount={pkg.moreServicesCount}
+                originalPrice={pkg.originalPrice}
+                discountedPrice={pkg.discountedPrice}
+                duration={pkg.duration}
+                offer={pkg.offer}
+                isRecommended={pkg.isRecommended}
+                          specialLabel={pkg.specialLabel}
+                          descriptions={pkg.descriptions}
+                onAddToCart={handleAddToCart}
+              />
+                      )}
+                    </Fragment>
+            ))}
+          </div>
+        </div>
 
               {/* Statistics Section */}
               <div className="bg-gray-100 rounded-2xl mt-16 py-12 px-8">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
                   <div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">150+ Services</h3>
-                    <p className="text-gray-600">Comprehensive car care solutions</p>
-                  </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">150+ Services</h3>
+                <p className="text-gray-600">Comprehensive car care solutions</p>
+              </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Free Pickup</h3>
-                    <p className="text-gray-600">Doorstep service at your convenience</p>
-                  </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Free Pickup</h3>
+                <p className="text-gray-600">Doorstep service at your convenience</p>
+              </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">40% Off</h3>
-                    <p className="text-gray-600">Best prices guaranteed</p>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">40% Off</h3>
+                <p className="text-gray-600">Best prices guaranteed</p>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Right Sidebar - Select Manufacturer */}
-            <div className="w-[400px] flex-shrink-0 ml-32">
-              <div className="sticky top-20">
+            <div className="w-full xl:w-[360px] flex-shrink-0 mt-10 xl:mt-0 xl:ml-16">
+              <div className="xl:sticky xl:top-20">
                 <BrandSelectorModal
                   variant="sidebar"
                   selectedBrand={selectedBrand}
                   onBrandSelect={setSelectedBrand}
-                  className="h-[600px] overflow-hidden rounded-2xl shadow-[0px_6px_30px_rgba(0,0,0,0.35)] bg-white"
+                  className="h-[500px] xl:h-[520px] max-h-[70vh] overflow-hidden rounded-2xl shadow-[0px_6px_30px_rgba(0,0,0,0.25)] bg-white"
                 />
               </div>
             </div>

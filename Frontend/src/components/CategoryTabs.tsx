@@ -50,13 +50,15 @@ const CategoryTabs = ({ categories, activeCategory, onCategoryChange }: Category
   };
 
   return (
-    <div className="relative py-4 w-full overflow-hidden">
-      {/* Left Arrow */}
-      <button
+    <div className="relative w-full overflow-hidden rounded-2xl border border-white/70 bg-gradient-to-br from-white via-white to-rose-50 shadow-[0_16px_40px_rgba(231,74,59,0.12)] px-4 py-4">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(231,74,59,0.12),transparent_55%)]" />
+      <div className="relative z-10">
+        {/* Left Arrow */}
+        <button
         onClick={goToPrevious}
         disabled={!canGoPrev}
-        className={`absolute left-0 top-1/2 transform -translate-y-1/2 z-20 rounded-full p-2 transition-all duration-200 ${
-          canGoPrev ? "bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-gray-800" : "invisible"
+        className={`absolute left-2 top-1/2 transform -translate-y-1/2 z-20 rounded-full p-2.5 transition-all duration-200 border border-white/70 backdrop-blur-sm shadow-sm ${
+          canGoPrev ? "bg-white/90 hover:bg-white text-gray-600 hover:text-gray-800" : "opacity-0 pointer-events-none"
         }`}
         aria-label="Previous category"
       >
@@ -111,16 +113,17 @@ const CategoryTabs = ({ categories, activeCategory, onCategoryChange }: Category
       </div>
       
       {/* Right Arrow */}
-      <button
+        <button
         onClick={goToNext}
         disabled={!canGoNext}
-        className={`absolute right-0 top-1/2 transform -translate-y-1/2 z-20 rounded-full p-2 transition-all duration-200 ${
-          canGoNext ? "bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-gray-800" : "invisible"
+        className={`absolute right-2 top-1/2 transform -translate-y-1/2 z-20 rounded-full p-2.5 transition-all duration-200 border border-white/70 backdrop-blur-sm shadow-sm ${
+          canGoNext ? "bg-white/90 hover:bg-white text-gray-600 hover:text-gray-800" : "opacity-0 pointer-events-none"
         }`}
         aria-label="Next category"
       >
         <ChevronRight className="h-5 w-5" />
       </button>
+      </div>
     </div>
   );
 };

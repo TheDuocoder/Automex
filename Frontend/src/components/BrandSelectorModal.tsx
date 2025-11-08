@@ -130,7 +130,7 @@ const BrandSelectorModal = ({
     <div
       className={cn(
         layout === "sidebar"
-          ? "grid grid-cols-3 gap-5 max-h-[580px] overflow-y-auto pr-2"
+          ? "grid grid-cols-3 gap-3.5 max-h-[460px] overflow-y-auto pr-2"
           : "grid grid-cols-3 gap-4 max-h-60 overflow-y-auto"
       )}
       style={{
@@ -146,7 +146,7 @@ const BrandSelectorModal = ({
             onClick={() => handleBrandClick(brand.id, brand.name)}
             className={cn(
               "flex flex-col items-center justify-center bg-white",
-              "w-[100px] h-[100px] md:w-[100px] md:h-[100px] max-md:w-[90px] max-md:h-[90px] rounded-xl relative overflow-hidden",
+              "w-[96px] h-[96px] md:w-[100px] md:h-[100px] max-md:w-[88px] max-md:h-[88px] rounded-xl relative overflow-hidden",
               // Hover state with red theme
               "hover:border-[#E74A3B] hover:border-2 hover:shadow-[0_4px_25px_rgba(0,0,0,0.06)] hover:scale-[1.03]",
               "active:scale-[0.98] active:shadow-sm",
@@ -158,7 +158,7 @@ const BrandSelectorModal = ({
             style={{ transition: 'all 0.10s ease' }}
           >
             <div className={cn(
-              "w-16 h-16 max-md:w-14 max-md:h-14 rounded-lg flex items-center justify-center mb-2 transition-all duration-300",
+              "w-15 h-15 max-md:w-13 max-md:h-13 rounded-lg flex items-center justify-center mb-2 transition-all duration-300",
               isSelected 
                 ? "bg-white shadow-sm" 
                 : "bg-white"
@@ -167,7 +167,7 @@ const BrandSelectorModal = ({
                 src={brand.logo}
                 alt={`${brand.name} logo`}
                 className={cn(
-                  "h-12 w-12 max-md:h-10 max-md:w-10 object-contain transition-all duration-300",
+                  "h-11 w-11 max-md:h-10 max-md:w-10 object-contain transition-all duration-300",
                   isSelected ? "scale-110" : "scale-100"
                 )}
                 style={{ 
@@ -183,7 +183,7 @@ const BrandSelectorModal = ({
               />
             </div>
             <span className={cn(
-              "text-[10px] text-center font-medium leading-tight px-1 transition-all duration-300",
+              "text-[10px] text-center font-medium leading-tight px-0.5 transition-all duration-300",
               isSelected ? "text-[#E74A3B] font-semibold" : "text-gray-700"
             )}>
               {brand.name}
@@ -201,7 +201,7 @@ const BrandSelectorModal = ({
     <div
       className={cn(
         layout === "sidebar"
-          ? "grid grid-cols-2 gap-3 max-h-[calc(100vh-16rem)] overflow-y-auto pr-1"
+          ? "grid grid-cols-2 gap-3 max-h-[380px] overflow-y-auto pr-1.5"
           : "grid grid-cols-3 gap-4 max-h-60 overflow-y-auto"
       )}
     >
@@ -212,13 +212,13 @@ const BrandSelectorModal = ({
             key={model.id}
             onClick={() => handleModelClick(model.id)}
             className={cn(
-              "flex flex-col items-center justify-center p-3 rounded-xl border transition-all duration-200 text-sm font-medium",
+              "flex flex-col items-center justify-center p-2.5 rounded-xl border transition-all duration-200 text-xs sm:text-sm font-medium",
               isSelected
                 ? "border-[#D32F2F] bg-red-50 text-[#D32F2F] shadow-sm"
                 : "border-gray-200 hover:border-[#D32F2F] hover:bg-red-50 hover:shadow"
             )}
           >
-            <span className="text-xs sm:text-sm text-center leading-tight">
+            <span className="text-xs text-center leading-tight">
               {model.name}
             </span>
           </button>
@@ -232,7 +232,7 @@ const BrandSelectorModal = ({
 
   const renderFuelOptions = (layout: "sidebar" | "modal") => (
     <div className="space-y-4">
-      <div className="text-xs text-gray-500 uppercase tracking-wide">
+      <div className="text-[11px] text-gray-500 uppercase tracking-wide">
         Preferred fuel type
       </div>
       <div className="grid grid-cols-2 gap-3">
@@ -243,7 +243,7 @@ const BrandSelectorModal = ({
               key={fuel}
               onClick={() => handleFuelClick(fuel)}
               className={cn(
-                "rounded-lg border py-3 text-sm font-semibold transition-all duration-200",
+                "rounded-lg border py-2.5 text-sm font-semibold transition-all duration-200",
                 isSelected
                   ? "border-[#D32F2F] bg-red-50 text-[#D32F2F] shadow-sm"
                   : "border-gray-200 text-gray-700 hover:border-[#D32F2F] hover:bg-red-50"
@@ -261,7 +261,7 @@ const BrandSelectorModal = ({
     const paddingX = layout === "sidebar" ? "px-5" : "px-6";
     const searchContainerClasses = cn(
       paddingX,
-      layout === "sidebar" ? "py-3" : "pb-2",
+      layout === "sidebar" ? "py-2.5" : "pb-2",
       "border-b border-gray-100"
     );
     const summaryContainerClasses = cn(
@@ -313,11 +313,11 @@ const BrandSelectorModal = ({
         {stage !== "brand" && selectedBrandEntity && (
           <div className={summaryContainerClasses}>
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center overflow-hidden" style={{ backgroundColor: '#FFFFFF' }}>
+              <div className="w-9 h-9 bg-white rounded-full flex items-center justify-center overflow-hidden" style={{ backgroundColor: '#FFFFFF' }}>
                 <img
                   src={selectedBrandEntity.logo}
                   alt={`${selectedBrandEntity.name} logo`}
-                  className="h-8 w-8 object-contain"
+                  className="h-7 w-7 object-contain"
                   style={{ 
                     filter: 'brightness(1.05) contrast(1.1)',
                     background: '#FFFFFF',
@@ -379,12 +379,12 @@ const BrandSelectorModal = ({
           background: 'linear-gradient(to bottom, #FFFFFF, #FAFAFA)'
         }}
       >
-        <div className="px-5 pt-3 pb-4 border-b border-gray-100">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Select Manufacturer</h3>
+        <div className="px-5 pt-3 pb-3 border-b border-gray-100">
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">Select Manufacturer</h3>
           {stage !== "brand" && (
             <button
               onClick={handleBack}
-              className="inline-flex items-center gap-1 text-xs font-semibold text-gray-600 hover:text-gray-900 mt-1"
+              className="inline-flex items-center gap-1 text-xs font-semibold text-gray-600 hover:text-gray-900"
             >
               <ChevronLeft className="h-4 w-4" />
               Back
