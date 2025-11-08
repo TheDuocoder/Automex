@@ -59,14 +59,14 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   const shouldShowButton = hasMoreFeatures || descriptions.length > 0;
 
   const displayImage = (
-    <div className="h-48 w-full rounded-xl overflow-hidden bg-white flex items-center justify-center border border-gray-200" style={{ backgroundColor: '#ffffff' }}>
+    <div className="h-36 w-full rounded-xl overflow-hidden bg-white flex items-center justify-center border border-gray-200" style={{ backgroundColor: '#ffffff' }}>
       {thumbnail ? (
         <img src={thumbnail} alt={name} className="w-full h-full object-contain bg-white" style={{ backgroundColor: '#ffffff' }} />
       ) : (
         <img
           src="/images/service_icons/car_service.png"
           alt="Service"
-          className="h-24 w-24 object-contain opacity-90 bg-white"
+          className="h-20 w-20 object-contain opacity-90 bg-white"
           style={{ backgroundColor: '#ffffff' }}
         />
       )}
@@ -97,23 +97,23 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
           <span className="tracking-wide">{duration}</span>
         </div>
 
-        <CardContent className="p-6 md:p-7">
-          <div className="flex flex-col md:flex-row gap-5 md:gap-8">
+        <CardContent className="p-4 md:p-5">
+          <div className="flex flex-col md:flex-row gap-4 md:gap-6">
             <div className="w-full md:w-[200px] flex-shrink-0 h-full">
-              <div className="h-40">{displayImage}</div>
+              <div className="h-32">{displayImage}</div>
             </div>
 
-            <div className="flex-1 space-y-4">
-              <h3 className="text-[24px] font-bold text-gray-900 leading-tight">{name}</h3>
+            <div className="flex-1 space-y-3">
+              <h3 className="text-[20px] font-bold text-gray-900 leading-tight">{name}</h3>
 
-              <div className="flex flex-wrap items-center gap-6 text-[15px] text-gray-700">
+              <div className="flex flex-wrap items-center gap-4 text-[14px] text-gray-700">
                 <span className="whitespace-nowrap">• {warranty}</span>
                 <span className="whitespace-nowrap">• {recommended}</span>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5 text-[15px] text-gray-700">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-1 text-[14px] text-gray-700">
                 {visibleFeatures.map((feature, index) => (
-                  <div key={index} className="flex items-center gap-2 whitespace-nowrap">
+                  <div key={index} className="flex items-center gap-1.5 whitespace-nowrap">
                     <div className="w-4 h-4 bg-[#CBF2CB] rounded-full flex items-center justify-center text-green-600 text-xs">
                       ✓
                     </div>
@@ -137,7 +137,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
               )}
 
               {showMore && descriptions.length > 0 && (
-                <div className="space-y-2 text-sm text-gray-700 border border-gray-200 rounded-lg p-4 bg-gray-50/70">
+                <div className="space-y-2 text-sm text-gray-700 border border-gray-200 rounded-lg p-3 bg-gray-50/70">
                   {descriptions.map((text, idx) => (
                     <p key={idx} className="leading-relaxed">
                       {text}
@@ -146,18 +146,18 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
                 </div>
               )}
 
-              <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 pt-2">
+              <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 pt-1">
                 <div className="text-gray-700 space-y-1 md:space-y-2">
                   <div className="text-sm text-gray-400 line-through whitespace-nowrap">
                     Rs. {originalPrice.toLocaleString()}
                   </div>
-                  <div className="text-[28px] font-bold text-gray-900 whitespace-nowrap">
+                  <div className="text-[24px] font-bold text-gray-900 whitespace-nowrap">
                     ₹ {discountedPrice.toLocaleString()}
                   </div>
                 </div>
 
                 <Button
-                  className="uppercase tracking-wider text-sm font-semibold border-2 border-red-500 text-red-500 bg-white hover:bg-red-50 hover:text-red-600 px-6 py-2.5 rounded-md"
+                  className="uppercase tracking-wider text-sm font-semibold border-2 border-red-500 text-red-500 bg-white hover:bg-red-50 hover:text-red-600 px-5 py-2 rounded-md"
                   onClick={() => onAddToCart(id, name)}
                 >
                   Select Car

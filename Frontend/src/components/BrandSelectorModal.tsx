@@ -148,11 +148,11 @@ const BrandSelectorModal = ({
               "flex flex-col items-center justify-center bg-white",
               "w-[96px] h-[96px] md:w-[100px] md:h-[100px] max-md:w-[88px] max-md:h-[88px] rounded-xl relative overflow-hidden",
               // Hover state with red theme
-              "hover:border-[#E74A3B] hover:border-2 hover:shadow-[0_4px_25px_rgba(0,0,0,0.06)] hover:scale-[1.03]",
+              "hover:border-[#E74A3B] hover:ring-2 hover:ring-inset hover:ring-[#E74A3B] hover:shadow-sm",
               "active:scale-[0.98] active:shadow-sm",
               // Selection state with red border and warm background
               isSelected
-                ? "border-[#E74A3B] border-2 bg-[#FFF9E5] shadow-[0_4px_25px_rgba(0,0,0,0.06)] scale-[1.02]"
+                ? "border-[#E74A3B] border-2 bg-[#FFF9E5] shadow-[0_4px_25px_rgba(0,0,0,0.06)]"
                 : "border border-gray-200"
             )}
             style={{ transition: 'all 0.10s ease' }}
