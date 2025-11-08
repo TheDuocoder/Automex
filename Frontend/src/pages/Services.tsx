@@ -7,23 +7,23 @@ import CategoryTabs from "@/components/CategoryTabs";
 import BrandSelectorModal from "@/components/BrandSelectorModal";
 
 interface ServicePackage {
-  id: string;
-  name: string;
-  thumbnail: string;
-  warranty: string;
-  recommended: string;
-  features: { name: string; included: boolean; details?: string; }[];
-  moreServicesCount: number;
-  originalPrice: number;
-  discountedPrice: number;
-  duration: string;
+  id?: string;
+  name?: string;
+  thumbnail?: string;
+  warranty?: string;
+  recommended?: string;
+  features?: { name: string; included: boolean; details?: string; }[];
+  moreServicesCount?: number;
+  originalPrice?: number;
+  discountedPrice?: number;
+  duration?: string;
   specialLabel?: string;
   offer?: {
     price: number;
     discount: string;
     badgeColor?: string;
   };
-  isRecommended: boolean;
+  isRecommended?: boolean;
   descriptions?: string[];
   sectionTitle?: string;
 }
@@ -383,7 +383,41 @@ const Services = () => {
         "Professional wheel cylinder replacement service with OES parts.",
         "Includes brake system inspection and performance verification."
       ]
-      }
+    },
+    {
+      id: "brake-drums-turning",
+      name: "Brake Drums Turning",
+      thumbnail: "/images/product_images/break_drums_turning.png",
+      warranty: "1 Month Warranty",
+      recommended: "In Case of Screeching Noise from Brakes",
+      features: [
+        { name: "Brake Drums Turning", included: true },
+        { name: "Refacing of Brake Drums", included: true },
+        { name: "Free Pickup & Drop", included: true },
+        { name: "Opening & Fitting of Brake Drums", included: true },
+        { name: "Applicable for Set of 2 Brake Drums", included: true }
+      ],
+      moreServicesCount: 0,
+      originalPrice: 1124,
+      discountedPrice: 899,
+      duration: "4 Hours",
+      isRecommended: false
+    },
+    {
+      id: "caliper-pin-greasing",
+      name: "Caliper Pin Greasing",
+      thumbnail: "/images/product_images/cliper_pin_greasing.png",
+      warranty: "",
+      recommended: "Recommended: In case of Brake Noise or Sticking",
+      features: [
+        { name: "Caliper Pin Greasing", included: true }
+      ],
+      moreServicesCount: 0,
+      originalPrice: 1499,
+      discountedPrice: 149,
+      duration: "1 Hour",
+      isRecommended: false
+    }
     ],
     "ac-service": [
       {
