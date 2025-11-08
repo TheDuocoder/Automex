@@ -29,8 +29,8 @@ const Header = () => {
   // Determine if header should be transparent (home page) or solid (other pages)
   const isTransparent = location.pathname === '/';
   
-  const headerPadding = isTransparent ? "py-3 md:py-4 lg:py-5" : "py-2 md:py-3 lg:py-4";
-  const logoHeights = isTransparent ? "h-16 md:h-20 lg:h-24" : "h-12 md:h-14 lg:h-16";
+  const headerPadding = isTransparent ? "py-0 md:py-1 lg:py-2" : "py-2 md:py-3 lg:py-4";
+  const logoHeights = isTransparent ? "h-24 md:h-32 lg:h-40" : "h-20 md:h-24 lg:h-28";
 
   return (
     <header
@@ -45,9 +45,9 @@ const Header = () => {
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3 md:gap-6">
-            <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
+            <div className={cn("flex items-center cursor-pointer", isTransparent && "-mt-2 md:-mt-3 lg:-mt-4")} onClick={() => navigate('/')}>
               <img 
-                src="/images/automex_circle_img.png" 
+                src="/images/Red_Automex.png" 
                 alt="AutoMex Logo" 
                 className={cn("w-auto object-contain", logoHeights)}
                 onError={(e) => {
@@ -57,14 +57,14 @@ const Header = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-3 md:gap-4 lg:gap-6">
+          <div className={cn("flex items-center gap-3 md:gap-4 lg:gap-6", isTransparent && "-mt-4 md:-mt-6 lg:-mt-8 md:mr-8 lg:mr-16")}>
             {/* Conditional Navigation - Individual links on landing page, Help dropdown on other pages */}
             {isTransparent ? (
               // Landing Page - Individual Navigation Links
               <>
                 <a 
                   href="/services" 
-                  className="text-sm text-white hover-automex hidden lg:block cursor-pointer"
+                  className="text-sm text-white hover:text-red-500 hover:font-bold transition-all duration-200 hidden lg:block cursor-pointer"
                   onClick={(e) => {
                     e.preventDefault();
                     navigate('/services');
@@ -75,7 +75,7 @@ const Header = () => {
                 
                 <a 
                   href="#about-us" 
-                  className="text-sm text-white hover-automex hidden lg:block"
+                  className="text-sm text-white hover:text-red-500 hover:font-bold transition-all duration-200 hidden lg:block"
                   onClick={(e) => {
                     e.preventDefault();
                     const element = document.getElementById('about-us');
@@ -89,7 +89,7 @@ const Header = () => {
                 
                 <a 
                   href="/contact-us" 
-                  className="text-sm text-white hover-automex hidden lg:block cursor-pointer"
+                  className="text-sm text-white hover:text-red-500 hover:font-bold transition-all duration-200 hidden lg:block cursor-pointer"
                   onClick={(e) => {
                     e.preventDefault();
                     navigate('/contact-us');

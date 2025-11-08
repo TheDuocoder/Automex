@@ -72,24 +72,24 @@ const Hero = () => {
             </p>
             <div className="space-y-4 md:space-y-5 text-sm md:text-base lg:text-lg opacity-95 mb-10 md:mb-12">
               <div className="flex items-start gap-3 md:gap-4">
-                <span className="flex-shrink-0 mt-0.5 text-xl md:text-2xl" style={{color: '#F4D03F'}}>✓</span>
+                <span className="flex-shrink-0 mt-0.5 text-2xl md:text-3xl font-black" style={{color: '#22C55E'}}>✓</span>
                 <span className="leading-relaxed">Certified Technicians with 10+ Years Experience</span>
               </div>
               <div className="flex items-start gap-3 md:gap-4">
-                <span className="flex-shrink-0 mt-0.5 text-xl md:text-2xl" style={{color: '#F4D03F'}}>✓</span>
+                <span className="flex-shrink-0 mt-0.5 text-2xl md:text-3xl font-black" style={{color: '#22C55E'}}>✓</span>
                 <span className="leading-relaxed">100% Genuine Parts & Transparent Pricing</span>
               </div>
               <div className="flex items-start gap-3 md:gap-4">
-                <span className="flex-shrink-0 mt-0.5 text-xl md:text-2xl" style={{color: '#F4D03F'}}>✓</span>
+                <span className="flex-shrink-0 mt-0.5 text-2xl md:text-3xl font-black" style={{color: '#22C55E'}}>✓</span>
                 <span className="leading-relaxed">Real-Time Service Tracking</span>
               </div>
             </div>
             <div>
               <span 
-                className="inline-block text-black px-4 md:px-6 py-2 md:py-3 rounded-full text-sm md:text-base font-bold shadow-xl transition-all cursor-pointer" 
-                style={{backgroundColor: '#F4D03F'}}
-                onMouseEnter={(e) => (e.target as HTMLElement).style.backgroundColor = '#F1C40F'} 
-                onMouseLeave={(e) => (e.target as HTMLElement).style.backgroundColor = '#F4D03F'}
+                className="inline-block text-white px-4 md:px-6 py-2 md:py-3 rounded-full text-sm md:text-base font-bold shadow-xl transition-all cursor-pointer" 
+                style={{backgroundColor: '#DC2626'}}
+                onMouseEnter={(e) => (e.target as HTMLElement).style.backgroundColor = '#B91C1C'} 
+                onMouseLeave={(e) => (e.target as HTMLElement).style.backgroundColor = '#DC2626'}
               >
                 Crafted for Quality. Built on Trust
               </span>
