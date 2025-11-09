@@ -2222,7 +2222,7 @@ const Services = () => {
       {
         id: "regular-ac-service",
         name: "Regular AC Service",
-        thumbnail: "/images/Ac repair.png",
+        thumbnail: "/images/product_images/ac_service.png",
         warranty: "500 Kms or 1 Month Warranty",
         recommended: "Every 5,000 Kms or 3 Months (Recommended)",
         features: [
@@ -2255,7 +2255,7 @@ const Services = () => {
       {
         id: "high-performance-ac-service",
         name: "High Performance AC Service",
-        thumbnail: "/images/Services/ac_service_technician.png",
+        thumbnail: "/images/product_images/high_perform_ac_service.png",
         warranty: "1,000 kms or 1 Month Warranty",
         recommended: "Every 10,000 Kms or 1 Year (Recommended)",
         features: [
@@ -2731,7 +2731,7 @@ const Services = () => {
       {
         id: "apollo-amazer-4g",
         name: "Apollo Amazer 4G",
-        thumbnail: "/images/product_images/applo_amazer_4G.png",
+        thumbnail: "/images/product_images/applo_amazer.png",
         warranty: "5 years warranty",
         recommended: "Size - 185/65 R15 • 5 years warranty • Tubeless • Fitting Cost Included",
         features: [
@@ -2752,7 +2752,7 @@ const Services = () => {
       {
         id: "apollo-alnac-4g",
         name: "Apollo Alnac 4G",
-        thumbnail: "/images/product_images/applo_alnac.png",
+        thumbnail: "/images/product_images/applo__alnac.png",
         warranty: "Premium Quality",
         recommended: "55,000 Kms Warranty • Professional Installation",
         features: [
@@ -2785,9 +2785,29 @@ const Services = () => {
         isRecommended: false
       },
       {
+        id: "mrf-ecotred",
+        name: "MRF Ecotred",
+        thumbnail: "/images/product_images/mrf__ecotread.png",
+        warranty: "5 years warranty",
+        recommended: "Size - 165/80 R14 • 5 years warranty • Tubeless • Fitting Cost Included",
+        features: [
+          { name: "Free Pickup & Drop", included: true },
+          { name: "Tyre Replacement at Service Center", included: true },
+          { name: "Tyres Inspection for Tread", included: true },
+          { name: "Alignment & Balancing Charges Extra", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 5899,
+        discountedPrice: 4430,
+        duration: "",
+        specialLabel: "",
+        expertRating: "4.8",
+        isRecommended: false
+      },
+      {
         id: "mrf-zvtv",
-        name: "MRF ZVTV",
-        thumbnail: "/images/Services/Tyre service.png",
+        name: "MRF Zvtv-A1",
+        thumbnail: "/images/product_images/mrf_zvtv__a1.png",
         warranty: "Premium Quality",
         recommended: "6 years warranty • Tubeless",
         features: [
@@ -2802,6 +2822,26 @@ const Services = () => {
         duration: "Expert Rating: 4.6",
         specialLabel: "",
         offer: undefined,
+        isRecommended: false
+      },
+      {
+        id: "mrf-zlx",
+        name: "Mrf ZIx",
+        thumbnail: "/images/product_images/mrf__zlx.png",
+        warranty: "",
+        recommended: "Tubeless",
+        features: [
+          { name: "Free Pickup & Drop", included: true },
+          { name: "Tyre Replacement at Service Center", included: true },
+          { name: "Tyres Inspection for Tread", included: true },
+          { name: "Alignment & Balancing Charges Extra", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 9299,
+        discountedPrice: 6918,
+        duration: "",
+        specialLabel: "",
+        expertRating: "4.6",
         isRecommended: false
       },
 
@@ -2961,8 +3001,8 @@ const Services = () => {
       },
       {
         id: "jk-ux-royale",
-        name: "JK Tyre UX Royale",
-        thumbnail: "/images/Services/Tyre service.png",
+        name: "JK UX Royale",
+        thumbnail: "/images/product_images/jx_ux_royale.png",
         warranty: "Premium Quality",
         recommended: "45,000 Kms Warranty • Professional Installation",
         features: [
@@ -2977,6 +3017,46 @@ const Services = () => {
         duration: "Expert Rating: 4.2",
         specialLabel: "",
         offer: undefined,
+        isRecommended: false
+      },
+      {
+        id: "jk-ux",
+        name: "JK UX",
+        thumbnail: "/images/product_images/jk_ux.png",
+        warranty: "Premium Quality",
+        recommended: "Tubeless",
+        features: [
+          { name: "Free Pickup & Drop", included: true },
+          { name: "Tyre Replacement at Service Center", included: true },
+          { name: "Tyres Inspection for Tread", included: true },
+          { name: "Alignment & Balancing Charges Extra", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 6999,
+        discountedPrice: 5228,
+        duration: "",
+        specialLabel: "",
+        expertRating: "4.5",
+        isRecommended: false
+      },
+      {
+        id: "jk-taximax",
+        name: "JK Taximax",
+        thumbnail: "/images/product_images/jx__taximax.png",
+        warranty: "5 years warranty",
+        recommended: "Size - 165/80 R14 • 5 years warranty • Tubeless • Fitting Cost Included",
+        features: [
+          { name: "Free Pickup & Drop", included: true },
+          { name: "Tyre Replacement at Service Center", included: true },
+          { name: "Tyres Inspection for Tread", included: true },
+          { name: "Alignment & Balancing Charges Extra", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 5699,
+        discountedPrice: 4260,
+        duration: "",
+        specialLabel: "",
+        expertRating: "4.9",
         isRecommended: false
       },
 

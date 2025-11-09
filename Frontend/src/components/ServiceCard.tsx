@@ -71,7 +71,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
           : variant === "reference"
           ? "w-[180px] h-[120px] rounded-lg"
           : "h-48 w-full rounded-xl"
-      } overflow-hidden bg-white flex items-center justify-center border border-gray-200`}
+      } overflow-hidden bg-white flex items-center justify-center`}
       style={{ backgroundColor: '#ffffff' }}
     >
       {thumbnail ? (
