@@ -26,6 +26,7 @@ interface ServicePackage {
   isRecommended?: boolean;
   descriptions?: string[];
   sectionTitle?: string;
+  expertRating?: string;
 }
 
 const Services = () => {
@@ -384,25 +385,7 @@ const Services = () => {
         "Includes brake system inspection and performance verification."
       ]
     },
-    {
-      id: "brake-drums-turning",
-      name: "Brake Drums Turning",
-      thumbnail: "/images/product_images/break_drums_turning.png",
-      warranty: "1 Month Warranty",
-      recommended: "In Case of Screeching Noise from Brakes",
-      features: [
-        { name: "Brake Drums Turning", included: true },
-        { name: "Refacing of Brake Drums", included: true },
-        { name: "Free Pickup & Drop", included: true },
-        { name: "Opening & Fitting of Brake Drums", included: true },
-        { name: "Applicable for Set of 2 Brake Drums", included: true }
-      ],
-      moreServicesCount: 0,
-      originalPrice: 1124,
-      discountedPrice: 899,
-      duration: "4 Hours",
-      isRecommended: false
-    },
+
     {
       id: "caliper-pin-greasing",
       name: "Caliper Pin Greasing",
@@ -416,6 +399,68 @@ const Services = () => {
       originalPrice: 1499,
       discountedPrice: 149,
       duration: "1 Hour",
+      isRecommended: false
+    },
+    {
+      id: "front-brake-pads-cleaning",
+      name: "Front Brake Pads Cleaning",
+      thumbnail: "/images/product_images/front_breakpad_cleaning.png",
+      warranty: "",
+      recommended: "Recommended: In case of Brake Vibration or Noise",
+      features: [
+        { name: "Front Brake Pad Cleaning", included: true }
+      ],
+      moreServicesCount: 0,
+      originalPrice: 1499,
+      discountedPrice: 149,
+      duration: "Takes 1 Hour",
+      isRecommended: false
+    },
+    {
+      id: "rear-brake-pads-shoes-cleaning",
+      name: "Rear Brake Pads / Shoes Cleaning",
+      thumbnail: "/images/product_images/rear_breakpad_cleaning.png",
+      warranty: "",
+      recommended: "Recommended: In case of Brake Noise or Reduced Performance",
+      features: [
+        { name: "Rear Brake Shoe / Pad Cleaning", included: true }
+      ],
+      moreServicesCount: 0,
+      originalPrice: 1499,
+      discountedPrice: 149,
+      duration: "Takes 1 Hour",
+      isRecommended: false
+    },
+    {
+      id: "wiper-fluid-replacement",
+      name: "Wiper Fluid Replacement",
+      thumbnail: "/images/product_images/wiper_fluid.png",
+      warranty: "",
+      recommended: "Every 1 Month Recommended • Applicable on Walk-ins Only",
+      features: [
+        { name: "Wiper Fluid Replacement", included: true },
+        { name: "Wiper Assembly Check", included: true }
+      ],
+      moreServicesCount: 0,
+      originalPrice: 499,
+      discountedPrice: 49,
+      duration: "Takes 30 Minutes",
+      isRecommended: false
+    },
+    {
+      id: "headlight-adjustment",
+      name: "Headlight Adjustment",
+      thumbnail: "/images/product_images/headlight_adustment.png",
+      warranty: "",
+      recommended: "Recommended: In Case of Poor Road Visibility • Applicable on Walk-ins Only",
+      features: [
+        { name: "Headlight Bulb Adjustment", included: true },
+        { name: "Headlight Wiring Inspection", included: true }
+      ],
+      moreServicesCount: 0,
+      originalPrice: 499,
+      discountedPrice: 49,
+      duration: "Takes 30 Minutes",
       isRecommended: false
     }
     ],
@@ -2284,7 +2329,7 @@ const Services = () => {
       {
         id: "ac-compressor-replacement",
         name: "Compressor Replacement",
-        thumbnail: "/images/service_icons/car_ac_services.png",
+        thumbnail: "/images/product_images/compressor.png",
         warranty: "3 Months Warranty",
         recommended: "Recommended in case of compressor leakage or less cooling",
         features: [
@@ -2308,7 +2353,7 @@ const Services = () => {
       {
         id: "ac-heating-coil-replacement",
         name: "Heating Coil Replacement",
-        thumbnail: "/images/service_icons/car_ac_services.png",
+        thumbnail: "/images/product_images/heating_coil.png",
         warranty: "3 Months Warranty",
         recommended: "Recommended in case of heater not working",
         features: [
@@ -2333,7 +2378,7 @@ const Services = () => {
       {
         id: "ac-vbelt-replacement",
         name: "V Belt Replacement",
-        thumbnail: "/images/service_icons/car_ac_services.png",
+        thumbnail: "/images/product_images/v_belt_replacement.png",
         warranty: "1 Month Warranty",
         recommended: "Recommended in case of whining noise from engine",
         features: [
@@ -2358,7 +2403,7 @@ const Services = () => {
       {
         id: "ac-blower-motor-replacement",
         name: "AC Blower Motor Replacement",
-        thumbnail: "/images/service_icons/car_ac_services.png",
+        thumbnail: "/images/product_images/ac_blower_motor.png",
         warranty: "1 Month Warranty",
         recommended: "Recommended in case of rattling, humming noise from AC blower",
         features: [
@@ -2397,7 +2442,7 @@ const Services = () => {
       {
         id: "radiator-replacement",
         name: "Radiator Replacement",
-        thumbnail: "/images/service_icons/car_ac_services.png",
+        thumbnail: "/images/product_images/radiator.png",
         warranty: "1 Month Warranty",
         recommended: "Recommended in case of blockage in the radiator vessels",
         features: [
@@ -2422,7 +2467,7 @@ const Services = () => {
       {
         id: "radiator-fan-motor",
         name: "Radiator Fan Motor Replacement",
-        thumbnail: "/images/service_icons/car_ac_services.png",
+        thumbnail: "/images/product_images/radiator_fan_motor.png",
         warranty: "1 Month Warranty",
         recommended: "Recommended in case of radiator fan not working",
         features: [
@@ -2483,8 +2528,8 @@ const Services = () => {
       },
       {
         id: "amaron-55-35ah",
-        name: "Amaron (55 Months Warranty)",
-        thumbnail: "https://gomechprod.blob.core.windows.net/websiteasset/New Website/video/thumbnails/1*1/Battery Service.jpg",
+        name: "Amaron Go 35 Amp",
+        thumbnail: "/images/product_images/amazon_go.png",
         warranty: "55 Months Warranty",
         recommended: "35 Amp Hour • 55 Months Warranty • Free of Cost Installation",
         features: [
@@ -2504,8 +2549,8 @@ const Services = () => {
       },
       {
         id: "amaron-72-35ah",
-        name: "Amaron (72 Months Warranty)",
-        thumbnail: "https://gomechprod.blob.core.windows.net/websiteasset/New Website/video/thumbnails/1*1/Battery Service.jpg",
+        name: "Amaron Flo 35 Amp",
+        thumbnail: "/images/product_images/amazon_flo.png",
         warranty: "72 Months Warranty",
         recommended: "35 Amp Hour • 72 Months Warranty • Free of Cost Installation",
         features: [
@@ -2540,8 +2585,8 @@ const Services = () => {
       },
       {
         id: "exide-55-35ah",
-        name: "Exide (55 Months Warranty)",
-        thumbnail: "/images/Services/Battery service.png",
+        name: "Exide Mileage 35 Amp",
+        thumbnail: "/images/product_images/excide_millage_35.png",
         warranty: "55 Months Warranty",
         recommended: "35 Amp Hour • Free of Cost Installation",
         features: [
@@ -2561,8 +2606,8 @@ const Services = () => {
       },
       {
         id: "exide-66-35ah",
-        name: "Exide (66 Months Warranty)",
-        thumbnail: "/images/Services/Battery service.png",
+        name: "Exide Epiq 35 Amp",
+        thumbnail: "/images/product_images/excide_epiq_35.png",
         warranty: "66 Months Warranty",
         recommended: "35 Amp Hour • Free of Cost Installation",
         features: [
@@ -2596,30 +2641,9 @@ const Services = () => {
       },
       {
         id: "livguard-60-35ah",
-        name: "Livguard (60 Months Warranty)",
-        thumbnail: "/images/Services/Battery service.png",
+        name: "Livguard Zing Aterna 35 Amp",
+        thumbnail: "/images/product_images/livegurd_zing.png",
         warranty: "60 Months Warranty",
-        recommended: "35 Amp Hour • Free of Cost Installation",
-        features: [
-          { name: "Free Pickup & Drop", included: true },
-          { name: "Old Battery Price Included", included: true },
-          { name: "Free Installation", included: true },
-          { name: "Available at Doorstep", included: true },
-          { name: "Immediate Jump Start Help", included: true }
-        ],
-        moreServicesCount: 0,
-        originalPrice: 0,
-        discountedPrice: 0,
-        duration: "",
-        specialLabel: "",
-        offer: undefined,
-        isRecommended: false
-      },
-      {
-        id: "livguard-72-35ah",
-        name: "Livguard (72 Months Warranty)",
-        thumbnail: "/images/Services/Battery service.png",
-        warranty: "72 Months Warranty",
         recommended: "35 Amp Hour • Free of Cost Installation",
         features: [
           { name: "Free Pickup & Drop", included: true },
@@ -2653,7 +2677,7 @@ const Services = () => {
       {
         id: "alternator-replacement",
         name: "Alternator Replacement",
-        thumbnail: "/images/service_icons/car_inspection.png",
+        thumbnail: "/images/product_images/alternator.png",
         warranty: "1 Month Warranty",
         recommended: "Recommended in case of frequently discharging battery",
         features: [
@@ -2672,7 +2696,7 @@ const Services = () => {
       {
         id: "alternator-repair",
         name: "Alternator Repair",
-        thumbnail: "/images/service_icons/car_inspection.png",
+        thumbnail: "/images/product_images/alternator_repair.png",
         warranty: "3 Months Warranty",
         recommended: "Recommended in case of frequently discharging battery",
         features: [
@@ -2705,9 +2729,30 @@ const Services = () => {
         isRecommended: false
       },
       {
+        id: "apollo-amazer-4g",
+        name: "Apollo Amazer 4G",
+        thumbnail: "/images/product_images/applo_amazer_4G.png",
+        warranty: "5 years warranty",
+        recommended: "Size - 185/65 R15 • 5 years warranty • Tubeless • Fitting Cost Included",
+        features: [
+          { name: "Free Pickup & Drop", included: true },
+          { name: "Tyre Replacement at Service Center", included: true },
+          { name: "Tyres Inspection for Tread", included: true },
+          { name: "Alignment & Balancing Charges Extra", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 7599,
+        discountedPrice: 5711,
+        duration: "",
+        specialLabel: "RECOMMENDED",
+        offer: undefined,
+        isRecommended: true,
+        expertRating: "4.2"
+      },
+      {
         id: "apollo-alnac-4g",
         name: "Apollo Alnac 4G",
-        thumbnail: "/images/Services/Tyre service.png",
+        thumbnail: "/images/product_images/applo_alnac.png",
         warranty: "Premium Quality",
         recommended: "55,000 Kms Warranty • Professional Installation",
         features: [
