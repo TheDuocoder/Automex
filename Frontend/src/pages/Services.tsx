@@ -107,7 +107,7 @@ const Services = () => {
     {
       id: "basic-service",
       name: "Basic Service",
-      thumbnail: "",
+      thumbnail: "/images/product_images/basic_service.png",
       warranty: "1000 Kms or 3 Months Warranty",
       recommended: "Every 5000 Kms or 6 Months (Recommended)",
       features: [
@@ -140,7 +140,7 @@ const Services = () => {
     {
       id: "standard-service",
       name: "Standard Service",
-      thumbnail: "",
+      thumbnail: "/images/product_images/standard_service.png",
       warranty: "1000 Kms or 3 Months Warranty",
       recommended: "Every 10,000 Kms or 6 Months (Recommended)",
       features: [
@@ -482,12 +482,12 @@ const Services = () => {
       },
       {
         id: "eps-motor-repair",
-        name: "EPS Motor Repair",
-        thumbnail: "/images/Services/steering.png",
+        name: "EPS Module Repair",
+        thumbnail: "/images/product_images/eps_module.png",
         warranty: "1 Month Warranty",
         recommended: "Heavy/jerky steering • EPS warning",
         features: [
-          { name: "EPS Motor Overhaul/Repair", included: true },
+          { name: "EPS Module Overhaul/Repair", included: true },
           { name: "Calibration & Fault Clear (If Required)", included: true }
         ],
         moreServicesCount: 0,
@@ -500,7 +500,7 @@ const Services = () => {
       {
         id: "steering-rack-repair",
         name: "Steering Rack Repair",
-        thumbnail: "/images/Services/steering.png",
+        thumbnail: "/images/product_images/steerning rack.png",
         warranty: "1 Month Warranty",
         recommended: "Oil leak/knocking from rack",
         features: [
@@ -532,7 +532,7 @@ const Services = () => {
       {
         id: "front-shock-absorber",
         name: "Front Shock Absorber Replacement",
-        thumbnail: "/images/Services/suspension.png",
+        thumbnail: "/images/product_images/front_shocker_mount.png",
         warranty: "1 Month Warranty",
         recommended: "Bouncy ride • Oil leak on strut",
         features: [
@@ -549,7 +549,7 @@ const Services = () => {
       {
         id: "rear-shock-absorber",
         name: "Rear Shock Absorber Replacement",
-        thumbnail: "/images/Services/suspension.png",
+        thumbnail: "/images/Landing_page_images/rear shock abserber .png",
         warranty: "1 Month Warranty",
         recommended: "Bouncy ride • Oil leak on damper",
         features: [
@@ -566,7 +566,7 @@ const Services = () => {
       {
         id: "lower-arm-replacement",
         name: "Suspension Lower Arm Replacement",
-        thumbnail: "/images/Services/suspension.png",
+        thumbnail: "/images/product_images/suspension lower arm.png",
         warranty: "1 Month Warranty",
         recommended: "Knocking • Drifting while driving",
         features: [
@@ -583,7 +583,7 @@ const Services = () => {
       {
         id: "link-rod-replacement",
         name: "Link Rod Replacement",
-        thumbnail: "/images/Services/suspension.png",
+        thumbnail: "/images/product_images/link rod.png",
         warranty: "1 Month Warranty",
         recommended: "Rattling from rough roads",
         features: [
@@ -600,7 +600,7 @@ const Services = () => {
       {
         id: "tie-rod-end-replacement",
         name: "Tie Rod End Replacement",
-        thumbnail: "/images/Services/suspension.png",
+        thumbnail: "/images/product_images/tie rod.png",
         warranty: "1 Month Warranty",
         recommended: "Vibration • Uneven tyre wear",
         features: [
@@ -617,7 +617,7 @@ const Services = () => {
       {
         id: "front-axle-repair",
         name: "Front Axle Repair",
-        thumbnail: "/images/Services/suspension.png",
+        thumbnail: "/images/product_images/front_axle.png",
         warranty: "1 Month Warranty",
         recommended: "Vibration while accelerating • Clicking while turning",
         features: [
@@ -867,7 +867,7 @@ const Services = () => {
       {
         id: "clutch-set-replacement",
         name: "Clutch Set Replacement",
-        thumbnail: "/images/Services/clutch.png",
+        thumbnail: "/images/product_images/clutchset.png",
         warranty: "1 Month Warranty",
         recommended: "Juddering, slipping or hard clutch pedal",
         features: [
@@ -885,7 +885,7 @@ const Services = () => {
       {
         id: "flywheel-replacement",
         name: "Flywheel Replacement",
-        thumbnail: "/images/Services/clutch.png",
+        thumbnail: "/images/product_images/flyweel.png",
         warranty: "1 Month Warranty",
         recommended: "Chatter, vibration or damaged flywheel",
         features: [
@@ -902,7 +902,7 @@ const Services = () => {
       {
         id: "clutch-bearing-replacement",
         name: "Clutch Bearing Replacement",
-        thumbnail: "/images/Services/clutch.png",
+        thumbnail: "/images/product_images/clutch_bearning.png",
         warranty: "1 Month Warranty",
         recommended: "Whining/humming noise while pressing clutch",
         features: [
@@ -919,7 +919,7 @@ const Services = () => {
       {
         id: "flywheel-turning",
         name: "Flywheel Turning",
-        thumbnail: "/images/Services/clutch.png",
+        thumbnail: "/images/product_images/flyweel.png",
         warranty: "Smooth surface finish",
         recommended: "Recommended with new clutch set (if required)",
         features: [
@@ -1892,7 +1892,7 @@ const Services = () => {
       {
         id: "front-bumper-paint",
         name: "Front Bumper Paint",
-        thumbnail: "/images/Services/denting and painting service.png",
+        thumbnail: "/images/product_images/front_bumper.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -1911,7 +1911,7 @@ const Services = () => {
       {
         id: "bonnet-paint",
         name: "Bonnet Paint",
-        thumbnail: "/images/Services/denting and painting service.png",
+        thumbnail: "/images/product_images/bonet.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -1945,7 +1945,7 @@ const Services = () => {
       {
         id: "rear-bumper-paint",
         name: "Rear Bumper Paint",
-        thumbnail: "/images/Services/denting and painting service.png",
+        thumbnail: "/images/product_images/rear_bumper.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -1964,7 +1964,7 @@ const Services = () => {
       {
         id: "boot-paint",
         name: "Boot Paint",
-        thumbnail: "/images/Services/denting and painting service.png",
+        thumbnail: "/images/product_images/rear_boot_paint.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -1998,7 +1998,7 @@ const Services = () => {
       {
         id: "full-body-dent-paint",
         name: "Full Body Dent Paint",
-        thumbnail: "/images/Services/denting and painting service.png",
+        thumbnail: "/images/product_images/full_body_dentpaint.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -2017,7 +2017,7 @@ const Services = () => {
       {
         id: "alloy-paint",
         name: "Alloy Paint",
-        thumbnail: "/images/Services/denting and painting service.png",
+        thumbnail: "/images/product_images/alloy_paint.png",
         warranty: "1 Year Warranty",
         recommended: "Every 1 Year (Recommended)",
         features: [
@@ -2160,7 +2160,7 @@ const Services = () => {
       {
         id: "right-fender-paint",
         name: "Right Fender Paint",
-        thumbnail: "/images/Services/denting and painting service.png",
+        thumbnail: "/images/product_images/right_fender_paint.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -2198,7 +2198,7 @@ const Services = () => {
       {
         id: "right-rear-door-paint",
         name: "Right Rear Door Paint",
-        thumbnail: "/images/Services/denting and painting service.png",
+        thumbnail: "/images/product_images/right_backdoor.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -2861,7 +2861,7 @@ const Services = () => {
       },
       {
         id: "mrf-zlx",
-        name: "Mrf ZIx",
+        name: "MRF ZIX",
         thumbnail: "/images/product_images/mrf__zlx.png",
         warranty: "",
         recommended: "Tubeless",
@@ -2877,41 +2877,6 @@ const Services = () => {
         duration: "",
         specialLabel: "",
         expertRating: "4.6",
-        isRecommended: false
-      },
-
-      {
-        id: "heading-bridgestone",
-        name: "Bridgestone",
-        thumbnail: "",
-        warranty: "",
-        recommended: "",
-        features: [],
-        moreServicesCount: 0,
-        originalPrice: 0,
-        discountedPrice: 0,
-        duration: "",
-        sectionTitle: "Bridgestone",
-        isRecommended: false
-      },
-      {
-        id: "bridgestone-turanza-t001",
-        name: "Bridgestone Turanza T001",
-        thumbnail: "/images/Services/Tyre service.png",
-        warranty: "Premium Quality",
-        recommended: "55,000 Kms Warranty • Professional Installation",
-        features: [
-          { name: "Free Home Installation", included: true },
-          { name: "Old Tyre Exchange", included: true },
-          { name: "Low Noise Comfort Ride", included: true },
-          { name: "Wet Grip Performance", included: true }
-        ],
-        moreServicesCount: 0,
-        originalPrice: 7699,
-        discountedPrice: 6299,
-        duration: "Expert Rating: 4.4",
-        specialLabel: "",
-        offer: undefined,
         isRecommended: false
       },
 
@@ -2932,7 +2897,7 @@ const Services = () => {
       {
         id: "ceat-secura-drive",
         name: "CEAT SecuraDrive",
-        thumbnail: "/images/Services/Tyre service.png",
+        thumbnail: "/images/product_images/ceat_sucuredrive.png",
         warranty: "Premium Quality",
         recommended: "50,000 Kms Warranty • Professional Installation",
         features: [
@@ -2947,6 +2912,46 @@ const Services = () => {
         duration: "Expert Rating: 4.3",
         specialLabel: "",
         offer: undefined,
+        isRecommended: false
+      },
+      {
+        id: "ceat-milaze",
+        name: "Ceat Milaze",
+        thumbnail: "/images/product_images/ceat_milage.png",
+        warranty: "Premium Quality",
+        recommended: "Tubeless",
+        features: [
+          { name: "Free Pickup & Drop", included: true },
+          { name: "Tyres Inspection for Tread", included: true },
+          { name: "Tyre Replacement at Service Center", included: true },
+          { name: "Alignment & Balancing Charges Extra", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 7399,
+        discountedPrice: 5490,
+        duration: "Expert Rating: 4.6",
+        specialLabel: "",
+        expertRating: "4.6",
+        isRecommended: false
+      },
+      {
+        id: "ceat-milaze-x3",
+        name: "Ceat Milaze X3",
+        thumbnail: "/images/product_images/ceat_milage_x3.png",
+        warranty: "Premium Quality",
+        recommended: "Tubeless",
+        features: [
+          { name: "Free Pickup & Drop", included: true },
+          { name: "Tyres Inspection for Tread", included: true },
+          { name: "Tyre Replacement at Service Center", included: true },
+          { name: "Alignment & Balancing Charges Extra", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 7399,
+        discountedPrice: 5490,
+        duration: "Expert Rating: 4.1",
+        specialLabel: "",
+        expertRating: "4.1",
         isRecommended: false
       },
 
@@ -2965,9 +2970,9 @@ const Services = () => {
         isRecommended: false
       },
       {
-        id: "goodyear-assurance-triplemax-2",
-        name: "Goodyear Assurance TripleMax 2",
-        thumbnail: "/images/Services/Tyre service.png",
+        id: "goodyear-assurance-triplemax",
+        name: "Goodyear Assurance TripleMax",
+        thumbnail: "/images/product_images/goodyear_assurance_triplemax.png",
         warranty: "Premium Quality",
         recommended: "50,000 Kms Warranty • Professional Installation",
         features: [
@@ -2984,40 +2989,25 @@ const Services = () => {
         offer: undefined,
         isRecommended: false
       },
-
       {
-        id: "heading-michelin",
-        name: "Michelin",
-        thumbnail: "",
-        warranty: "",
-        recommended: "",
-        features: [],
-        moreServicesCount: 0,
-        originalPrice: 0,
-        discountedPrice: 0,
-        duration: "",
-        sectionTitle: "Michelin",
-        isRecommended: false
-      },
-      {
-        id: "michelin-energy-xm2",
-        name: "Michelin Energy XM2",
-        thumbnail: "/images/Services/Tyre service.png",
+        id: "goodyear-duraplus",
+        name: "Goodyear Duraplus",
+        thumbnail: "/images/product_images/goodyear_duraplus.png",
         warranty: "Premium Quality",
-        recommended: "60,000 Kms Warranty • Professional Installation",
+        recommended: "Tubeless",
         features: [
-          { name: "Free Home Installation", included: true },
-          { name: "Old Tyre Exchange", included: true },
-          { name: "Wheel Alignment Check", included: true },
-          { name: "Nitrogen Filling", included: true }
+          { name: "Free Pickup & Drop", included: true },
+          { name: "Tyres Inspection for Tread", included: true },
+          { name: "Tyre Replacement at Service Center", included: true },
+          { name: "Alignment & Balancing Charges Extra", included: true }
         ],
         moreServicesCount: 0,
-        originalPrice: 8999,
-        discountedPrice: 7299,
+        originalPrice: 7199,
+        discountedPrice: 5364,
         duration: "Expert Rating: 4.6",
         specialLabel: "",
-        offer: undefined,
-        isRecommended: true
+        expertRating: "4.6",
+        isRecommended: false
       },
 
       {
@@ -3037,7 +3027,7 @@ const Services = () => {
       {
         id: "jk-ux-royale",
         name: "JK UX Royale",
-        thumbnail: "/images/product_images/jx_ux_royale.png",
+        thumbnail: "/images/product_images/jk_ux_royale.png",
         warranty: "Premium Quality",
         recommended: "45,000 Kms Warranty • Professional Installation",
         features: [
@@ -3077,7 +3067,7 @@ const Services = () => {
       {
         id: "jk-taximax",
         name: "JK Taximax",
-        thumbnail: "/images/product_images/jx__taximax.png",
+        thumbnail: "/images/product_images/jk__taximax.png",
         warranty: "5 years warranty",
         recommended: "Size - 165/80 R14 • 5 years warranty • Tubeless • Fitting Cost Included",
         features: [
@@ -3110,9 +3100,9 @@ const Services = () => {
         isRecommended: false
       },
       {
-        id: "continental-uc6",
-        name: "Continental UltraContact UC6",
-        thumbnail: "/images/Services/Tyre service.png",
+        id: "continental-ultracontact",
+        name: "Continental Ultracontact",
+        thumbnail: "/images/product_images/continetal.png",
         warranty: "Premium Quality",
         recommended: "55,000 Kms Warranty • Professional Installation",
         features: [
@@ -3145,9 +3135,9 @@ const Services = () => {
         isRecommended: false
       },
       {
-        id: "yokohama-earth-1-e400",
-        name: "Yokohama Earth-1 E400",
-        thumbnail: "/images/Services/Tyre service.png",
+        id: "yokohama-earth-1",
+        name: "Yokohama Earth-1",
+        thumbnail: "/images/product_images/yokohma_earth_1.png",
         warranty: "Premium Quality",
         recommended: "50,000 Kms Warranty • Professional Installation",
         features: [
@@ -3160,42 +3150,6 @@ const Services = () => {
         originalPrice: 6999,
         discountedPrice: 5699,
         duration: "Expert Rating: 4.3",
-        specialLabel: "",
-        offer: undefined,
-        isRecommended: false
-      },
-
-      {
-        id: "heading-pirelli",
-        name: "Pirelli",
-        thumbnail: "",
-        warranty: "",
-        recommended: "",
-        features: [],
-        moreServicesCount: 0,
-        originalPrice: 0,
-        discountedPrice: 0,
-        duration: "",
-        sectionTitle: "Pirelli",
-        isRecommended: false
-      }
-      ,
-      {
-        id: "pirelli-cinturato-p1",
-        name: "Pirelli Cinturato P1",
-        thumbnail: "/images/Services/Tyre service.png",
-        warranty: "Premium Quality",
-        recommended: "45,000 Kms Warranty • Professional Installation",
-        features: [
-          { name: "Free Home Installation", included: true },
-          { name: "Old Tyre Exchange", included: true },
-          { name: "Eco-friendly Compound", included: true },
-          { name: "Comfortable Urban Ride", included: true }
-        ],
-        moreServicesCount: 0,
-        originalPrice: 7599,
-        discountedPrice: 6299,
-        duration: "Expert Rating: 4.2",
         specialLabel: "",
         offer: undefined,
         isRecommended: false
