@@ -2,6 +2,7 @@ import { Fragment, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import ServiceCard from "@/components/ServiceCard";
 import CategoryTabs from "@/components/CategoryTabs";
 import BrandSelectorModal from "@/components/BrandSelectorModal";
@@ -70,23 +71,23 @@ const Services = () => {
     },
     {
       id: "suspension-fitting",
-      name: "Suspension and Fitting",
-      icon: <img src="/images/service_icons/car_suspensions and fitments.png" alt="Suspension and Fitting" className="h-10 w-10 object-contain" />
+      name: "Suspension & Fitting",
+      icon: <img src="/images/service_icons/car_suspensions and fitments.png" alt="Suspension & Fitting" className="h-10 w-10 object-contain" />
     },
     {
       id: "car-spa",
-      name: "Spa and Cleaning",
-      icon: <img src="/images/service_icons/car_spa and cleaning.png" alt="Spa and Cleaning" className="h-10 w-10 object-contain" />
+      name: "Spa & Cleaning",
+      icon: <img src="/images/service_icons/car_spa and cleaning.png" alt="Spa & Cleaning" className="h-10 w-10 object-contain" />
     },
     {
       id: "clutch-body-parts",
-      name: "Clutch and Body Parts",
-      icon: <img src="/images/service_icons/car_clutch and body_parts.png" alt="Clutch and Body Parts" className="h-10 w-10 object-contain" />
+      name: "Clutch & Body Parts",
+      icon: <img src="/images/service_icons/car_clutch and body_parts.png" alt="Clutch & Body Parts" className="h-10 w-10 object-contain" />
     },
     {
       id: "windshield-lights",
-      name: "Windshield and Lights",
-      icon: <img src="/images/service_icons/car_windshiled and lights2.png" alt="Windshield and Lights" className="h-10 w-10 object-contain" />
+      name: "Windshields & Lights",
+      icon: <img src="/images/service_icons/car_windshiled and lights2.png" alt="Windshields & Lights" className="h-10 w-10 object-contain" />
     },
     {
       id: "car-inspections",
@@ -278,7 +279,7 @@ const Services = () => {
       recommended: "Best Performance (Single OE Unit)",
       features: [
         { name: "Opening & Fitting of Front Brake Disc", included: true },
-        { name: "Reduces Vibrations and Brake Noise", included: true },
+        { name: "Reduces Vibrations & Brake Noise", included: true },
         { name: "Free Pickup & Drop", included: true },
         { name: "Front Brake Disc Replacement", included: true }
       ],
@@ -614,6 +615,23 @@ const Services = () => {
         isRecommended: false
       },
       {
+        id: "front-axle-repair",
+        name: "Front Axle Repair",
+        thumbnail: "/images/Services/suspension.png",
+        warranty: "1 Month Warranty",
+        recommended: "Vibration while accelerating • Clicking while turning",
+        features: [
+          { name: "CV Joint/Boot Inspection", included: true },
+          { name: "Greasing & Refit/Replacement Advice", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 4499,
+        discountedPrice: 3799,
+        duration: "Takes 3-4 Hours",
+        specialLabel: "",
+        isRecommended: false
+      },
+      {
         id: "strut-bar-replacement",
         name: "Strut Bar Replacement",
         thumbnail: "/images/Services/suspension.png",
@@ -666,8 +684,8 @@ const Services = () => {
       },
 
       {
-        id: "fitments-heading",
-        name: "Fitments",
+        id: "fitting-heading",
+        name: "Fitting",
         thumbnail: "",
         warranty: "",
         recommended: "",
@@ -676,12 +694,12 @@ const Services = () => {
         originalPrice: 0,
         discountedPrice: 0,
         duration: "",
-        sectionTitle: "Fitments",
+        sectionTitle: "Fitting",
         isRecommended: false
       },
       {
-        id: "vacuum-hose-replacement",
-        name: "Vacuum Hose Replacement",
+        id: "vacuum-replacement",
+        name: "Vacuum Replacement",
         thumbnail: "/images/Services/fitments.png",
         warranty: "1 Month Warranty",
         recommended: "Hissing/idle surge • Vacuum leak",
@@ -748,6 +766,23 @@ const Services = () => {
         isRecommended: false
       },
       {
+        id: "power-window-repair",
+        name: "Power Window Repair",
+        thumbnail: "/images/Services/fitments.png",
+        warranty: "1 Month Warranty",
+        recommended: "Window not rolling up/down",
+        features: [
+          { name: "Regulator/Motor Inspection", included: true },
+          { name: "Track Alignment & Lubrication", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 1699,
+        discountedPrice: 1399,
+        duration: "Takes 90 mins",
+        specialLabel: "",
+        isRecommended: false
+      },
+      {
         id: "door-latch-repair",
         name: "Door Latch Repair",
         thumbnail: "/images/Services/fitments.png",
@@ -781,7 +816,7 @@ const Services = () => {
       },
       {
         id: "abs-esp-eps-issues",
-        name: "ABS and ESP Problems • Steering",
+        name: "ABS & ESP Problems • Steering",
         thumbnail: "/images/Services/steering.png",
         warranty: "Diagnosis Report",
         recommended: "Warning light ON • Loss of assist",
@@ -2361,7 +2396,7 @@ const Services = () => {
           { name: "Spare Part Cost Only", included: true },
           { name: "Free Pickup & Drop", included: true },
           { name: "Hoses Additional (If Required)", included: true },
-          { name: "Coolant and Radiator Flush Cost Additional", included: true }
+          { name: "Coolant & Radiator Flush Cost Additional", included: true }
         ],
         moreServicesCount: 0,
         originalPrice: 5999,
@@ -2472,7 +2507,7 @@ const Services = () => {
         recommended: "Recommended in case of radiator fan not working",
         features: [
           { name: "Radiator Fan Motor Replacement (OES)", included: true },
-          { name: "Coolant and Radiator Flush Cost Additional", included: true },
+          { name: "Coolant & Radiator Flush Cost Additional", included: true },
           { name: "Free Pickup & Drop", included: true },
           { name: "Opening & Fitting of Radiator Fan Motor", included: true }
         ],
@@ -3782,7 +3817,7 @@ const Services = () => {
                    selectedCategory === "windshield-lights" ? "" :
                    selectedCategory === "car-spa" ? "Spa & Cleaning" :
                    selectedCategory === "detailing" ? "Polishing" :
-                   selectedCategory === "suspension-fitting" ? "Suspension & Fitments" :
+                   selectedCategory === "suspension-fitting" ? "Suspension & Fitting" :
                    selectedCategory === "clutch-body-parts" ? "Clutch & Body Parts" :
                    selectedCategory === "car-inspections" ? "Car Inspections" :
                    selectedCategory === "car-insurance" ? "Insurance Claims" : "Scheduled Packages"}
@@ -3860,6 +3895,7 @@ const Services = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
