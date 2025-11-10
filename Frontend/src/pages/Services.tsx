@@ -107,7 +107,7 @@ const Services = () => {
     {
       id: "basic-service",
       name: "Basic Service",
-      thumbnail: "/images/product_images/basic_service.png",
+      thumbnail: "/images/product_images/Car services/basic_service.png",
       warranty: "1000 Kms or 3 Months Warranty",
       recommended: "Every 5000 Kms or 6 Months (Recommended)",
       features: [
@@ -140,7 +140,7 @@ const Services = () => {
     {
       id: "standard-service",
       name: "Standard Service",
-      thumbnail: "/images/product_images/standard_service.png",
+      thumbnail: "/images/product_images/Car services/standard_service.png",
       warranty: "1000 Kms or 3 Months Warranty",
       recommended: "Every 10,000 Kms or 6 Months (Recommended)",
       features: [
@@ -226,7 +226,7 @@ const Services = () => {
     {
       id: "front-brake-pads",
       name: "Front Brake Pads",
-      thumbnail: "/images/product_images/frontbrakes.png",
+      thumbnail: "/images/product_images/Car services/frontbrakes.png",
       warranty: "1 Month Warranty",
       recommended: "Every 20,000 Kms or 12 Months (Recommended)",
       features: [
@@ -250,7 +250,7 @@ const Services = () => {
     {
       id: "rear-brake-shoes",
       name: "Rear Brake Shoes",
-      thumbnail: "/images/product_images/rearbreak_shoes.png",
+      thumbnail: "/images/product_images/Car services/rearbreak_shoes.png",
       warranty: "1 Month Warranty",
       recommended: "Every 20,000 Kms or 12 Months (Recommended)",
       features: [
@@ -274,7 +274,7 @@ const Services = () => {
     {
       id: "front-brake-discs",
       name: "Front Brake Discs",
-      thumbnail: "/images/product_images/frontbrake_disk.png",
+      thumbnail: "/images/product_images/Car services/frontbrake_disk.png",
       warranty: "1 Month Warranty • Corrosion Resistance",
       recommended: "Best Performance (Single OE Unit)",
       features: [
@@ -297,7 +297,7 @@ const Services = () => {
     {
       id: "caliper-pin-replacement",
       name: "Caliper Pin Replacement",
-      thumbnail: "/images/product_images/caliperpin_replacement.png",
+      thumbnail: "/images/product_images/Car services/caliperpin_replacement.png",
       warranty: "Recommended in case of noise from brakes",
       recommended: "Caliper Pin Replacement (OES) • Caliper Assembly Cost Additional",
       features: [
@@ -319,7 +319,7 @@ const Services = () => {
     {
       id: "brake-drums-turning",
       name: "Brake Drums Turning",
-      thumbnail: "/images/product_images/break_drums_turning.png",
+      thumbnail: "/images/product_images/Car services/break_drums_turning.png",
       warranty: "1 Month Warranty",
       recommended: "Recommended : In Case of Screeching Noise from Brakes",
       features: [
@@ -343,7 +343,7 @@ const Services = () => {
     {
       id: "handbrake-wire-replacement",
       name: "Handbrake Wire Replacement",
-      thumbnail: "/images/product_images/handbrack_wire.png",
+      thumbnail: "/images/product_images/Car services/handbrack_wire.png",
       warranty: "1 Month Warranty",
       recommended: "Restores handbrake bite & safety",
       features: [
@@ -366,7 +366,7 @@ const Services = () => {
     {
       id: "wheel-cylinder-replacement",
       name: "Wheel Cylinder Replacement",
-      thumbnail: "/images/product_images/wheel_cylinder_replacement.png",
+      thumbnail: "/images/product_images/Car services/wheel_cylinder_replacement.png",
       warranty: "Recommended : In case of Poor Braking",
       recommended: "Wheel Cylinder Replacement (OES)",
       features: [
@@ -390,7 +390,7 @@ const Services = () => {
     {
       id: "caliper-pin-greasing",
       name: "Caliper Pin Greasing",
-      thumbnail: "/images/product_images/cliper_pin_greasing.png",
+      thumbnail: "/images/product_images/Car services/cliper_pin_greasing.png",
       warranty: "",
       recommended: "Recommended: In case of Brake Noise or Sticking",
       features: [
@@ -405,7 +405,7 @@ const Services = () => {
     {
       id: "front-brake-pads-cleaning",
       name: "Front Brake Pads Cleaning",
-      thumbnail: "/images/product_images/front_breakpad_cleaning.png",
+      thumbnail: "/images/product_images/Car services/front_breakpad_cleaning.png",
       warranty: "",
       recommended: "Recommended: In case of Brake Vibration or Noise",
       features: [
@@ -420,7 +420,7 @@ const Services = () => {
     {
       id: "rear-brake-pads-shoes-cleaning",
       name: "Rear Brake Pads / Shoes Cleaning",
-      thumbnail: "/images/product_images/rear_breakpad_cleaning.png",
+      thumbnail: "/images/product_images/Car services/rear_breakpad_cleaning.png",
       warranty: "",
       recommended: "Recommended: In case of Brake Noise or Reduced Performance",
       features: [
@@ -435,7 +435,7 @@ const Services = () => {
     {
       id: "wiper-fluid-replacement",
       name: "Wiper Fluid Replacement",
-      thumbnail: "/images/product_images/wiper_fluid.png",
+      thumbnail: "/images/product_images/Car services/wiper_fluid.png",
       warranty: "",
       recommended: "Every 1 Month Recommended • Applicable on Walk-ins Only",
       features: [
@@ -451,7 +451,7 @@ const Services = () => {
     {
       id: "headlight-adjustment",
       name: "Headlight Adjustment",
-      thumbnail: "/images/product_images/headlight_adustment.png",
+      thumbnail: "/images/product_images/Car services/headlight_adustment.png",
       warranty: "",
       recommended: "Recommended: In Case of Poor Road Visibility • Applicable on Walk-ins Only",
       features: [
@@ -803,26 +803,6 @@ const Services = () => {
         moreServicesCount: 0,
         originalPrice: 8379,
         discountedPrice: 7122,
-        duration: "Takes 6 Hours",
-        specialLabel: "",
-        isRecommended: false
-      },
-      {
-        id: "radiator-replacement",
-        name: "Radiator Replacement",
-        thumbnail: "/images/product_images/radiator.png",
-        warranty: "1 Month Warranty",
-        recommended: "In Case of Blockage in the Radiator Vessels",
-        features: [
-          { name: "Radiator Replacement (OES)", included: true },
-          { name: "Radiator Hoses, Thermostat Valves Cost Additional", included: true },
-          { name: "Free Pickup & Drop", included: true },
-          { name: "Spare Part Price Only", included: true },
-          { name: "Coolant Cost Additional", included: true }
-        ],
-        moreServicesCount: 0,
-        originalPrice: 7641,
-        discountedPrice: 6495,
         duration: "Takes 6 Hours",
         specialLabel: "",
         isRecommended: false
@@ -1275,7 +1255,7 @@ const Services = () => {
       {
         id: "front-windshield-replacement",
         name: "Front Windshield Replacement",
-        thumbnail: "/images/product_images/Windshield&lights/Front Windshield Replacement .png",
+        thumbnail: "/images/product_images/Windshield & lights/Front Windshield Replacement .png",
         warranty: "1 Year Sealant Warranty",
         recommended: "OEM Spec Glass • Cashless Support Available",
         features: [
@@ -2284,7 +2264,7 @@ const Services = () => {
       {
         id: "regular-ac-service",
         name: "Regular AC Service",
-        thumbnail: "/images/product_images/ac_service.png",
+        thumbnail: "/images/product_images/Ac service & Repair/ac_service.png",
         warranty: "500 Kms or 1 Month Warranty",
         recommended: "Every 5,000 Kms or 3 Months (Recommended)",
         features: [
@@ -2361,7 +2341,7 @@ const Services = () => {
       {
         id: "cooling-coil-replacement",
         name: "Cooling Coil Replacement",
-        thumbnail: "/images/product_images/coiling_coil1.png",
+        thumbnail: "/images/product_images/Ac service & Repair/coiling_coil1.png",
         warranty: "3 Months Warranty",
         recommended: "In Case of No / Less Cooling",
         features: [
@@ -2391,7 +2371,7 @@ const Services = () => {
       {
         id: "ac-compressor-replacement",
         name: "Compressor Replacement",
-        thumbnail: "/images/product_images/compressor.png",
+        thumbnail: "/images/product_images/Ac service & Repair/compressor.png",
         warranty: "3 Months Warranty",
         recommended: "Recommended in case of compressor leakage or less cooling",
         features: [
@@ -2415,7 +2395,7 @@ const Services = () => {
       {
         id: "ac-heating-coil-replacement",
         name: "Heating Coil Replacement",
-        thumbnail: "/images/product_images/heating_coil.png",
+        thumbnail: "/images/product_images/Ac service & Repair/heating_coil.png",
         warranty: "3 Months Warranty",
         recommended: "Recommended in case of heater not working",
         features: [
@@ -2440,7 +2420,7 @@ const Services = () => {
       {
         id: "ac-vbelt-replacement",
         name: "V Belt Replacement",
-        thumbnail: "/images/product_images/v_belt_replacement.png",
+        thumbnail: "/images/product_images/Ac service & Repair/v_belt_replacement.png",
         warranty: "1 Month Warranty",
         recommended: "Recommended in case of whining noise from engine",
         features: [
@@ -2465,7 +2445,7 @@ const Services = () => {
       {
         id: "ac-blower-motor-replacement",
         name: "AC Blower Motor Replacement",
-        thumbnail: "/images/product_images/ac_blower_motor.png",
+        thumbnail: "/images/product_images/Ac service & Repair/ac_blower_motor.png",
         warranty: "1 Month Warranty",
         recommended: "Recommended in case of rattling, humming noise from AC blower",
         features: [
@@ -2504,7 +2484,7 @@ const Services = () => {
       {
         id: "radiator-replacement",
         name: "Radiator Replacement",
-        thumbnail: "/images/product_images/radiator.png",
+        thumbnail: "/images/product_images/Ac service & Repair/radiator_replacement.png",
         warranty: "1 Month Warranty",
         recommended: "Recommended in case of blockage in the radiator vessels",
         features: [
@@ -2552,7 +2532,7 @@ const Services = () => {
       {
         id: "radiator-flush-clean",
         name: "Radiator Flush & Clean",
-        thumbnail: "/images/service_icons/car_ac_services.png",
+        thumbnail: "/images/product_images/Ac service & Repair/Radiator Flush & Clean.png",
         warranty: "Protects Radiator from Corrosion",
         recommended: "Free Pickup and Drop",
         features: [
@@ -2591,7 +2571,7 @@ const Services = () => {
       {
         id: "amaron-55-35ah",
         name: "Amaron Go 35 Amp",
-        thumbnail: "/images/product_images/amazon_go.png",
+        thumbnail: "/images/product_images/Batteries/amazon_go.png",
         warranty: "55 Months Warranty",
         recommended: "35 Amp Hour • 55 Months Warranty • Free of Cost Installation",
         features: [
@@ -2612,7 +2592,7 @@ const Services = () => {
       {
         id: "amaron-72-35ah",
         name: "Amaron Flo 35 Amp",
-        thumbnail: "/images/product_images/amazon_flo.png",
+        thumbnail: "/images/product_images/Batteries/amazon_flo.png",
         warranty: "72 Months Warranty",
         recommended: "35 Amp Hour • 72 Months Warranty • Free of Cost Installation",
         features: [
@@ -2648,7 +2628,7 @@ const Services = () => {
       {
         id: "exide-55-35ah",
         name: "Exide Mileage 35 Amp",
-        thumbnail: "/images/product_images/excide_millage_35.png",
+        thumbnail: "/images/product_images/Batteries/excide_millage_35.png",
         warranty: "55 Months Warranty",
         recommended: "35 Amp Hour • Free of Cost Installation",
         features: [
@@ -2669,7 +2649,7 @@ const Services = () => {
       {
         id: "exide-66-35ah",
         name: "Exide Epiq 35 Amp",
-        thumbnail: "/images/product_images/excide_epiq_35.png",
+        thumbnail: "/images/product_images/Batteries/excide_epiq_35.png",
         warranty: "66 Months Warranty",
         recommended: "35 Amp Hour • Free of Cost Installation",
         features: [
@@ -2704,7 +2684,7 @@ const Services = () => {
       {
         id: "livguard-60-35ah",
         name: "Livguard Zing Aterna 35 Amp",
-        thumbnail: "/images/product_images/livegurd_zing.png",
+        thumbnail: "/images/product_images/Batteries/livegurd_zing.png",
         warranty: "60 Months Warranty",
         recommended: "35 Amp Hour • Free of Cost Installation",
         features: [
@@ -2739,7 +2719,7 @@ const Services = () => {
       {
         id: "alternator-replacement",
         name: "Alternator Replacement",
-        thumbnail: "/images/product_images/alternator.png",
+        thumbnail: "/images/product_images/Batteries/alternator.png",
         warranty: "1 Month Warranty",
         recommended: "Recommended in case of frequently discharging battery",
         features: [
@@ -2758,7 +2738,7 @@ const Services = () => {
       {
         id: "alternator-repair",
         name: "Alternator Repair",
-        thumbnail: "/images/product_images/alternator_repair.png",
+        thumbnail: "/images/product_images/Batteries/alternator_repair.png",
         warranty: "3 Months Warranty",
         recommended: "Recommended in case of frequently discharging battery",
         features: [
@@ -2793,7 +2773,7 @@ const Services = () => {
       {
         id: "apollo-amazer-4g",
         name: "Apollo Amazer 4G",
-        thumbnail: "/images/product_images/applo_amazer.png",
+        thumbnail: "/images/product_images/Tyres & wheel cares/applo_amazer.png",
         warranty: "5 years warranty",
         recommended: "Size - 185/65 R15 • 5 years warranty • Tubeless • Fitting Cost Included",
         features: [
@@ -2814,7 +2794,7 @@ const Services = () => {
       {
         id: "apollo-alnac-4g",
         name: "Apollo Alnac 4G",
-        thumbnail: "/images/product_images/applo__alnac.png",
+        thumbnail: "/images/product_images/Tyres & wheel cares/applo__alnac.png",
         warranty: "Premium Quality",
         recommended: "55,000 Kms Warranty • Professional Installation",
         features: [
@@ -2849,7 +2829,7 @@ const Services = () => {
       {
         id: "mrf-ecotred",
         name: "MRF Ecotred",
-        thumbnail: "/images/product_images/mrf__ecotread.png",
+        thumbnail: "/images/product_images/Tyres & wheel cares/mrf__ecotread.png",
         warranty: "5 years warranty",
         recommended: "Size - 165/80 R14 • 5 years warranty • Tubeless • Fitting Cost Included",
         features: [
@@ -2869,7 +2849,7 @@ const Services = () => {
       {
         id: "mrf-zvtv",
         name: "MRF Zvtv-A1",
-        thumbnail: "/images/product_images/mrf_zvtv__a1.png",
+        thumbnail: "/images/product_images/Tyres & wheel cares/mrf_zvtv_a1.png",
         warranty: "Premium Quality",
         recommended: "6 years warranty • Tubeless",
         features: [
@@ -2889,7 +2869,7 @@ const Services = () => {
       {
         id: "mrf-zlx",
         name: "MRF ZIX",
-        thumbnail: "/images/product_images/mrf__zlx.png",
+        thumbnail: "/images/product_images/Tyres & wheel cares/mrf__zlx.png",
         warranty: "",
         recommended: "Tubeless",
         features: [
@@ -2924,7 +2904,7 @@ const Services = () => {
       {
         id: "ceat-secura-drive",
         name: "CEAT SecuraDrive",
-        thumbnail: "/images/product_images/ceat_sucuredrive.png",
+        thumbnail: "/images/product_images/Tyres & wheel cares/ceat_sucuredrive.png",
         warranty: "Premium Quality",
         recommended: "50,000 Kms Warranty • Professional Installation",
         features: [
@@ -2944,7 +2924,7 @@ const Services = () => {
       {
         id: "ceat-milaze",
         name: "Ceat Milaze",
-        thumbnail: "/images/product_images/ceat_milage.png",
+        thumbnail: "/images/product_images/Tyres & wheel cares/ceat_milage.png",
         warranty: "Premium Quality",
         recommended: "Tubeless",
         features: [
@@ -2964,7 +2944,7 @@ const Services = () => {
       {
         id: "ceat-milaze-x3",
         name: "Ceat Milaze X3",
-        thumbnail: "/images/product_images/ceat_milage_x3.png",
+        thumbnail: "/images/product_images/Tyres & wheel cares/ceat_milage_x3.png",
         warranty: "Premium Quality",
         recommended: "Tubeless",
         features: [
@@ -2999,7 +2979,7 @@ const Services = () => {
       {
         id: "goodyear-assurance-triplemax",
         name: "Goodyear Assurance TripleMax",
-        thumbnail: "/images/product_images/goodyear_assurance_triplemax.png",
+        thumbnail: "/images/product_images/Tyres & wheel cares/goodyear_assurance_triplemax.png",
         warranty: "Premium Quality",
         recommended: "50,000 Kms Warranty • Professional Installation",
         features: [
@@ -3019,7 +2999,7 @@ const Services = () => {
       {
         id: "goodyear-duraplus",
         name: "Goodyear Duraplus",
-        thumbnail: "/images/product_images/goodyear_duraplus.png",
+        thumbnail: "/images/product_images/Tyres & wheel cares/goodyear_duraplus.png",
         warranty: "Premium Quality",
         recommended: "Tubeless",
         features: [
@@ -3054,7 +3034,7 @@ const Services = () => {
       {
         id: "jk-ux-royale",
         name: "JK UX Royale",
-        thumbnail: "/images/product_images/jk_ux_royale.png",
+        thumbnail: "/images/product_images/Tyres & wheel cares/jk_ux_royale.png",
         warranty: "Premium Quality",
         recommended: "45,000 Kms Warranty • Professional Installation",
         features: [
@@ -3074,7 +3054,7 @@ const Services = () => {
       {
         id: "jk-ux",
         name: "JK UX",
-        thumbnail: "/images/product_images/jk_ux.png",
+        thumbnail: "/images/product_images/Tyres & wheel cares/jk_ux.png",
         warranty: "Premium Quality",
         recommended: "Tubeless",
         features: [
@@ -3094,7 +3074,7 @@ const Services = () => {
       {
         id: "jk-taximax",
         name: "JK Taximax",
-        thumbnail: "/images/product_images/jk__taximax.png",
+        thumbnail: "/images/product_images/Tyres & wheel cares/jk__taximax.png",
         warranty: "5 years warranty",
         recommended: "Size - 165/80 R14 • 5 years warranty • Tubeless • Fitting Cost Included",
         features: [
@@ -3129,7 +3109,7 @@ const Services = () => {
       {
         id: "continental-ultracontact",
         name: "Continental Ultracontact",
-        thumbnail: "/images/product_images/continetal.png",
+        thumbnail: "/images/product_images/Tyres & wheel cares/continetal.png",
         warranty: "Premium Quality",
         recommended: "55,000 Kms Warranty • Professional Installation",
         features: [
@@ -3164,7 +3144,7 @@ const Services = () => {
       {
         id: "yokohama-earth-1",
         name: "Yokohama Earth-1",
-        thumbnail: "/images/product_images/yokohma_earth_1.png",
+        thumbnail: "/images/product_images/Tyres & wheel cares/yokohma_earth_1.png",
         warranty: "Premium Quality",
         recommended: "50,000 Kms Warranty • Professional Installation",
         features: [
@@ -3370,7 +3350,7 @@ const Services = () => {
       {
         id: "radiator-flush-clean",
         name: "Radiator Flush & Clean",
-        thumbnail: "/images/product_images/Inspection/Radiator Flush & Clean.png",
+        thumbnail: "/images/product_images/Ac service & Repair/Radiator Flush & Clean.png",
         warranty: "Rust protection",
         recommended: "Overheating / coolant degradation",
         features: [
