@@ -63,17 +63,6 @@ const Header = () => {
               // Landing Page - Individual Navigation Links
               <>
                 <a 
-                  href="/services" 
-                  className="text-sm text-white hover:text-red-500 hover:font-bold transition-all duration-200 hidden lg:block cursor-pointer"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    navigate('/services');
-                  }}
-                >
-                  Services
-                </a>
-                
-                <a 
                   href="#about-us" 
                   className="text-sm text-white hover:text-red-500 hover:font-bold transition-all duration-200 hidden lg:block"
                   onClick={(e) => {
@@ -85,6 +74,17 @@ const Header = () => {
                   }}
                 >
                   About Us
+                </a>
+                
+                <a 
+                  href="/services" 
+                  className="text-sm text-white hover:text-red-500 hover:font-bold transition-all duration-200 hidden lg:block cursor-pointer"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate('/services');
+                  }}
+                >
+                  Services
                 </a>
                 
                 <a 

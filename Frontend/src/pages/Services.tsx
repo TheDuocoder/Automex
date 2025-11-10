@@ -717,7 +717,7 @@ const Services = () => {
       {
         id: "engine-mount-replacement",
         name: "Engine Mount Replacement",
-        thumbnail: "/images/Services/fitments.png",
+        thumbnail: "/images/product_images/engine_mounting.png",
         warranty: "1 Month Warranty",
         recommended: "Vibration in cabin • Broken mount",
         features: [
@@ -734,7 +734,7 @@ const Services = () => {
       {
         id: "gearbox-mount-replacement",
         name: "Gearbox Mount Replacement",
-        thumbnail: "/images/Services/fitments.png",
+        thumbnail: "/images/product_images/gear_box_mounting.png",
         warranty: "1 Month Warranty",
         recommended: "Clunk when shifting • Excess movement",
         features: [
@@ -745,6 +745,85 @@ const Services = () => {
         originalPrice: 2499,
         discountedPrice: 1999,
         duration: "Takes 2 Hours",
+        specialLabel: "",
+        isRecommended: false
+      },
+      {
+        id: "fuel-pump-replacement",
+        name: "Fuel Pump Replacement",
+        thumbnail: "/images/product_images/fuel_pump.png",
+        warranty: "1 Month Warranty",
+        recommended: "In Case of Car Jerking while Accelerating",
+        features: [
+          { name: "Fuel Pump Assy. Replacement", included: true },
+          { name: "Fuel Line & Injectors Cleaning Cost Additional ( If Needed )", included: true },
+          { name: "Free Pickup & Drop", included: true },
+          { name: "OES Spare Part Cost Only", included: true },
+          { name: "Fuel Pipes Cost Additional ( If Needed )", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 7556,
+        discountedPrice: 6300,
+        duration: "Takes 8 Hours",
+        specialLabel: "Extra ₹500 OFF",
+        isRecommended: false
+      },
+      {
+        id: "ecm-repair",
+        name: "ECM Repair",
+        thumbnail: "/images/product_images/ecm_repair.png",
+        warranty: "1 Month Warranty",
+        recommended: "In case of Car Not Starting",
+        features: [
+          { name: "ECM Repair", included: true },
+          { name: "Opening & Fitting of ECM", included: true },
+          { name: "Free Pickup & Drop", included: true },
+          { name: "Repairing of Electrical Circuits with Diodes & Capacitor", included: true },
+          { name: "Circuit Board & Programming Cost Additional", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 7647,
+        discountedPrice: 6500,
+        duration: "Takes 8 Hours",
+        specialLabel: "",
+        isRecommended: false
+      },
+      {
+        id: "water-pump-replacement",
+        name: "Water Pump Replacement",
+        thumbnail: "/images/product_images/water_pump.png",
+        warranty: "1 Month Warranty",
+        recommended: "In case of Engine Overheating",
+        features: [
+          { name: "Water Pump Replacement (OES)", included: true },
+          { name: "Coolant and Radiator Flush Cost Addtional", included: true },
+          { name: "Spare Part Cost Only", included: true },
+          { name: "Free Pickup & Drop", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 8379,
+        discountedPrice: 7122,
+        duration: "Takes 6 Hours",
+        specialLabel: "",
+        isRecommended: false
+      },
+      {
+        id: "radiator-replacement",
+        name: "Radiator Replacement",
+        thumbnail: "/images/product_images/radiator.png",
+        warranty: "1 Month Warranty",
+        recommended: "In Case of Blockage in the Radiator Vessels",
+        features: [
+          { name: "Radiator Replacement (OES)", included: true },
+          { name: "Radiator Hoses, Thermostat Valves Cost Additional", included: true },
+          { name: "Free Pickup & Drop", included: true },
+          { name: "Spare Part Price Only", included: true },
+          { name: "Coolant Cost Additional", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 7641,
+        discountedPrice: 6495,
+        duration: "Takes 6 Hours",
         specialLabel: "",
         isRecommended: false
       },
@@ -968,7 +1047,7 @@ const Services = () => {
       {
         id: "front-bumper-replacement",
         name: "Front Bumper Replacement",
-        thumbnail: "/images/Services/body_parts.png",
+        thumbnail: "/images/product_images/front_bumper_relacement.png",
         warranty: "Fitment Warranty",
         recommended: "Damaged or cracked bumper",
         features: [
@@ -985,7 +1064,7 @@ const Services = () => {
       {
         id: "rear-bumper-replacement",
         name: "Rear Bumper Replacement",
-        thumbnail: "/images/Services/body_parts.png",
+        thumbnail: "/images/product_images/rear_bumper_replacement.png",
         warranty: "Fitment Warranty",
         recommended: "Damaged or cracked bumper",
         features: [
@@ -1001,10 +1080,10 @@ const Services = () => {
       },
       {
         id: "right-front-door-handle",
-        name: "Right Front Door Handle Replacement",
-        thumbnail: "/images/Services/body_parts.png",
+        name: "Right Front Door Replacement",
+        thumbnail: "/images/product_images/right_front_door.png",
         warranty: "Fitment Warranty",
-        recommended: "Broken door handle",
+        recommended: "Damaged door shell",
         features: [
           { name: "Door Trim Opening & Fitting", included: true },
           { name: "Handle Linkages Refit", included: true }
@@ -1018,10 +1097,10 @@ const Services = () => {
       },
       {
         id: "right-rear-door-handle",
-        name: "Right Rear Door Handle Replacement",
-        thumbnail: "/images/Services/body_parts.png",
+        name: "Right Rear Door Replacement",
+        thumbnail: "/images/product_images/right_rear_door.png",
         warranty: "Fitment Warranty",
-        recommended: "Broken door handle",
+        recommended: "Damaged door shell",
         features: [
           { name: "Door Trim Opening & Fitting", included: true },
           { name: "Handle Linkages Refit", included: true }
@@ -1036,7 +1115,7 @@ const Services = () => {
       {
         id: "right-fender-replacement",
         name: "Right Fender Replacement",
-        thumbnail: "/images/Services/body_parts.png",
+        thumbnail: "/images/product_images/fender.png",
         warranty: "Fitment Warranty",
         recommended: "Damaged fender panel",
         features: [
@@ -1051,26 +1130,29 @@ const Services = () => {
         isRecommended: false
       },
       {
-        id: "left-fender-replacement",
-        name: "Left Fender Replacement",
-        thumbnail: "/images/Services/body_parts.png",
+        id: "boot-replacement",
+        name: "Boot Replacement",
+        thumbnail: "/images/product_images/boot.png",
         warranty: "Fitment Warranty",
-        recommended: "Damaged fender panel",
+        recommended: "In Case Corroded Boot • In Case Broken / Damaged Boot",
         features: [
-          { name: "Removal & Fitting of Fender", included: true },
-          { name: "Alignment & Gaps Check", included: true }
+          { name: "Boot Replacement", included: true },
+          { name: "Opening & Fitting of Boot", included: true },
+          { name: "Hinges, Rod Spring / Shocker Cost Additional", included: true },
+          { name: "Paint Cost Additional", included: true },
+          { name: "Free Pickup & Drop", included: true }
         ],
         moreServicesCount: 0,
-        originalPrice: 0,
-        discountedPrice: 0,
-        duration: "Takes 2 Hours",
+        originalPrice: 7300,
+        discountedPrice: 6570,
+        duration: "Takes 6 Hours",
         specialLabel: "",
         isRecommended: false
       },
       {
         id: "bonnet-replacement",
         name: "Bonnet Replacement",
-        thumbnail: "/images/Services/body_parts.png",
+        thumbnail: "/images/product_images/bonnet.png",
         warranty: "Fitment Warranty",
         recommended: "Damaged bonnet",
         features: [
@@ -1085,26 +1167,30 @@ const Services = () => {
         isRecommended: false
       },
       {
-        id: "rear-door-replacement-left",
-        name: "Left Rear Door Replacement",
-        thumbnail: "/images/Services/body_parts.png",
+        id: "left-front-door-replacement",
+        name: "Left Front Door Replacement",
+        thumbnail: "/images/product_images/left_front_door.png",
         warranty: "Fitment Warranty",
-        recommended: "Damaged door shell",
+        recommended: "In Case Corroded Door • In Case Broken / Damaged Door",
         features: [
-          { name: "Opening & Fitting of Door", included: true },
-          { name: "Transfer of Locks/Glass/Trim", included: true }
+          { name: "Left Front Door Replacement (Single Unit)", included: true },
+          { name: "Opening & Fitting of Left Front Door", included: true },
+          { name: "Hinges, Weatherstrip, Handle, Cost Additional", included: true },
+          { name: "Trim, Lock, Window Glass & Channel Cost Additional", included: true },
+          { name: "Paint Cost Additional", included: true },
+          { name: "Free Pickup & Drop", included: true }
         ],
         moreServicesCount: 0,
-        originalPrice: 0,
-        discountedPrice: 0,
-        duration: "Takes 4-6 Hours",
+        originalPrice: 10286,
+        discountedPrice: 9257,
+        duration: "Takes 6 Hours",
         specialLabel: "",
         isRecommended: false
       },
       {
-        id: "rear-door-replacement-right",
-        name: "Right Rear Door Replacement",
-        thumbnail: "/images/Services/body_parts.png",
+        id: "rear-door-replacement-left",
+        name: "Left Rear Door Replacement",
+        thumbnail: "/images/product_images/left_rear_door.png",
         warranty: "Fitment Warranty",
         recommended: "Damaged door shell",
         features: [
@@ -1150,91 +1236,32 @@ const Services = () => {
         specialLabel: "",
         isRecommended: false
       },
-
       {
-        id: "stereos-heading",
-        name: "Stereos",
-        thumbnail: "",
+        id: "all-doors-adjustment",
+        name: "All Doors Adjustment",
+        thumbnail: "/images/product_images/all_door_handles.png",
         warranty: "",
-        recommended: "",
-        features: [],
-        moreServicesCount: 0,
-        originalPrice: 0,
-        discountedPrice: 0,
-        duration: "",
-        sectionTitle: "Stereos",
-        isRecommended: false
-      },
-      {
-        id: "sony-xav-ax1000",
-        name: "Sony XAV-AX1000",
-        thumbnail: "/images/Services/stereo.png",
-        warranty: "Manufacturer Warranty",
-        recommended: "Apple CarPlay • 6.2” Touchscreen",
+        recommended: "In case of Door Alignment Issues",
         features: [
-          { name: "Installation & Wiring", included: true }
+          { name: "All Door Adjustment (Alignment", included: true },
+          { name: "and Lock Inspection)", included: true },
+          { name: "Hinges", included: true }
         ],
         moreServicesCount: 0,
-        originalPrice: 16999,
-        discountedPrice: 14999,
-        duration: "Takes 2 Hours",
-        specialLabel: "",
-        isRecommended: false
-      },
-      {
-        id: "sony-xav-ax3000",
-        name: "Sony XAV-AX3000",
-        thumbnail: "/images/Services/stereo.png",
-        warranty: "Manufacturer Warranty",
-        recommended: "Apple CarPlay/Android Auto • 6.95”",
-        features: [
-          { name: "Installation & Wiring", included: true }
-        ],
-        moreServicesCount: 0,
-        originalPrice: 22999,
-        discountedPrice: 19999,
-        duration: "Takes 2 Hours",
-        specialLabel: "",
-        isRecommended: false
-      },
-      {
-        id: "sony-gs-620",
-        name: "Sony GS-620 (6.5\" MM6)",
-        thumbnail: "/images/Services/stereo.png",
-        warranty: "Manufacturer Warranty",
-        recommended: "Premium Component Speakers",
-        features: [
-          { name: "Speaker Fitment", included: true }
-        ],
-        moreServicesCount: 0,
-        originalPrice: 8999,
-        discountedPrice: 7499,
-        duration: "Takes 90 mins",
-        specialLabel: "",
-        isRecommended: false
-      },
-      {
-        id: "sony-gs-1200",
-        name: "Sony GS-1200 (12\" Subwoofer)",
-        thumbnail: "/images/Services/stereo.png",
-        warranty: "Manufacturer Warranty",
-        recommended: "Deep Bass Performance",
-        features: [
-          { name: "Subwoofer Fitment", included: true }
-        ],
-        moreServicesCount: 0,
-        originalPrice: 10999,
-        discountedPrice: 8999,
-        duration: "Takes 90 mins",
-        specialLabel: "",
+        originalPrice: 2499,
+        discountedPrice: 249,
+        duration: "Takes 1 Hour",
+        specialLabel: "Under 249",
         isRecommended: false
       }
+
     ],
     "windshield-lights": [
       {
         id: "windshields-heading",
         name: "Windshields",
         thumbnail: "",
+
         warranty: "",
         recommended: "",
         features: [],
@@ -1248,7 +1275,7 @@ const Services = () => {
       {
         id: "front-windshield-replacement",
         name: "Front Windshield Replacement",
-        thumbnail: "/images/Services/windshield.png",
+        thumbnail: "/images/product_images/Front Windshield Replacement.png",
         warranty: "1 Year Sealant Warranty",
         recommended: "OEM Spec Glass • Cashless Support Available",
         features: [
@@ -1266,7 +1293,7 @@ const Services = () => {
       {
         id: "rear-windshield-replacement",
         name: "Rear Windshield Replacement",
-        thumbnail: "/images/Services/windshield.png",
+        thumbnail: "/images/product_images/Rear Windshield Replacement.png",
         warranty: "1 Year Sealant Warranty",
         recommended: "OEM Spec Glass • Defogger Compatible",
         features: [
@@ -1964,7 +1991,7 @@ const Services = () => {
       {
         id: "boot-paint",
         name: "Boot Paint",
-        thumbnail: "/images/product_images/rear_boot_paint.png",
+        thumbnail: "/images/product_images/boot.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -3459,7 +3486,7 @@ const Services = () => {
      {
        id: "know-your-policy",
        name: "Know Your Policy",
-       thumbnail: "/images/Services/car_insurance.png",
+       thumbnail: "/images/product_images/know_ur_polices.png",
        warranty: "Coverage & Claim Guidance",
        recommended: "Understand inclusions, exclusions and claim steps",
        features: [
