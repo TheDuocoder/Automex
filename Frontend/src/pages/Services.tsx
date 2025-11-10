@@ -1275,7 +1275,7 @@ const Services = () => {
       {
         id: "front-windshield-replacement",
         name: "Front Windshield Replacement",
-        thumbnail: "/images/product_images/Front Windshield Replacement.png",
+        thumbnail: "/images/product_images/Windshield&lights/Front Windshield Replacement .png",
         warranty: "1 Year Sealant Warranty",
         recommended: "OEM Spec Glass • Cashless Support Available",
         features: [
@@ -3200,7 +3200,7 @@ const Services = () => {
       {
         id: "second-hand-car-inspection",
         name: "Second Hand Car Inspection",
-        thumbnail: "/images/Services/car_inspection.png",
+        thumbnail: "/images/product_images/Inspection/Second Hand Car Inspection.png",
         warranty: "Detailed Buyer Report",
         recommended: "Comprehensive used car evaluation",
         features: [
@@ -3233,7 +3233,7 @@ const Services = () => {
       {
         id: "road-trip-inspection",
         name: "Road Trip Inspection",
-        thumbnail: "/images/Services/car_inspection.png",
+        thumbnail: "/images/product_images/Inspection/Road Trip Inspection.png",
         warranty: "Travel Readiness Checklist",
         recommended: "Before long outstation drives",
         features: [
@@ -3251,7 +3251,7 @@ const Services = () => {
       {
         id: "engine-scanning",
         name: "Engine Scanning",
-        thumbnail: "/images/Services/car_inspection.png",
+        thumbnail: "/images/product_images/Inspection/Engine Scanning.png",
         warranty: "Scan Report Included",
         recommended: "Diagnose engine warning lights",
         features: [
@@ -3269,7 +3269,7 @@ const Services = () => {
       {
         id: "insurance-claim-inspection",
         name: "Insurance Claim Inspection",
-        thumbnail: "/images/Services/car_inspection.png",
+        thumbnail: "/images/product_images/Inspection/Insurance Claim Inspection.png",
         warranty: "Photos & Estimate Support",
         recommended: "For insurance damage claims",
         features: [
@@ -3287,7 +3287,7 @@ const Services = () => {
       {
         id: "car-fluid-check",
         name: "Car Fluids Check",
-        thumbnail: "/images/Services/car_inspection.png",
+        thumbnail: "/images/product_images/Inspection/Car Fluids Check.png",
         warranty: "Top-up recommendations",
         recommended: "Engine oil, coolant, brake, PS, washer",
         features: [
@@ -3304,7 +3304,7 @@ const Services = () => {
       {
         id: "complete-suspension-inspection",
         name: "Complete Suspension Inspection",
-        thumbnail: "/images/Services/car_inspection.png",
+        thumbnail: "/images/product_images/Inspection/Complete Suspension Inspection.png",
         warranty: "Noise/Vibration Root-cause Report",
         recommended: "If you hear rattles, thuds or feel vibrations",
         features: [
@@ -3336,7 +3336,7 @@ const Services = () => {
       {
         id: "radiator-replacement",
         name: "Radiator Replacement",
-        thumbnail: "/images/Services/car_inspection.png",
+        thumbnail: "/images/product_images/Inspection/Radiator Replacement.png",
         warranty: "1 Month Warranty",
         recommended: "Overheating or coolant leakage",
         features: [
@@ -3353,7 +3353,7 @@ const Services = () => {
       {
         id: "radiator-fan-motor-replacement",
         name: "Radiator Fan Motor Replacement",
-        thumbnail: "/images/Services/car_inspection.png",
+        thumbnail: "/images/product_images/Inspection/Radiator Fan Motor Replacement.png",
         warranty: "1 Month Warranty",
         recommended: "Fan not working / overheating in traffic",
         features: [
@@ -3370,7 +3370,7 @@ const Services = () => {
       {
         id: "radiator-flush-clean",
         name: "Radiator Flush & Clean",
-        thumbnail: "/images/Services/car_inspection.png",
+        thumbnail: "/images/product_images/Inspection/Radiator Flush & Clean.png",
         warranty: "Rust protection",
         recommended: "Overheating / coolant degradation",
         features: [
@@ -3401,8 +3401,8 @@ const Services = () => {
       },
       {
         id: "car-warning-assistance",
-        name: "Car Warning Assistance",
-        thumbnail: "/images/Services/car_inspection.png",
+        name: "Car Waterlog Assistance",
+        thumbnail: "/images/product_images/Inspection/Car Waterlog Assistance.png",
         warranty: "Resolution Guidance",
         recommended: "Dashboard warning lights / alerts",
         features: [
@@ -3419,7 +3419,7 @@ const Services = () => {
       {
         id: "car-engine-issues",
         name: "Car Engine Issues",
-        thumbnail: "/images/Services/car_inspection.png",
+        thumbnail: "/images/product_images/Inspection/Car Engine Issues.png",
         warranty: "Technician Diagnosis",
         recommended: "Misfire, power loss, stalling, smoke",
         features: [
@@ -3436,7 +3436,7 @@ const Services = () => {
       {
         id: "brakes-wheels-issues",
         name: "Problem with Car Brakes & Wheels",
-        thumbnail: "/images/Services/car_inspection.png",
+        thumbnail: "/images/product_images/Inspection/Problem with Car Brakes & Wheels.png",
         warranty: "Safety Checklist",
         recommended: "Noise, vibration or wobble while driving",
         features: [
@@ -3453,7 +3453,7 @@ const Services = () => {
       {
         id: "damaged-body-or-interiors",
         name: "Damaged Car Body or Interiors",
-        thumbnail: "/images/Services/car_inspection.png",
+        thumbnail: "/images/product_images/Inspection/Damaged Car Body or Interiors.png",
         warranty: "Repair Estimate",
         recommended: "Dents, scratches or interior damage",
         features: [
@@ -3486,7 +3486,7 @@ const Services = () => {
      {
        id: "know-your-policy",
        name: "Know Your Policy",
-       thumbnail: "/images/product_images/know_ur_polices.png",
+       thumbnail: "/images/product_images/Inurance/know_ur_polices.png",
        warranty: "Coverage & Claim Guidance",
        recommended: "Understand inclusions, exclusions and claim steps",
        features: [
@@ -3519,7 +3519,7 @@ const Services = () => {
      {
        id: "accidental-denting-painting-insured",
        name: "Accidental Denting & Painting (For Insured Vehicles)",
-       thumbnail: "/images/Services/denting and painting service.png",
+       thumbnail: "/images/product_images/Inurance/Accidental Denting & Painting.png",
        warranty: "As per insurer",
        recommended: "Cashless repairs at network garages",
        features: [
@@ -3537,7 +3537,7 @@ const Services = () => {
      {
        id: "fire-damage-assistance",
        name: "Fire Damage Assistance (For Insured Vehicles)",
-       thumbnail: "/images/Services/car_insurance.png",
+       thumbnail: "/images/product_images/Inurance/Fire Damage Assistance  copy.png",
        warranty: "As per insurer",
        recommended: "Claim assistance for fire related damage",
        features: [
@@ -3555,7 +3555,7 @@ const Services = () => {
      {
        id: "car-flood-damage",
        name: "Car Flood Damage (For Insured Vehicles)",
-       thumbnail: "/images/Services/car_insurance.png",
+       thumbnail: "/images/product_images/Inurance/Car Flood Damage.png",
        warranty: "As per insurer",
        recommended: "Assistance for water ingress damage",
        features: [
@@ -3573,7 +3573,7 @@ const Services = () => {
      {
        id: "windshield-replacement-insured",
        name: "Windshield Replacement (For Insured Vehicles)",
-       thumbnail: "/images/Services/car_insurance.png",
+       thumbnail: "/images/product_images/Inurance/Windshield Replacement .png",
        warranty: "As per insurer",
        recommended: "Cashless OEM glass replacement",
        features: [
@@ -3604,77 +3604,9 @@ const Services = () => {
        isRecommended: false
      },
      {
-       id: "tyres-wheels-replacement-insured",
-       name: "Tyres & Wheel Replacement (For Insured Vehicles)",
-       thumbnail: "/images/Services/Tyre service.png",
-       warranty: "As per insurer",
-       recommended: "Claim assistance for tyre/rim damage",
-       features: [
-         { name: "Claim Intimation & Paperwork", included: true },
-         { name: "Cashless Support at Network Garage", included: true }
-       ],
-       moreServicesCount: 0,
-       originalPrice: 0,
-       discountedPrice: 0,
-       duration: "Case dependent",
-       specialLabel: "",
-       isRecommended: false
-     },
-     {
-       id: "battery-replacement-insured",
-       name: "Battery Replacement (For Insured Vehicles)",
-       thumbnail: "/images/Services/Battery service.png",
-       warranty: "As per insurer",
-       recommended: "Claim assistance for battery failure",
-       features: [
-         { name: "Cashless Support if Covered", included: true },
-         { name: "Pickup & Drop Assistance", included: true }
-       ],
-       moreServicesCount: 0,
-       originalPrice: 0,
-       discountedPrice: 0,
-       duration: "Takes 1 Hour",
-       specialLabel: "",
-       isRecommended: false
-     },
-     {
-       id: "key-replacement-insured",
-       name: "Key Replacement (For Insured Vehicles)",
-       thumbnail: "/images/Services/car_insurance.png",
-       warranty: "As per insurer",
-       recommended: "Lost or damaged key claim",
-       features: [
-         { name: "Insurance Intimation & Documents", included: true },
-         { name: "Key Cutting/Coding Support", included: true }
-       ],
-       moreServicesCount: 0,
-       originalPrice: 0,
-       discountedPrice: 0,
-       duration: "Same Day (model dependent)",
-       specialLabel: "",
-       isRecommended: false
-     },
-     {
-       id: "ecm-replacement-insured",
-       name: "ECM Replacement (For Insured Vehicles)",
-       thumbnail: "/images/Services/car_insurance.png",
-       warranty: "As per insurer",
-       recommended: "ECM damage covered under policy",
-       features: [
-         { name: "OEM ECM Supply & Programming", included: true },
-         { name: "Surveyor & Claim Coordination", included: true }
-       ],
-       moreServicesCount: 0,
-       originalPrice: 0,
-       discountedPrice: 0,
-       duration: "1-2 Days",
-       specialLabel: "",
-       isRecommended: false
-     },
-     {
        id: "car-theft-claim-insured",
        name: "Car Theft Claim (For Insured Vehicles)",
-       thumbnail: "/images/Services/car_insurance.png",
+       thumbnail: "/images/product_images/Inurance/Car Theft Claim (For Insured Vehicles).png",
        warranty: "As per insurer",
        recommended: "End-to-end theft claim support",
        features: [
@@ -3706,7 +3638,7 @@ const Services = () => {
      {
        id: "doorstep-accidental-inspection-insured",
        name: "Doorstep Accidental Inspection",
-       thumbnail: "/images/Services/car_inspection.png",
+       thumbnail: "/images/product_images/Inurance/Doorstep Accidental Inspection.png",
        warranty: "Photo Checklist Provided",
        recommended: "Initial inspection before claim",
        features: [
@@ -3723,7 +3655,7 @@ const Services = () => {
      {
        id: "towing-for-insured-vehicle",
        name: "Towing (For Insured Vehicle)",
-       thumbnail: "/images/Services/car_inspection.png",
+       thumbnail: "/images/product_images/Inurance/Towing (For Insured Vehicle).png",
        warranty: "As per insurer",
        recommended: "Breakdown/accident towing assistance",
        features: [
@@ -3740,7 +3672,7 @@ const Services = () => {
      {
        id: "insurance-claim-inspection-insured",
        name: "Insurance Claim Inspection",
-       thumbnail: "/images/Services/car_inspection.png",
+       thumbnail: "/images/product_images/Inurance/Insurance Claim Inspection1.png",
        warranty: "Photos & Estimate Support",
        recommended: "For insurance damage claims",
        features: [

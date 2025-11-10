@@ -114,7 +114,7 @@ const Login = ({ onClose, onSwitchToRegister }: LoginProps) => {
   }
 
   return (
-    <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-6 relative">
+    <div className="w-full max-w-lg bg-white rounded-2xl shadow-2xl p-6 relative">
       {/* Close Button */}
       {onClose && (
         <button
