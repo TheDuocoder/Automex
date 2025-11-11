@@ -1255,7 +1255,7 @@ const Services = () => {
       {
         id: "front-windshield-replacement",
         name: "Front Windshield Replacement",
-        thumbnail: "/images/product_images/Windshield & lights/Front Windshield Replacement .png",
+        thumbnail: "/images/product_images/Windshield & lights/Front Windshield Replacement.png",
         warranty: "1 Year Sealant Warranty",
         recommended: "OEM Spec Glass • Cashless Support Available",
         features: [
@@ -1273,7 +1273,7 @@ const Services = () => {
       {
         id: "rear-windshield-replacement",
         name: "Rear Windshield Replacement",
-        thumbnail: "/images/product_images/Rear Windshield Replacement.png",
+        thumbnail: "/images/product_images/Windshield & lights/Rear Windshield Replacement.png",
         warranty: "1 Year Sealant Warranty",
         recommended: "OEM Spec Glass • Defogger Compatible",
         features: [
@@ -1306,7 +1306,7 @@ const Services = () => {
       {
         id: "door-glass-replacement",
         name: "Door Glass Replacement",
-        thumbnail: "/images/Services/windshield.png",
+        thumbnail: "/images/product_images/Windshield & lights/Door Glass Replacement.png",
         warranty: "1 Month Fitment Warranty",
         recommended: "OEM Door Glass",
         features: [
@@ -1323,7 +1323,7 @@ const Services = () => {
       {
         id: "rear-quarter-glass-replacement",
         name: "Rear Quarter Glass Replacement",
-        thumbnail: "/images/Services/windshield.png",
+        thumbnail: "/images/product_images/Windshield & lights/Rear Quarter Glass Replacement.png",
         warranty: "1 Month Fitment Warranty",
         recommended: "OEM Quarter Glass",
         features: [
@@ -1355,7 +1355,7 @@ const Services = () => {
       {
         id: "front-headlight",
         name: "Front Headlight",
-        thumbnail: "/images/Services/lights.png",
+        thumbnail: "/images/product_images/Windshield & lights/Front Headlight.png",
         warranty: "1 Month Fitment Warranty",
         recommended: "Headlamp Assembly Replacement",
         features: [
@@ -1372,7 +1372,7 @@ const Services = () => {
       {
         id: "rear-taillight",
         name: "Rear Taillight",
-        thumbnail: "/images/Services/lights.png",
+        thumbnail: "/images/product_images/Windshield & lights/Rear Taillight.png",
         warranty: "1 Month Fitment Warranty",
         recommended: "Tail Lamp Assembly Replacement",
         features: [
@@ -1389,7 +1389,7 @@ const Services = () => {
       {
         id: "fog-light",
         name: "Fog Light",
-        thumbnail: "/images/Services/lights.png",
+        thumbnail: "/images/product_images/Windshield & lights/For light.png",
         warranty: "1 Month Fitment Warranty",
         recommended: "Fog Lamp Assembly Replacement",
         features: [
@@ -1421,7 +1421,7 @@ const Services = () => {
       {
         id: "side-mirror-replacement",
         name: "Side Mirror Replacement",
-        thumbnail: "/images/Services/lights.png",
+        thumbnail: "/images/product_images/Windshield & lights/Side Mirror Replacement.png",
         warranty: "1 Month Fitment Warranty",
         recommended: "ORVM Assembly/Glass Replacement",
         features: [
@@ -1440,7 +1440,7 @@ const Services = () => {
       {
         id: "premium-top-wash",
         name: "Premium Top Wash",
-        thumbnail: "/images/product_images/Car Spa & Cleaning/Premium Top Wash.png",
+        thumbnail: "/images/product_images/Spa & Cleaning/Premium Top Wash.png",
         warranty: "Pickup Charges Additional in Invoice",
         recommended: "Applicable on Walk-in Only",
         features: [
@@ -1459,7 +1459,7 @@ const Services = () => {
       {
         id: "deep-all-round-spa",
         name: "Deep All Round Spa",
-        thumbnail: "/images/product_images/Car Spa & Cleaning/Deep All Round Spa.png",
+        thumbnail: "/images/product_images/Spa & Cleaning/Deep All Round Spa.png",
         warranty: "",
         recommended: "Every 6 Months (Recommended)",
         features: [
@@ -1476,112 +1476,47 @@ const Services = () => {
         specialLabel: "RECOMMENDED",
         isRecommended: true
       },
-
       {
-        id: "winter-special-heading",
-        name: "Winter Special",
-        thumbnail: "",
+        id: "car-rubbing-polishing",
+        name: "Car Rubbing & Polishing",
+        thumbnail: "/images/product_images/Spa & Cleaning/Car Rubbing & Polishing.png",
         warranty: "",
-        recommended: "",
-        features: [],
-        moreServicesCount: 0,
-        originalPrice: 0,
-        discountedPrice: 0,
-        duration: "",
-        sectionTitle: "Winter Special",
-        isRecommended: false
-      },
-      {
-        id: "deep-cleaning-360",
-        name: "360° Deep Cleaning",
-        thumbnail: "/images/service_icons/car_spa and cleaning.png",
-        warranty: "",
-        recommended: "Full interior shampoo & sanitisation",
+        recommended: "Every 6 Months Recommended",
         features: [
-          { name: "Seats, Roof & Carpet Shampoo", included: true },
-          { name: "Door Pads & Trims Cleaning", included: true },
-          { name: "AC Vents Sanitisation", included: true },
-          { name: "Exterior Foam Wash", included: true }
+          { name: "Machine Rubbing with Compound", included: true },
+          { name: "Pressure Car Wash", included: true },
+          { name: "Alloy Polishing", included: true },
+          { name: "Wax Polishing", included: true },
+          { name: "Tyre Dressing", included: true }
         ],
         moreServicesCount: 0,
-        originalPrice: 3499,
-        discountedPrice: 2799,
-        duration: "Takes 6-8 Hours",
-        specialLabel: "",
-        isRecommended: false
-      },
-
-      {
-        id: "spa-heading",
-        name: "Spa",
-        thumbnail: "",
-        warranty: "",
-        recommended: "",
-        features: [],
-        moreServicesCount: 0,
-        originalPrice: 0,
-        discountedPrice: 0,
-        duration: "",
-        sectionTitle: "Spa",
-        isRecommended: false
-      },
-      {
-        id: "premium-top-wash",
-        name: "Premium Top Wash",
-        thumbnail: "/images/product_images/Car Spa & Cleaning/Premium Top Wash.png",
-        warranty: "Pickup Charges Additional in Invoice",
-        recommended: "Applicable on Walk-in Only",
-        features: [
-          { name: "Exterior Top Wash", included: true },
-          { name: "Hand Drying", included: true },
-          { name: "Rinsing", included: true },
-          { name: "Tyre external wash", included: true }
-        ],
-        moreServicesCount: 0,
-        originalPrice: 330,
-        discountedPrice: 99,
-        duration: "Revitalize Your Ride in Just 1 Hour",
+        originalPrice: 1786,
+        discountedPrice: 1429,
+        duration: "Takes 6 Hours",
         specialLabel: "",
         isRecommended: false
       },
       {
         id: "car-interior-spa",
         name: "Car Interior Spa",
-        thumbnail: "/images/service_icons/car_spa and cleaning.png",
+        thumbnail: "/images/product_images/Spa & Cleaning/Car Interior Spa.png",
         warranty: "",
-        recommended: "Deep clean for cabin hygiene",
+        recommended: "Every 3 Months (Recommended)",
         features: [
-          { name: "Seats & Roof Liner Shampoo", included: true },
-          { name: "Door Pads & Floor Cleaning", included: true },
-          { name: "Odour Removal Treatment", included: true }
+          { name: "Pressure Car Wash", included: true },
+          { name: "Interior Vacuum Cleaning", included: true },
+          { name: "Interior Wet Shampooing and Detailing", included: true },
+          { name: "Anti Viral & Bacterial Treatment", included: true },
+          { name: "Dashboard Polishing", included: true }
         ],
         moreServicesCount: 0,
-        originalPrice: 2599,
-        discountedPrice: 2099,
+        originalPrice: 1999,
+        discountedPrice: 1499,
         duration: "Takes 6 Hours",
         specialLabel: "",
         isRecommended: false
       },
-      {
-        id: "deep-all-round-spa",
-        name: "Deep All Round Spa",
-        thumbnail: "/images/product_images/Car Spa & Cleaning/Deep All Round Spa.png",
-        warranty: "",
-        recommended: "Every 6 Months (Recommended)",
-        features: [
-          { name: "Interior Vacuum Cleaning", included: true },
-          { name: "Interior Wet Shampooing and Detailing", included: true },
-          { name: "Rubbing with Compound", included: true },
-          { name: "Dashboard Polishing", included: true },
-          { name: "Pressure Car Wash", included: true }
-        ],
-        moreServicesCount: 4,
-        originalPrice: 3124,
-        discountedPrice: 2499,
-        duration: "Takes 8 Hours",
-        specialLabel: "RECOMMENDED",
-        isRecommended: true
-      },
+
       {
         id: "washing-heading",
         name: "Washing",
@@ -1599,7 +1534,7 @@ const Services = () => {
       {
         id: "car-wash-wax",
         name: "Car Wash & Wax",
-        thumbnail: "/images/service_icons/car_spa and cleaning.png",
+        thumbnail: "/images/product_images/Spa & Cleaning/car wash & wax copy.png",
         warranty: "",
         recommended: "Wash + wax protection",
         features: [
@@ -1610,23 +1545,6 @@ const Services = () => {
         moreServicesCount: 0,
         originalPrice: 1299,
         discountedPrice: 999,
-        duration: "Takes 2 Hours",
-        specialLabel: "",
-        isRecommended: false
-      },
-      {
-        id: "rat-repellent-treatment",
-        name: "Rat / Pest Repellent Treatment",
-        thumbnail: "/images/service_icons/car_spa and cleaning.png",
-        warranty: "",
-        recommended: "Protects wiring & cabin from pests",
-        features: [
-          { name: "Engine Bay Repellent Spray", included: true },
-          { name: "Cabin Pest Treatment", included: true }
-        ],
-        moreServicesCount: 0,
-        originalPrice: 1499,
-        discountedPrice: 1199,
         duration: "Takes 2 Hours",
         specialLabel: "",
         isRecommended: false
@@ -1649,7 +1567,7 @@ const Services = () => {
       {
         id: "sunroof-service",
         name: "Sunroof Service",
-        thumbnail: "/images/service_icons/car_spa and cleaning.png",
+        thumbnail: "/images/product_images/Spa & Cleaning/Sunroof Service.png",
         warranty: "",
         recommended: "Smooth operation & leak prevention",
         features: [
