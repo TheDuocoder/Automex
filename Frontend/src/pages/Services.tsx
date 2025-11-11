@@ -76,8 +76,8 @@ const Services = () => {
     },
     {
       id: "car-spa",
-      name: "Spa & Cleaning",
-      icon: <img src="/images/service_icons/car_spa and cleaning.png" alt="Spa & Cleaning" className="h-10 w-10 object-contain" />
+      name: "Spa",
+      icon: <img src="/images/service_icons/car_spa and cleaning.png" alt="Spa" className="h-10 w-10 object-contain" />
     },
     {
       id: "clutch-body-parts",
@@ -1438,6 +1438,46 @@ const Services = () => {
     ],
     "car-spa": [
       {
+        id: "premium-top-wash",
+        name: "Premium Top Wash",
+        thumbnail: "/images/product_images/Car Spa & Cleaning/Premium Top Wash.png",
+        warranty: "Pickup Charges Additional in Invoice",
+        recommended: "Applicable on Walk-in Only",
+        features: [
+          { name: "Exterior Top Wash", included: true },
+          { name: "Hand Drying", included: true },
+          { name: "Rinsing", included: true },
+          { name: "Tyre external wash", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 330,
+        discountedPrice: 99,
+        duration: "Revitalize Your Ride in Just 1 Hour",
+        specialLabel: "",
+        isRecommended: false
+      },
+      {
+        id: "deep-all-round-spa",
+        name: "Deep All Round Spa",
+        thumbnail: "/images/product_images/Car Spa & Cleaning/Deep All Round Spa.png",
+        warranty: "",
+        recommended: "Every 6 Months (Recommended)",
+        features: [
+          { name: "Interior Vacuum Cleaning", included: true },
+          { name: "Interior Wet Shampooing and Detailing", included: true },
+          { name: "Rubbing with Compound", included: true },
+          { name: "Dashboard Polishing", included: true },
+          { name: "Pressure Car Wash", included: true }
+        ],
+        moreServicesCount: 4,
+        originalPrice: 3124,
+        discountedPrice: 2499,
+        duration: "Takes 8 Hours",
+        specialLabel: "RECOMMENDED",
+        isRecommended: true
+      },
+
+      {
         id: "winter-special-heading",
         name: "Winter Special",
         thumbnail: "",
@@ -1450,25 +1490,6 @@ const Services = () => {
         duration: "",
         sectionTitle: "Winter Special",
         isRecommended: false
-      },
-      {
-        id: "winter-care-package",
-        name: "Winter Care Package",
-        thumbnail: "/images/service_icons/car_spa and cleaning.png",
-        warranty: "",
-        recommended: "Recommended for winter readiness",
-        features: [
-          { name: "Exterior Foam Wash", included: true },
-          { name: "Interior Vacuuming & Dusting", included: true },
-          { name: "Dashboard Polish", included: true },
-          { name: "Tyre & Engine Bay Dressing", included: true }
-        ],
-        moreServicesCount: 0,
-        originalPrice: 1499,
-        discountedPrice: 1199,
-        duration: "Takes 3 Hours",
-        specialLabel: "RECOMMENDED",
-        isRecommended: true
       },
       {
         id: "deep-cleaning-360",
@@ -1505,6 +1526,25 @@ const Services = () => {
         isRecommended: false
       },
       {
+        id: "premium-top-wash",
+        name: "Premium Top Wash",
+        thumbnail: "/images/product_images/Car Spa & Cleaning/Premium Top Wash.png",
+        warranty: "Pickup Charges Additional in Invoice",
+        recommended: "Applicable on Walk-in Only",
+        features: [
+          { name: "Exterior Top Wash", included: true },
+          { name: "Hand Drying", included: true },
+          { name: "Rinsing", included: true },
+          { name: "Tyre external wash", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 330,
+        discountedPrice: 99,
+        duration: "Revitalize Your Ride in Just 1 Hour",
+        specialLabel: "",
+        isRecommended: false
+      },
+      {
         id: "car-interior-spa",
         name: "Car Interior Spa",
         thumbnail: "/images/service_icons/car_spa and cleaning.png",
@@ -1525,37 +1565,35 @@ const Services = () => {
       {
         id: "deep-all-round-spa",
         name: "Deep All Round Spa",
-        thumbnail: "/images/service_icons/car_spa and cleaning.png",
+        thumbnail: "/images/product_images/Car Spa & Cleaning/Deep All Round Spa.png",
         warranty: "",
-        recommended: "Complete interior + exterior refresh",
+        recommended: "Every 6 Months (Recommended)",
         features: [
-          { name: "Complete Interior Shampoo & Clean", included: true },
-          { name: "Exterior Foam Wash", included: true },
-          { name: "Protective Dash & Trim Dressing", included: true }
+          { name: "Interior Vacuum Cleaning", included: true },
+          { name: "Interior Wet Shampooing and Detailing", included: true },
+          { name: "Rubbing with Compound", included: true },
+          { name: "Dashboard Polishing", included: true },
+          { name: "Pressure Car Wash", included: true }
         ],
-        moreServicesCount: 0,
-        originalPrice: 3999,
-        discountedPrice: 3199,
+        moreServicesCount: 4,
+        originalPrice: 3124,
+        discountedPrice: 2499,
         duration: "Takes 8 Hours",
-        specialLabel: "",
-        isRecommended: false
+        specialLabel: "RECOMMENDED",
+        isRecommended: true
       },
       {
-        id: "premium-top-wash",
-        name: "Premium Top Wash",
-        thumbnail: "/images/service_icons/car_spa and cleaning.png",
+        id: "washing-heading",
+        name: "Washing",
+        thumbnail: "",
         warranty: "",
-        recommended: "Quick shine & clean",
-        features: [
-          { name: "Pressure Car Wash", included: true },
-          { name: "Interior Vacuuming", included: true },
-          { name: "Tyre Dressing", included: true }
-        ],
+        recommended: "",
+        features: [],
         moreServicesCount: 0,
-        originalPrice: 899,
-        discountedPrice: 699,
-        duration: "Takes 60 Mins",
-        specialLabel: "",
+        originalPrice: 0,
+        discountedPrice: 0,
+        duration: "",
+        sectionTitle: "Washing",
         isRecommended: false
       },
       {
@@ -1590,38 +1628,6 @@ const Services = () => {
         originalPrice: 1499,
         discountedPrice: 1199,
         duration: "Takes 2 Hours",
-        specialLabel: "",
-        isRecommended: false
-      },
-
-      {
-        id: "inspection-heading",
-        name: "Inspection",
-        thumbnail: "",
-        warranty: "",
-        recommended: "",
-        features: [],
-        moreServicesCount: 0,
-        originalPrice: 0,
-        discountedPrice: 0,
-        duration: "",
-        sectionTitle: "Inspection",
-        isRecommended: false
-      },
-      {
-        id: "car-inspection-diagnostics",
-        name: "Car Inspection / Diagnostics",
-        thumbnail: "/images/service_icons/car_spa and cleaning.png",
-        warranty: "",
-        recommended: "Health check for issues & faults",
-        features: [
-          { name: "OBD Scan & Fault Codes", included: true },
-          { name: "Visual Inspection Checklist", included: true }
-        ],
-        moreServicesCount: 0,
-        originalPrice: 999,
-        discountedPrice: 799,
-        duration: "Takes 1-2 Hours",
         specialLabel: "",
         isRecommended: false
       },
@@ -1677,7 +1683,7 @@ const Services = () => {
       {
         id: "rubbing-polishing-3m",
         name: "3M Car Rubbing & Polishing",
-        thumbnail: "/images/service_icons/car_detailing_services.png",
+        thumbnail: "/images/product_images/Detailing Services/3M Car Rubbing & Polishing.png",
         warranty: "",
         recommended: "Every 6 Months (Recommended)",
         features: [
@@ -1713,7 +1719,7 @@ const Services = () => {
       {
         id: "ceramic-coating-standard",
         name: "Ceramic Coating",
-        thumbnail: "/images/service_icons/car_detailing_services.png",
+        thumbnail: "/images/product_images/Detailing Services/Ceramic Coating.png",
         warranty: "Up to 2 Years Protection (Depending on Package)",
         recommended: "High gloss, hydrophobic protection",
         features: [
@@ -1730,19 +1736,21 @@ const Services = () => {
       },
       {
         id: "meguiars-ceramic-coating",
-        name: "Meguiar's Ceramic Coating",
-        thumbnail: "/images/service_icons/car_detailing_services.png",
-        warranty: "Up to 2 Years Protection (Depending on Package)",
-        recommended: "Premium ceramic with deep gloss",
+        name: "Graphene Coating - 10H",
+        thumbnail: "/images/product_images/Detailing Services/Graphene Coating - 10H.png",
+        warranty: "2 Years Warranty",
+        recommended: "Free Pickup & Drop",
         features: [
-          { name: "Multiple Layer Application", included: true },
-          { name: "Gloss & Shine Finish", included: true },
-          { name: "UV Protection", included: true }
+          { name: "Protects Against UV Rays & Color Fading", included: true },
+          { name: "Complete Car Detailing", included: true },
+          { name: "Premium Gloss Finish", included: true },
+          { name: "Free Annual Maintenance", included: true },
+          { name: "Double Layer Graphene Protection", included: true }
         ],
         moreServicesCount: 0,
-        originalPrice: 22999,
-        discountedPrice: 18999,
-        duration: "Takes 1 Day",
+        originalPrice: 13646,
+        discountedPrice: 11599,
+        duration: "Takes 2 Days",
         specialLabel: "PREMIUM",
         isRecommended: false
       },
@@ -1764,7 +1772,7 @@ const Services = () => {
       {
         id: "meguiars-teflon-coating",
         name: "Meguiar's Teflon Coating",
-        thumbnail: "/images/service_icons/car_detailing_services.png",
+        thumbnail: "/images/product_images/Detailing Services/Meguiar's Teflon Coating.png",
         warranty: "Up to 6 Months Protection",
         recommended: "Shine and basic paint protection",
         features: [
@@ -1782,7 +1790,7 @@ const Services = () => {
       {
         id: "3m-teflon-coating",
         name: "3M Teflon Coating",
-        thumbnail: "/images/service_icons/car_detailing_services.png",
+        thumbnail: "/images/product_images/Detailing Services/3M Teflon Coating.png",
         warranty: "Up to 6 Months Protection",
         recommended: "Paint sealant and shine",
         features: [
@@ -1814,7 +1822,7 @@ const Services = () => {
       {
         id: "ppf-paint-protection-film",
         name: "PPF - Paint Protection Film",
-        thumbnail: "/images/service_icons/car_detailing_services.png",
+        thumbnail: "/images/product_images/Detailing Services/PPF - Paint Protection Film.png",
         warranty: "Self-healing top coat",
         recommended: "Scratch and chip protection",
         features: [
@@ -1847,7 +1855,7 @@ const Services = () => {
       {
         id: "anti-rust-underbody",
         name: "Anti Rust Underbody Coating",
-        thumbnail: "/images/service_icons/car_detailing_services.png",
+        thumbnail: "/images/product_images/Detailing Services/Anti Rust Underbody Coating.png",
         warranty: "Prevents corrosion • Long lasting protection",
         recommended: "Recommended for monsoon & coastal areas",
         features: [
@@ -1866,7 +1874,7 @@ const Services = () => {
       {
         id: "silencer-coating",
         name: "Silencer Coating",
-        thumbnail: "/images/service_icons/car_detailing_services.png",
+        thumbnail: "/images/product_images/Detailing Services/Silencer Coating.png",
         warranty: "Rust prevention for exhaust system",
         recommended: "Protects silencer from corrosion",
         features: [
@@ -3708,7 +3716,7 @@ const Services = () => {
                    selectedCategory === "batteries" ? "Batteries" :
                    selectedCategory === "tyres" ? "Premium Tyres" :
                    selectedCategory === "windshield-lights" ? "" :
-                   selectedCategory === "car-spa" ? "Spa & Cleaning" :
+                   selectedCategory === "car-spa" ? "Spa" :
                    selectedCategory === "detailing" ? "Polishing" :
                    selectedCategory === "suspension-fitting" ? "Suspension & Fitting" :
                    selectedCategory === "clutch-body-parts" ? "Clutch & Body Parts" :
