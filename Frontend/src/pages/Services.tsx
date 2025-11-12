@@ -631,57 +631,6 @@ const Services = () => {
         specialLabel: "",
         isRecommended: false
       },
-      {
-        id: "strut-bar-replacement",
-        name: "Strut Bar Replacement",
-        thumbnail: "/images/Services/suspension.png",
-        warranty: "1 Month Warranty",
-        recommended: "Thuds from front end",
-        features: [
-          { name: "Opening & Fitting of Strut Bar", included: true },
-          { name: "Rubber Mount Inspection", included: true }
-        ],
-        moreServicesCount: 0,
-        originalPrice: 1999,
-        discountedPrice: 1599,
-        duration: "Takes 90 mins",
-        specialLabel: "",
-        isRecommended: false
-      },
-      {
-        id: "cross-member-replacement",
-        name: "Cross Member Replacement",
-        thumbnail: "/images/Services/suspension.png",
-        warranty: "1 Month Warranty",
-        recommended: "Bent/damaged cross member",
-        features: [
-          { name: "Removal & Fitting of Cross Member", included: true },
-          { name: "Torque Tightening & Alignment Check", included: true }
-        ],
-        moreServicesCount: 0,
-        originalPrice: 4999,
-        discountedPrice: 4199,
-        duration: "Takes 4 Hours",
-        specialLabel: "",
-        isRecommended: false
-      },
-      {
-        id: "front-strut-mount-replacement",
-        name: "Front Strut Mount Replacement",
-        thumbnail: "/images/Services/suspension.png",
-        warranty: "1 Month Warranty",
-        recommended: "Knocking while turning or bumps",
-        features: [
-          { name: "Opening & Fitting of Strut Mount", included: true },
-          { name: "Bearing Inspection/Replacement (If Needed)", included: true }
-        ],
-        moreServicesCount: 0,
-        originalPrice: 2399,
-        discountedPrice: 1999,
-        duration: "Takes 2 Hours",
-        specialLabel: "",
-        isRecommended: false
-      },
 
       {
         id: "fitting-heading",
@@ -695,23 +644,6 @@ const Services = () => {
         discountedPrice: 0,
         duration: "",
         sectionTitle: "Fitting",
-        isRecommended: false
-      },
-      {
-        id: "vacuum-replacement",
-        name: "Vacuum Replacement",
-        thumbnail: "/images/Services/fitments.png",
-        warranty: "1 Month Warranty",
-        recommended: "Hissing/idle surge • Vacuum leak",
-        features: [
-          { name: "Hose Replacement & Clamps", included: true },
-          { name: "Leak Test", included: true }
-        ],
-        moreServicesCount: 0,
-        originalPrice: 1299,
-        discountedPrice: 999,
-        duration: "Takes 60 mins",
-        specialLabel: "",
         isRecommended: false
       },
       {
@@ -791,7 +723,7 @@ const Services = () => {
       {
         id: "water-pump-replacement",
         name: "Water Pump Replacement",
-        thumbnail: "/images/product_images/water_pump.png",
+        thumbnail: "/images/product_images/Suspension & Fittings/Water Pump Replacement.png",
         warranty: "1 Month Warranty",
         recommended: "In case of Engine Overheating",
         features: [
@@ -808,43 +740,28 @@ const Services = () => {
         isRecommended: false
       },
       {
-        id: "ball-joint-replacement",
-        name: "Ball Joint Replacement",
-        thumbnail: "/images/Services/fitments.png",
-        warranty: "1 Month Warranty",
-        recommended: "Knocking over bumps • Wandering",
+        id: "mud-flaps",
+        name: "Mud Flaps",
+        thumbnail: "/images/product_images/Suspension & Fittings/Mud Flaps.png",
+        warranty: "1 Month Warranty on Fitting",
+        recommended: "Excellent Durability",
         features: [
-          { name: "Opening & Fitting of Ball Joint", included: true },
-          { name: "Greasing & Safety Check", included: true }
+          { name: "Mud Flaps Set of 4", included: true },
+          { name: "Protects Car Underbody", included: true },
+          { name: "Prevents Soil Accumulation", included: true },
+          { name: "Easy Fitment", included: true }
         ],
         moreServicesCount: 0,
-        originalPrice: 1899,
-        discountedPrice: 1499,
-        duration: "Takes 90 mins",
-        specialLabel: "",
-        isRecommended: false
-      },
-      {
-        id: "power-window-repair",
-        name: "Power Window Repair",
-        thumbnail: "/images/Services/fitments.png",
-        warranty: "1 Month Warranty",
-        recommended: "Window not rolling up/down",
-        features: [
-          { name: "Regulator/Motor Inspection", included: true },
-          { name: "Track Alignment & Lubrication", included: true }
-        ],
-        moreServicesCount: 0,
-        originalPrice: 1699,
-        discountedPrice: 1399,
-        duration: "Takes 90 mins",
+        originalPrice: 824,
+        discountedPrice: 700,
+        duration: "Takes 2 Hours",
         specialLabel: "",
         isRecommended: false
       },
       {
         id: "door-latch-repair",
         name: "Door Latch Repair",
-        thumbnail: "/images/Services/fitments.png",
+        thumbnail: "/images/product_images/Suspension & Fittings/Door Latch Repair.png",
         warranty: "1 Month Warranty",
         recommended: "Door not locking/closing properly",
         features: [
@@ -855,6 +772,25 @@ const Services = () => {
         originalPrice: 1299,
         discountedPrice: 999,
         duration: "Takes 60 mins",
+        specialLabel: "",
+        isRecommended: false
+      },
+      {
+        id: "power-window-repair",
+        name: "Power Window Repair",
+        thumbnail: "/images/product_images/Suspension & Fittings/Power Window Repair.png",
+        warranty: "1 Month Warranty",
+        recommended: "In Case of Window Not Working • In Case of Hard Window Functioning",
+        features: [
+          { name: "Power Window Mechanism Repair", included: true },
+          { name: "Power Window Switch Cost Additional", included: true },
+          { name: "Power Window Motor Cost Additional", included: true },
+          { name: "Free Pickup & Drop", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 1443,
+        discountedPrice: 1299,
+        duration: "Takes 6 Hours",
         specialLabel: "",
         isRecommended: false
       },
@@ -874,36 +810,40 @@ const Services = () => {
         isRecommended: false
       },
       {
-        id: "abs-esp-eps-issues",
-        name: "ABS & ESP Problems • Steering",
-        thumbnail: "/images/Services/steering.png",
-        warranty: "Diagnosis Report",
-        recommended: "Warning light ON • Loss of assist",
+        id: "noises-suspension-steering",
+        name: "Noises with Car Suspension & Steering",
+        thumbnail: "/images/product_images/Suspension & Fittings/Noises with Car Suspension & Steering.png",
+        warranty: "",
+        recommended: "In Case of Noise Coming from Suspension • In Case of Loose Steering Wheel",
         features: [
-          { name: "Computer Scan & Road Test", included: true },
-          { name: "Repair Plan & Estimate", included: true }
+          { name: "Steering System Inspection", included: true },
+          { name: "25 Points Check-List", included: true },
+          { name: "Complete Suspension Inspection", included: true },
+          { name: "Free Pickup & Drop", included: true }
         ],
         moreServicesCount: 0,
-        originalPrice: 999,
-        discountedPrice: 799,
-        duration: "Takes 60-90 mins",
+        originalPrice: 640,
+        discountedPrice: 499,
+        duration: "Takes 6 Hours",
         specialLabel: "",
         isRecommended: false
       },
       {
-        id: "suspension-noise",
-        name: "Noisy Shock/Struts",
-        thumbnail: "/images/Services/suspension.png",
-        warranty: "Diagnosis Report",
-        recommended: "Thud/creak while driving",
+        id: "faulty-electricals",
+        name: "Faulty Electricals",
+        thumbnail: "/images/product_images/Suspension & Fittings/Faulty Electricals.png",
+        warranty: "",
+        recommended: "In Case of Electrical Malfunctioning • In Case of Dead Battery",
         features: [
-          { name: "Lift Inspection of Suspension", included: true },
-          { name: "Lubrication & Repair Advice", included: true }
+          { name: "Full Car Scanning", included: true },
+          { name: "Detailed Health Card", included: true },
+          { name: "25 Points Check-List", included: true },
+          { name: "Free Pickup & Drop", included: true }
         ],
         moreServicesCount: 0,
-        originalPrice: 799,
-        discountedPrice: 599,
-        duration: "Takes 45-60 mins",
+        originalPrice: 657,
+        discountedPrice: 499,
+        duration: "Takes 6 Hours",
         specialLabel: "",
         isRecommended: false
       }
@@ -1897,7 +1837,7 @@ const Services = () => {
       {
         id: "boot-paint",
         name: "Boot Paint",
-        thumbnail: "/images/product_images/boot.png",
+        thumbnail: "/images/product_images/Denting & Painting/Boot Paint.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -1950,7 +1890,7 @@ const Services = () => {
       {
         id: "alloy-paint",
         name: "Alloy Paint",
-        thumbnail: "/images/product_images/alloy_paint.png",
+        thumbnail: "/images/product_images/Denting & Painting/Alloy Paint.png",
         warranty: "1 Year Warranty",
         recommended: "Every 1 Year (Recommended)",
         features: [
@@ -1983,7 +1923,7 @@ const Services = () => {
       {
         id: "left-fender-paint",
         name: "Left Fender Paint",
-        thumbnail: "/images/Services/denting and painting service.png",
+        thumbnail: "/images/product_images/Denting & Painting/Left Fender Paint.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -2002,7 +1942,7 @@ const Services = () => {
       {
         id: "left-front-door-paint",
         name: "Left Front Door Paint",
-        thumbnail: "/images/Services/denting and painting service.png",
+        thumbnail: "/images/product_images/Denting & Painting/Left Front Door Paint.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -2021,7 +1961,7 @@ const Services = () => {
       {
         id: "left-rear-door-paint",
         name: "Left Rear Door Paint",
-        thumbnail: "/images/Services/denting and painting service.png",
+        thumbnail: "/images/product_images/Denting & Painting/Left Rear Door Paint.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -2040,7 +1980,7 @@ const Services = () => {
       {
         id: "left-quarter-panel-paint",
         name: "Left Quarter Panel Paint",
-        thumbnail: "/images/Services/denting and painting service.png",
+        thumbnail: "/images/product_images/Denting & Painting/Left Quarter Panel Paint.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -2059,7 +1999,7 @@ const Services = () => {
       {
         id: "left-running-board-paint",
         name: "Left Running Board Paint",
-        thumbnail: "/images/Services/denting and painting service.png",
+        thumbnail: "/images/product_images/Denting & Painting/Left Running Board Paint.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -2093,7 +2033,7 @@ const Services = () => {
       {
         id: "right-fender-paint",
         name: "Right Fender Paint",
-        thumbnail: "/images/product_images/right_fender_paint.png",
+        thumbnail: "/images/product_images/Denting & Painting/Right Fender Paint.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -2112,7 +2052,7 @@ const Services = () => {
       {
         id: "right-front-door-paint",
         name: "Right Front Door Paint",
-        thumbnail: "/images/Services/denting and painting service.png",
+        thumbnail: "/images/product_images/Denting & Painting/Right Front Door Paint.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -2131,7 +2071,7 @@ const Services = () => {
       {
         id: "right-rear-door-paint",
         name: "Right Rear Door Paint",
-        thumbnail: "/images/product_images/right_backdoor.png",
+        thumbnail: "/images/product_images/Denting & Painting/Right Rear Door Paint.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -2150,7 +2090,7 @@ const Services = () => {
       {
         id: "right-quarter-panel-paint",
         name: "Right Quarter Panel Paint",
-        thumbnail: "/images/Services/denting and painting service.png",
+        thumbnail: "/images/product_images/Denting & Painting/Right Quarter Panel Paint.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -2169,7 +2109,7 @@ const Services = () => {
       {
         id: "right-running-board-paint",
         name: "Right Running Board Paint",
-        thumbnail: "/images/Services/denting and painting service.png",
+        thumbnail: "/images/product_images/Denting & Painting/Right Running Board Paint.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
