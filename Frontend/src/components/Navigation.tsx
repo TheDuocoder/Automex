@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import batteryIcon from "@/assets/service-battery.png";
 import tyreIcon from "@/assets/service-tyres.png";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
@@ -182,6 +182,7 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
   const premiumHeaderRef = useRef<HTMLHeadingElement>(null);
   const premiumDescRef = useRef<HTMLParagraphElement>(null);
   const premiumCarouselRef = useRef<HTMLDivElement>(null);
+  const navigationRootRef = useRef<HTMLDivElement | null>(null);
 
   // Autoplay for luxury brands carousel
   useEffect(() => {
@@ -288,8 +289,7 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
     };
   }, [curatedCarouselApi]);
   
-  // GSAP animation for Premium Car Services section
-  useEffect(() => {
+  useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       if (premiumHeaderRef.current && premiumDescRef.current && premiumCarouselRef.current) {
         const tl = gsap.timeline({
@@ -321,7 +321,108 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
           ease: 'power3.out'
         }, '-=0.3');
       }
-    });
+
+      // Animate service cards with sophisticated stagger
+      const serviceCards = gsap.utils.toArray<HTMLElement>(".service-card");
+      
+      serviceCards.forEach((card, index) => {
+        // Calculate row and column for grid-based stagger
+        const row = Math.floor(index / 4);
+        const col = index % 4;
+        
+        gsap.from(card, {
+          y: 80,
+          opacity: 0,
+          scale: 0.9,
+          rotationX: 15,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: card,
+            start: "top 90%",
+            toggleActions: "play none none none",
+            once: true,
+          },
+          delay: (row * 0.1) + (col * 0.08),
+        });
+
+        // Image zoom effect
+        const image = card.querySelector(".service-card__image");
+        if (image) {
+          gsap.from(image, {
+            scale: 1.15,
+            opacity: 0,
+            ease: "power2.out",
+            duration: 1.2,
+            scrollTrigger: {
+              trigger: card,
+              start: "top 90%",
+              toggleActions: "play none none none",
+              once: true,
+            },
+            delay: (row * 0.1) + (col * 0.08) + 0.2,
+          });
+        }
+
+        // Text content fade-in
+        const textContent = card.querySelector("h3, p");
+        if (textContent) {
+          gsap.from(textContent.parentElement, {
+            y: 20,
+            opacity: 0,
+            duration: 0.8,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: card,
+              start: "top 90%",
+              toggleActions: "play none none none",
+              once: true,
+            },
+            delay: (row * 0.1) + (col * 0.08) + 0.4,
+          });
+        }
+      });
+
+      // Animate value proposition cards
+      const valueCards = gsap.utils.toArray<HTMLElement>(".value-card");
+      valueCards.forEach((card, index) => {
+        gsap.from(card, {
+          y: 60,
+          opacity: 0,
+          scale: 0.95,
+          duration: 0.9,
+          ease: "back.out(1.4)",
+          scrollTrigger: {
+            trigger: card,
+            start: "top 85%",
+            toggleActions: "play none none none",
+            once: true,
+          },
+          delay: index * 0.15,
+        });
+
+        // Icon animation
+        const icon = card.querySelector("svg, .w-12");
+        if (icon) {
+          gsap.from(icon, {
+            scale: 0,
+            rotation: -180,
+            opacity: 0,
+            duration: 0.8,
+            ease: "back.out(2)",
+            scrollTrigger: {
+              trigger: card,
+              start: "top 85%",
+              toggleActions: "play none none none",
+              once: true,
+            },
+            delay: index * 0.15 + 0.2,
+          });
+        }
+      });
+    }, navigationRootRef);
+
+    ScrollTrigger.refresh();
 
     return () => ctx.revert();
   }, []);
@@ -360,7 +461,7 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
   };
 
   return (
-    <div>
+    <div ref={navigationRootRef}>
       {/* Navigation Bar - hidden to remove white space below header */}      {/* Content Sections */}
       <div>
         {/* Our Services Section */}
@@ -535,7 +636,7 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
               {carServices.map((service, index) => (
                 <Card 
                   key={index} 
-                  className="group hover:shadow-lg transition-all duration-300 bg-white relative overflow-hidden cursor-pointer w-full"
+                  className="service-card group hover:shadow-xl hover:-translate-y-1 transition-all duration-500 bg-white relative overflow-hidden cursor-pointer w-full rounded-2xl"
                 >
                   {service.isNew && (
                     <div className="absolute top-2 right-2 bg-green-500 text-white text-[10px] px-1.5 py-0.5 rounded-full z-10">
@@ -547,7 +648,7 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
                       <img
                         src={service.image}
                         alt={service.title}
-                        className={`w-full h-full ${service.isIcon ? "object-contain p-6 bg-gray-50" : "object-cover"} transform group-hover:scale-105 transition-transform duration-300`}
+                        className={`service-card__image w-full h-full ${service.isIcon ? "object-contain p-6 bg-gray-50" : "object-cover"} transform group-hover:scale-105 transition-transform duration-500`}
                         data-fallback-index="0"
                         onError={(e) => {
                           const target = e.currentTarget as HTMLImageElement;
@@ -574,26 +675,26 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
             </div>
 
             {/* Value Propositions */}
-            <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="text-center p-6 bg-blue-50 rounded-xl">
-                <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="value-props mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="value-card text-center p-6 bg-blue-50 rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 cursor-pointer">
+                <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4 transition-transform duration-300 hover:scale-110 hover:rotate-12">
                   <Shield className="h-6 w-6 text-white" />
                 </div>
-                <h3 className="font-semibold mb-2">Quality Assurance</h3>
+                <h3 className="font-semibold mb-2 transition-colors duration-300 hover:text-blue-600">Quality Assurance</h3>
                 <p className="text-gray-600 text-sm">Certified mechanics and genuine spare parts</p>
               </div>
-              <div className="text-center p-6 bg-green-50 rounded-xl">
-                <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="value-card text-center p-6 bg-green-50 rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 cursor-pointer">
+                <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4 transition-transform duration-300 hover:scale-110 hover:rotate-12">
                   <Clock className="h-6 w-6 text-white" />
                 </div>
-                <h3 className="font-semibold mb-2">Timely Service</h3>
+                <h3 className="font-semibold mb-2 transition-colors duration-300 hover:text-green-600">Timely Service</h3>
                 <p className="text-gray-600 text-sm">On-time service delivery with live updates</p>
               </div>
-              <div className="text-center p-6 bg-purple-50 rounded-xl">
-                <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="value-card text-center p-6 bg-purple-50 rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 cursor-pointer">
+                <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4 transition-transform duration-300 hover:scale-110 hover:rotate-12">
                   <Star className="h-6 w-6 text-white" />
                 </div>
-                <h3 className="font-semibold mb-2">Best Pricing</h3>
+                <h3 className="font-semibold mb-2 transition-colors duration-300 hover:text-purple-600">Best Pricing</h3>
                 <p className="text-gray-600 text-sm">Competitive prices with no hidden charges</p>
               </div>
             </div>
