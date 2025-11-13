@@ -4,6 +4,8 @@ import { Card } from "@/components/ui/card";
 import batteryIcon from "@/assets/service-battery.png";
 import tyreIcon from "@/assets/service-tyres.png";
 import { useEffect, useState, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   Carousel,
   CarouselContent,
@@ -12,6 +14,8 @@ import {
   CarouselPrevious,
   type CarouselApi,
 } from "@/components/ui/carousel";
+
+gsap.registerPlugin(ScrollTrigger);
 
 // Service-specific image fallbacks to guarantee a valid photo renders
 const imageFallbacks: Record<string, string[]> = {
@@ -172,6 +176,12 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
   const [summerCarouselApi, setSummerCarouselApi] = useState<CarouselApi>();
   const [curatedCarouselApi, setCuratedCarouselApi] = useState<CarouselApi>();
   const [apiActiveTab, setApiActiveTab] = useState("Our Services");
+  
+  // Refs for GSAP animations
+  const premiumSectionRef = useRef<HTMLElement>(null);
+  const premiumHeaderRef = useRef<HTMLHeadingElement>(null);
+  const premiumDescRef = useRef<HTMLParagraphElement>(null);
+  const premiumCarouselRef = useRef<HTMLDivElement>(null);
 
   // Autoplay for luxury brands carousel
   useEffect(() => {
@@ -278,7 +288,45 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
     };
   }, [curatedCarouselApi]);
   
-  const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+  // GSAP animation for Premium Car Services section
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      if (premiumHeaderRef.current && premiumDescRef.current && premiumCarouselRef.current) {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: premiumSectionRef.current,
+            start: 'top 80%',
+            end: 'bottom 20%',
+            toggleActions: 'play none none reverse',
+          }
+        });
+
+        tl.from(premiumHeaderRef.current, {
+          y: 50,
+          opacity: 0,
+          duration: 0.8,
+          ease: 'power3.out'
+        })
+        .from(premiumDescRef.current, {
+          y: 30,
+          opacity: 0,
+          duration: 0.6,
+          ease: 'power2.out'
+        }, '-=0.4')
+        .from(premiumCarouselRef.current.querySelectorAll('.carousel-item'), {
+          y: 80,
+          opacity: 0,
+          duration: 0.8,
+          stagger: 0.2,
+          ease: 'power3.out'
+        }, '-=0.3');
+      }
+    });
+
+    return () => ctx.revert();
+  }, []);
+  
+  const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
 
   useEffect(() => {
     const handleScroll = () => {
@@ -316,20 +364,25 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
       {/* Navigation Bar - hidden to remove white space below header */}      {/* Content Sections */}
       <div>
         {/* Our Services Section */}
-        <div 
-          ref={el => sectionRefs.current["Our Services"] = el} 
+        <section 
+          ref={(el) => {
+            if (el) {
+              sectionRefs.current["Our Services"] = el;
+              premiumSectionRef.current = el;
+            }
+          }}
           className="py-8 bg-gradient-to-b from-gray-50 to-white min-h-screen"
         >
           <div className="container mx-auto px-4">
             {/* Header */}
             <div className="mb-6">
               <div className="text-center mb-10 mt-6">
-                <h2 className="text-4xl font-bold mb-4">Premium Car Services in Bhubaneswar</h2>
-              <p className="text-gray-600 max-w-3xl mx-auto">
+                <h2 ref={premiumHeaderRef} className="text-4xl font-bold mb-4">Premium Car Services in Bhubaneswar</h2>
+              <p ref={premiumDescRef} className="text-gray-600 max-w-3xl mx-auto">
                 Specialized service center for luxury vehicles including BMW, Mercedes-Benz, and Audi. Our certified technicians provide comprehensive maintenance, 
                 repairs, and premium care services using state-of-the-art equipment and genuine parts.
               </p>
-              <div className="mt-6 max-w-4xl mx-auto">
+              <div ref={premiumCarouselRef} className="mt-6 max-w-4xl mx-auto">
                 <Carousel 
                   className="w-full max-w-4xl mx-auto"
                   opts={{
@@ -338,7 +391,7 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
                   }}
                   setApi={setCarouselApi}>
                   <CarouselContent>
-                    <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                    <CarouselItem className="carousel-item md:basis-1/2 lg:basis-1/3">
                       <div className="relative group aspect-[16/9] overflow-hidden rounded-xl">
                         <img 
                           src="https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&q=80" 
@@ -353,7 +406,7 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
                         </div>
                       </div>
                     </CarouselItem>
-                    <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                    <CarouselItem className="carousel-item md:basis-1/2 lg:basis-1/3">
                       <div className="relative group aspect-[16/9] overflow-hidden rounded-xl">
                         <img 
                           src="https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?auto=format&fit=crop&q=80" 
@@ -368,7 +421,7 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
                         </div>
                       </div>
                     </CarouselItem>
-                    <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                    <CarouselItem className="carousel-item md:basis-1/2 lg:basis-1/3">
                       <div className="relative group aspect-[16/9] overflow-hidden rounded-xl">
                         <img 
                           src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80" 
@@ -383,7 +436,7 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
                         </div>
                       </div>
                     </CarouselItem>
-                    <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                    <CarouselItem className="carousel-item md:basis-1/2 lg:basis-1/3">
                       <div className="relative group aspect-[16/9] overflow-hidden rounded-xl">
                         <img 
                           src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&q=80" 
@@ -398,7 +451,7 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
                         </div>
                       </div>
                     </CarouselItem>
-                    <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                    <CarouselItem className="carousel-item md:basis-1/2 lg:basis-1/3">
                       <div className="relative group aspect-[16/9] overflow-hidden rounded-xl">
                         <img 
                           src="https://images.unsplash.com/photo-1580274455191-1c62238fa333?auto=format&fit=crop&q=80" 
@@ -413,7 +466,7 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
                         </div>
                       </div>
                     </CarouselItem>
-                    <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                    <CarouselItem className="carousel-item md:basis-1/2 lg:basis-1/3">
                       <div className="relative group aspect-[16/9] overflow-hidden rounded-xl">
                         <img 
                           src="/images/Landing_page_images/Volve car.png" 
@@ -428,7 +481,7 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
                         </div>
                       </div>
                     </CarouselItem>
-                    <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                    <CarouselItem className="carousel-item md:basis-1/2 lg:basis-1/3">
                       <div className="relative group aspect-[16/9] overflow-hidden rounded-xl">
                         <img
                           src="/images/Landing_page_images/Skoda car.png"
@@ -449,7 +502,7 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
                         </div>
                       </div>
                     </CarouselItem>
-                    <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                    <CarouselItem className="carousel-item md:basis-1/2 lg:basis-1/3">
                       <div className="relative group aspect-[16/9] overflow-hidden rounded-xl">
                         <img
                           src="/images/Landing_page_images/Vw car.png"
@@ -545,7 +598,7 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Add remaining sections */}
       </div>
