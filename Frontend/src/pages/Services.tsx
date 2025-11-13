@@ -1871,7 +1871,7 @@ const Services = () => {
       {
         id: "full-body-dent-paint",
         name: "Full Body Dent Paint",
-        thumbnail: "/images/product_images/full_body_dentpaint.png",
+        thumbnail: "/images/product_images/Denting & Painting/Full Body Dent Paint.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -2207,7 +2207,7 @@ const Services = () => {
       {
         id: "cooling-coil-replacement",
         name: "Cooling Coil Replacement",
-        thumbnail: "/images/product_images/Ac service & Repair/coiling_coil1.png",
+        thumbnail: "/images/product_images/Ac service & Repair/Cooling Coil Replacement.png",
         warranty: "3 Months Warranty",
         recommended: "In Case of No / Less Cooling",
         features: [
