@@ -107,7 +107,7 @@ const Services = () => {
     {
       id: "basic-service",
       name: "Basic Service",
-      thumbnail: "/images/product_images/Car services/basic_service.png",
+      thumbnail: "/images/product_images/Car services/Basic Service.png",
       warranty: "1000 Kms or 3 Months Warranty",
       recommended: "Every 5000 Kms or 6 Months (Recommended)",
       features: [
@@ -140,7 +140,7 @@ const Services = () => {
     {
       id: "standard-service",
       name: "Standard Service",
-      thumbnail: "/images/product_images/Car services/standard_service.png",
+      thumbnail: "/images/product_images/Car services/Standard Service.png",
       warranty: "1000 Kms or 3 Months Warranty",
       recommended: "Every 10,000 Kms or 6 Months (Recommended)",
       features: [
@@ -170,7 +170,7 @@ const Services = () => {
     {
       id: "comprehensive-service",
       name: "Comprehensive Service",
-      thumbnail: "/images/Services/Premium car service.png",
+      thumbnail: "/images/product_images/Car services/Comprehensive Service.png",
       warranty: "1000 Kms or 1 Month Warranty",
       recommended: "Every 20,000 Kms or 12 Months (Recommended)",
       features: [
