@@ -420,7 +420,7 @@ const Services = () => {
     {
       id: "rear-brake-pads-shoes-cleaning",
       name: "Rear Brake Pads / Shoes Cleaning",
-      thumbnail: "/images/product_images/Car services/rear_breakpad_cleaning.png",
+      thumbnail: "/images/product_images/Car services/ Rear Brake Pads.png",
       warranty: "",
       recommended: "Recommended: In case of Brake Noise or Reduced Performance",
       features: [
@@ -483,7 +483,7 @@ const Services = () => {
       {
         id: "eps-motor-repair",
         name: "EPS Module Repair",
-        thumbnail: "/images/product_images/eps_module.png",
+        thumbnail: "/images/product_images/Suspension & Fittings/eps_module.png",
         warranty: "1 Month Warranty",
         recommended: "Heavy/jerky steering • EPS warning",
         features: [
@@ -500,7 +500,7 @@ const Services = () => {
       {
         id: "steering-rack-repair",
         name: "Steering Rack Repair",
-        thumbnail: "/images/product_images/steerning rack.png",
+        thumbnail: "/images/product_images/Suspension & Fittings/Steering Rack Repair.png",
         warranty: "1 Month Warranty",
         recommended: "Oil leak/knocking from rack",
         features: [
@@ -532,7 +532,7 @@ const Services = () => {
       {
         id: "front-shock-absorber",
         name: "Front Shock Absorber Replacement",
-        thumbnail: "/images/product_images/front_shocker_mount.png",
+        thumbnail: "/images/product_images/Suspension & Fittings/Front Shock Absorber Replacement.png",
         warranty: "1 Month Warranty",
         recommended: "Bouncy ride • Oil leak on strut",
         features: [
@@ -566,7 +566,7 @@ const Services = () => {
       {
         id: "lower-arm-replacement",
         name: "Suspension Lower Arm Replacement",
-        thumbnail: "/images/product_images/suspension lower arm.png",
+        thumbnail: "/images/product_images/Suspension & Fittings/Suspension Lower Arm Replacement.png",
         warranty: "1 Month Warranty",
         recommended: "Knocking • Drifting while driving",
         features: [
@@ -583,7 +583,7 @@ const Services = () => {
       {
         id: "link-rod-replacement",
         name: "Link Rod Replacement",
-        thumbnail: "/images/product_images/link rod.png",
+        thumbnail: "/images/product_images/Suspension & Fittings/Link Rod Replacement.png",
         warranty: "1 Month Warranty",
         recommended: "Rattling from rough roads",
         features: [
@@ -600,7 +600,7 @@ const Services = () => {
       {
         id: "tie-rod-end-replacement",
         name: "Tie Rod End Replacement",
-        thumbnail: "/images/product_images/tie rod.png",
+        thumbnail: "/images/product_images/Suspension & Fittings/Tie Rod End Replacement.png",
         warranty: "1 Month Warranty",
         recommended: "Vibration • Uneven tyre wear",
         features: [
@@ -617,7 +617,7 @@ const Services = () => {
       {
         id: "front-axle-repair",
         name: "Front Axle Repair",
-        thumbnail: "/images/product_images/front_axle.png",
+        thumbnail: "/images/product_images/Suspension & Fittings/Front Axle Repair.png",
         warranty: "1 Month Warranty",
         recommended: "Vibration while accelerating • Clicking while turning",
         features: [
@@ -649,7 +649,7 @@ const Services = () => {
       {
         id: "engine-mount-replacement",
         name: "Engine Mount Replacement",
-        thumbnail: "/images/product_images/engine_mounting.png",
+        thumbnail: "/images/product_images/Suspension & Fittings/engine_mounting.png",
         warranty: "1 Month Warranty",
         recommended: "Vibration in cabin • Broken mount",
         features: [
@@ -666,7 +666,7 @@ const Services = () => {
       {
         id: "gearbox-mount-replacement",
         name: "Gearbox Mount Replacement",
-        thumbnail: "/images/product_images/gear_box_mounting.png",
+        thumbnail: "/images/product_images/Suspension & Fittings/Gearbox Mount Replacement.png",
         warranty: "1 Month Warranty",
         recommended: "Clunk when shifting • Excess movement",
         features: [
@@ -683,7 +683,7 @@ const Services = () => {
       {
         id: "fuel-pump-replacement",
         name: "Fuel Pump Replacement",
-        thumbnail: "/images/product_images/fuel_pump.png",
+        thumbnail: "/images/product_images/Suspension & Fittings/Fuel Pump Replacement.png",
         warranty: "1 Month Warranty",
         recommended: "In Case of Car Jerking while Accelerating",
         features: [
@@ -703,7 +703,7 @@ const Services = () => {
       {
         id: "ecm-repair",
         name: "ECM Repair",
-        thumbnail: "/images/product_images/ecm_repair.png",
+        thumbnail: "/images/product_images/Suspension & Fittings/ecm_repair.png",
         warranty: "1 Month Warranty",
         recommended: "In case of Car Not Starting",
         features: [
@@ -866,7 +866,7 @@ const Services = () => {
       {
         id: "clutch-set-replacement",
         name: "Clutch Set Replacement",
-        thumbnail: "/images/product_images/clutchset.png",
+        thumbnail: "/images/product_images/Clutch and Body parts/Clutch Set Replacement.png",
         warranty: "1 Month Warranty",
         recommended: "Juddering, slipping or hard clutch pedal",
         features: [
@@ -884,7 +884,7 @@ const Services = () => {
       {
         id: "flywheel-replacement",
         name: "Flywheel Replacement",
-        thumbnail: "/images/product_images/flyweel.png",
+        thumbnail: "/images/product_images/Clutch and Body parts/Flywheel Replacement.png",
         warranty: "1 Month Warranty",
         recommended: "Chatter, vibration or damaged flywheel",
         features: [
@@ -901,7 +901,7 @@ const Services = () => {
       {
         id: "clutch-bearing-replacement",
         name: "Clutch Bearing Replacement",
-        thumbnail: "/images/product_images/clutch_bearning.png",
+        thumbnail: "/images/product_images/Clutch and Body parts/Clutch Bearing Replacement.png",
         warranty: "1 Month Warranty",
         recommended: "Whining/humming noise while pressing clutch",
         features: [
@@ -918,7 +918,7 @@ const Services = () => {
       {
         id: "flywheel-turning",
         name: "Flywheel Turning",
-        thumbnail: "/images/product_images/flyweel.png",
+        thumbnail: "/images/product_images/Clutch and Body parts/Flywheel Turning.png",
         warranty: "Smooth surface finish",
         recommended: "Recommended with new clutch set (if required)",
         features: [
@@ -935,7 +935,7 @@ const Services = () => {
       {
         id: "clutch-overhaul",
         name: "Clutch Overhaul",
-        thumbnail: "/images/Services/clutch.png",
+        thumbnail: "/images/product_images/Clutch and Body parts/Clutch Overhaul.png",
         warranty: "1 Month Warranty",
         recommended: "Complete clutch refresh",
         features: [
@@ -967,7 +967,7 @@ const Services = () => {
       {
         id: "front-bumper-replacement",
         name: "Front Bumper Replacement",
-        thumbnail: "/images/product_images/front_bumper_relacement.png",
+        thumbnail: "/images/product_images/Clutch and Body parts/Front Bumper Replacement.png",
         warranty: "Fitment Warranty",
         recommended: "Damaged or cracked bumper",
         features: [
@@ -984,7 +984,7 @@ const Services = () => {
       {
         id: "rear-bumper-replacement",
         name: "Rear Bumper Replacement",
-        thumbnail: "/images/product_images/rear_bumper_replacement.png",
+        thumbnail: "/images/product_images/Clutch and Body parts/Rear Bumper Replacement.png",
         warranty: "Fitment Warranty",
         recommended: "Damaged or cracked bumper",
         features: [
@@ -1001,7 +1001,7 @@ const Services = () => {
       {
         id: "right-front-door-handle",
         name: "Right Front Door Replacement",
-        thumbnail: "/images/product_images/right_front_door.png",
+        thumbnail: "/images/product_images/Clutch and Body parts/Right Front Door Replacement.png",
         warranty: "Fitment Warranty",
         recommended: "Damaged door shell",
         features: [
@@ -1018,7 +1018,7 @@ const Services = () => {
       {
         id: "right-rear-door-handle",
         name: "Right Rear Door Replacement",
-        thumbnail: "/images/product_images/right_rear_door.png",
+        thumbnail: "/images/product_images/Clutch and Body parts/Right Rear Door Replacement.png",
         warranty: "Fitment Warranty",
         recommended: "Damaged door shell",
         features: [
@@ -1035,7 +1035,7 @@ const Services = () => {
       {
         id: "right-fender-replacement",
         name: "Right Fender Replacement",
-        thumbnail: "/images/product_images/fender.png",
+        thumbnail: "/images/product_images/Clutch and Body parts/fender.png",
         warranty: "Fitment Warranty",
         recommended: "Damaged fender panel",
         features: [
@@ -1052,7 +1052,7 @@ const Services = () => {
       {
         id: "boot-replacement",
         name: "Boot Replacement",
-        thumbnail: "/images/product_images/boot.png",
+        thumbnail: "/images/product_images/Clutch and Body parts/Boot Replacement.png",
         warranty: "Fitment Warranty",
         recommended: "In Case Corroded Boot • In Case Broken / Damaged Boot",
         features: [
@@ -1072,7 +1072,7 @@ const Services = () => {
       {
         id: "bonnet-replacement",
         name: "Bonnet Replacement",
-        thumbnail: "/images/product_images/bonnet.png",
+        thumbnail: "/images/product_images/Clutch and Body parts/Bonnet Replacement.png",
         warranty: "Fitment Warranty",
         recommended: "Damaged bonnet",
         features: [
@@ -1089,7 +1089,7 @@ const Services = () => {
       {
         id: "left-front-door-replacement",
         name: "Left Front Door Replacement",
-        thumbnail: "/images/product_images/left_front_door.png",
+        thumbnail: "/images/product_images/Clutch and Body parts/Left Front Door Replacement.png",
         warranty: "Fitment Warranty",
         recommended: "In Case Corroded Door • In Case Broken / Damaged Door",
         features: [
@@ -1110,7 +1110,7 @@ const Services = () => {
       {
         id: "rear-door-replacement-left",
         name: "Left Rear Door Replacement",
-        thumbnail: "/images/product_images/left_rear_door.png",
+        thumbnail: "/images/product_images/Clutch and Body parts/Left Rear Door Replacement.png",
         warranty: "Fitment Warranty",
         recommended: "Damaged door shell",
         features: [
@@ -1142,7 +1142,7 @@ const Services = () => {
       {
         id: "clutch-transmission-trouble",
         name: "Clutch & Transmission Trouble",
-        thumbnail: "/images/Services/clutch.png",
+        thumbnail: "/images/product_images/Clutch and Body parts/Clutch & Transmission Trouble.png",
         warranty: "Diagnosis Report",
         recommended: "Grinding gears, slipping clutch, hard shifts",
         features: [
@@ -1159,7 +1159,7 @@ const Services = () => {
       {
         id: "all-doors-adjustment",
         name: "All Doors Adjustment",
-        thumbnail: "/images/product_images/all_door_handles.png",
+        thumbnail: "/images/product_images/Clutch and Body parts/All Doors Adjustment2.png",
         warranty: "",
         recommended: "In case of Door Alignment Issues",
         features: [
@@ -1765,7 +1765,7 @@ const Services = () => {
       {
         id: "front-bumper-paint",
         name: "Front Bumper Paint",
-        thumbnail: "/images/product_images/front_bumper.png",
+        thumbnail: "/images/product_images/Denting & Painting/front_bumper.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -1784,7 +1784,7 @@ const Services = () => {
       {
         id: "bonnet-paint",
         name: "Bonnet Paint",
-        thumbnail: "/images/product_images/bonet.png",
+        thumbnail: "/images/product_images/Denting & Painting/ Bonnet Paint.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -1818,7 +1818,7 @@ const Services = () => {
       {
         id: "rear-bumper-paint",
         name: "Rear Bumper Paint",
-        thumbnail: "/images/product_images/rear_bumper.png",
+        thumbnail: "/images/product_images/Denting & Painting/rear_bumper.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -2163,7 +2163,7 @@ const Services = () => {
       {
         id: "high-performance-ac-service",
         name: "High Performance AC Service",
-        thumbnail: "/images/product_images/high_perform_ac_service.png",
+        thumbnail: "/images/product_images/Ac service & Repair/high_perform_ac_service.png",
         warranty: "1,000 kms or 1 Month Warranty",
         recommended: "Every 10,000 Kms or 1 Year (Recommended)",
         features: [
@@ -2375,7 +2375,7 @@ const Services = () => {
       {
         id: "radiator-fan-motor",
         name: "Radiator Fan Motor Replacement",
-        thumbnail: "/images/product_images/radiator_fan_motor.png",
+        thumbnail: "/images/product_images/Inspection/Radiator Fan Motor Replacement.png",
         warranty: "1 Month Warranty",
         recommended: "Recommended in case of radiator fan not working",
         features: [
