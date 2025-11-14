@@ -67,7 +67,9 @@ const Hero = () => {
       { scale: 1, duration: 1.2, ease: "power3.out" }
     );
 
-    return () => animation.kill();
+    return () => {
+      animation.kill();
+    };
   }, [currentImageIndex]);
 
   return (
@@ -80,7 +82,7 @@ const Hero = () => {
           data-bg-index={index}
           style={{
             backgroundImage: `url("${image}")`,
-            filter: 'brightness(0.5)',
+            filter: 'brightness(0.5) drop-shadow(0px 0px 20px rgba(255, 0, 0, 0.2))',
             opacity: currentImageIndex === index ? 1 : 0,
             zIndex: currentImageIndex === index ? 1 : 0
           }}
@@ -109,9 +111,15 @@ const Hero = () => {
       <div className="container mx-auto px-4 md:px-6 lg:px-8 relative z-[4] h-full flex items-center pt-24 md:pt-32 pb-16 md:pb-20">
         <div className="grid md:grid-cols-[1fr_auto] gap-8 md:gap-12 lg:gap-16 items-start w-full">
           {/* Left side - Text content */}
-          <div className="relative text-white max-w-3xl pt-4 md:pt-8">
+          <div 
+            className="relative text-white max-w-3xl pt-4 md:pt-8 px-6 md:px-8 py-8 md:py-10 rounded-lg"
+            style={{
+              background: 'linear-gradient(to right, rgba(0,0,0,0.55), rgba(0,0,0,0.15), transparent)',
+              textShadow: '0 2px 6px rgba(0,0,0,0.45)'
+            }}
+          >
             <h2 className="hero-title text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-5 md:mb-7 leading-tight tracking-tight">
-              Professional Car Service & Maintenance Excellence
+              Premium Car Service & Trusted Maintenance Excellence
             </h2>
             <p className="hero-description text-base md:text-lg lg:text-xl opacity-95 mb-8 md:mb-10 leading-relaxed max-w-2xl">
               Expert mechanics working with premium tools and genuine parts for your luxury vehicle. 
@@ -134,9 +142,9 @@ const Hero = () => {
             <div>
               <span 
                 className="hero-cta inline-block text-white px-4 md:px-6 py-2 md:py-3 rounded-full text-sm md:text-base font-bold shadow-xl transition-all cursor-pointer" 
-                style={{backgroundColor: '#DC2626'}}
-                onMouseEnter={(e) => (e.target as HTMLElement).style.backgroundColor = '#B91C1C'} 
-                onMouseLeave={(e) => (e.target as HTMLElement).style.backgroundColor = '#DC2626'}
+                style={{background: 'linear-gradient(90deg, #ff3d3d, #ff6a45)'}}
+                onMouseEnter={(e) => (e.target as HTMLElement).style.background = 'linear-gradient(90deg, #e63535, #e65a3d)'} 
+                onMouseLeave={(e) => (e.target as HTMLElement).style.background = 'linear-gradient(90deg, #ff3d3d, #ff6a45)'}
               >
                 Crafted for Quality. Built on Trust
               </span>
