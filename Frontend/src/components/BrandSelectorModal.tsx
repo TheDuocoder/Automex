@@ -201,9 +201,13 @@ const BrandSelectorModal = ({
     <div
       className={cn(
         layout === "sidebar"
-          ? "grid grid-cols-2 gap-3 max-h-[380px] overflow-y-auto pr-1.5"
+          ? "grid grid-cols-3 gap-3 max-h-[380px] overflow-y-auto pr-1.5"
           : "grid grid-cols-3 gap-4 max-h-60 overflow-y-auto"
       )}
+      style={{
+        scrollbarWidth: 'thin',
+        scrollbarColor: '#cbd5e1 #f8fafc'
+      }}
     >
       {filteredModelList.map((model) => {
         const isSelected = selectedModelId === model.id;

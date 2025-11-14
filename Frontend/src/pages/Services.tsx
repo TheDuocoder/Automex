@@ -3764,12 +3764,12 @@ const Services = () => {
 
             {/* Right Sidebar - Select Manufacturer */}
             <div ref={sidebarRef} className="w-full xl:w-[360px] flex-shrink-0 mt-10 xl:mt-0 xl:ml-16">
-              <div className="xl:sticky xl:top-20">
+              <div className="sticky top-20 max-h-[calc(100vh-100px)]">
                 <BrandSelectorModal
                   variant="sidebar"
                   selectedBrand={selectedBrand}
                   onBrandSelect={setSelectedBrand}
-                  className="h-[500px] xl:h-[520px] max-h-[70vh] overflow-hidden rounded-2xl shadow-[0px_6px_30px_rgba(0,0,0,0.25)] bg-white"
+                  className="h-auto max-h-[calc(100vh-120px)] overflow-auto rounded-2xl shadow-[0px_6px_30px_rgba(0,0,0,0.25)] bg-white"
                 />
               </div>
             </div>
