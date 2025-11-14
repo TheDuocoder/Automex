@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect, useRef, useLayoutEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import Header from "@/components/Header";
@@ -6,6 +6,11 @@ import Footer from "@/components/Footer";
 import ServiceCard from "@/components/ServiceCard";
 import CategoryTabs from "@/components/CategoryTabs";
 import BrandSelectorModal from "@/components/BrandSelectorModal";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Lenis from "lenis";
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface ServicePackage {
   id?: string;
@@ -36,6 +41,12 @@ const Services = () => {
 
   const [selectedCategory, setSelectedCategory] = useState("car-services");
   const [selectedBrand, setSelectedBrand] = useState("");
+  
+  const containerRef = useRef<HTMLDivElement>(null);
+  const categoryTabsRef = useRef<HTMLDivElement>(null);
+  const serviceCardsRef = useRef<HTMLDivElement>(null);
+  const statsRef = useRef<HTMLDivElement>(null);
+  const sidebarRef = useRef<HTMLDivElement>(null);
 
   // Service categories data
   const serviceCategories = [
@@ -3548,18 +3559,128 @@ const Services = () => {
     alert(`${serviceName} added to cart!`);
   };
 
+  // Lenis smooth scrolling setup
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+      smoothTouch: false
+    });
+
+    function raf(time: number) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+
+    return () => {
+      lenis.destroy();
+    };
+  }, []);
+
+  // GSAP animations on mount
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      // Category tabs entrance
+      if (categoryTabsRef.current) {
+        gsap.from(categoryTabsRef.current, {
+          y: -40,
+          opacity: 0,
+          duration: 0.8,
+          ease: "power3.out",
+          delay: 0.2
+        });
+      }
+
+      // Service cards stagger animation
+      if (serviceCardsRef.current) {
+        const cards = serviceCardsRef.current.querySelectorAll(".service-card-animate");
+        gsap.from(cards, {
+          y: 60,
+          opacity: 0,
+          duration: 0.7,
+          stagger: 0.12,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: serviceCardsRef.current,
+            start: "top 80%",
+            toggleActions: "play none none none"
+          }
+        });
+      }
+
+      // Stats section animation
+      if (statsRef.current) {
+        gsap.from(statsRef.current.children, {
+          scale: 0.8,
+          opacity: 0,
+          duration: 0.6,
+          stagger: 0.15,
+          ease: "back.out(1.7)",
+          scrollTrigger: {
+            trigger: statsRef.current,
+            start: "top 85%",
+            toggleActions: "play none none none"
+          }
+        });
+      }
+
+      // Sidebar float animation
+      if (sidebarRef.current) {
+        gsap.from(sidebarRef.current, {
+          x: 60,
+          opacity: 0,
+          duration: 0.9,
+          ease: "power3.out",
+          delay: 0.4
+        });
+      }
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  // Re-animate service cards when category changes
+  useEffect(() => {
+    if (!serviceCardsRef.current) return;
+
+    const cards = serviceCardsRef.current.querySelectorAll(".service-card-animate");
+    
+    gsap.fromTo(
+      cards,
+      { y: 30, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 0.6,
+        stagger: 0.08,
+        ease: "power2.out",
+        clearProps: "all"
+      }
+    );
+  }, [selectedCategory]);
+
   return (
-    <div className="min-h-screen bg-white font-inter">
+    <div ref={containerRef} className="min-h-screen bg-white font-inter relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-20 left-10 w-96 h-96 bg-red-100/30 rounded-full blur-3xl animate-float-slow" />
+        <div className="absolute bottom-40 right-20 w-[500px] h-[500px] bg-orange-100/20 rounded-full blur-3xl animate-float-slower" />
+        <div className="absolute top-1/2 left-1/3 w-64 h-64 bg-pink-100/25 rounded-full blur-3xl animate-float-medium" />
+      </div>
+
       <Header />
 
       {/* Main Content */}
-      <div className="pt-0 pb-8">
+      <div className="pt-0 pb-8 relative z-10">
         <div className="max-w-[1400px] mx-auto pl-2 pr-6">
           <div className="flex gap-8">
             {/* Left Content Area */}
             <div className="flex-1 max-w-[1280px]">
               {/* Category Navigation */}
-              <div className="mb-6">
+              <div ref={categoryTabsRef} className="mb-6">
               <CategoryTabs
                 categories={serviceCategories}
                 activeCategory={selectedCategory}
@@ -3582,7 +3703,7 @@ const Services = () => {
                    selectedCategory === "car-insurance" ? "Insurance Claims" : "Scheduled Packages"}
                 </h2>
 
-          <div className="space-y-6">
+          <div ref={serviceCardsRef} className="space-y-6">
                   {(servicePackages[selectedCategory as keyof typeof servicePackages] || servicePackages["car-services"])
                     .map((pkg) => (
                     <Fragment key={`${selectedCategory}-${pkg.id}`}>
@@ -3591,6 +3712,7 @@ const Services = () => {
                           {pkg.sectionTitle}
                         </h3>
                       ) : (
+              <div className="service-card-animate">
               <ServiceCard
                 id={pkg.id}
                 name={pkg.name}
@@ -3615,6 +3737,7 @@ const Services = () => {
                 }
                 onAddToCart={handleAddToCart}
               />
+              </div>
                       )}
                     </Fragment>
             ))}
@@ -3623,7 +3746,7 @@ const Services = () => {
 
               {/* Statistics Section */}
               <div className="bg-gray-100 rounded-2xl mt-16 py-12 px-8">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div ref={statsRef} className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
                   <div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">150+ Services</h3>
                 <p className="text-gray-600">Comprehensive car care solutions</p>
@@ -3641,7 +3764,7 @@ const Services = () => {
             </div>
 
             {/* Right Sidebar - Select Manufacturer */}
-            <div className="w-full xl:w-[360px] flex-shrink-0 mt-10 xl:mt-0 xl:ml-16">
+            <div ref={sidebarRef} className="w-full xl:w-[360px] flex-shrink-0 mt-10 xl:mt-0 xl:ml-16">
               <div className="xl:sticky xl:top-20">
                 <BrandSelectorModal
                   variant="sidebar"

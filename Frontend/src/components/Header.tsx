@@ -1,9 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { ChevronDown, Menu, X, User, LogOut, Settings, ShoppingBag } from "lucide-react";
-import { useState } from "react";
+import { useState, useLayoutEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
+import { gsap } from "gsap";
+import { motion } from "framer-motion";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,6 +22,7 @@ const Header = () => {
   const location = useLocation();
   const isHomePage = location.pathname === '/';
   const { user, isAuthenticated, logout } = useAuth();
+  const navLinksRef = useRef<HTMLDivElement | null>(null);
 
   const handleLogout = async () => {
     await logout();
@@ -31,6 +34,73 @@ const Header = () => {
   
   const headerPadding = isTransparent ? "py-0 md:py-1 lg:py-2" : "py-2 md:py-3 lg:py-4";
   const logoHeights = isTransparent ? "h-24 md:h-32 lg:h-40" : "h-20 md:h-24 lg:h-28";
+
+  useLayoutEffect(() => {
+    if (!navLinksRef.current || !isTransparent) return;
+
+    const cleanups: Array<() => void> = [];
+    const activeTweens = new Map<HTMLElement, gsap.core.Tween>();
+
+    const ctx = gsap.context(() => {
+      const links = gsap.utils.toArray<HTMLAnchorElement>(".nav-link");
+
+      links.forEach((link) => {
+        const label = link.querySelector<HTMLSpanElement>(".nav-link-label");
+        const light = link.querySelector<HTMLElement>(".nav-link-light");
+
+        if (!label || !light) return;
+
+        gsap.set(light, { "--angle": "0deg", opacity: 0 });
+
+        const handleEnter = () => {
+          gsap.to(label, { y: -6, duration: 0.35, ease: "power3.out" });
+          gsap.to(link, { boxShadow: "0 12px 32px rgba(239,68,68,0.45)", duration: 0.4, ease: "power3.out" });
+          gsap.to(light, { opacity: 1, duration: 0.28, ease: "power2.out" });
+
+          const tween = gsap.to(light, {
+            duration: 1.4,
+            "--angle": "+=360deg",
+            ease: "none",
+            repeat: -1
+          });
+
+          activeTweens.set(light, tween);
+        };
+
+        const handleLeave = () => {
+          gsap.to(label, { y: 0, duration: 0.3, ease: "power3.inOut" });
+          gsap.to(link, { boxShadow: "0 0px 0px rgba(0,0,0,0)", duration: 0.3, ease: "power3.inOut" });
+          gsap.to(light, { opacity: 0, duration: 0.22, ease: "power2.in" });
+
+          const tween = activeTweens.get(light);
+          if (tween) {
+            tween.kill();
+            activeTweens.delete(light);
+          }
+
+          gsap.set(light, { "--angle": "0deg" });
+        };
+
+        link.addEventListener("mouseenter", handleEnter);
+        link.addEventListener("mouseleave", handleLeave);
+
+        cleanups.push(() => {
+          link.removeEventListener("mouseenter", handleEnter);
+          link.removeEventListener("mouseleave", handleLeave);
+          const tween = activeTweens.get(light);
+          if (tween) tween.kill();
+          activeTweens.delete(light);
+        });
+      });
+    }, navLinksRef);
+
+    return () => {
+      cleanups.forEach((cleanup) => cleanup());
+      activeTweens.forEach((tween) => tween.kill());
+      activeTweens.clear();
+      ctx.revert();
+    };
+  }, [isTransparent]);
 
   return (
     <header
@@ -61,43 +131,94 @@ const Header = () => {
             {/* Conditional Navigation - Individual links on landing page, Help dropdown on other pages */}
             {isTransparent ? (
               // Landing Page - Individual Navigation Links
-              <>
-                <a 
-                  href="#about-us" 
-                  className="text-sm text-white hover:text-red-500 hover:font-bold transition-all duration-200 hidden lg:block"
+              <div
+                ref={navLinksRef}
+                className="hidden lg:flex items-center gap-10"
+              >
+                <motion.a
+                  href="#about-us"
+                  initial={false}
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.97 }}
+                  transition={{ type: "spring", stiffness: 260, damping: 18 }}
+                  className="nav-link relative hidden lg:flex items-center justify-center overflow-hidden rounded-full border border-white/25 px-6 py-2 text-sm font-medium tracking-[0.08em] text-white/90 backdrop-blur-sm transition-colors duration-200 hover:text-white"
                   onClick={(e) => {
                     e.preventDefault();
-                    const element = document.getElementById('about-us');
+                    const element = document.getElementById("about-us");
                     if (element) {
-                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      element.scrollIntoView({ behavior: "smooth", block: "start" });
                     }
                   }}
                 >
-                  About Us
-                </a>
-                
-                <a 
-                  href="/services" 
-                  className="text-sm text-white hover:text-red-500 hover:font-bold transition-all duration-200 hidden lg:block cursor-pointer"
+                  <span className="nav-link-label relative z-20 select-none">About Us</span>
+                  <span className="pointer-events-none absolute inset-0 rounded-full bg-white/5 opacity-40 mix-blend-screen"></span>
+                  <span
+                    className="nav-link-light pointer-events-none absolute inset-0 rounded-full mix-blend-screen"
+                    style={{
+                      background:
+                        "conic-gradient(from var(--angle, 0deg), rgba(239,68,68,0) 0deg, rgba(239,68,68,0.9) 16deg, rgba(239,68,68,0) 32deg)",
+                      WebkitMask:
+                        "radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 1px))",
+                      mask: "radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 1px))",
+                      opacity: 0
+                    }}
+                  ></span>
+                </motion.a>
+
+                <motion.a
+                  href="/services"
+                  initial={false}
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.97 }}
+                  transition={{ type: "spring", stiffness: 260, damping: 18 }}
+                  className="nav-link relative hidden lg:flex items-center justify-center overflow-hidden rounded-full border border-white/25 px-6 py-2 text-sm font-medium tracking-[0.08em] text-white/90 backdrop-blur-sm transition-colors duration-200 hover:text-white"
                   onClick={(e) => {
                     e.preventDefault();
-                    navigate('/services');
+                    navigate("/services");
                   }}
                 >
-                  Services
-                </a>
-                
-                <a 
-                  href="/contact-us" 
-                  className="text-sm text-white hover:text-red-500 hover:font-bold transition-all duration-200 hidden lg:block cursor-pointer"
+                  <span className="nav-link-label relative z-20 select-none">Services</span>
+                  <span className="pointer-events-none absolute inset-0 rounded-full bg-white/5 opacity-40 mix-blend-screen"></span>
+                  <span
+                    className="nav-link-light pointer-events-none absolute inset-0 rounded-full mix-blend-screen"
+                    style={{
+                      background:
+                        "conic-gradient(from var(--angle, 0deg), rgba(239,68,68,0) 0deg, rgba(239,68,68,0.9) 16deg, rgba(239,68,68,0) 32deg)",
+                      WebkitMask:
+                        "radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 1px))",
+                      mask: "radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 1px))",
+                      opacity: 0
+                    }}
+                  ></span>
+                </motion.a>
+
+                <motion.a
+                  href="/contact-us"
+                  initial={false}
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.97 }}
+                  transition={{ type: "spring", stiffness: 260, damping: 18 }}
+                  className="nav-link relative hidden lg:flex items-center justify-center overflow-hidden rounded-full border border-white/25 px-6 py-2 text-sm font-medium tracking-[0.08em] text-white/90 backdrop-blur-sm transition-colors duration-200 hover:text-white"
                   onClick={(e) => {
                     e.preventDefault();
-                    navigate('/contact-us');
+                    navigate("/contact-us");
                   }}
                 >
-                  Contact Us
-                </a>
-              </>
+                  <span className="nav-link-label relative z-20 select-none">Contact Us</span>
+                  <span className="pointer-events-none absolute inset-0 rounded-full bg-white/5 opacity-40 mix-blend-screen"></span>
+                  <span
+                    className="nav-link-light pointer-events-none absolute inset-0 rounded-full mix-blend-screen"
+                    style={{
+                      background:
+                        "conic-gradient(from var(--angle, 0deg), rgba(239,68,68,0) 0deg, rgba(239,68,68,0.9) 16deg, rgba(239,68,68,0) 32deg)",
+                      WebkitMask:
+                        "radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 1px))",
+                      mask: "radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 1px))",
+                      opacity: 0
+                    }}
+                  ></span>
+                </motion.a>
+              </div>
             ) : (
               // Other Pages - Help Dropdown
               <DropdownMenu>
