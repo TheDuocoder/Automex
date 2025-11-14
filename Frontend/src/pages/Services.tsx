@@ -3634,7 +3634,7 @@ const Services = () => {
           opacity: 0,
           duration: 0.9,
           ease: "power3.out",
-          delay: 0.4
+          delay: 0.5
         });
       }
     }, containerRef);

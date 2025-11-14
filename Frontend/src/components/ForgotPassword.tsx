@@ -252,12 +252,12 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
   };
 
   return (
-    <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-6 relative">
+    <div className="w-full max-w-[540px] bg-black/5 backdrop-blur-sm border border-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.3),0_0_60px_rgba(255,81,47,0.15),0_0_100px_rgba(221,36,118,0.1)] rounded-3xl p-8 relative">
       {/* Close Button */}
       {onClose && (
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+          className="absolute top-4 right-4 text-white/70 hover:text-white transition-colors"
           aria-label="Close"
         >
           <X className="w-5 h-5" />
@@ -265,61 +265,69 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
       )}
 
       {/* Logo/Icon */}
-      <div className="flex justify-center mb-2">
+      <div className="flex justify-center mb-4">
         <img
-          src="/images/Landing_page_images/Red_Automex.png"
+          src="/images/Landing_page_images/Red_circle_Automex.png"
           alt="AutoMex Logo"
-          className="h-32 w-auto object-contain"
+          className="h-32 w-auto object-contain drop-shadow-2xl"
           onError={(e) => {
-            e.currentTarget.src = "/images/Landing_page_images/AUTOMEX.png";
+            e.currentTarget.src = "/images/Landing_page_images/Red_Automex.png";
           }}
         />
       </div>
 
       {/* Title */}
-      <div className="bg-gradient-to-r from-gray-100 via-gray-50 to-gray-100 rounded-lg py-2 px-3 mb-3">
-        <h2 className="text-lg font-bold mb-0.5 text-center text-black">
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold text-center text-white drop-shadow-2xl">
           {step === 1 ? "Forgot Password" : "Reset Password"}
         </h2>
-        <p className="text-xs text-gray-600 text-center">
+        <p className="text-sm text-white/80 text-center mt-2">
           {step === 1
             ? "Enter your email to receive a reset token"
-            : "Enter the token from your email and your new password"}
+            : "Enter your new password"}
         </p>
       </div>
 
       {/* Step 1: Email Form */}
       {step === 1 && (
         <form onSubmit={handleEmailSubmit}>
-          <div className="mb-4">
-            <label className="block text-xs font-semibold text-gray-900 mb-1">
-              Email <span className="text-red-500">*</span>
-            </label>
+          <div className="mb-6">
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
               <Input
                 type="email"
                 value={emailData.email}
                 onChange={handleEmailChange}
                 placeholder="Enter your email address"
-                className={`w-full h-9 pl-10 pr-3 text-sm rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent ${
-                  errors.email ? "border-red-500" : "border-gray-300"
-                }`}
+                className="w-full h-12 pl-12 pr-4 text-sm bg-white/60 backdrop-blur-sm border-0 rounded-xl focus:ring-2 focus:ring-white/50 text-gray-900 placeholder-gray-700 shadow-[0_4px_20px_rgba(0,0,0,0.15),0_2px_10px_rgba(255,81,47,0.1)]"
               />
             </div>
             {errors.email && (
-              <p className="text-xs text-red-500 mt-1">{errors.email}</p>
+              <p className="text-xs text-red-300 mt-1">{errors.email}</p>
             )}
           </div>
 
           <Button
             type="submit"
             disabled={isLoading}
-            className="w-full h-9 bg-primary hover:bg-primary/90 text-white text-sm font-semibold rounded-lg mb-3 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full h-12 text-white text-base font-semibold rounded-xl mb-4 disabled:opacity-50 disabled:cursor-not-allowed uppercase transition-all duration-500 shadow-[0_0_20px_rgba(255,81,47,0.4),0_8px_30px_rgba(221,36,118,0.3),0_4px_15px_rgba(0,0,0,0.2)]"
+            style={{
+              backgroundImage: 'linear-gradient(to right, #FF512F 0%, #DD2476 51%, #FF512F 100%)',
+              backgroundSize: '200% auto',
+              backgroundPosition: 'left center'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundPosition = 'right center';
+              e.currentTarget.style.boxShadow = '0 0 30px rgba(255,81,47,0.6), 0 12px 40px rgba(221,36,118,0.5), 0 6px 20px rgba(0,0,0,0.3)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundPosition = 'left center';
+              e.currentTarget.style.boxShadow = '0 0 20px rgba(255,81,47,0.4), 0 8px 30px rgba(221,36,118,0.3), 0 4px 15px rgba(0,0,0,0.2)';
+            }}
           >
             {isLoading ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
                 Sending...
               </>
             ) : (
@@ -327,28 +335,36 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
             )}
           </Button>
 
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={onBackToLogin}
-            className="w-full h-9 text-sm text-gray-600 hover:text-gray-900 flex items-center justify-center gap-2"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Login
-          </Button>
+          <div className="text-center">
+            <button
+              type="button"
+              onClick={onBackToLogin}
+              className="text-sm font-medium transition-colors inline-flex items-center gap-2"
+              style={{ color: '#DD2476' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#FF512F';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = '#DD2476';
+              }}
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Login
+            </button>
+          </div>
         </form>
       )}
 
       {/* Step 2: Token + New Password Form */}
       {step === 2 && (
         <form onSubmit={handleResetSubmit}>
-                    {/* Info Message */}
-          <div className="mb-3 p-2 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-xs text-blue-800">
+          {/* Info Message */}
+          <div className="mb-4 p-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl">
+            <p className="text-xs text-white/90">
               <strong>Password Reset Token:</strong> The token has been generated for{" "}
               <span className="font-semibold">{emailData.email}</span>. 
               {resetToken ? (
-                <span className="block mt-1 text-green-700 font-semibold">
+                <span className="block mt-1 text-green-300 font-semibold">
                   ✓ Token received! You can now set your new password below.
                 </span>
               ) : (
@@ -358,21 +374,16 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
           </div>
 
           {/* New Password Input */}
-          <div className="mb-3">
-            <label className="block text-xs font-semibold text-gray-900 mb-1">
-              New Password <span className="text-red-500">*</span>
-            </label>
+          <div className="mb-4">
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
               <Input
                 type={showPassword ? "text" : "password"}
                 name="newPassword"
                 value={resetData.newPassword}
                 onChange={handleResetChange}
-                placeholder="Enter new password (min. 8 characters)"
-                className={`w-full h-9 pl-10 pr-10 text-sm rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent ${
-                  errors.newPassword ? "border-red-500" : "border-gray-300"
-                }`}
+                placeholder="New password (min. 8 characters)"
+                className="w-full h-12 pl-12 pr-12 text-sm bg-white/60 backdrop-blur-sm border-0 rounded-xl focus:ring-2 focus:ring-white/50 text-gray-900 placeholder-gray-700 shadow-[0_4px_20px_rgba(0,0,0,0.15),0_2px_10px_rgba(255,81,47,0.1)]"
               />
               <button
                 type="button"
@@ -380,33 +391,28 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
               >
                 {showPassword ? (
-                  <EyeOff className="w-4 h-4" />
+                  <EyeOff className="w-5 h-5" />
                 ) : (
-                  <Eye className="w-4 h-4" />
+                  <Eye className="w-5 h-5" />
                 )}
               </button>
             </div>
             {errors.newPassword && (
-              <p className="text-xs text-red-500 mt-1">{errors.newPassword}</p>
+              <p className="text-xs text-red-300 mt-1">{errors.newPassword}</p>
             )}
           </div>
 
           {/* Confirm Password Input */}
-          <div className="mb-4">
-            <label className="block text-xs font-semibold text-gray-900 mb-1">
-              Confirm Password <span className="text-red-500">*</span>
-            </label>
+          <div className="mb-6">
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
               <Input
                 type={showConfirmPassword ? "text" : "password"}
                 name="confirmPassword"
                 value={resetData.confirmPassword}
                 onChange={handleResetChange}
                 placeholder="Confirm new password"
-                className={`w-full h-9 pl-10 pr-10 text-sm rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent ${
-                  errors.confirmPassword ? "border-red-500" : "border-gray-300"
-                }`}
+                className="w-full h-12 pl-12 pr-12 text-sm bg-white/60 backdrop-blur-sm border-0 rounded-xl focus:ring-2 focus:ring-white/50 text-gray-900 placeholder-gray-700 shadow-[0_4px_20px_rgba(0,0,0,0.15),0_2px_10px_rgba(255,81,47,0.1)]"
               />
               <button
                 type="button"
@@ -414,14 +420,14 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
               >
                 {showConfirmPassword ? (
-                  <EyeOff className="w-4 h-4" />
+                  <EyeOff className="w-5 h-5" />
                 ) : (
-                  <Eye className="w-4 h-4" />
+                  <Eye className="w-5 h-5" />
                 )}
               </button>
             </div>
             {errors.confirmPassword && (
-              <p className="text-xs text-red-500 mt-1">
+              <p className="text-xs text-red-300 mt-1">
                 {errors.confirmPassword}
               </p>
             )}
@@ -430,11 +436,24 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
           <Button
             type="submit"
             disabled={isLoading}
-            className="w-full h-9 bg-primary hover:bg-primary/90 text-white text-sm font-semibold rounded-lg mb-3 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full h-12 text-white text-base font-semibold rounded-xl mb-4 disabled:opacity-50 disabled:cursor-not-allowed uppercase transition-all duration-500 shadow-[0_0_20px_rgba(255,81,47,0.4),0_8px_30px_rgba(221,36,118,0.3),0_4px_15px_rgba(0,0,0,0.2)]"
+            style={{
+              backgroundImage: 'linear-gradient(to right, #FF512F 0%, #DD2476 51%, #FF512F 100%)',
+              backgroundSize: '200% auto',
+              backgroundPosition: 'left center'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundPosition = 'right center';
+              e.currentTarget.style.boxShadow = '0 0 30px rgba(255,81,47,0.6), 0 12px 40px rgba(221,36,118,0.5), 0 6px 20px rgba(0,0,0,0.3)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundPosition = 'left center';
+              e.currentTarget.style.boxShadow = '0 0 20px rgba(255,81,47,0.4), 0 8px 30px rgba(221,36,118,0.3), 0 4px 15px rgba(0,0,0,0.2)';
+            }}
           >
             {isLoading ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
                 Resetting...
               </>
             ) : (
@@ -442,35 +461,46 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
             )}
           </Button>
 
-          <div className="space-y-2">
-            <div className="flex gap-2">
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={() => {
-                  setStep(1);
-                  clearResetToken();
-                  setResetData({ newPassword: "", confirmPassword: "" });
-                }}
-                className="flex-1 h-9 text-sm text-gray-600 hover:text-gray-900 flex items-center justify-center gap-2"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                Change Email
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={() => {
-                  clearResetToken();
-                  if (onBackToLogin) {
-                    onBackToLogin();
-                  }
-                }}
-                className="flex-1 h-9 text-sm text-gray-600 hover:text-gray-900"
-              >
-                Cancel
-              </Button>
-            </div>
+          <div className="flex gap-3 justify-center">
+            <button
+              type="button"
+              onClick={() => {
+                setStep(1);
+                clearResetToken();
+                setResetData({ newPassword: "", confirmPassword: "" });
+              }}
+              className="text-sm font-medium transition-colors inline-flex items-center gap-2"
+              style={{ color: '#DD2476' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#FF512F';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = '#DD2476';
+              }}
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Change Email
+            </button>
+            <span className="text-white/50">|</span>
+            <button
+              type="button"
+              onClick={() => {
+                clearResetToken();
+                if (onBackToLogin) {
+                  onBackToLogin();
+                }
+              }}
+              className="text-sm font-medium transition-colors"
+              style={{ color: '#DD2476' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#FF512F';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = '#DD2476';
+              }}
+            >
+              Cancel
+            </button>
           </div>
         </form>
       )}

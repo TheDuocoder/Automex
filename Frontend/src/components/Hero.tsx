@@ -144,7 +144,7 @@ const Hero = () => {
           </div>
 
           {/* Right side - Login/Register Form */}
-          <div className="hero-auth-card w-full md:w-auto">
+          <div className="hero-auth-card w-full md:w-[540px]">
             {!showRegisterForm ? (
               <Login 
                 onSwitchToRegister={() => setShowRegisterForm(true)} 
