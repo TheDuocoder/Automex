@@ -42,11 +42,6 @@ const Header = () => {
     { label: "About Us", type: "section", target: "about-us" },
     { label: "Services", type: "route", href: "/services" },
     { label: "Contact Us", type: "route", href: "/contact-us" },
-    { label: "FAQ", type: "section", target: "faq" },
-    { label: "Offers", type: "section", target: "offers" },
-    { label: "Reviews", type: "section", target: "reviews" },
-    { label: "Terms", type: "section", target: "terms" },
-    { label: "Privacy", type: "section", target: "privacy" },
   ];
 
   useLayoutEffect(() => {
@@ -126,8 +121,8 @@ const Header = () => {
           : "bg-black shadow-md relative"
       )}
     >
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="flex items-center justify-between gap-6">
+      <div className="container mx-auto px-4 md:px-6 lg:px-8">
+        <div className="grid md:grid-cols-[1fr_auto] gap-8 md:gap-12 lg:gap-16 items-center">
           <div
             className={cn(
               "flex items-center cursor-pointer flex-shrink-0",
@@ -145,14 +140,14 @@ const Header = () => {
             />
           </div>
 
-          <div className="flex items-center justify-end gap-4 flex-1">
+          <div className="flex items-center justify-end gap-4">
             <motion.div
               ref={navLinksRef}
               initial={{ opacity: 0, x: 40 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
               className={cn(
-                "hidden lg:flex items-center gap-6 flex-1 justify-end",
+                "hidden lg:flex items-center gap-6 justify-center w-[540px]",
                 isTransparent && "-mt-2"
               )}
             >
@@ -201,13 +196,14 @@ const Header = () => {
                 </motion.a>
               ))}
             </motion.div>
+          </div>
 
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className={cn("flex items-center gap-3 md:gap-4 lg:gap-6 flex-shrink-0", isTransparent && "-mt-2 md:-mt-4 lg:-mt-6")}
-            >
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className={cn("flex items-center gap-3 md:gap-4 lg:gap-6 flex-shrink-0", isTransparent && "-mt-2 md:-mt-4 lg:-mt-6")}
+          >
               {/* Profile Menu (if authenticated) */}
               {isAuthenticated && (
                 <DropdownMenu>
@@ -283,7 +279,6 @@ const Header = () => {
                 {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
             </motion.div>
-          </div>
         </div>
 
         {/* Mobile Menu */}
