@@ -342,14 +342,6 @@ const BrandSelectorModal = ({
               </div>
             </div>
             <div className="flex items-center gap-2">
-              {stage === "fuel" && (
-                <button
-                  onClick={() => clearModel()}
-                  className="text-xs font-semibold text-gray-600 hover:text-gray-900"
-                >
-                  Change model
-                </button>
-              )}
               <button
                 onClick={() => {
                   clearBrand();
