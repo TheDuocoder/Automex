@@ -35,6 +35,20 @@ const Header = () => {
   const headerPadding = isTransparent ? "py-0 md:py-1 lg:py-2" : "py-2 md:py-3 lg:py-4";
   const logoHeights = isTransparent ? "h-24 md:h-32 lg:h-40" : "h-20 md:h-24 lg:h-28";
 
+  const navigationLinks: Array<
+    | { label: string; type: "route"; href: string }
+    | { label: string; type: "section"; target: string }
+  > = [
+    { label: "About Us", type: "section", target: "about-us" },
+    { label: "Services", type: "route", href: "/services" },
+    { label: "Contact Us", type: "route", href: "/contact-us" },
+    { label: "FAQ", type: "section", target: "faq" },
+    { label: "Offers", type: "section", target: "offers" },
+    { label: "Reviews", type: "section", target: "reviews" },
+    { label: "Terms", type: "section", target: "terms" },
+    { label: "Privacy", type: "section", target: "privacy" },
+  ];
+
   useLayoutEffect(() => {
     if (!navLinksRef.current || !isTransparent) return;
 
@@ -113,44 +127,65 @@ const Header = () => {
       )}
     >
       <div className="container mx-auto px-4 md:px-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3 md:gap-6">
-            <div className={cn("flex items-center cursor-pointer", isTransparent && "-mt-2 md:-mt-3 lg:-mt-4")} onClick={() => navigate('/')}>
-              <img 
-                src="/images/Landing_page_images/Red_Automex.png" 
-                alt="AutoMex Logo" 
-                className={cn("w-auto object-contain", logoHeights)}
-                onError={(e) => {
-                  e.currentTarget.src = "/images/Landing_page_images/AUTOMEX.png";
-                }}
-              />
-            </div>
+        <div className="flex items-center justify-between gap-6">
+          <div
+            className={cn(
+              "flex items-center cursor-pointer flex-shrink-0",
+              isTransparent && "-mt-2 md:-mt-3 lg:-mt-4"
+            )}
+            onClick={() => navigate('/')}
+          >
+            <img 
+              src="/images/Landing_page_images/Red_Automex.png" 
+              alt="AutoMex Logo" 
+              className={cn("w-auto object-contain", logoHeights)}
+              onError={(e) => {
+                e.currentTarget.src = "/images/Landing_page_images/AUTOMEX.png";
+              }}
+            />
           </div>
 
-          <div className={cn("flex items-center gap-3 md:gap-4 lg:gap-6", isTransparent && "-mt-4 md:-mt-6 lg:-mt-8 md:mr-8 lg:mr-16")}>
-            {/* Conditional Navigation - Individual links on landing page, Help dropdown on other pages */}
-            {isTransparent ? (
-              // Landing Page - Individual Navigation Links
-              <div
-                ref={navLinksRef}
-                className="hidden lg:flex items-center gap-10"
-              >
+          <div className="flex items-center justify-end gap-4 flex-1">
+            <motion.div
+              ref={navLinksRef}
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className={cn(
+                "hidden lg:flex items-center gap-6 flex-1 justify-end",
+                isTransparent && "-mt-2"
+              )}
+            >
+              {navigationLinks.map((item) => (
                 <motion.a
-                  href="#about-us"
+                  key={item.label}
+                  href={
+                    item.type === "route"
+                      ? item.href
+                      : `/#${item.target}`
+                  }
                   initial={false}
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.97 }}
                   transition={{ type: "spring", stiffness: 260, damping: 18 }}
-                  className="nav-link relative hidden lg:flex items-center justify-center overflow-hidden rounded-full border border-white/25 px-6 py-2 text-sm font-medium tracking-[0.08em] text-white/90 backdrop-blur-sm transition-colors duration-200 hover:text-white"
+                  className="nav-link relative lg:flex items-center justify-center overflow-hidden rounded-full border border-white/25 px-4 py-2 text-xs xl:text-sm font-medium tracking-[0.08em] text-white/90 backdrop-blur-sm transition-colors duration-200 hover:text-white"
                   onClick={(e) => {
-                    e.preventDefault();
-                    const element = document.getElementById("about-us");
-                    if (element) {
-                      element.scrollIntoView({ behavior: "smooth", block: "start" });
+                    if (item.type === "route") {
+                      e.preventDefault();
+                      navigate(item.href);
+                      return;
+                    }
+
+                    if (location.pathname === '/') {
+                      e.preventDefault();
+                      const element = document.getElementById(item.target);
+                      if (element) {
+                        element.scrollIntoView({ behavior: "smooth", block: "start" });
+                      }
                     }
                   }}
                 >
-                  <span className="nav-link-label relative z-20 select-none">About Us</span>
+                  <span className="nav-link-label relative z-20 select-none">{item.label}</span>
                   <span className="pointer-events-none absolute inset-0 rounded-full bg-white/5 opacity-40 mix-blend-screen"></span>
                   <span
                     className="nav-link-light pointer-events-none absolute inset-0 rounded-full mix-blend-screen"
@@ -164,285 +199,90 @@ const Header = () => {
                     }}
                   ></span>
                 </motion.a>
+              ))}
+            </motion.div>
 
-                <motion.a
-                  href="/services"
-                  initial={false}
-                  whileHover={{ scale: 1.04 }}
-                  whileTap={{ scale: 0.97 }}
-                  transition={{ type: "spring", stiffness: 260, damping: 18 }}
-                  className="nav-link relative hidden lg:flex items-center justify-center overflow-hidden rounded-full border border-white/25 px-6 py-2 text-sm font-medium tracking-[0.08em] text-white/90 backdrop-blur-sm transition-colors duration-200 hover:text-white"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    navigate("/services");
-                  }}
-                >
-                  <span className="nav-link-label relative z-20 select-none">Services</span>
-                  <span className="pointer-events-none absolute inset-0 rounded-full bg-white/5 opacity-40 mix-blend-screen"></span>
-                  <span
-                    className="nav-link-light pointer-events-none absolute inset-0 rounded-full mix-blend-screen"
-                    style={{
-                      background:
-                        "conic-gradient(from var(--angle, 0deg), rgba(239,68,68,0) 0deg, rgba(239,68,68,0.9) 16deg, rgba(239,68,68,0) 32deg)",
-                      WebkitMask:
-                        "radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 1px))",
-                      mask: "radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 1px))",
-                      opacity: 0
-                    }}
-                  ></span>
-                </motion.a>
-
-                <motion.a
-                  href="/contact-us"
-                  initial={false}
-                  whileHover={{ scale: 1.04 }}
-                  whileTap={{ scale: 0.97 }}
-                  transition={{ type: "spring", stiffness: 260, damping: 18 }}
-                  className="nav-link relative hidden lg:flex items-center justify-center overflow-hidden rounded-full border border-white/25 px-6 py-2 text-sm font-medium tracking-[0.08em] text-white/90 backdrop-blur-sm transition-colors duration-200 hover:text-white"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    navigate("/contact-us");
-                  }}
-                >
-                  <span className="nav-link-label relative z-20 select-none">Contact Us</span>
-                  <span className="pointer-events-none absolute inset-0 rounded-full bg-white/5 opacity-40 mix-blend-screen"></span>
-                  <span
-                    className="nav-link-light pointer-events-none absolute inset-0 rounded-full mix-blend-screen"
-                    style={{
-                      background:
-                        "conic-gradient(from var(--angle, 0deg), rgba(239,68,68,0) 0deg, rgba(239,68,68,0.9) 16deg, rgba(239,68,68,0) 32deg)",
-                      WebkitMask:
-                        "radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 1px))",
-                      mask: "radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 1px))",
-                      opacity: 0
-                    }}
-                  ></span>
-                </motion.a>
-              </div>
-            ) : (
-              // Other Pages - Help Dropdown
-              <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="text-sm text-white hover-automex hidden lg:flex items-center gap-1">
-                  Help
-                  <ChevronDown className="h-3 w-3" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48 bg-white">
-                <DropdownMenuItem className="cursor-pointer">
-                  <a 
-                    href="#about-us" 
-                    className="w-full text-gray-700 hover:text-gray-900"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      const element = document.getElementById('about-us');
-                      if (element) {
-                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                      }
-                    }}
-                  >
-                    About Us
-                  </a>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer">
-                  <a 
-                    href="/contact-us" 
-                    className="w-full text-gray-700 hover:text-gray-900"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      navigate('/contact-us');
-                    }}
-                  >
-                    Contact Us
-                  </a>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer">
-                  <a 
-                    href="#faq" 
-                    className="w-full text-gray-700 hover:text-gray-900"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      const element = document.getElementById('faq');
-                      if (element) {
-                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                      }
-                    }}
-                  >
-                    FAQ
-                  </a>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer">
-                  <a 
-                    href="#offers" 
-                    className="w-full text-gray-700 hover:text-gray-900"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      const element = document.getElementById('offers');
-                      if (element) {
-                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                      }
-                    }}
-                  >
-                    Offers
-                  </a>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer">
-                  <a 
-                    href="#reviews" 
-                    className="w-full text-gray-700 hover:text-gray-900"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      const element = document.getElementById('reviews');
-                      if (element) {
-                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                      }
-                    }}
-                  >
-                    Reviews
-                  </a>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className="cursor-pointer">
-                  <a 
-                    href="#terms" 
-                    className="w-full text-gray-700 hover:text-gray-900"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      const element = document.getElementById('terms');
-                      if (element) {
-                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                      }
-                    }}
-                  >
-                    Terms
-                  </a>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer">
-                  <a 
-                    href="#privacy" 
-                    className="w-full text-gray-700 hover:text-gray-900"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      const element = document.getElementById('privacy');
-                      if (element) {
-                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                      }
-                    }}
-                  >
-                    Privacy
-                  </a>
-                </DropdownMenuItem>
-                {isAuthenticated && (
-                  <>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem className="cursor-pointer">
-                      <a 
-                        href="/services" 
-                        className="w-full text-gray-700 hover:text-gray-900"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          navigate('/services');
-                        }}
-                      >
-                        Services
-                      </a>
-                    </DropdownMenuItem>
-                  </>
-                )}
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className="cursor-pointer">
-                  <a 
-                    href="#how-it-works" 
-                    className="w-full text-gray-700 hover:text-gray-900"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      const element = document.getElementById('how-it-works');
-                      if (element) {
-                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                      }
-                    }}
-                  >
-                    How It Works
-                  </a>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            )}
-
-            {/* Profile Menu (if authenticated) */}
-            {isAuthenticated && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className="hidden lg:flex items-center gap-2 text-white hover:bg-white/10 h-9 px-3"
-                    title={`Logged in as: ${user?.full_name || user?.email?.split('@')[0] || 'User'}`}
-                  >
-                    <div className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center" title={`${user?.full_name || user?.email?.split('@')[0] || 'User'}`}>
-                      <User className="h-5 w-5 text-white" />
-                    </div>
-                    <span className="text-sm font-medium">
-                      {user?.full_name || user?.email?.split('@')[0] || 'User'}
-                    </span>
-                    <ChevronDown className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56 bg-white">
-                  <DropdownMenuLabel className="font-normal">
-                    <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">
-                        {user?.full_name || 'User'}
-                      </p>
-                      <p className="text-xs leading-none text-muted-foreground">
-                        {user?.email}
-                      </p>
-                      {user?.role && (
-                        <p className="text-xs leading-none text-primary mt-1">
-                          Role: {user.role.name}
-                        </p>
-                      )}
-                    </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    onClick={() => navigate('/services')}
-                    className="cursor-pointer"
-                  >
-                    <ShoppingBag className="mr-2 h-4 w-4" />
-                    <span>My Services</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => navigate('/profile')}
-                    className="cursor-pointer"
-                  >
-                    <User className="mr-2 h-4 w-4" />
-                    <span>Profile</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer">
-                    <Settings className="mr-2 h-4 w-4" />
-                    <span>Settings</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    onClick={handleLogout}
-                    className="cursor-pointer text-red-600 focus:text-red-600"
-                  >
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span>Logout</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
-
-            {/* Mobile Menu Button */}
-            <button
-              className="md:hidden text-white"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label="Toggle menu"
-              title={isAuthenticated ? `Menu - ${user?.full_name || user?.email?.split('@')[0] || 'User'}` : 'Toggle menu'}
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className={cn("flex items-center gap-3 md:gap-4 lg:gap-6 flex-shrink-0", isTransparent && "-mt-2 md:-mt-4 lg:-mt-6")}
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
+              {/* Profile Menu (if authenticated) */}
+              {isAuthenticated && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="hidden lg:flex items-center gap-2 text-white hover:bg-white/10 h-9 px-3"
+                      title={`Logged in as: ${user?.full_name || user?.email?.split('@')[0] || 'User'}`}
+                    >
+                      <div className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center" title={`${user?.full_name || user?.email?.split('@')[0] || 'User'}`}>
+                        <User className="h-5 w-5 text-white" />
+                      </div>
+                      <span className="text-sm font-medium">
+                        {user?.full_name || user?.email?.split('@')[0] || 'User'}
+                      </span>
+                      <ChevronDown className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56 bg-white">
+                    <DropdownMenuLabel className="font-normal">
+                      <div className="flex flex-col space-y-1">
+                        <p className="text-sm font-medium leading-none">
+                          {user?.full_name || 'User'}
+                        </p>
+                        <p className="text-xs leading-none text-muted-foreground">
+                          {user?.email}
+                        </p>
+                        {user?.role && (
+                          <p className="text-xs leading-none text-primary mt-1">
+                            Role: {user.role.name}
+                          </p>
+                        )}
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onClick={() => navigate('/services')}
+                      className="cursor-pointer"
+                    >
+                      <ShoppingBag className="mr-2 h-4 w-4" />
+                      <span>My Services</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => navigate('/profile')}
+                      className="cursor-pointer"
+                    >
+                      <User className="mr-2 h-4 w-4" />
+                      <span>Profile</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="cursor-pointer">
+                      <Settings className="mr-2 h-4 w-4" />
+                      <span>Settings</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onClick={handleLogout}
+                      className="cursor-pointer text-red-600 focus:text-red-600"
+                    >
+                      <LogOut className="mr-2 h-4 w-4" />
+                      <span>Logout</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
+
+              {/* Mobile Menu Button */}
+              <button
+                className="md:hidden text-white"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-label="Toggle menu"
+                title={isAuthenticated ? `Menu - ${user?.full_name || user?.email?.split('@')[0] || 'User'}` : 'Toggle menu'}
+              >
+                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
+            </motion.div>
           </div>
         </div>
 
@@ -519,21 +359,6 @@ const Header = () => {
               >
                 Reviews
               </a>
-              <a 
-                href="#how-it-works" 
-                className="text-sm text-white hover-automex py-2"
-                onClick={(e) => {
-                  e.preventDefault();
-                  const element = document.getElementById('how-it-works');
-                  if (element) {
-                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  }
-                  setMobileMenuOpen(false);
-                }}
-              >
-                How It Works
-              </a>
-              
               {/* Legal & Policies */}
               <div className="border-t border-white/20 mt-2 pt-2">
                 <div className="text-xs text-white/70 mb-2 px-0">Legal & Policies</div>

@@ -41,12 +41,14 @@ const Services = () => {
 
   const [selectedCategory, setSelectedCategory] = useState("car-services");
   const [selectedBrand, setSelectedBrand] = useState("");
+  const [sidebarTop, setSidebarTop] = useState(96);
   
   const containerRef = useRef<HTMLDivElement>(null);
   const categoryTabsRef = useRef<HTMLDivElement>(null);
   const serviceCardsRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const sidebarContentRef = useRef<HTMLDivElement>(null);
 
   // Service categories data
   const serviceCategories = [
@@ -3661,6 +3663,88 @@ const Services = () => {
     );
   }, [selectedCategory]);
 
+  // Measure sidebar offset once (and on resize) so it matches service content while staying fixed
+  useLayoutEffect(() => {
+    const updateOffset = () => {
+      if (!categoryTabsRef.current) return;
+      const rect = categoryTabsRef.current.getBoundingClientRect();
+      setSidebarTop(Math.max(80, Math.round(rect.top)));
+    };
+
+    updateOffset();
+    window.addEventListener("resize", updateOffset);
+    return () => window.removeEventListener("resize", updateOffset);
+  }, []);
+
+  // Prevent page scroll when hovering over sidebar and allow only sidebar scroll
+  useEffect(() => {
+    const sidebarElement = sidebarContentRef.current;
+    if (!sidebarElement) return;
+
+    let isHovering = false;
+
+    const handleMouseEnter = () => {
+      isHovering = true;
+    };
+
+    const handleMouseLeave = () => {
+      isHovering = false;
+    };
+
+    const handleWheel = (e: WheelEvent) => {
+      if (!isHovering) return;
+
+      // Always prevent page scroll when hovering over sidebar
+      e.preventDefault();
+      e.stopPropagation();
+
+      // Find the element that the mouse is actually over
+      const target = e.target as HTMLElement;
+      
+      // Check if target or its parents are scrollable
+      let scrollableElement: HTMLElement | null = null;
+      let current: HTMLElement | null = target;
+
+      while (current && current !== sidebarElement) {
+        const style = window.getComputedStyle(current);
+        const hasOverflow = style.overflow === 'auto' || style.overflow === 'scroll' || 
+                           style.overflowY === 'auto' || style.overflowY === 'scroll';
+        
+        if (hasOverflow && current.scrollHeight > current.clientHeight) {
+          scrollableElement = current;
+          break;
+        }
+        current = current.parentElement;
+      }
+
+      // If no scrollable element found in the path, find the main scrollable container
+      if (!scrollableElement) {
+        scrollableElement = sidebarElement.querySelector('[class*="overflow-y-auto"], [class*="overflow-auto"]') as HTMLElement;
+      }
+
+      if (scrollableElement && scrollableElement.scrollHeight > scrollableElement.clientHeight) {
+        const { scrollTop, scrollHeight, clientHeight } = scrollableElement;
+        const isAtTop = scrollTop <= 0;
+        const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
+
+        // If we can scroll within the element, scroll it
+        if ((!isAtTop && e.deltaY < 0) || (!isAtBottom && e.deltaY > 0)) {
+          scrollableElement.scrollTop += e.deltaY;
+        }
+      }
+    };
+
+    sidebarElement.addEventListener('mouseenter', handleMouseEnter);
+    sidebarElement.addEventListener('mouseleave', handleMouseLeave);
+    sidebarElement.addEventListener('wheel', handleWheel, { passive: false });
+
+    return () => {
+      sidebarElement.removeEventListener('mouseenter', handleMouseEnter);
+      sidebarElement.removeEventListener('mouseleave', handleMouseLeave);
+      sidebarElement.removeEventListener('wheel', handleWheel);
+    };
+  }, []);
+
   return (
     <div ref={containerRef} className="min-h-screen bg-white font-inter relative overflow-hidden">
       {/* Animated background elements */}
@@ -3764,12 +3848,19 @@ const Services = () => {
 
             {/* Right Sidebar - Select Manufacturer */}
             <div ref={sidebarRef} className="w-full xl:w-[360px] flex-shrink-0 mt-10 xl:mt-0 xl:ml-16">
-              <div className="sticky top-20 max-h-[calc(100vh-100px)]">
+              <div 
+                ref={sidebarContentRef}
+                className="xl:fixed xl:max-h-[calc(100vh-100px)] xl:z-30 xl:w-[360px]"
+                style={{
+                  right: 'max(calc((100% - 1400px) / 2 + 24px), 24px)',
+                  top: `${sidebarTop}px`
+                }}
+              >
                 <BrandSelectorModal
                   variant="sidebar"
                   selectedBrand={selectedBrand}
                   onBrandSelect={setSelectedBrand}
-                  className="h-auto max-h-[calc(100vh-120px)] overflow-auto rounded-2xl shadow-[0px_6px_30px_rgba(0,0,0,0.25)] bg-white"
+                  className="h-auto max-h-[calc(100vh-120px)] overflow-y-auto overflow-x-hidden rounded-2xl shadow-[0px_6px_30px_rgba(0,0,0,0.25)] bg-white"
                 />
               </div>
             </div>
