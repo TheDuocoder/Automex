@@ -41,7 +41,7 @@ const Services = () => {
 
   const [selectedCategory, setSelectedCategory] = useState("car-services");
   const [selectedBrand, setSelectedBrand] = useState("");
-  const [sidebarTop, setSidebarTop] = useState(96);
+  const [sidebarTop, setSidebarTop] = useState(60);
   
   const containerRef = useRef<HTMLDivElement>(null);
   const categoryTabsRef = useRef<HTMLDivElement>(null);
@@ -3668,7 +3668,7 @@ const Services = () => {
     const updateOffset = () => {
       if (!categoryTabsRef.current) return;
       const rect = categoryTabsRef.current.getBoundingClientRect();
-      setSidebarTop(Math.max(80, Math.round(rect.top)));
+      setSidebarTop(Math.max(20, Math.round(rect.top)));
     };
 
     updateOffset();
