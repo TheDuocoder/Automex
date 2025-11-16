@@ -41,6 +41,7 @@ const Header = () => {
   > = [
     { label: "About Us", type: "section", target: "about-us" },
     { label: "Services", type: "route", href: "/services" },
+    ...(isAuthenticated ? [{ label: "My Services", type: "route", href: "/my-services" } as const] : []),
     { label: "Contact Us", type: "route", href: "/contact-us" },
   ];
 
@@ -122,7 +123,8 @@ const Header = () => {
       )}
     >
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
-        <div className="grid md:grid-cols-[1fr_auto] gap-8 md:gap-12 lg:gap-16 items-center">
+        <div className="flex items-center justify-between gap-4 md:gap-8">
+          {/* Logo - Left Side */}
           <div
             className={cn(
               "flex items-center cursor-pointer flex-shrink-0",
@@ -140,88 +142,92 @@ const Header = () => {
             />
           </div>
 
-          <div className="flex items-center justify-end gap-4">
-            <motion.div
-              ref={navLinksRef}
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-              className={cn(
-                "hidden lg:flex items-center gap-6 justify-center w-[540px]",
-                isTransparent && "-mt-2"
-              )}
-            >
-              {navigationLinks.map((item) => (
-                <motion.a
-                  key={item.label}
-                  href={
-                    item.type === "route"
-                      ? item.href
-                      : `/#${item.target}`
+          {/* Navigation Links - Center (hidden when authenticated on mobile) */}
+          <motion.div
+            ref={navLinksRef}
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className={cn(
+              "hidden lg:flex items-center gap-6 justify-center flex-1",
+              isTransparent && "-mt-2"
+            )}
+          >
+            {navigationLinks.map((item) => (
+              <motion.a
+                key={item.label}
+                href={
+                  item.type === "route"
+                    ? item.href
+                    : `/#${item.target}`
+                }
+                initial={false}
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ type: "spring", stiffness: 260, damping: 18 }}
+                className="nav-link relative lg:flex items-center justify-center overflow-hidden rounded-full border border-white/25 px-4 py-2 text-xs xl:text-sm font-medium tracking-[0.08em] text-white/90 backdrop-blur-sm transition-colors duration-200 hover:text-white"
+                onClick={(e) => {
+                  if (item.type === "route") {
+                    e.preventDefault();
+                    navigate(item.href);
+                    return;
                   }
-                  initial={false}
-                  whileHover={{ scale: 1.04 }}
-                  whileTap={{ scale: 0.97 }}
-                  transition={{ type: "spring", stiffness: 260, damping: 18 }}
-                  className="nav-link relative lg:flex items-center justify-center overflow-hidden rounded-full border border-white/25 px-4 py-2 text-xs xl:text-sm font-medium tracking-[0.08em] text-white/90 backdrop-blur-sm transition-colors duration-200 hover:text-white"
-                  onClick={(e) => {
-                    if (item.type === "route") {
-                      e.preventDefault();
-                      navigate(item.href);
-                      return;
-                    }
 
-                    if (location.pathname === '/') {
-                      e.preventDefault();
-                      const element = document.getElementById(item.target);
-                      if (element) {
-                        element.scrollIntoView({ behavior: "smooth", block: "start" });
-                      }
+                  if (location.pathname === '/') {
+                    e.preventDefault();
+                    const element = document.getElementById(item.target);
+                    if (element) {
+                      element.scrollIntoView({ behavior: "smooth", block: "start" });
                     }
+                  }
+                }}
+              >
+                <span className="nav-link-label relative z-20 select-none">{item.label}</span>
+                <span className="pointer-events-none absolute inset-0 rounded-full bg-white/5 opacity-40 mix-blend-screen"></span>
+                <span
+                  className="nav-link-light pointer-events-none absolute inset-0 rounded-full mix-blend-screen"
+                  style={{
+                    background:
+                      "conic-gradient(from var(--angle, 0deg), rgba(239,68,68,0) 0deg, rgba(239,68,68,0.9) 16deg, rgba(239,68,68,0) 32deg)",
+                    WebkitMask:
+                      "radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 1px))",
+                    mask: "radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 1px))",
+                    opacity: 0
                   }}
-                >
-                  <span className="nav-link-label relative z-20 select-none">{item.label}</span>
-                  <span className="pointer-events-none absolute inset-0 rounded-full bg-white/5 opacity-40 mix-blend-screen"></span>
-                  <span
-                    className="nav-link-light pointer-events-none absolute inset-0 rounded-full mix-blend-screen"
-                    style={{
-                      background:
-                        "conic-gradient(from var(--angle, 0deg), rgba(239,68,68,0) 0deg, rgba(239,68,68,0.9) 16deg, rgba(239,68,68,0) 32deg)",
-                      WebkitMask:
-                        "radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 1px))",
-                      mask: "radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 1px))",
-                      opacity: 0
-                    }}
-                  ></span>
-                </motion.a>
-              ))}
-            </motion.div>
-          </div>
+                ></span>
+              </motion.a>
+            ))}
+          </motion.div>
 
+          {/* User Info - Right Side */}
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             className={cn("flex items-center gap-3 md:gap-4 lg:gap-6 flex-shrink-0", isTransparent && "-mt-2 md:-mt-4 lg:-mt-6")}
           >
-              {/* Profile Menu (if authenticated) */}
-              {isAuthenticated && (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      className="hidden lg:flex items-center gap-2 text-white hover:bg-white/10 h-9 px-3"
-                      title={`Logged in as: ${user?.full_name || user?.email?.split('@')[0] || 'User'}`}
-                    >
-                      <div className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center" title={`${user?.full_name || user?.email?.split('@')[0] || 'User'}`}>
-                        <User className="h-5 w-5 text-white" />
-                      </div>
-                      <span className="text-sm font-medium">
-                        {user?.full_name || user?.email?.split('@')[0] || 'User'}
-                      </span>
-                      <ChevronDown className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
+              {/* Profile Menu (if authenticated) - Hide on landing page */}
+              {isAuthenticated && !isHomePage && (
+                <div className="hidden lg:block">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        className="flex items-center gap-2 text-white hover:opacity-90 h-auto px-3 py-2 rounded-lg bg-black border-2 border-pink-500/90 transition-all duration-200 hover:border-pink-500 relative"
+                        title={`Logged in as: ${user?.full_name || user?.email?.split('@')[0] || 'User'}`}
+                        style={{
+                          boxShadow: 'inset 0 0 0 1px rgba(255, 255, 255, 0.3)'
+                        }}
+                      >
+                        <div className="h-8 w-8 rounded-full bg-gray-700 flex items-center justify-center flex-shrink-0" title={`${user?.full_name || user?.email?.split('@')[0] || 'User'}`}>
+                          <User className="h-5 w-5 text-white" />
+                        </div>
+                        <span className="text-sm font-medium whitespace-nowrap">
+                          {user?.full_name || user?.email?.split('@')[0] || 'User'}
+                        </span>
+                        <ChevronDown className="h-4 w-4 flex-shrink-0" />
+                      </Button>
+                    </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56 bg-white">
                     <DropdownMenuLabel className="font-normal">
                       <div className="flex flex-col space-y-1">
@@ -240,7 +246,7 @@ const Header = () => {
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
-                      onClick={() => navigate('/services')}
+                      onClick={() => navigate('/my-services')}
                       className="cursor-pointer"
                     >
                       <ShoppingBag className="mr-2 h-4 w-4" />
@@ -266,7 +272,8 @@ const Header = () => {
                       <span>Logout</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
-                </DropdownMenu>
+                  </DropdownMenu>
+                </div>
               )}
 
               {/* Mobile Menu Button */}
@@ -398,6 +405,17 @@ const Header = () => {
                     }}
                   >
                     Services
+                  </a>
+                  <a 
+                    href="/my-services" 
+                    className="text-sm text-white hover-automex py-2 cursor-pointer"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigate('/my-services');
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    My Services
                   </a>
                   <div className="border-t border-white/20 pt-2 mt-2">
                     <div className="px-2 py-1 text-xs text-white/70">

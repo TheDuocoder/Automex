@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { Search, X, Car, ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,16 +21,19 @@ const BrandSelectorModal = ({
 }: BrandSelectorModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const triggerButtonRef = useRef<HTMLButtonElement>(null);
   const {
     catalog,
     selectedBrandId,
     selectedModelId,
     selectedFuelType,
+    highlightTrigger,
     selectBrand,
     selectModel,
     selectFuelType,
     clearBrand,
     clearModel,
+    clearHighlight,
   } = useCarSelectionStore();
 
   const selectedBrandEntity = useMemo(
@@ -51,9 +54,47 @@ const BrandSelectorModal = ({
       : "model"
     : "brand";
 
+  // Reset modal state when store is reset (when all selections are cleared)
+  useEffect(() => {
+    if (!selectedBrandId && !selectedModelId && !selectedFuelType) {
+      setIsOpen(false);
+      setSearchTerm("");
+    }
+  }, [selectedBrandId, selectedModelId, selectedFuelType]);
+
   useEffect(() => {
     setSearchTerm("");
   }, [stage]);
+
+  // Handle highlight animation when validation fails
+  useEffect(() => {
+    if (highlightTrigger && triggerButtonRef.current) {
+      const button = triggerButtonRef.current;
+      
+      // Add highlight animation classes
+      button.classList.add("animate-pulse");
+      button.style.borderColor = "#ef4444";
+      button.style.boxShadow = "0 0 0 3px rgba(239, 68, 68, 0.3)";
+      
+      // Scroll to button if not visible
+      button.scrollIntoView({ behavior: "smooth", block: "center" });
+      
+      // Remove animation after 2 seconds
+      const timeout = setTimeout(() => {
+        button.classList.remove("animate-pulse");
+        button.style.borderColor = "";
+        button.style.boxShadow = "";
+        clearHighlight();
+      }, 2000);
+      
+      return () => {
+        clearTimeout(timeout);
+        button.classList.remove("animate-pulse");
+        button.style.borderColor = "";
+        button.style.boxShadow = "";
+      };
+    }
+  }, [highlightTrigger, clearHighlight]);
 
   const normalizedSearch = searchTerm.trim().toLowerCase();
 
@@ -87,14 +128,17 @@ const BrandSelectorModal = ({
   const handleBrandClick = (brandId: string, brandName: string) => {
     selectBrand(brandId);
     onBrandSelect(brandName);
+    // Store is automatically updated via selectBrand
   };
 
   const handleModelClick = (modelId: string) => {
     selectModel(modelId);
+    // Store is automatically updated via selectModel
   };
 
   const handleFuelClick = (fuel: FuelType) => {
     selectFuelType(fuel);
+    // Store is automatically updated via selectFuelType
     if (variant === "modal") {
       setIsOpen(false);
     }
@@ -364,19 +408,58 @@ const BrandSelectorModal = ({
     );
   };
 
+  // Handle highlight animation for sidebar variant
+  useEffect(() => {
+    if (variant === "sidebar" && highlightTrigger) {
+      const sidebar = document.querySelector('[data-brand-selector-sidebar]');
+      if (sidebar) {
+        const titleElement = sidebar.querySelector('h3');
+        if (titleElement) {
+          // Add highlight animation
+          titleElement.classList.add("animate-pulse");
+          titleElement.style.color = "#ef4444";
+          titleElement.style.textShadow = "0 0 8px rgba(239, 68, 68, 0.5)";
+          
+          // Scroll to sidebar if not visible
+          sidebar.scrollIntoView({ behavior: "smooth", block: "center" });
+          
+          // Remove animation after 2 seconds
+          const timeout = setTimeout(() => {
+            titleElement.classList.remove("animate-pulse");
+            titleElement.style.color = "";
+            titleElement.style.textShadow = "";
+            clearHighlight();
+          }, 2000);
+          
+          return () => {
+            clearTimeout(timeout);
+            titleElement.classList.remove("animate-pulse");
+            titleElement.style.color = "";
+            titleElement.style.textShadow = "";
+          };
+        }
+      }
+    }
+  }, [highlightTrigger, variant, clearHighlight]);
+
   if (variant === "sidebar") {
     return (
       <aside
+        data-brand-selector-sidebar
         className={cn(
           "w-full h-full overflow-hidden",
-          className
+          className,
+          highlightTrigger && "ring-2 ring-red-500 ring-offset-2 rounded-2xl"
         )}
         style={{
           background: 'linear-gradient(to bottom, #FFFFFF, #FAFAFA)'
         }}
       >
         <div className="px-5 pt-3 pb-3 border-b border-gray-100">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Select Manufacturer</h3>
+          <h3 className={cn(
+            "text-lg font-semibold text-gray-900 mb-2 transition-all duration-300",
+            highlightTrigger && "text-red-500"
+          )}>Select Manufacturer</h3>
           {stage !== "brand" && (
             <button
               onClick={handleBack}
@@ -399,8 +482,12 @@ const BrandSelectorModal = ({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button
+          ref={triggerButtonRef}
           variant="outline"
-          className="flex items-center gap-2 h-12 px-4 font-medium border-gray-300 hover:border-gray-400"
+          className={cn(
+            "flex items-center gap-2 h-12 px-4 font-medium border-gray-300 hover:border-gray-400 transition-all duration-300",
+            highlightTrigger && "border-red-500 shadow-lg"
+          )}
         >
           <Car className="h-4 w-4 text-gray-600" />
           <span className="text-gray-700">{triggerLabel}</span>

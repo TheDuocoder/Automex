@@ -369,14 +369,32 @@ users_router = APIRouter()
 
 # Custom /me endpoint that returns UserRead directly
 # This bypasses FastAPI Users' model_validate which causes the greenlet error
-@users_router.get("/me", response_model=UserRead, name="users:me")
+@users_router.get(
+    "/me",
+    response_model=UserRead,
+    name="users:me",
+    summary="Get Current User (Users Router)",
+    description="Get the currently authenticated user's information via users router",
+    tags=["Authentication"],
+    responses={
+        200: {
+            "description": "User information retrieved successfully",
+        },
+        401: {"description": "Not authenticated"},
+    }
+)
 async def get_current_user_custom(
     user: UserRead = Depends(get_current_user_with_role_read)
 ):
-    """Get current authenticated user with role information (custom implementation)
+    """
+    Get current authenticated user with role information (custom implementation).
     
     This endpoint returns the user as a UserRead Pydantic model that's already
     constructed from plain Python types, avoiding any SQLAlchemy lazy loading issues.
+    
+    **Path**: `/api/v1/auth/users/me`
+    
+    **Authentication**: Required (JWT Bearer token)
     """
     # The dependency already returns UserRead, so just return it directly
     return user
@@ -387,13 +405,88 @@ async def get_current_user_custom(
 router.include_router(users_router, prefix="/users")
 
 
-@router.get("/me", response_model=UserRead)
+@router.get(
+    "/me",
+    response_model=UserRead,
+    summary="Get Current User",
+    description="Get the currently authenticated user's information including role details",
+    tags=["Authentication"],
+    responses={
+        200: {
+            "description": "User information retrieved successfully",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "id": 1,
+                        "email": "user@example.com",
+                        "full_name": "John Doe",
+                        "phone_number": "+1234567890",
+                        "is_active": True,
+                        "is_verified": True,
+                        "is_superuser": False,
+                        "role_id": 1,
+                        "role": {
+                            "id": 1,
+                            "name": "normal",
+                            "description": "Normal user with standard permissions"
+                        }
+                    }
+                }
+            }
+        },
+        401: {"description": "Not authenticated"},
+    }
+)
 async def get_current_user(
     user: UserRead = Depends(get_current_user_with_role_read)
 ):
-    """Get current authenticated user with role information"""
+    """
+    Get current authenticated user with role information.
+    
+    Returns the complete user profile including:
+    - User ID, email, full name, phone number
+    - Account status (active, verified, superuser)
+    - Role information with permissions
+    
+    Requires authentication via JWT token.
+    """
     # Use get_current_user_with_role_read dependency which returns UserRead
     # This avoids any SQLAlchemy lazy loading issues
+    return user
+
+
+@router.get(
+    "/user-info",
+    response_model=UserRead,
+    summary="Get User Information",
+    description="Get detailed information about the currently authenticated user",
+    tags=["Authentication"],
+    responses={
+        200: {
+            "description": "User information retrieved successfully",
+        },
+        401: {"description": "Not authenticated - Please provide a valid JWT token"},
+    }
+)
+async def get_user_info(
+    user: UserRead = Depends(get_current_user_with_role_read)
+):
+    """
+    Get detailed user information.
+    
+    This endpoint returns comprehensive information about the authenticated user:
+    - Personal details (email, name, phone)
+    - Account status and permissions
+    - Role and permissions information
+    
+    **Authentication Required**: This endpoint requires a valid JWT token in the Authorization header.
+    
+    **Example Request**:
+    ```
+    GET /api/v1/auth/user-info
+    Authorization: Bearer <your-jwt-token>
+    ```
+    """
     return user
 
 

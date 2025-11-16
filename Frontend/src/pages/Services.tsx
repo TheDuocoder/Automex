@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import ServiceCard from "@/components/ServiceCard";
 import CategoryTabs from "@/components/CategoryTabs";
 import BrandSelectorModal from "@/components/BrandSelectorModal";
+import { useCarSelectionStore } from "@/stores/carSelectionStore";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
@@ -38,6 +39,7 @@ interface ServicePackage {
 const Services = () => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const { resetSelection } = useCarSelectionStore();
 
   const [selectedCategory, setSelectedCategory] = useState("car-services");
   const [selectedBrand, setSelectedBrand] = useState("");
@@ -3557,9 +3559,17 @@ const Services = () => {
       return;
     }
 
-    // Handle authenticated user cart logic here
-    alert(`${serviceName} added to cart!`);
+    // Booking is handled by DatePickerModal, no need to do anything here
+    // The DatePickerModal will redirect to /my-services after successful booking
   };
+
+  // Reset car selection store when navigating away from services page
+  useEffect(() => {
+    return () => {
+      // Reset store when component unmounts (user navigates away)
+      resetSelection();
+    };
+  }, [resetSelection]);
 
   // Lenis smooth scrolling setup
   useEffect(() => {

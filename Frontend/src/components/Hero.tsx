@@ -1,12 +1,18 @@
 import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import Login from "./Login";
 import Register from "./Register";
+import { Button } from "@/components/ui/button";
+import { ShoppingBag, Calendar, Settings, ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
 
 const Hero = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showRegisterForm, setShowRegisterForm] = useState(false);
   const heroRef = useRef<HTMLElement | null>(null);
+  const { isAuthenticated, user } = useAuth();
+  const navigate = useNavigate();
   
   // Array of car service background images
   const backgroundImages = [
@@ -47,10 +53,23 @@ const Hero = () => {
         .to(".hero-bullets-item", { autoAlpha: 1, y: 0, stagger: 0.15 }, "-=0.55")
         .to(".hero-cta", { autoAlpha: 1, y: 0 }, "-=0.35")
         .to(".hero-auth-card", { autoAlpha: 1, y: 0 }, "-=0.6");
+      
+      // Animate welcome section elements if authenticated
+      if (isAuthenticated) {
+        gsap.set(".welcome-section > *", { autoAlpha: 0, y: 20 });
+        gsap.to(".welcome-section > *", {
+          autoAlpha: 1,
+          y: 0,
+          stagger: 0.1,
+          duration: 0.6,
+          ease: "power2.out",
+          delay: 0.3
+        });
+      }
     }, heroRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     if (!heroRef.current) return;
@@ -151,17 +170,113 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* Right side - Login/Register Form */}
-          <div className="hero-auth-card w-full md:w-[540px]">
-            {!showRegisterForm ? (
-              <Login 
-                onSwitchToRegister={() => setShowRegisterForm(true)} 
-              />
+          {/* Right side - Login/Register Form or Welcome Section */}
+          <div className="w-full md:w-[540px]">
+            <div className="hero-auth-card w-full">
+              {isAuthenticated ? (
+                // Welcome Section for Logged-in Users
+                <div className="welcome-section w-full bg-black/60 backdrop-blur-md border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_60px_rgba(255,81,47,0.2),0_0_100px_rgba(221,36,118,0.15)] rounded-3xl p-8 relative">
+                {/* Welcome Header */}
+                <div className="text-center mb-6">
+                  <div className="flex justify-center mb-4">
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-gradient-to-r from-pink-500/50 to-red-500/50 rounded-full blur-xl"></div>
+                      <div className="relative bg-gradient-to-br from-pink-500/20 to-red-500/20 rounded-full p-3 border-2 border-white/20">
+                        <Sparkles className="w-8 h-8 text-white" />
+                      </div>
+                    </div>
+                  </div>
+                  <h2 className="text-3xl font-bold text-white mb-2 drop-shadow-lg">
+                    Welcome back, {user?.full_name?.split(' ')[0] || 'User'}!
+                  </h2>
+                  <p className="text-white/80 text-sm">
+                    Ready to take care of your vehicle?
+                  </p>
+                </div>
+
+                {/* Quick Actions */}
+                <div className="space-y-3 mb-6">
+                  <Button
+                    onClick={() => navigate('/services')}
+                    className="w-full h-14 text-white text-base font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl group"
+                    style={{
+                      backgroundImage: 'linear-gradient(to right, #FF512F 0%, #DD2476 51%, #FF512F 100%)',
+                      backgroundSize: '200% auto',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundPosition = 'right center';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundPosition = 'left center';
+                    }}
+                  >
+                    <ShoppingBag className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
+                    Browse Our Services
+                    <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+
+                  <Button
+                    onClick={() => navigate('/services')}
+                    variant="outline"
+                    className="w-full h-12 text-white border-white/30 bg-white/5 hover:bg-white/10 rounded-xl transition-all duration-300"
+                  >
+                    <Calendar className="w-4 h-4 mr-2" />
+                    Schedule Service
+                  </Button>
+                </div>
+
+                {/* Features Highlight */}
+                <div className="border-t border-white/10 pt-6">
+                  <p className="text-white/70 text-xs font-medium mb-3 uppercase tracking-wider">Quick Access</p>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-3 text-white/90 text-sm">
+                      <CheckCircle2 className="w-4 h-4 text-green-400 flex-shrink-0" />
+                      <span>Track your service requests</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-white/90 text-sm">
+                      <CheckCircle2 className="w-4 h-4 text-green-400 flex-shrink-0" />
+                      <span>View service history</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-white/90 text-sm">
+                      <CheckCircle2 className="w-4 h-4 text-green-400 flex-shrink-0" />
+                      <span>Manage your vehicles</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Account Info */}
+                <div className="mt-6 pt-6 border-t border-white/10">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-white/90 text-sm font-medium">{user?.full_name || 'User'}</p>
+                      <p className="text-white/60 text-xs">{user?.email}</p>
+                    </div>
+                    <Button
+                      onClick={() => navigate('/profile')}
+                      variant="ghost"
+                      size="sm"
+                      className="text-white/80 hover:text-white hover:bg-white/10 rounded-lg"
+                    >
+                      <Settings className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
             ) : (
-              <Register 
-                onSwitchToLogin={() => setShowRegisterForm(false)}
-              />
+              // Login/Register Form for Non-authenticated Users
+              <>
+                {!showRegisterForm ? (
+                  <Login 
+                    onSwitchToRegister={() => setShowRegisterForm(true)} 
+                  />
+                ) : (
+                  <Register 
+                    onSwitchToLogin={() => setShowRegisterForm(false)}
+                  />
+                )}
+              </>
             )}
+            </div>
           </div>
         </div>
       </div>

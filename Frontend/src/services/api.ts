@@ -27,19 +27,51 @@ export async function apiCall<T>(
     
     // Get auth token and include it in headers
     const authHeader = getAuthHeader();
+    const token = getAuthToken();
+    
+    // Debug: Log token presence (only in development)
+    if (import.meta.env.DEV && !token) {
+      console.warn('[API] No auth token found in localStorage');
+    }
+    
+    // Build headers - ensure auth header is included
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      ...authHeader, // This includes Authorization: Bearer <token> if token exists
+    };
+    
+    // Merge with any headers passed in options
+    if (options.headers) {
+      Object.assign(headers, options.headers);
+    }
+    
+    // Debug: Log headers in development (but hide token value)
+    if (import.meta.env.DEV && token) {
+      console.log('[API] Request:', {
+        url,
+        method: options.method || 'GET',
+        hasAuth: !!headers.Authorization,
+        authPrefix: headers.Authorization?.substring(0, 20) + '...',
+      });
+    }
     
     const response = await fetch(url, {
       ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        ...authHeader,
-        ...options.headers,
-      },
+      headers,
     });
 
     const data = await response.json().catch(() => null);
 
     if (!response.ok) {
+      // If unauthorized, log token info for debugging
+      if (response.status === 401 && import.meta.env.DEV) {
+        console.error('[API] 401 Unauthorized:', {
+          endpoint,
+          hasToken: !!token,
+          tokenLength: token?.length || 0,
+        });
+      }
+      
       return {
         error: data?.detail || `Request failed with status ${response.status}`,
         status: response.status,
@@ -84,6 +116,11 @@ export function removeAuthToken(): void {
  */
 export function getAuthHeader(): Record<string, string> {
   const token = getAuthToken();
-  return token ? { Authorization: `Bearer ${token}` } : {};
+  if (!token) {
+    return {};
+  }
+  // Ensure token doesn't have extra whitespace and is properly formatted
+  const cleanToken = token.trim();
+  return { Authorization: `Bearer ${cleanToken}` };
 }
 

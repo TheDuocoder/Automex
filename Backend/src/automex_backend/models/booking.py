@@ -29,7 +29,7 @@ class Booking(Base):
     
     # Foreign keys
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)
-    service_id: Mapped[int] = mapped_column(ForeignKey("service.id"), nullable=False)
+    service_id: Mapped[Optional[int]] = mapped_column(ForeignKey("service.id"), nullable=True)
     
     # Booking details
     booking_date: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
@@ -40,15 +40,20 @@ class Booking(Base):
     )
     
     # Vehicle details
-    vehicle_make: Mapped[str] = mapped_column(String(length=100), nullable=False)
-    vehicle_model: Mapped[str] = mapped_column(String(length=100), nullable=False)
-    vehicle_year: Mapped[int] = mapped_column(Integer, nullable=False)
-    vehicle_registration: Mapped[str] = mapped_column(String(length=50), nullable=False)
+    vehicle_make: Mapped[Optional[str]] = mapped_column(String(length=100), nullable=True)
+    vehicle_model: Mapped[Optional[str]] = mapped_column(String(length=100), nullable=True)
+    vehicle_year: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    vehicle_registration: Mapped[Optional[str]] = mapped_column(String(length=50), nullable=True)
+    # Car selection details from Zustand store
+    car_brand: Mapped[Optional[str]] = mapped_column(String(length=100), nullable=True)
+    car_model: Mapped[Optional[str]] = mapped_column(String(length=100), nullable=True)
+    fuel_type: Mapped[Optional[str]] = mapped_column(String(length=50), nullable=True)
+    service_name: Mapped[Optional[str]] = mapped_column(String(length=255), nullable=True)
     
     # Contact and location
-    contact_name: Mapped[str] = mapped_column(String(length=255), nullable=False)
-    contact_phone: Mapped[str] = mapped_column(String(length=20), nullable=False)
-    pickup_address: Mapped[str] = mapped_column(Text, nullable=False)
+    contact_name: Mapped[Optional[str]] = mapped_column(String(length=255), nullable=True)
+    contact_phone: Mapped[Optional[str]] = mapped_column(String(length=20), nullable=True)
+    pickup_address: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     
     # Additional information
     special_instructions: Mapped[Optional[str]] = mapped_column(Text, nullable=True)

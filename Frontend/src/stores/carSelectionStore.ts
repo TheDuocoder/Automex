@@ -499,39 +499,63 @@ interface CarSelectionState {
   selectedBrandId?: string;
   selectedModelId?: string;
   selectedFuelType?: FuelType;
+  selectedPart?: string; // Service/Part name being booked
+  selectedDate?: Date; // Selected booking date
+  highlightTrigger: boolean; // Flag to trigger highlight animation
   selectBrand: (brandId: string) => void;
   selectModel: (modelId: string) => void;
   selectFuelType: (fuel: FuelType) => void;
+  selectPart: (part: string) => void;
+  selectDate: (date: Date) => void;
   clearBrand: () => void;
   clearModel: () => void;
   resetSelection: () => void;
+  isCarSelected: () => boolean; // Helper to check if brand, model, and fuel are all selected
+  triggerHighlight: () => void; // Trigger highlight animation
+  clearHighlight: () => void; // Clear highlight animation
 }
 
-export const useCarSelectionStore = create<CarSelectionState>()((set) => ({
+export const useCarSelectionStore = create<CarSelectionState>()((set, get) => ({
   catalog: carCatalog,
   selectedBrandId: undefined,
   selectedModelId: undefined,
   selectedFuelType: undefined,
+  selectedPart: undefined,
+  selectedDate: undefined,
+  highlightTrigger: false,
   selectBrand: (brandId) =>
     set({
       selectedBrandId: brandId,
       selectedModelId: undefined,
       selectedFuelType: undefined,
+      highlightTrigger: false, // Clear highlight when user makes a selection
     }),
   selectModel: (modelId) =>
     set({
       selectedModelId: modelId,
       selectedFuelType: undefined,
+      highlightTrigger: false, // Clear highlight when user makes a selection
     }),
   selectFuelType: (fuel) =>
     set({
       selectedFuelType: fuel,
+      highlightTrigger: false, // Clear highlight when user makes a selection
+    }),
+  selectPart: (part) =>
+    set({
+      selectedPart: part,
+    }),
+  selectDate: (date) =>
+    set({
+      selectedDate: date,
     }),
   clearBrand: () =>
     set({
       selectedBrandId: undefined,
       selectedModelId: undefined,
       selectedFuelType: undefined,
+      selectedPart: undefined,
+      highlightTrigger: false,
     }),
   clearModel: () =>
     set({
@@ -543,6 +567,21 @@ export const useCarSelectionStore = create<CarSelectionState>()((set) => ({
       selectedBrandId: undefined,
       selectedModelId: undefined,
       selectedFuelType: undefined,
+      selectedPart: undefined,
+      selectedDate: undefined,
+      highlightTrigger: false,
+    }),
+  isCarSelected: () => {
+    const state = get();
+    return !!(state.selectedBrandId && state.selectedModelId && state.selectedFuelType);
+  },
+  triggerHighlight: () =>
+    set({
+      highlightTrigger: true,
+    }),
+  clearHighlight: () =>
+    set({
+      highlightTrigger: false,
     }),
 }));
 

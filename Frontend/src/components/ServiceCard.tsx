@@ -3,6 +3,9 @@ import { Clock, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useCarSelectionStore } from "@/stores/carSelectionStore";
+import { useToast } from "@/hooks/use-toast";
+import DatePickerModal from "./DatePickerModal";
 
 interface ServiceFeature {
   name: string;
@@ -54,6 +57,9 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   descriptions = [],
   variant = "default",
 }) => {
+  const { isCarSelected, selectPart, triggerHighlight } = useCarSelectionStore();
+  const { toast } = useToast();
+  const [isDatePickerOpen, setIsDatePickerOpen] = React.useState(false);
   const DEFAULT_VISIBLE = 4;
   const [showMore, setShowMore] = React.useState(false);
   const hasMoreFeatures = features.length > DEFAULT_VISIBLE;
@@ -61,6 +67,39 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   const remainingCount = Math.max(features.length - DEFAULT_VISIBLE, 0);
   const shouldShowButton = hasMoreFeatures || descriptions.length > 0;
   const showPrice = discountedPrice > 0;
+
+  const handleBookClick = () => {
+    if (!isCarSelected()) {
+      // Show notification
+      toast({
+        title: "Car Selection Required",
+        description: "Please select manufacturer, model, and fuel type before booking.",
+        variant: "destructive",
+        duration: 4000,
+      });
+      
+      // Trigger highlight animation
+      triggerHighlight();
+      
+      // Clear highlight after animation
+      setTimeout(() => {
+        const { clearHighlight } = useCarSelectionStore.getState();
+        clearHighlight();
+      }, 2000);
+      
+      return;
+    }
+    
+    // If validation passes, store the part and show date picker
+    selectPart(name);
+    setIsDatePickerOpen(true);
+  };
+
+  const handleDatePickerClose = () => {
+    setIsDatePickerOpen(false);
+    // Booking is handled inside DatePickerModal, no need to call onAddToCart
+    // The DatePickerModal will redirect to /my-services after successful booking
+  };
 
 
   const displayImage = (
@@ -94,7 +133,13 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   );
 
   return (
-    <div className="space-y-4">
+    <>
+      <DatePickerModal
+        isOpen={isDatePickerOpen}
+        onClose={handleDatePickerClose}
+        serviceName={name}
+      />
+      <div className="space-y-4">
       <Card className={`relative overflow-hidden border border-gray-200 bg-white ${
         variant === "gom" 
           ? "rounded-[6px] shadow-sm" 
@@ -256,9 +301,9 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 
                   <Button
                     className={`${variant === "gom" ? "uppercase tracking-wider text-[14px] font-semibold border border-red-500 text-red-500 bg-white hover:bg-red-50 hover:text-red-600 w-[127px] h-[40px] rounded" : "uppercase tracking-wider text-sm font-semibold border-2 border-red-500 text-red-500 bg-white hover:bg-red-50 hover:text-red-600 px-5 py-2 rounded-md"}`}
-                    onClick={() => onAddToCart(id, name)}
+                    onClick={handleBookClick}
                   >
-                    Select Car
+                    Book
                   </Button>
                 </div>
               </div>
@@ -281,6 +326,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         </div>
       )}
     </div>
+    </>
   );
 };
 

@@ -9,21 +9,35 @@ from automex_backend.models.booking import BookingStatus
 
 class BookingBase(BaseModel):
     """Base booking schema"""
-    service_id: int
+    service_id: Optional[int] = None
     booking_date: datetime
-    vehicle_make: str = Field(..., min_length=1, max_length=100)
-    vehicle_model: str = Field(..., min_length=1, max_length=100)
-    vehicle_year: int = Field(..., ge=1900, le=2100)
-    vehicle_registration: str = Field(..., min_length=1, max_length=50)
-    contact_name: str = Field(..., min_length=1, max_length=255)
-    contact_phone: str = Field(..., pattern=r"^\+?[1-9]\d{1,14}$")
-    pickup_address: str = Field(..., min_length=10)
+    vehicle_make: Optional[str] = Field(None, min_length=1, max_length=100)
+    vehicle_model: Optional[str] = Field(None, min_length=1, max_length=100)
+    vehicle_year: Optional[int] = Field(None, ge=1900, le=2100)
+    vehicle_registration: Optional[str] = Field(None, min_length=1, max_length=50)
+    contact_name: Optional[str] = Field(None, min_length=1, max_length=255)
+    contact_phone: Optional[str] = Field(None, max_length=20)
+    pickup_address: Optional[str] = Field(None, min_length=10)
     special_instructions: Optional[str] = None
+    # Car selection details from Zustand store
+    car_brand: Optional[str] = Field(None, max_length=100)
+    car_model: Optional[str] = Field(None, max_length=100)
+    fuel_type: Optional[str] = Field(None, max_length=50)
+    service_name: Optional[str] = Field(None, max_length=255)
 
 
 class BookingCreate(BookingBase):
     """Schema for creating a new booking"""
     pass
+
+
+class ServiceBookingCreate(BaseModel):
+    """Simplified schema for service bookings from frontend Zustand store"""
+    booking_date: datetime
+    car_brand: str = Field(..., min_length=1, max_length=100)
+    car_model: str = Field(..., min_length=1, max_length=100)
+    fuel_type: str = Field(..., min_length=1, max_length=50)
+    service_name: str = Field(..., min_length=1, max_length=255)
 
 
 class BookingUpdate(BaseModel):
@@ -35,7 +49,7 @@ class BookingUpdate(BaseModel):
     vehicle_year: Optional[int] = Field(None, ge=1900, le=2100)
     vehicle_registration: Optional[str] = Field(None, min_length=1, max_length=50)
     contact_name: Optional[str] = Field(None, min_length=1, max_length=255)
-    contact_phone: Optional[str] = Field(None, pattern=r"^\+?[1-9]\d{1,14}$")
+    contact_phone: Optional[str] = Field(None, max_length=20)
     pickup_address: Optional[str] = Field(None, min_length=10)
     special_instructions: Optional[str] = None
     estimated_cost: Optional[float] = Field(None, gt=0)
@@ -54,6 +68,11 @@ class BookingRead(BookingBase):
     created_at: datetime
     updated_at: datetime
     completed_at: Optional[datetime] = None
+    # Include car selection fields
+    car_brand: Optional[str] = None
+    car_model: Optional[str] = None
+    fuel_type: Optional[str] = None
+    service_name: Optional[str] = None
     
     class Config:
         from_attributes = True
