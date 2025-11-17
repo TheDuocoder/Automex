@@ -5,13 +5,13 @@ import { useAuth } from "@/contexts/AuthContext";
 import Login from "./Login";
 import Register from "./Register";
 import { Button } from "@/components/ui/button";
-import { ShoppingBag, Calendar, Settings, ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
+import { ShoppingBag, Calendar, Settings, ArrowRight, CheckCircle2, Sparkles, LogOut } from "lucide-react";
 
 const Hero = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showRegisterForm, setShowRegisterForm] = useState(false);
   const heroRef = useRef<HTMLElement | null>(null);
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
   
   // Array of car service background images
@@ -197,7 +197,7 @@ const Hero = () => {
                 {/* Quick Actions */}
                 <div className="space-y-3 mb-6">
                   <Button
-                    onClick={() => navigate('/services')}
+                    onClick={() => navigate('/my-services')}
                     className="w-full h-14 text-white text-base font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl group"
                     style={{
                       backgroundImage: 'linear-gradient(to right, #FF512F 0%, #DD2476 51%, #FF512F 100%)',
@@ -211,7 +211,7 @@ const Hero = () => {
                     }}
                   >
                     <ShoppingBag className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
-                    Browse Our Services
+                    My Services
                     <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                   </Button>
 
@@ -246,18 +246,27 @@ const Hero = () => {
 
                 {/* Account Info */}
                 <div className="mt-6 pt-6 border-t border-white/10">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-white/90 text-sm font-medium">{user?.full_name || 'User'}</p>
-                      <p className="text-white/60 text-xs">{user?.email}</p>
-                    </div>
+                  <div className="flex gap-2">
                     <Button
                       onClick={() => navigate('/profile')}
-                      variant="ghost"
+                      variant="outline"
                       size="sm"
-                      className="text-white/80 hover:text-white hover:bg-white/10 rounded-lg"
+                      className="flex-1 text-white border-white/30 bg-white/5 hover:bg-white/10 rounded-lg"
                     >
-                      <Settings className="w-4 h-4" />
+                      <Settings className="w-4 h-4 mr-1.5" />
+                      Edit Profile
+                    </Button>
+                    <Button
+                      onClick={async () => {
+                        await logout();
+                        navigate('/');
+                      }}
+                      variant="outline"
+                      size="sm"
+                      className="flex-1 text-white border-white/30 bg-white/5 hover:bg-white/10 rounded-lg"
+                    >
+                      <LogOut className="w-4 h-4 mr-1.5" />
+                      Logout
                     </Button>
                   </div>
                 </div>

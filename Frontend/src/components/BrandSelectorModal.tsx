@@ -174,7 +174,7 @@ const BrandSelectorModal = ({
     <div
       className={cn(
         layout === "sidebar"
-          ? "grid grid-cols-3 gap-3.5 max-h-[460px] overflow-y-auto pr-2"
+          ? "grid grid-cols-3 gap-3.5 max-h-[340px] overflow-y-auto pr-2"
           : "grid grid-cols-3 gap-4 max-h-60 overflow-y-auto"
       )}
       style={{
@@ -306,11 +306,10 @@ const BrandSelectorModal = ({
   );
 
   const renderSelectionContent = (layout: "sidebar" | "modal") => {
-    const paddingX = layout === "sidebar" ? "px-5" : "px-6";
+    const paddingX = layout === "sidebar" ? "px-6" : "px-6";
     const searchContainerClasses = cn(
       paddingX,
-      layout === "sidebar" ? "py-2.5" : "pb-2",
-      "border-b border-gray-100"
+      layout === "sidebar" ? "pt-4 pb-4" : "pb-2"
     );
     const summaryContainerClasses = cn(
       paddingX,
@@ -319,7 +318,7 @@ const BrandSelectorModal = ({
     );
     const gridWrapperClasses = cn(
       paddingX,
-      layout === "sidebar" ? "py-5" : "pb-6"
+      layout === "sidebar" ? "py-6" : "pb-6"
     );
 
     return (
@@ -447,17 +446,14 @@ const BrandSelectorModal = ({
       <aside
         data-brand-selector-sidebar
         className={cn(
-          "w-full h-full overflow-hidden",
+          "w-full h-full overflow-hidden bg-white",
           className,
           highlightTrigger && "ring-2 ring-red-500 ring-offset-2 rounded-2xl"
         )}
-        style={{
-          background: 'linear-gradient(to bottom, #FFFFFF, #FAFAFA)'
-        }}
       >
-        <div className="px-5 pt-3 pb-3 border-b border-gray-100">
+        <div className="px-6 pt-5 pb-4 border-b border-gray-200">
           <h3 className={cn(
-            "text-lg font-semibold text-gray-900 mb-2 transition-all duration-300",
+            "text-xl font-semibold text-gray-900 mb-4 transition-all duration-300",
             highlightTrigger && "text-red-500"
           )}>Select Manufacturer</h3>
           {stage !== "brand" && (

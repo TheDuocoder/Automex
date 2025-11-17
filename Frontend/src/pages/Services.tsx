@@ -3857,10 +3857,10 @@ const Services = () => {
             </div>
 
             {/* Right Sidebar - Select Manufacturer */}
-            <div ref={sidebarRef} className="w-full xl:w-[360px] flex-shrink-0 mt-10 xl:mt-0 xl:ml-16">
+            <div ref={sidebarRef} className="w-full xl:w-[400px] flex-shrink-0 mt-10 xl:mt-0 xl:ml-16">
               <div 
                 ref={sidebarContentRef}
-                className="xl:fixed xl:max-h-[calc(100vh-100px)] xl:z-30 xl:w-[360px]"
+                className="xl:fixed xl:max-h-[calc(100vh-180px)] xl:z-30 xl:w-[400px]"
                 style={{
                   right: 'max(calc((100% - 1400px) / 2 + 24px), 24px)',
                   top: `${sidebarTop}px`
@@ -3870,7 +3870,7 @@ const Services = () => {
                   variant="sidebar"
                   selectedBrand={selectedBrand}
                   onBrandSelect={setSelectedBrand}
-                  className="h-auto max-h-[calc(100vh-120px)] overflow-y-auto overflow-x-hidden rounded-2xl shadow-[0px_6px_30px_rgba(0,0,0,0.25)] bg-white"
+                  className="h-auto max-h-[calc(100vh-200px)] overflow-y-auto overflow-x-hidden rounded-2xl shadow-[0px_6px_30px_rgba(0,0,0,0.25)] bg-white"
                 />
               </div>
             </div>

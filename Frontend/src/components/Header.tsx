@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ChevronDown, Menu, X, User, LogOut, Settings, ShoppingBag } from "lucide-react";
+import { ChevronDown, Menu, X, User, LogOut, Settings, ShoppingBag, HelpCircle } from "lucide-react";
 import { useState, useLayoutEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -39,10 +39,9 @@ const Header = () => {
     | { label: string; type: "route"; href: string }
     | { label: string; type: "section"; target: string }
   > = [
-    { label: "About Us", type: "section", target: "about-us" },
-    { label: "Services", type: "route", href: "/services" },
-    ...(isAuthenticated ? [{ label: "My Services", type: "route", href: "/my-services" } as const] : []),
-    { label: "Contact Us", type: "route", href: "/contact-us" },
+    ...(location.pathname !== '/services' ? [{ label: "About Us", type: "section", target: "about-us" } as const] : []),
+    ...(location.pathname !== '/services' ? [{ label: "Services", type: "route", href: "/services" } as const] : []),
+    ...(location.pathname !== '/services' ? [{ label: "Contact Us", type: "route", href: "/contact-us" } as const] : []),
   ];
 
   useLayoutEffect(() => {
@@ -149,7 +148,7 @@ const Header = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             className={cn(
-              "hidden lg:flex items-center gap-6 justify-center flex-1",
+              "hidden lg:flex items-center gap-6 justify-center flex-1 ml-[40rem]",
               isTransparent && "-mt-2"
             )}
           >
@@ -198,6 +197,57 @@ const Header = () => {
               </motion.a>
             ))}
           </motion.div>
+
+          {/* Help Dropdown - Show on Services page when authenticated */}
+          {isAuthenticated && location.pathname === '/services' && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className={cn("hidden lg:block", isTransparent && "-mt-2")}
+            >
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="flex items-center gap-2 text-white hover:opacity-90 h-auto px-4 py-2 rounded-full border border-white/25 backdrop-blur-sm transition-all duration-200 hover:border-white/40"
+                  >
+                    <HelpCircle className="h-4 w-4" />
+                    <span className="text-sm font-medium">Help</span>
+                    <ChevronDown className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48 bg-white">
+                  <DropdownMenuItem
+                    onClick={() => {
+                      navigate('/');
+                      setTimeout(() => {
+                        const element = document.getElementById('about-us');
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      }, 100);
+                    }}
+                    className="cursor-pointer"
+                  >
+                    About Us
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => navigate('/my-services')}
+                    className="cursor-pointer"
+                  >
+                    My Services
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => navigate('/contact-us')}
+                    className="cursor-pointer"
+                  >
+                    Contact Us
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </motion.div>
+          )}
 
           {/* User Info - Right Side */}
           <motion.div
