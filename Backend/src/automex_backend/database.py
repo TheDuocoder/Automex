@@ -13,11 +13,16 @@ class Base(DeclarativeBase):
     pass
 
 
-# Create async engine
+# Create async engine with MySQL optimizations for faster async communication
 engine = create_async_engine(
     settings.DATABASE_URL,
     echo=settings.DEBUG,
-    future=True
+    future=True,
+    pool_pre_ping=True,  # Verify connections before using
+    pool_recycle=3600,   # Recycle connections after 1 hour
+    pool_size=10,        # Connection pool size
+    max_overflow=20,     # Maximum overflow connections
+    pool_reset_on_return='commit',  # Reset connections on return
 )
 
 # Create async session maker
@@ -39,18 +44,50 @@ async def init_db():
         # WARNING: This will delete all data in DEBUG mode!
         if settings.DEBUG:
             try:
-                # Check if bookings table exists and has new columns
-                from sqlalchemy import inspect, text
+                # Check if bookings table exists and has new columns using MySQL async queries
+                from sqlalchemy import text
                 
-                # Use sync engine for inspection
-                sync_engine = conn.sync_engine
-                inspector = inspect(sync_engine)
+                # Check if table exists using MySQL information_schema
+                table_check = text("""
+                    SELECT COUNT(*) as count 
+                    FROM information_schema.tables 
+                    WHERE table_schema = DATABASE() 
+                    AND table_name = 'bookings'
+                """)
+                result = await conn.execute(table_check)
+                table_exists = result.scalar() > 0
                 
-                if inspector.has_table("bookings"):
-                    # Check if new columns exist
-                    columns = [col['name'] for col in inspector.get_columns("bookings")]
+                if table_exists:
+                    # Check if status column is ENUM type (needs to be VARCHAR)
+                    status_check = text("""
+                        SELECT DATA_TYPE, COLUMN_TYPE
+                        FROM information_schema.columns 
+                        WHERE table_schema = DATABASE() 
+                        AND table_name = 'bookings' 
+                        AND column_name = 'status'
+                    """)
+                    result = await conn.execute(status_check)
+                    status_info = result.fetchone()
+                    
+                    # Check for required columns using MySQL information_schema
+                    columns_check = text("""
+                        SELECT column_name 
+                        FROM information_schema.columns 
+                        WHERE table_schema = DATABASE() 
+                        AND table_name = 'bookings' 
+                        AND column_name IN ('car_brand', 'car_model', 'fuel_type', 'service_name')
+                    """)
+                    result = await conn.execute(columns_check)
+                    existing_columns = [row[0] for row in result.fetchall()]
                     required_columns = ['car_brand', 'car_model', 'fuel_type', 'service_name']
-                    missing_columns = [col for col in required_columns if col not in columns]
+                    missing_columns = [col for col in required_columns if col not in existing_columns]
+                    
+                    # If status is ENUM type, convert it to VARCHAR
+                    if status_info and status_info[0] == 'enum':
+                        print(f"[INFO] Status column is ENUM type, converting to VARCHAR(50)...")
+                        alter_status = text("ALTER TABLE bookings MODIFY COLUMN status VARCHAR(50) NOT NULL DEFAULT 'pending'")
+                        await conn.execute(alter_status)
+                        print("[INFO] Status column converted to VARCHAR successfully")
                     
                     if missing_columns:
                         print(f"[INFO] Missing columns detected: {missing_columns}")
@@ -66,7 +103,7 @@ async def init_db():
                 print("[INFO] Dropping and recreating tables to ensure schema is correct...")
                 await conn.run_sync(Base.metadata.drop_all)
         
-        # Create all tables
+        # Create all tables using async MySQL
         await conn.run_sync(Base.metadata.create_all)
         print("[INFO] All tables created successfully")
     

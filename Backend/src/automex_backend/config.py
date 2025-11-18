@@ -24,7 +24,7 @@ class Settings(BaseSettings):
     PORT: int = 8000
     
     # Database
-    DATABASE_URL: str = "sqlite+aiosqlite:///./automex.db"
+    DATABASE_URL: str = "mysql+aiomysql://root:root@localhost:3306/automex"
     
     # Security
     SECRET_KEY: str = "your-secret-key-change-this-in-production"

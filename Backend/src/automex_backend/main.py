@@ -234,8 +234,9 @@ async def test_database():
     """Test database connectivity"""
     try:
         from automex_backend.database import engine
+        from sqlalchemy import text
         async with engine.connect() as conn:
-            result = await conn.execute("SELECT 1")
+            result = await conn.execute(text("SELECT 1"))
             return {"status": "database_connected", "test": "passed"}
     except Exception as e:
         return {"status": "database_error", "error": str(e)}

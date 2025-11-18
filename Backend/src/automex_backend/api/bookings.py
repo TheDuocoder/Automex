@@ -2,7 +2,7 @@
 Booking management API routes
 """
 from typing import List, Optional
-from datetime import datetime
+from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -11,8 +11,8 @@ from automex_backend.database import get_async_session
 from automex_backend.models.booking import Booking, BookingStatus
 from automex_backend.models.service import Service
 from automex_backend.models.user import User
-from automex_backend.schemas.booking import BookingRead, BookingCreate, BookingUpdate, ServiceBookingCreate
-from automex_backend.api.auth import current_active_user
+from automex_backend.schemas.booking import BookingRead, BookingCreate, BookingUpdate, ServiceBookingCreate, BookingStatusUpdate
+from automex_backend.api.auth import current_active_user, get_current_user_with_role
 
 router = APIRouter()
 
@@ -198,6 +198,177 @@ async def create_service_booking(
         )
 
 
+@router.patch("/{booking_id}/status", response_model=BookingRead)
+async def update_booking_status(
+    booking_id: int,
+    status_update: BookingStatusUpdate,
+    session: AsyncSession = Depends(get_async_session),
+    user: User = Depends(current_active_user)
+):
+    """
+    Update booking status (Admin and Super Admin only)
+    """
+    print(f"[DEBUG] update_booking_status called: booking_id={booking_id}, status={status_update.status}, user_id={user.id if user else None}")
+    
+    # Validate status first - check against enum VALUES, not names
+    status_value = status_update.status.lower().strip()
+    valid_statuses = {s.value for s in BookingStatus}
+    
+    if status_value not in valid_statuses:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid status value: {status_update.status}. Valid values are: {', '.join(sorted(valid_statuses))}"
+        )
+    
+    # Find the enum member by value (not name)
+    new_status = None
+    for status_enum in BookingStatus:
+        if status_enum.value == status_value:
+            new_status = status_enum
+            break
+    
+    if not new_status:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid status value: {status_update.status}. Valid values are: {', '.join(sorted(valid_statuses))}"
+        )
+    
+    print(f"[DEBUG] Validated status: {new_status.name} = {new_status.value}")
+    
+    try:
+        # Check if user is Admin or Super Admin
+        from automex_backend.models.role import Role
+        
+        # Check permissions: Super user OR role name is admin/super
+        is_admin_or_super = False
+        
+        if user.is_superuser:
+            is_admin_or_super = True
+            print(f"[DEBUG] User {user.id} is superuser")
+        else:
+            # Check role_id exists
+            if hasattr(user, 'role_id') and user.role_id:
+                print(f"[DEBUG] User {user.id} has role_id: {user.role_id}")
+                # Load role to check name
+                role_stmt = select(Role).where(Role.id == user.role_id)
+                role_result = await session.execute(role_stmt)
+                role = role_result.scalar_one_or_none()
+                if role:
+                    print(f"[DEBUG] User role name: {role.name}")
+                    if role.name in ["admin", "super"]:
+                        is_admin_or_super = True
+                else:
+                    print(f"[DEBUG] Role {user.role_id} not found")
+            else:
+                print(f"[DEBUG] User {user.id} has no role_id")
+        
+        if not is_admin_or_super:
+            print(f"[DEBUG] User {user.id} is not admin or super, denying access")
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Only Admin and Super Admin can change booking status"
+            )
+        
+        print(f"[DEBUG] Permission check passed, getting booking {booking_id}")
+        
+        # Get booking
+        booking_result = await session.execute(
+            select(Booking).where(Booking.id == booking_id)
+        )
+        booking = booking_result.scalar_one_or_none()
+        
+        if not booking:
+            print(f"[DEBUG] Booking {booking_id} not found")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Booking not found"
+            )
+        
+        print(f"[DEBUG] Booking found, current status: {booking.status}, updating to: {new_status}")
+        print(f"[DEBUG] New status value: {new_status.value}, type: {type(new_status)}")
+        
+        # Get the string value from enum
+        status_value = new_status.value if isinstance(new_status, BookingStatus) else str(new_status)
+        print(f"[DEBUG] Status string value to store: {status_value}")
+        
+        # Use raw SQL update to bypass SQLAlchemy's enum type conversion
+        # This ensures we store the string value directly without enum name conversion
+        from sqlalchemy import text
+        
+        # Build SQL update with bind parameter for status
+        sql_query = text("""
+            UPDATE bookings 
+            SET status = :status_value, updated_at = NOW()
+            WHERE id = :booking_id
+        """)
+        
+        params = {
+            "status_value": status_value,
+            "booking_id": booking_id
+        }
+        
+        # If status is completed, set completed_at
+        if new_status == BookingStatus.COMPLETED and not booking.completed_at:
+            sql_query = text("""
+                UPDATE bookings 
+                SET status = :status_value, 
+                    completed_at = :completed_at,
+                    updated_at = NOW()
+                WHERE id = :booking_id
+            """)
+            params["completed_at"] = datetime.now(timezone.utc)
+        
+        print(f"[DEBUG] Executing raw SQL update with status: {status_value}")
+        try:
+            result = await session.execute(sql_query, params)
+            print(f"[DEBUG] Update executed, rows affected: {result.rowcount}")
+            await session.commit()
+            print(f"[DEBUG] Update committed successfully")
+        except Exception as commit_error:
+            print(f"[ERROR] Commit failed: {commit_error}")
+            await session.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Failed to save booking status update: {str(commit_error)}"
+            )
+        
+        print(f"[DEBUG] Refreshing booking")
+        try:
+            await session.refresh(booking)
+            print(f"[DEBUG] Booking refreshed, status is now: {booking.status}")
+        except Exception as refresh_error:
+            print(f"[WARNING] Refresh failed but commit succeeded: {refresh_error}")
+            # Re-fetch the booking to ensure we have the latest data
+            booking_result = await session.execute(
+                select(Booking).where(Booking.id == booking_id)
+            )
+            booking = booking_result.scalar_one_or_none()
+        
+        # Return booking - FastAPI will serialize it using BookingRead schema
+        return booking
+    except HTTPException as http_ex:
+        print(f"[DEBUG] HTTPException raised: {http_ex.status_code} - {http_ex.detail}")
+        raise
+    except Exception as e:
+        import traceback
+        error_trace = traceback.format_exc()
+        error_msg = str(e)
+        print(f"[ERROR] Error updating booking status: {error_msg}")
+        print(f"[ERROR] Booking ID: {booking_id}, New Status: {status_update.status}")
+        print(f"[ERROR] User ID: {user.id if user else 'None'}")
+        print(f"[ERROR] User is_superuser: {user.is_superuser if user else 'None'}")
+        print(f"[ERROR] User role_id: {getattr(user, 'role_id', 'N/A')}")
+        print(f"[ERROR] Traceback:\n{error_trace}")
+        try:
+            await session.rollback()
+        except Exception as rollback_error:
+            print(f"[ERROR] Failed to rollback: {rollback_error}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to update booking status: {error_msg}. Check server logs for details."
+        )
+
+
 @router.put("/{booking_id}", response_model=BookingRead)
 async def update_booking(
     booking_id: int,
@@ -232,7 +403,7 @@ async def update_booking(
     
     # If status is completed, set completed_at
     if booking.status == BookingStatus.COMPLETED and not booking.completed_at:
-        booking.completed_at = datetime.utcnow()
+        booking.completed_at = datetime.now(timezone.utc)
     
     await session.commit()
     await session.refresh(booking)

@@ -13,11 +13,10 @@ from automex_backend.database import Base
 class BookingStatus(str, PyEnum):
     """Booking status enumeration"""
     PENDING = "pending"
-    CONFIRMED = "confirmed"
+    ANALYSE = "analyse"
     IN_PROGRESS = "in_progress"
     COMPLETED = "completed"
     CANCELLED = "cancelled"
-    RESCHEDULED = "rescheduled"
 
 
 class Booking(Base):
@@ -33,10 +32,10 @@ class Booking(Base):
     
     # Booking details
     booking_date: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
-    status: Mapped[BookingStatus] = mapped_column(
-        Enum(BookingStatus),
+    status: Mapped[str] = mapped_column(
+        String(length=50),
         nullable=False,
-        default=BookingStatus.PENDING
+        default=BookingStatus.PENDING.value
     )
     
     # Vehicle details
@@ -67,6 +66,18 @@ class Booking(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
     completed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+    
+    @property
+    def status_enum(self) -> BookingStatus:
+        """Convert string status to BookingStatus enum"""
+        if isinstance(self.status, BookingStatus):
+            return self.status
+        # Find enum by value
+        for status_enum in BookingStatus:
+            if status_enum.value == self.status:
+                return status_enum
+        # Fallback to PENDING if not found
+        return BookingStatus.PENDING
     
     def __repr__(self) -> str:
         return f"<Booking(id={self.id}, user_id={self.user_id}, status={self.status})>"

@@ -10,11 +10,10 @@ import { apiCall } from './api';
  */
 export enum BookingStatus {
   PENDING = "pending",
-  CONFIRMED = "confirmed",
+  ANALYSE = "analyse",
   IN_PROGRESS = "in_progress",
   COMPLETED = "completed",
   CANCELLED = "cancelled",
-  RESCHEDULED = "rescheduled",
 }
 
 /**
@@ -126,5 +125,25 @@ export async function cancelBooking(bookingId: number): Promise<void> {
   if (response.error) {
     throw new Error(response.error);
   }
+}
+
+/**
+ * Update booking status (Admin/Super Admin only)
+ */
+export async function updateBookingStatus(bookingId: number, newStatus: BookingStatus): Promise<Booking> {
+  const response = await apiCall<Booking>(`/api/v1/bookings/${bookingId}/status`, {
+    method: 'PATCH',
+    body: JSON.stringify({ status: newStatus }),
+  });
+
+  if (response.error) {
+    throw new Error(response.error);
+  }
+
+  if (!response.data) {
+    throw new Error('Failed to update booking status');
+  }
+
+  return response.data;
 }
 

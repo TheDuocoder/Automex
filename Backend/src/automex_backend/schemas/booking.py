@@ -40,6 +40,11 @@ class ServiceBookingCreate(BaseModel):
     service_name: str = Field(..., min_length=1, max_length=255)
 
 
+class BookingStatusUpdate(BaseModel):
+    """Schema for updating booking status"""
+    status: str
+
+
 class BookingUpdate(BaseModel):
     """Schema for updating a booking"""
     booking_date: Optional[datetime] = None

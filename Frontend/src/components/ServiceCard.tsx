@@ -230,9 +230,9 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 
                   <Button
                     className="bg-white border border-[#E53935] text-[#E53935] hover:bg-[#E53935] hover:text-white px-6 py-2 rounded font-medium transition-colors"
-                    onClick={() => onAddToCart(id, name)}
+                    onClick={handleBookClick}
                   >
-                    + ADD TO CART
+                    Book
                   </Button>
                 </div>
               </div>
