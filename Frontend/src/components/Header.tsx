@@ -31,7 +31,7 @@ const Header = () => {
 
   // Determine if header should be transparent (home page) or solid (other pages)
   const isTransparent = location.pathname === '/';
-  
+
   const headerPadding = isTransparent ? "py-0 md:py-1 lg:py-2" : "py-2 md:py-3 lg:py-4";
   const logoHeights = isTransparent ? "h-24 md:h-32 lg:h-40" : "h-20 md:h-24 lg:h-28";
 
@@ -39,10 +39,10 @@ const Header = () => {
     | { label: string; type: "route"; href: string }
     | { label: string; type: "section"; target: string }
   > = [
-    ...(location.pathname !== '/services' ? [{ label: "About Us", type: "section", target: "about-us" } as const] : []),
-    ...(location.pathname !== '/services' ? [{ label: "Services", type: "route", href: "/services" } as const] : []),
-    ...(location.pathname !== '/services' ? [{ label: "Contact Us", type: "route", href: "/contact-us" } as const] : []),
-  ];
+      ...(location.pathname !== '/services' ? [{ label: "About Us", type: "section", target: "about-us" } as const] : []),
+      ...(location.pathname !== '/services' ? [{ label: "Services", type: "route", href: "/services" } as const] : []),
+      ...(location.pathname !== '/services' ? [{ label: "Contact Us", type: "route", href: "/contact-us" } as const] : []),
+    ];
 
   useLayoutEffect(() => {
     if (!navLinksRef.current || !isTransparent) return;
@@ -131,9 +131,9 @@ const Header = () => {
             )}
             onClick={() => navigate('/')}
           >
-            <img 
-              src="/images/Landing_page_images/Red_Automex.png" 
-              alt="AutoMex Logo" 
+            <img
+              src="/images/Landing_page_images/Red_Automex.png"
+              alt="AutoMex Logo"
               className={cn("w-auto object-contain", logoHeights)}
               onError={(e) => {
                 e.currentTarget.src = "/images/Landing_page_images/AUTOMEX.png";
@@ -148,7 +148,7 @@ const Header = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             className={cn(
-              "hidden lg:flex items-center gap-6 justify-center flex-1 ml-[40rem]",
+              "hidden lg:flex items-center gap-6 justify-end flex-1 pr-20",
               isTransparent && "-mt-2"
             )}
           >
@@ -256,28 +256,28 @@ const Header = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className={cn("flex items-center gap-3 md:gap-4 lg:gap-6 flex-shrink-0", isTransparent && "-mt-2 md:-mt-4 lg:-mt-6")}
           >
-              {/* Profile Menu (if authenticated) - Hide on landing page */}
-              {isAuthenticated && !isHomePage && (
-                <div className="hidden lg:block">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        className="flex items-center gap-2 text-white hover:opacity-90 h-auto px-3 py-2 rounded-lg bg-black border-2 border-pink-500/90 transition-all duration-200 hover:border-pink-500 relative"
-                        title={`Logged in as: ${user?.full_name || user?.email?.split('@')[0] || 'User'}`}
-                        style={{
-                          boxShadow: 'inset 0 0 0 1px rgba(255, 255, 255, 0.3)'
-                        }}
-                      >
-                        <div className="h-8 w-8 rounded-full bg-gray-700 flex items-center justify-center flex-shrink-0" title={`${user?.full_name || user?.email?.split('@')[0] || 'User'}`}>
-                          <User className="h-5 w-5 text-white" />
-                        </div>
-                        <span className="text-sm font-medium whitespace-nowrap">
-                          {user?.full_name || user?.email?.split('@')[0] || 'User'}
-                        </span>
-                        <ChevronDown className="h-4 w-4 flex-shrink-0" />
-                      </Button>
-                    </DropdownMenuTrigger>
+            {/* Profile Menu (if authenticated) - Hide on landing page */}
+            {isAuthenticated && !isHomePage && (
+              <div className="hidden lg:block">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="flex items-center gap-2 text-white hover:opacity-90 h-auto px-3 py-2 rounded-lg bg-black border-2 border-pink-500/90 transition-all duration-200 hover:border-pink-500 relative"
+                      title={`Logged in as: ${user?.full_name || user?.email?.split('@')[0] || 'User'}`}
+                      style={{
+                        boxShadow: 'inset 0 0 0 1px rgba(255, 255, 255, 0.3)'
+                      }}
+                    >
+                      <div className="h-8 w-8 rounded-full bg-gray-700 flex items-center justify-center flex-shrink-0" title={`${user?.full_name || user?.email?.split('@')[0] || 'User'}`}>
+                        <User className="h-5 w-5 text-white" />
+                      </div>
+                      <span className="text-sm font-medium whitespace-nowrap">
+                        {user?.full_name || user?.email?.split('@')[0] || 'User'}
+                      </span>
+                      <ChevronDown className="h-4 w-4 flex-shrink-0" />
+                    </Button>
+                  </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56 bg-white">
                     <DropdownMenuLabel className="font-normal">
                       <div className="flex flex-col space-y-1">
@@ -322,20 +322,20 @@ const Header = () => {
                       <span>Logout</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-              )}
+                </DropdownMenu>
+              </div>
+            )}
 
-              {/* Mobile Menu Button */}
-              <button
-                className="md:hidden text-white"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                aria-label="Toggle menu"
-                title={isAuthenticated ? `Menu - ${user?.full_name || user?.email?.split('@')[0] || 'User'}` : 'Toggle menu'}
-              >
-                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
-            </motion.div>
+            {/* Mobile Menu Button */}
+            <button
+              className="md:hidden text-white"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle menu"
+              title={isAuthenticated ? `Menu - ${user?.full_name || user?.email?.split('@')[0] || 'User'}` : 'Toggle menu'}
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </motion.div>
         </div>
 
         {/* Mobile Menu */}
@@ -344,8 +344,8 @@ const Header = () => {
             <nav className="flex flex-col space-y-3 pt-3">
               {/* Main Navigation */}
               <div className="text-xs text-white/70 mb-2 px-0">Navigation</div>
-              <a 
-                href="#about-us" 
+              <a
+                href="#about-us"
                 className="text-sm text-white hover-automex py-2"
                 onClick={(e) => {
                   e.preventDefault();
@@ -358,8 +358,8 @@ const Header = () => {
               >
                 About Us
               </a>
-              <a 
-                href="/contact-us" 
+              <a
+                href="/contact-us"
                 className="text-sm text-white hover-automex py-2 cursor-pointer"
                 onClick={(e) => {
                   e.preventDefault();
@@ -369,8 +369,8 @@ const Header = () => {
               >
                 Contact Us
               </a>
-              <a 
-                href="#faq" 
+              <a
+                href="#faq"
                 className="text-sm text-white hover-automex py-2"
                 onClick={(e) => {
                   e.preventDefault();
@@ -383,8 +383,8 @@ const Header = () => {
               >
                 FAQ
               </a>
-              <a 
-                href="#offers" 
+              <a
+                href="#offers"
                 className="text-sm text-white hover-automex py-2"
                 onClick={(e) => {
                   e.preventDefault();
@@ -397,8 +397,8 @@ const Header = () => {
               >
                 Offers
               </a>
-              <a 
-                href="#reviews" 
+              <a
+                href="#reviews"
                 className="text-sm text-white hover-automex py-2"
                 onClick={(e) => {
                   e.preventDefault();
@@ -414,9 +414,9 @@ const Header = () => {
               {/* Legal & Policies */}
               <div className="border-t border-white/20 mt-2 pt-2">
                 <div className="text-xs text-white/70 mb-2 px-0">Legal & Policies</div>
-                <a 
-                  href="#terms" 
-                  className="text-sm text-white hover-automex py-2" 
+                <a
+                  href="#terms"
+                  className="text-sm text-white hover-automex py-2"
                   onClick={(e) => {
                     e.preventDefault();
                     const element = document.getElementById('terms');
@@ -428,9 +428,9 @@ const Header = () => {
                 >
                   Terms
                 </a>
-                <a 
-                  href="#privacy" 
-                  className="text-sm text-white hover-automex py-2" 
+                <a
+                  href="#privacy"
+                  className="text-sm text-white hover-automex py-2"
                   onClick={(e) => {
                     e.preventDefault();
                     const element = document.getElementById('privacy');
@@ -445,8 +445,8 @@ const Header = () => {
               </div>
               {isAuthenticated && (
                 <>
-                  <a 
-                    href="/services" 
+                  <a
+                    href="/services"
                     className="text-sm text-white hover-automex py-2 cursor-pointer"
                     onClick={(e) => {
                       e.preventDefault();
@@ -456,8 +456,8 @@ const Header = () => {
                   >
                     Services
                   </a>
-                  <a 
-                    href="/my-services" 
+                  <a
+                    href="/my-services"
                     className="text-sm text-white hover-automex py-2 cursor-pointer"
                     onClick={(e) => {
                       e.preventDefault();

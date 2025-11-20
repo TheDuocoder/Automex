@@ -3,15 +3,16 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Calendar, Car, Clock, CheckCircle2, XCircle, Loader2, Search, Filter } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Calendar, Car, Clock, CheckCircle2, XCircle, Loader2, AlertCircle, MapPin, Wrench } from "lucide-react";
 import { getUserBookings, cancelBooking, updateBookingStatus, type Booking, BookingStatus } from "@/services/bookingService";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 
 const MyServices = () => {
   const { isAuthenticated, user } = useAuth();
@@ -22,17 +23,7 @@ const MyServices = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [cancellingId, setCancellingId] = useState<number | null>(null);
   const [updatingStatusId, setUpdatingStatusId] = useState<number | null>(null);
-  
-  // Filter state - all statuses selected by default
-  const [selectedStatuses, setSelectedStatuses] = useState<Set<BookingStatus>>(
-    new Set([
-      BookingStatus.PENDING,
-      BookingStatus.ANALYSE,
-      BookingStatus.IN_PROGRESS,
-      BookingStatus.COMPLETED,
-      BookingStatus.CANCELLED,
-    ])
-  );
+  const [activeTab, setActiveTab] = useState<string>("all");
 
   // Check if user is Admin or Super Admin
   const isAdmin = user?.role?.name === "admin" || user?.role?.name === "super" || user?.is_superuser;
@@ -41,7 +32,9 @@ const MyServices = () => {
     try {
       setIsLoading(true);
       const data = await getUserBookings();
-      setBookings(data);
+      // Sort bookings by date (newest first)
+      const sortedData = data.sort((a, b) => new Date(b.booking_date).getTime() - new Date(a.booking_date).getTime());
+      setBookings(sortedData);
     } catch (error) {
       toast({
         title: "Error",
@@ -59,7 +52,6 @@ const MyServices = () => {
       return;
     }
 
-    // Check if redirected from successful booking
     const state = location.state as { bookingSuccess?: boolean; serviceName?: string } | null;
     if (state?.bookingSuccess) {
       toast({
@@ -116,7 +108,6 @@ const MyServices = () => {
         description: `Booking #${bookingId} moved to ${getStatusLabel(newStatus)}`,
         duration: 3000,
       });
-      // Reload bookings to reflect the change
       await loadBookings();
     } catch (error) {
       console.error("Failed to update booking status:", error);
@@ -144,11 +135,11 @@ const MyServices = () => {
 
   const getStatusColor = (status: BookingStatus): string => {
     const colors: Record<BookingStatus, string> = {
-      [BookingStatus.PENDING]: "bg-yellow-100 text-yellow-800 border-yellow-300",
-      [BookingStatus.ANALYSE]: "bg-blue-100 text-blue-800 border-blue-300",
-      [BookingStatus.IN_PROGRESS]: "bg-purple-100 text-purple-800 border-purple-300",
-      [BookingStatus.COMPLETED]: "bg-green-100 text-green-800 border-green-300",
-      [BookingStatus.CANCELLED]: "bg-red-100 text-red-800 border-red-300",
+      [BookingStatus.PENDING]: "bg-yellow-100 text-yellow-800 border-yellow-200",
+      [BookingStatus.ANALYSE]: "bg-blue-100 text-blue-800 border-blue-200",
+      [BookingStatus.IN_PROGRESS]: "bg-purple-100 text-purple-800 border-purple-200",
+      [BookingStatus.COMPLETED]: "bg-green-100 text-green-800 border-green-200",
+      [BookingStatus.CANCELLED]: "bg-red-100 text-red-800 border-red-200",
     };
     return colors[status] || colors[BookingStatus.PENDING];
   };
@@ -159,10 +150,33 @@ const MyServices = () => {
         return <CheckCircle2 className="h-4 w-4" />;
       case BookingStatus.CANCELLED:
         return <XCircle className="h-4 w-4" />;
+      case BookingStatus.IN_PROGRESS:
+        return <Loader2 className="h-4 w-4 animate-spin" />;
+      case BookingStatus.ANALYSE:
+        return <Search className="h-4 w-4" />; // Using Search icon locally defined or imported
       default:
         return <Clock className="h-4 w-4" />;
     }
   };
+
+  // Helper for Search icon since it wasn't imported in the original file but used in my switch
+  const Search = ({ className }: { className?: string }) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <circle cx="11" cy="11" r="8" />
+      <path d="m21 21-4.3-4.3" />
+    </svg>
+  );
 
   const getNextStatus = (currentStatus: BookingStatus): BookingStatus | null => {
     switch (currentStatus) {
@@ -172,340 +186,283 @@ const MyServices = () => {
         return BookingStatus.IN_PROGRESS;
       case BookingStatus.IN_PROGRESS:
         return BookingStatus.COMPLETED;
-      case BookingStatus.COMPLETED:
-      case BookingStatus.CANCELLED:
-        return null; // No next state
       default:
         return null;
     }
   };
 
-  // Filter bookings based on selected statuses
-  const filteredBookings = bookings.filter(b => selectedStatuses.has(b.status));
-  
-  // Group filtered bookings by status
-  const groupedBookings = {
-    [BookingStatus.PENDING]: filteredBookings.filter(b => b.status === BookingStatus.PENDING),
-    [BookingStatus.ANALYSE]: filteredBookings.filter(b => b.status === BookingStatus.ANALYSE),
-    [BookingStatus.IN_PROGRESS]: filteredBookings.filter(b => b.status === BookingStatus.IN_PROGRESS),
-    [BookingStatus.COMPLETED]: filteredBookings.filter(b => b.status === BookingStatus.COMPLETED),
-    [BookingStatus.CANCELLED]: filteredBookings.filter(b => b.status === BookingStatus.CANCELLED),
+  const filterBookings = (status: string) => {
+    if (status === "all") return bookings;
+    return bookings.filter((b) => b.status === status);
   };
-  
-  // Handle status filter change
-  const handleStatusFilterChange = (status: BookingStatus, checked: boolean) => {
-    setSelectedStatuses(prev => {
-      const newSet = new Set(prev);
-      if (checked) {
-        newSet.add(status);
-      } else {
-        newSet.delete(status);
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
       }
-      return newSet;
-    });
-  };
-  
-  // Handle "All" checkbox
-  const handleAllFilterChange = (checked: boolean) => {
-    if (checked) {
-      setSelectedStatuses(new Set([
-        BookingStatus.PENDING,
-        BookingStatus.ANALYSE,
-        BookingStatus.IN_PROGRESS,
-        BookingStatus.COMPLETED,
-        BookingStatus.CANCELLED,
-      ]));
-    } else {
-      setSelectedStatuses(new Set());
     }
   };
-  
-  // Check if all statuses are selected
-  const allStatusesSelected = selectedStatuses.size === 5;
 
-  const columns = [
-    { status: BookingStatus.PENDING, title: "Pending", color: "border-yellow-300 bg-yellow-50/50" },
-    { status: BookingStatus.ANALYSE, title: "Analyse", color: "border-blue-300 bg-blue-50/50" },
-    { status: BookingStatus.IN_PROGRESS, title: "In Progress", color: "border-purple-300 bg-purple-50/50" },
-    { status: BookingStatus.COMPLETED, title: "Done", color: "border-green-300 bg-green-50/50" },
-    { status: BookingStatus.CANCELLED, title: "Cancelled", color: "border-red-300 bg-red-50/50" },
-  ];
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 12
+      }
+    }
+  };
 
-  if (!isAuthenticated) {
-    return null;
-  }
+  const BookingCard = ({ booking }: { booking: Booking }) => (
+    <motion.div
+      variants={itemVariants}
+      layout
+      initial="hidden"
+      animate="visible"
+      exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
+      whileHover={{ y: -5, transition: { duration: 0.2 } }}
+    >
+      <Card
+        className="h-full hover:shadow-xl transition-all duration-300 border-l-4 overflow-hidden group cursor-pointer relative"
+        style={{
+          borderLeftColor:
+            booking.status === BookingStatus.COMPLETED ? '#22c55e' :
+              booking.status === BookingStatus.CANCELLED ? '#ef4444' :
+                booking.status === BookingStatus.IN_PROGRESS ? '#a855f7' :
+                  booking.status === BookingStatus.ANALYSE ? '#3b82f6' :
+                    '#eab308'
+        }}
+        onClick={() => navigate(`/booking/${booking.id}`)}
+      >
+        <CardHeader className="pb-3 bg-gray-50/50 border-b border-gray-100">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <CardTitle className="text-lg font-bold text-gray-900 line-clamp-1 group-hover:text-primary transition-colors">
+                {booking.service_name || "Service Booking"}
+              </CardTitle>
+              <div className="flex items-center gap-2 mt-1.5">
+                <Badge variant="outline" className={cn("font-medium flex items-center gap-1.5", getStatusColor(booking.status))}>
+                  {getStatusIcon(booking.status)}
+                  {getStatusLabel(booking.status)}
+                </Badge>
+                <span className="text-xs text-gray-400 font-mono">#{booking.id}</span>
+              </div>
+            </div>
+          </div>
+        </CardHeader>
+
+        <CardContent className="pt-4 pb-2 space-y-4">
+          {/* Vehicle Info */}
+          <div className="flex items-start gap-3">
+            <div className="p-2 bg-gray-100 rounded-lg text-gray-600 group-hover:bg-white group-hover:shadow-sm transition-all">
+              <Car className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-xs text-gray-500 font-medium uppercase tracking-wider">Vehicle</p>
+              <p className="text-sm font-semibold text-gray-900">
+                {booking.car_brand || booking.vehicle_make} {booking.car_model || booking.vehicle_model}
+              </p>
+              {booking.fuel_type && (
+                <p className="text-xs text-gray-500">{booking.fuel_type}</p>
+              )}
+            </div>
+          </div>
+
+          {/* Date Info */}
+          <div className="flex items-start gap-3">
+            <div className="p-2 bg-gray-100 rounded-lg text-gray-600 group-hover:bg-white group-hover:shadow-sm transition-all">
+              <Calendar className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-xs text-gray-500 font-medium uppercase tracking-wider">Scheduled For</p>
+              <p className="text-sm font-semibold text-gray-900">
+                {format(new Date(booking.booking_date), "EEE, MMM d, yyyy")}
+              </p>
+              <p className="text-xs text-gray-500">
+                at {format(new Date(booking.booking_date), "h:mm a")}
+              </p>
+            </div>
+          </div>
+
+          {/* Cost Info (if available) */}
+          {booking.estimated_cost && (
+            <div className="flex items-start gap-3">
+              <div className="p-2 bg-gray-100 rounded-lg text-gray-600 group-hover:bg-white group-hover:shadow-sm transition-all">
+                <span className="h-5 w-5 flex items-center justify-center font-bold text-sm">₹</span>
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 font-medium uppercase tracking-wider">Est. Cost</p>
+                <p className="text-sm font-semibold text-gray-900">
+                  ₹{booking.estimated_cost.toLocaleString()}
+                </p>
+              </div>
+            </div>
+          )}
+        </CardContent>
+
+        <CardFooter className="pt-2 pb-4 px-6 border-t border-gray-100 mt-2 bg-gray-50/30 group-hover:bg-gray-50/80 transition-colors">
+          <div className="w-full flex gap-2" onClick={(e) => e.stopPropagation()}>
+            {isAdmin && (() => {
+              const nextStatus = getNextStatus(booking.status);
+              if (nextStatus) {
+                return (
+                  <Button
+                    size="sm"
+                    onClick={() => handleStatusChange(booking.id, nextStatus)}
+                    disabled={updatingStatusId === booking.id}
+                    className="flex-1 bg-black text-white hover:bg-gray-800"
+                  >
+                    {updatingStatusId === booking.id ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      `Move to ${getStatusLabel(nextStatus)}`
+                    )}
+                  </Button>
+                );
+              }
+              return null;
+            })()}
+
+            {booking.status !== BookingStatus.COMPLETED &&
+              booking.status !== BookingStatus.CANCELLED && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleCancel(booking.id)}
+                  disabled={cancellingId === booking.id}
+                  className="flex-1 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 hover:border-red-300"
+                >
+                  {cancellingId === booking.id ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    "Cancel"
+                  )}
+                </Button>
+              )}
+
+            {(booking.status === BookingStatus.COMPLETED || booking.status === BookingStatus.CANCELLED) && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate(`/booking/${booking.id}`)}
+                className="w-full text-gray-500 hover:text-gray-900 hover:bg-white/50"
+              >
+                View Details
+              </Button>
+            )}
+          </div>
+        </CardFooter>
+      </Card>
+    </motion.div>
+  );
+
+  if (!isAuthenticated) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header />
-      
-      <main className="container mx-auto px-4 md:px-6 lg:px-8 py-8 md:py-12">
-        <div className="mb-8">
-          <div className="flex items-center justify-between flex-wrap gap-4 mb-2">
+
+      <main className="flex-grow container mx-auto px-4 md:px-6 lg:px-8 py-8 md:py-12">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">My Services</h1>
-              <p className="text-gray-600">View and manage your service bookings</p>
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight">My Services</h1>
+              <p className="text-gray-500 mt-2 text-lg">Track and manage your vehicle service history</p>
             </div>
-            
-            {/* Filter Checkboxes */}
-            <div className="flex items-center gap-4 flex-wrap">
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="filter-all"
-                  checked={allStatusesSelected}
-                  onCheckedChange={handleAllFilterChange}
-                />
-                <label
-                  htmlFor="filter-all"
-                  className="text-sm font-medium text-gray-700 cursor-pointer select-none"
-                >
-                  All
-                </label>
-              </div>
-              
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="filter-pending"
-                  checked={selectedStatuses.has(BookingStatus.PENDING)}
-                  onCheckedChange={(checked) => handleStatusFilterChange(BookingStatus.PENDING, checked as boolean)}
-                />
-                <label
-                  htmlFor="filter-pending"
-                  className="text-sm font-medium text-gray-700 cursor-pointer select-none"
-                >
-                  Pending
-                </label>
-              </div>
-              
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="filter-analyse"
-                  checked={selectedStatuses.has(BookingStatus.ANALYSE)}
-                  onCheckedChange={(checked) => handleStatusFilterChange(BookingStatus.ANALYSE, checked as boolean)}
-                />
-                <label
-                  htmlFor="filter-analyse"
-                  className="text-sm font-medium text-gray-700 cursor-pointer select-none"
-                >
-                  Analyse
-                </label>
-              </div>
-              
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="filter-in-progress"
-                  checked={selectedStatuses.has(BookingStatus.IN_PROGRESS)}
-                  onCheckedChange={(checked) => handleStatusFilterChange(BookingStatus.IN_PROGRESS, checked as boolean)}
-                />
-                <label
-                  htmlFor="filter-in-progress"
-                  className="text-sm font-medium text-gray-700 cursor-pointer select-none"
-                >
-                  In Progress
-                </label>
-              </div>
-              
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="filter-done"
-                  checked={selectedStatuses.has(BookingStatus.COMPLETED)}
-                  onCheckedChange={(checked) => handleStatusFilterChange(BookingStatus.COMPLETED, checked as boolean)}
-                />
-                <label
-                  htmlFor="filter-done"
-                  className="text-sm font-medium text-gray-700 cursor-pointer select-none"
-                >
-                  Done
-                </label>
-              </div>
-              
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="filter-cancelled"
-                  checked={selectedStatuses.has(BookingStatus.CANCELLED)}
-                  onCheckedChange={(checked) => handleStatusFilterChange(BookingStatus.CANCELLED, checked as boolean)}
-                />
-                <label
-                  htmlFor="filter-cancelled"
-                  className="text-sm font-medium text-gray-700 cursor-pointer select-none"
-                >
-                  Cancelled
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {isLoading ? (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            <span className="ml-3 text-gray-600">Loading your bookings...</span>
-          </div>
-        ) : bookings.length === 0 ? (
-          <Card className="p-12 text-center">
-            <Calendar className="h-16 w-16 mx-auto mb-4 text-gray-400" />
-            <h2 className="text-2xl font-semibold text-gray-900 mb-2">No Bookings Yet</h2>
-            <p className="text-gray-600 mb-6">You haven't booked any services yet.</p>
-            <Button onClick={() => navigate('/services')} className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600">
-              Browse Services
-            </Button>
-          </Card>
-        ) : selectedStatuses.size === 0 ? (
-          <Card className="p-12 text-center">
-            <Filter className="h-16 w-16 mx-auto mb-4 text-gray-400" />
-            <h2 className="text-2xl font-semibold text-gray-900 mb-2">No Filters Selected</h2>
-            <p className="text-gray-600 mb-6">Please select at least one status filter to view bookings.</p>
-            <Button 
-              onClick={() => handleAllFilterChange(true)} 
-              className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600"
+            <Button
+              onClick={() => navigate('/services')}
+              className="bg-black text-white hover:bg-gray-800 rounded-full px-6 shadow-lg hover:shadow-xl transition-all"
             >
-              Show All Bookings
+              <Wrench className="mr-2 h-4 w-4" />
+              Book New Service
             </Button>
-          </Card>
-        ) : (
-          <div className="overflow-x-auto pb-4">
-            <div className="flex gap-4 min-w-max">
-              {columns.map((column) => {
-                const columnBookings = groupedBookings[column.status];
-                return (
-                  <div
-                    key={column.status}
-                    className={cn(
-                      "flex-shrink-0 w-80 border-2 rounded-lg p-4",
-                      column.color
-                    )}
-                  >
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="font-semibold text-gray-900 text-lg">
-                        {column.title}
-                      </h3>
-                      <Badge className={cn("font-semibold", getStatusColor(column.status))}>
-                        {columnBookings.length}
-                      </Badge>
-                    </div>
-                    
-                    <div className="space-y-3 max-h-[calc(100vh-300px)] overflow-y-auto">
-                      {columnBookings.length === 0 ? (
-                        <div className="text-center py-8 text-gray-400 text-sm">
-                          No bookings
-                        </div>
-                      ) : (
-                        columnBookings.map((booking) => (
-                          <Card
-                            key={booking.id}
-                            className="bg-white hover:shadow-md transition-shadow cursor-pointer"
-                            onClick={() => navigate(`/booking/${booking.id}`)}
-                          >
-                            <CardHeader className="pb-3">
-                              <div className="flex items-start justify-between">
-                                <CardTitle className="text-base font-semibold">
-                                  {booking.service_name || "Service Booking"}
-                                </CardTitle>
-                                <Badge className={cn("text-xs", getStatusColor(booking.status))}>
-                                  {getStatusIcon(booking.status)}
-                                </Badge>
-                              </div>
-                            </CardHeader>
-                            
-                            <CardContent className="space-y-3">
-                              {/* Vehicle Info */}
-                              <div className="flex items-start gap-2">
-                                <Car className="h-4 w-4 text-gray-400 mt-0.5 flex-shrink-0" />
-                                <div className="flex-1 min-w-0">
-                                  <p className="text-xs text-gray-500">Vehicle</p>
-                                  <p className="text-sm font-medium text-gray-900 truncate">
-                                    {booking.car_brand || booking.vehicle_make} {booking.car_model || booking.vehicle_model}
-                                  </p>
-                                  {booking.fuel_type && (
-                                    <p className="text-xs text-gray-500 mt-0.5">Fuel: {booking.fuel_type}</p>
-                                  )}
-                                </div>
-                              </div>
-
-                              {/* Booking Date */}
-                              <div className="flex items-start gap-2">
-                                <Calendar className="h-4 w-4 text-gray-400 mt-0.5 flex-shrink-0" />
-                                <div className="flex-1">
-                                  <p className="text-xs text-gray-500">Date</p>
-                                  <p className="text-sm font-medium text-gray-900">
-                                    {format(new Date(booking.booking_date), "MMM d, yyyy")}
-                                  </p>
-                                  <p className="text-xs text-gray-500">
-                                    {format(new Date(booking.booking_date), "h:mm a")}
-                                  </p>
-                                </div>
-                              </div>
-
-                              {/* Booking ID */}
-                              <div className="pt-2 border-t border-gray-200">
-                                <p className="text-xs text-gray-500">
-                                  Booking ID: <span className="font-mono font-semibold">#{booking.id}</span>
-                                </p>
-                                {booking.estimated_cost && (
-                                  <p className="text-xs text-gray-500 mt-1">
-                                    Est. Cost: <span className="font-semibold">₹{booking.estimated_cost.toLocaleString()}</span>
-                                  </p>
-                                )}
-                              </div>
-
-                              {/* Actions */}
-                              <div className="pt-2 border-t border-gray-200 space-y-2" onClick={(e) => e.stopPropagation()}>
-                                {isAdmin && (() => {
-                                  const nextStatus = getNextStatus(booking.status);
-                                  if (nextStatus) {
-                                    return (
-                                      <Button
-                                        variant="default"
-                                        size="sm"
-                                        onClick={() => handleStatusChange(booking.id, nextStatus)}
-                                        disabled={updatingStatusId === booking.id}
-                                        className="w-full text-xs h-8 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white"
-                                      >
-                                        {updatingStatusId === booking.id ? (
-                                          <>
-                                            <Loader2 className="mr-2 h-3 w-3 animate-spin" />
-                                            Updating...
-                                          </>
-                                        ) : (
-                                          `Move to ${getStatusLabel(nextStatus)}`
-                                        )}
-                                      </Button>
-                                    );
-                                  }
-                                  return null;
-                                })()}
-                                
-                                {booking.status !== BookingStatus.COMPLETED && 
-                                 booking.status !== BookingStatus.CANCELLED && (
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => handleCancel(booking.id)}
-                                    disabled={cancellingId === booking.id}
-                                    className="w-full text-red-600 border-red-200 hover:bg-red-50 text-xs h-7"
-                                  >
-                                    {cancellingId === booking.id ? (
-                                      <>
-                                        <Loader2 className="mr-1 h-3 w-3 animate-spin" />
-                                        Cancelling...
-                                      </>
-                                    ) : (
-                                      "Cancel Booking"
-                                    )}
-                                  </Button>
-                                )}
-                              </div>
-                            </CardContent>
-                          </Card>
-                        ))
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
           </div>
-        )}
+
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center py-32">
+              <Loader2 className="h-10 w-10 animate-spin text-primary mb-4" />
+              <p className="text-gray-500 animate-pulse">Loading your bookings...</p>
+            </div>
+          ) : bookings.length === 0 ? (
+            <Card className="p-16 text-center border-dashed border-2 bg-white/50">
+              <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Car className="h-10 w-10 text-gray-400" />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-3">No Bookings Yet</h2>
+              <p className="text-gray-500 mb-8 max-w-md mx-auto">
+                You haven't booked any services with us yet. Schedule your first service today to keep your vehicle in top condition.
+              </p>
+              <Button
+                onClick={() => navigate('/services')}
+                size="lg"
+                className="bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white rounded-full px-8"
+              >
+                Explore Services
+              </Button>
+            </Card>
+          ) : (
+            <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <TabsList className="w-full justify-start overflow-x-auto bg-white p-1 border border-gray-200 rounded-xl mb-8 h-auto flex-wrap gap-1">
+                <TabsTrigger value="all" className="rounded-lg px-4 py-2 data-[state=active]:bg-black data-[state=active]:text-white">
+                  All <Badge variant="secondary" className="ml-2 bg-gray-100 text-gray-600">{bookings.length}</Badge>
+                </TabsTrigger>
+                <TabsTrigger value={BookingStatus.PENDING} className="rounded-lg px-4 py-2 data-[state=active]:bg-yellow-500 data-[state=active]:text-white">
+                  Pending <Badge variant="secondary" className="ml-2 bg-gray-100 text-gray-600">{bookings.filter(b => b.status === BookingStatus.PENDING).length}</Badge>
+                </TabsTrigger>
+                <TabsTrigger value={BookingStatus.ANALYSE} className="rounded-lg px-4 py-2 data-[state=active]:bg-blue-500 data-[state=active]:text-white">
+                  Analyse <Badge variant="secondary" className="ml-2 bg-gray-100 text-gray-600">{bookings.filter(b => b.status === BookingStatus.ANALYSE).length}</Badge>
+                </TabsTrigger>
+                <TabsTrigger value={BookingStatus.IN_PROGRESS} className="rounded-lg px-4 py-2 data-[state=active]:bg-purple-500 data-[state=active]:text-white">
+                  In Progress <Badge variant="secondary" className="ml-2 bg-gray-100 text-gray-600">{bookings.filter(b => b.status === BookingStatus.IN_PROGRESS).length}</Badge>
+                </TabsTrigger>
+                <TabsTrigger value={BookingStatus.COMPLETED} className="rounded-lg px-4 py-2 data-[state=active]:bg-green-500 data-[state=active]:text-white">
+                  Done <Badge variant="secondary" className="ml-2 bg-gray-100 text-gray-600">{bookings.filter(b => b.status === BookingStatus.COMPLETED).length}</Badge>
+                </TabsTrigger>
+                <TabsTrigger value={BookingStatus.CANCELLED} className="rounded-lg px-4 py-2 data-[state=active]:bg-red-500 data-[state=active]:text-white">
+                  Cancelled <Badge variant="secondary" className="ml-2 bg-gray-100 text-gray-600">{bookings.filter(b => b.status === BookingStatus.CANCELLED).length}</Badge>
+                </TabsTrigger>
+              </TabsList>
+
+              <AnimatePresence mode="wait">
+                {["all", BookingStatus.PENDING, BookingStatus.ANALYSE, BookingStatus.IN_PROGRESS, BookingStatus.COMPLETED, BookingStatus.CANCELLED].map((tabValue) => (
+                  <TabsContent key={tabValue} value={tabValue} className="mt-0 focus-visible:outline-none">
+                    {filterBookings(tabValue).length === 0 ? (
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        className="text-center py-20 bg-white rounded-2xl border border-dashed border-gray-200"
+                      >
+                        <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                          <AlertCircle className="h-8 w-8 text-gray-300" />
+                        </div>
+                        <h3 className="text-lg font-medium text-gray-900">No bookings found</h3>
+                        <p className="text-gray-500 mt-1">There are no bookings in this category.</p>
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        variants={containerVariants}
+                        initial="hidden"
+                        animate="visible"
+                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                      >
+                        {filterBookings(tabValue).map((booking) => (
+                          <BookingCard key={booking.id} booking={booking} />
+                        ))}
+                      </motion.div>
+                    )}
+                  </TabsContent>
+                ))}
+              </AnimatePresence>
+            </Tabs>
+          )}
+        </div>
       </main>
 
       <Footer />
