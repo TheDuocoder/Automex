@@ -311,6 +311,35 @@ const BrandSelectorModal = ({
             volkswagenFileName = 't_roc';
           }
           imagePath = `/images/Car_images/Volkswagen/${volkswagenFileName}.png`;
+        } else if (brandName === 'bmw') {
+          // BMW images are in "BMW" folder with spaces in filenames
+          // Convert model name to have proper spacing and capitalization
+          let bmwFileName = model.name; // Use original name with spaces
+          imagePath = `/images/Car_images/BMW/${bmwFileName}.png`;
+        } else if (brandName === 'mercedes-benz' || brandName === 'mercedes_benz') {
+          // Mercedes-Benz images are in "Mercedes-Benz" folder with spaces and hyphens
+          let mercedesFileName = model.name; // Use original name with spaces and hyphens
+          // Special case: R Class has a leading space in filename
+          if (modelName === 'r_class' || model.name === 'R Class') {
+            mercedesFileName = ' R Class';
+          }
+          // Special case: S-Class uses hyphen format
+          if (modelName === 's-class' || modelName === 's_class' || model.name === 'S-Class' || model.name === 'S Class') {
+            mercedesFileName = 'S-Class';
+          }
+          // Special case: GLE43 AMG uses space and number format
+          if (modelName === 'gle43_amg' || model.name === 'GLE43 AMG' || model.name === 'GLE 43 AMG') {
+            mercedesFileName = 'GLE43 AMG';
+          }
+          imagePath = `/images/Car_images/Mercedes-Benz/${mercedesFileName}.png`;
+        } else if (brandName === 'volvo') {
+          // Volvo images are in "Volvo" folder with spaces in filenames
+          let volvoFileName = model.name; // Use original name with spaces
+          // Special case: XC 40 uses space before number
+          if (modelName === 'xc_40' || modelName === 'xc40' || model.name === 'XC40') {
+            volvoFileName = 'XC 40';
+          }
+          imagePath = `/images/Car_images/Volvo/${volvoFileName}.png`;
         } else {
           imagePath = `/images/Car_images/${brandName}_car/${modelName}.png`;
         }
