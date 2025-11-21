@@ -86,12 +86,12 @@ const Login = ({ onClose, onSwitchToRegister }: LoginProps) => {
         description: "Welcome back to AutoMex.",
       });
 
-      // Close the form and redirect to services page
+      // Close the form and redirect to my services page
       if (onClose) {
         onClose();
       }
-      // Redirect to services page after successful login
-      navigate('/services');
+      // Redirect to my services page after successful login
+      navigate('/my-services');
     } catch (error) {
       toast({
         title: "Login Failed",

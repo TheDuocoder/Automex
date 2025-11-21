@@ -2,8 +2,10 @@
  * API Configuration and Base Service
  */
 
-// API Base URL - Update this based on your environment
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+// API Base URL - Use empty string for relative paths (works with Nginx proxy)
+// Endpoints already include '/api' prefix, so relative paths will work correctly
+// When accessed via Docker/network IP, relative paths ensure requests go through Nginx proxy
+export const API_BASE_URL = import.meta.env.VITE_API_URL || '';
 
 /**
  * API Response wrapper
@@ -23,15 +25,16 @@ export async function apiCall<T>(
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> {
   try {
-    const url = `${API_BASE_URL}${endpoint}`;
+    // Construct URL - handle empty API_BASE_URL for relative paths
+    const url = API_BASE_URL ? `${API_BASE_URL}${endpoint}` : endpoint;
     
     // Get auth token and include it in headers
     const authHeader = getAuthHeader();
     const token = getAuthToken();
     
-    // Debug: Log token presence (only in development)
-    if (import.meta.env.DEV && !token) {
-      console.warn('[API] No auth token found in localStorage');
+    // Debug: Log token presence (always log in dev, and log errors)
+    if (!token) {
+      console.warn('[API] No auth token found in localStorage for endpoint:', endpoint);
     }
     
     // Build headers - ensure auth header is included
@@ -45,15 +48,15 @@ export async function apiCall<T>(
       Object.assign(headers, options.headers);
     }
     
-    // Debug: Log headers in development (but hide token value)
-    if (import.meta.env.DEV && token) {
-      console.log('[API] Request:', {
-        url,
-        method: options.method || 'GET',
-        hasAuth: !!headers.Authorization,
-        authPrefix: headers.Authorization?.substring(0, 20) + '...',
-      });
-    }
+    // Debug: Log request details
+    console.log('[API] Request:', {
+      url,
+      method: options.method || 'GET',
+      hasAuth: !!headers.Authorization,
+      hasToken: !!token,
+      tokenLength: token?.length || 0,
+      authPrefix: headers.Authorization ? headers.Authorization.substring(0, 25) + '...' : 'none',
+    });
     
     const response = await fetch(url, {
       ...options,
@@ -63,12 +66,15 @@ export async function apiCall<T>(
     const data = await response.json().catch(() => null);
 
     if (!response.ok) {
-      // If unauthorized, log token info for debugging
-      if (response.status === 401 && import.meta.env.DEV) {
-        console.error('[API] 401 Unauthorized:', {
+      // If unauthorized, log detailed error info
+      if (response.status === 401) {
+        console.error('[API] 401 Unauthorized Error:', {
           endpoint,
+          url,
           hasToken: !!token,
           tokenLength: token?.length || 0,
+          tokenPreview: token ? token.substring(0, 20) + '...' : 'none',
+          responseData: data,
         });
       }
       
@@ -91,10 +97,32 @@ export async function apiCall<T>(
 }
 
 /**
- * Get auth token from localStorage
+ * Get auth token from localStorage or Zustand store
  */
 export function getAuthToken(): string | null {
-  return localStorage.getItem('auth_token');
+  // First try localStorage (primary source)
+  let token = localStorage.getItem('auth_token');
+  
+  // If not found, try to get from Zustand store as fallback
+  if (!token && typeof window !== 'undefined') {
+    try {
+      const authStorage = localStorage.getItem('auth-storage');
+      if (authStorage) {
+        const parsed = JSON.parse(authStorage);
+        if (parsed?.state?.token) {
+          token = parsed.state.token;
+          // Also store it in the primary location for consistency
+          if (token) {
+            localStorage.setItem('auth_token', token);
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('[API] Failed to read token from Zustand store:', e);
+    }
+  }
+  
+  return token;
 }
 
 /**

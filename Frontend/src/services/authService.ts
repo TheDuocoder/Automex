@@ -88,7 +88,10 @@ export async function registerUser(data: RegisterData) {
  */
 export async function loginUser(email: string, password: string): Promise<LoginResponse> {
   try {
-    const url = `${API_BASE_URL}/api/v1/auth/login`;
+    // Construct URL - handle empty API_BASE_URL for relative paths
+    const url = API_BASE_URL ? `${API_BASE_URL}/api/v1/auth/login` : '/api/v1/auth/login';
+    
+    console.log('[Auth] Login request URL:', url);
     
     const response = await fetch(url, {
       method: 'POST',
@@ -108,8 +111,14 @@ export async function loginUser(email: string, password: string): Promise<LoginR
 
     const data: LoginResponse = await response.json();
     
+    console.log('[Auth] Login successful, storing token. Token length:', data.access_token?.length || 0);
+    
     // Store the access token in localStorage
     setAuthToken(data.access_token);
+    
+    // Verify token was stored
+    const storedToken = localStorage.getItem('auth_token');
+    console.log('[Auth] Token stored successfully:', !!storedToken, 'Length:', storedToken?.length || 0);
     
     // Store user data in localStorage for persistence
     localStorage.setItem('user_data', JSON.stringify(data.user));

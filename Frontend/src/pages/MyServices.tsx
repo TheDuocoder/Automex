@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 
 const MyServices = () => {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
@@ -31,14 +31,37 @@ const MyServices = () => {
   const loadBookings = async () => {
     try {
       setIsLoading(true);
+      
+      // Check if token exists before making API call
+      const token = localStorage.getItem('auth_token');
+      if (!token) {
+        console.log('[MyServices] No auth token found, redirecting to home');
+        // Clear auth state silently and redirect to show welcome card
+        await logout();
+        navigate('/');
+        return;
+      }
+      
       const data = await getUserBookings();
       // Sort bookings by date (newest first)
       const sortedData = data.sort((a, b) => new Date(b.booking_date).getTime() - new Date(a.booking_date).getTime());
       setBookings(sortedData);
     } catch (error) {
+      console.error('[MyServices] Error loading bookings:', error);
+      const errorMessage = error instanceof Error ? error.message : "Failed to load bookings";
+      
+      // If unauthorized or session expired, silently clear auth and redirect to welcome card
+      if (errorMessage.includes('Unauthorized') || errorMessage.includes('401') || errorMessage.includes('Session')) {
+        console.log('[MyServices] Session expired, redirecting to home');
+        // Clear auth state silently and redirect to show welcome card
+        await logout();
+        navigate('/');
+        return;
+      }
+      
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "Failed to load bookings",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
