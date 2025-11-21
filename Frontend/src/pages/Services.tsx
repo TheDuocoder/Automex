@@ -44,7 +44,7 @@ const Services = () => {
   const [selectedCategory, setSelectedCategory] = useState("car-services");
   const [selectedBrand, setSelectedBrand] = useState("");
   const [sidebarTop, setSidebarTop] = useState(60);
-  
+
   const containerRef = useRef<HTMLDivElement>(null);
   const categoryTabsRef = useRef<HTMLDivElement>(null);
   const serviceCardsRef = useRef<HTMLDivElement>(null);
@@ -119,51 +119,51 @@ const Services = () => {
   // Mock service packages data
   const servicePackages: Record<string, ServicePackage[]> = {
     "car-services": [
-    {
-      id: "basic-service",
-      name: "Basic Service",
-      thumbnail: "/images/product_images/Car services/Basic Service.png",
-      warranty: "1000 Kms or 3 Months Warranty",
-      recommended: "Every 5000 Kms or 6 Months (Recommended)",
-      features: [
-        { name: "Wiper Fluid Replacement", included: true },
-        { name: "Car Wash", included: true },
-        { name: "Engine Oil Replacement", included: true },
-        { name: "Battery Water Top Up", included: true },
-        { name: "Interior Vacuuming (Carpet & Seats)", included: true },
+      {
+        id: "basic-service",
+        name: "Basic Service",
+        thumbnail: "/images/product_images/Car services/Basic Service.png",
+        warranty: "1000 Kms or 3 Months Warranty",
+        recommended: "Every 5000 Kms or 6 Months (Recommended)",
+        features: [
+          { name: "Wiper Fluid Replacement", included: true },
+          { name: "Car Wash", included: true },
+          { name: "Engine Oil Replacement", included: true },
+          { name: "Battery Water Top Up", included: true },
+          { name: "Interior Vacuuming (Carpet & Seats)", included: true },
           { name: "Air Filter Cleaning", included: true },
           { name: "Spark Plug Inspection", included: true },
           { name: "Coolant Top-Up 200ml", included: true }
-      ],
-      moreServicesCount: 4,
+        ],
+        moreServicesCount: 4,
         descriptions: [
           "Complete 34-point inspection covering brakes, suspension, electricals, tyres and safety.",
           "Top-up of all essential fluids including radiator coolant, power steering and windshield washer.",
           "Detailed cabin sanitisation with dashboard polish and door-pad wipe down.",
           "Road test with post-service quality checklist before final handover."
         ],
-      originalPrice: 3559,
-      discountedPrice: 2669,
-      duration: "4 Hrs Taken",
-      offer: {
-        price: 2169,
-        discount: "Extra ₹500 OFF",
-        badgeColor: "bg-green-500"
+        originalPrice: 3559,
+        discountedPrice: 2669,
+        duration: "4 Hrs Taken",
+        offer: {
+          price: 2169,
+          discount: "Extra ₹500 OFF",
+          badgeColor: "bg-green-500"
+        },
+        isRecommended: false
       },
-      isRecommended: false
-    },
-    {
-      id: "standard-service",
-      name: "Standard Service",
-      thumbnail: "/images/product_images/Car services/Standard Service.png",
-      warranty: "1000 Kms or 3 Months Warranty",
-      recommended: "Every 10,000 Kms or 6 Months (Recommended)",
-      features: [
-        { name: "Car Scanning", included: true },
-        { name: "Battery Water Top up", included: true },
-        { name: "Interior Vacuuming (Carpet & Seats)", included: true },
-        { name: "Wiper Fluid Replacement", included: true },
-        { name: "Car Wash", included: true },
+      {
+        id: "standard-service",
+        name: "Standard Service",
+        thumbnail: "/images/product_images/Car services/Standard Service.png",
+        warranty: "1000 Kms or 3 Months Warranty",
+        recommended: "Every 10,000 Kms or 6 Months (Recommended)",
+        features: [
+          { name: "Car Scanning", included: true },
+          { name: "Battery Water Top up", included: true },
+          { name: "Interior Vacuuming (Carpet & Seats)", included: true },
+          { name: "Wiper Fluid Replacement", included: true },
+          { name: "Car Wash", included: true },
           { name: "Brake Cleaning & Adjustment", included: true },
           { name: "Fuel Filter Replacement", included: true },
           { name: "AC Filter Replacement", included: true },
@@ -177,308 +177,308 @@ const Services = () => {
           "Torque setting of suspension, steering and wheel components.",
           "Exterior foam wash and interior germ cleaning with ozone treatment."
         ],
-      originalPrice: 4813,
-      discountedPrice: 3369,
-      duration: "6 Hrs Taken",
-      isRecommended: true
-    },
-    {
-      id: "comprehensive-service",
-      name: "Comprehensive Service",
-      thumbnail: "/images/product_images/Car services/Comprehensive Service.png",
-      warranty: "1000 Kms or 1 Month Warranty",
-      recommended: "Every 20,000 Kms or 12 Months (Recommended)",
-      features: [
-        { name: "AC Filter Replacement", included: true },
-        { name: "Car Scanning", included: true },
-        { name: "Interior Vacuuming (Carpet & Seats)", included: true },
-        { name: "Front Brake Pads Serviced", included: true },
-        { name: "Wheel Alignment", included: true },
-        { name: "Engine Oil Replacement", included: true },
-        { name: "Air Filter Replacement", included: true },
-        { name: "Gear Oil Top Up", included: true },
-        { name: "Spark Plug Inspection", included: true },
-        { name: "Fuel Filter Cleaning", included: true },
-        { name: "Rear Brake Shoes Serviced", included: true },
-        { name: "Wheel Balancing", included: true },
-        { name: "Tyre Rotation", included: true },
-        { name: "Throttle Body Cleaning", included: true },
-        { name: "Coolant Top Up (200 ml)", included: true },
-        { name: "Brake Fluid Top Up", included: true }
-      ],
-      moreServicesCount: 8,
-      originalPrice: 5299,
-      discountedPrice: 4199,
-      duration: "8 Hrs Taken",
-      specialLabel: "FREE AC GAS TOP-UP",
-      offer: {
-        price: 3799,
-        discount: "Extra ₹400 OFF",
-        badgeColor: "bg-green-500"
+        originalPrice: 4813,
+        discountedPrice: 3369,
+        duration: "6 Hrs Taken",
+        isRecommended: true
       },
-      isRecommended: false,
-      descriptions: [
-        "Full synthetic oil service with OEM filter kit and complete top-up of all fluids.",
-        "50-point health check covering suspension, steering, drivetrain and electrical systems.",
-        "Includes wheel alignment & balancing, throttle body cleaning and brake servicing.",
-        "Exterior foam wash + interior deep clean with deodorisation and ozone sanitation."
-      ]
-    },
-    {
-      id: "brake-maintenance-heading",
-      name: "Brake Maintenance",
-      thumbnail: "",
-      warranty: "",
-      recommended: "",
-      features: [],
-      moreServicesCount: 0,
-      originalPrice: 0,
-      discountedPrice: 0,
-      duration: "",
-      sectionTitle: "Brake Maintenance",
-      isRecommended: false
-    },
-    {
-      id: "front-brake-pads",
-      name: "Front Brake Pads",
-      thumbnail: "/images/product_images/Car services/frontbrakes.png",
-      warranty: "1 Month Warranty",
-      recommended: "Every 20,000 Kms or 12 Months (Recommended)",
-      features: [
-        { name: "Opening & Fitting of Front Brake Pads", included: true },
-        { name: "Applicable for Set of 2 Front Brake Pads", included: true },
-        { name: "Front Brake Disc Cleaning", included: true },
-        { name: "Front Brake Pads Replacement (OES)", included: true },
-        { name: "Inspection of Front Brake Calipers", included: true }
-      ],
-      moreServicesCount: 1,
-      originalPrice: 2374,
-      discountedPrice: 1899,
-      duration: "3 Hours",
-      specialLabel: "OEM/BRAND INCLUDED",
-      isRecommended: false,
-      descriptions: [
-        "Premium ceramic brake pads with warranty on labour & fitment.",
-        "Includes disc brushing, caliper pin greasing and road test."
-      ]
-    },
-    {
-      id: "rear-brake-shoes",
-      name: "Rear Brake Shoes",
-      thumbnail: "/images/product_images/Car services/rearbreak_shoes.png",
-      warranty: "1 Month Warranty",
-      recommended: "Every 20,000 Kms or 12 Months (Recommended)",
-      features: [
-        { name: "Opening & Fitting of Rear Brake Shoes", included: true },
-        { name: "Applicable for Set of 2 Rear Brake Shoes", included: true },
-        { name: "Rear Brake Disc Cleaning", included: true },
-        { name: "Rear Brake Shoes Replacement (OEM)", included: true },
-        { name: "Inspection of Rear Brake Calipers", included: true }
-      ],
-      moreServicesCount: 1,
-      originalPrice: 2499,
-      discountedPrice: 2099,
-      duration: "90 Mins",
-      specialLabel: "LABOUR INCLUDED",
-      isRecommended: false,
-      descriptions: [
-        "Original equipment rear brake shoe set with warranty on labour.",
-        "Includes handbrake adjustment, drum cleaning and final inspection."
-      ]
-    },
-    {
-      id: "front-brake-discs",
-      name: "Front Brake Discs",
-      thumbnail: "/images/product_images/Car services/frontbrake_disk.png",
-      warranty: "1 Month Warranty • Corrosion Resistance",
-      recommended: "Best Performance (Single OE Unit)",
-      features: [
-        { name: "Opening & Fitting of Front Brake Disc", included: true },
-        { name: "Reduces Vibrations & Brake Noise", included: true },
-        { name: "Free Pickup & Drop", included: true },
-        { name: "Front Brake Disc Replacement", included: true }
-      ],
-      moreServicesCount: 0,
-      originalPrice: 3599,
-      discountedPrice: 3099,
-      duration: "90 Mins",
-      specialLabel: "LABOUR INCLUDED",
-      isRecommended: false,
-      descriptions: [
-        "Replacement with OEM-spec rotors including torque tightening.",
-        "Brake bedding procedure and vibration test drive post fitment."
-      ]
-    },
-    {
-      id: "caliper-pin-replacement",
-      name: "Caliper Pin Replacement",
-      thumbnail: "/images/product_images/Car services/caliperpin_replacement.png",
-      warranty: "Recommended in case of noise from brakes",
-      recommended: "Caliper Pin Replacement (OES) • Caliper Assembly Cost Additional",
-      features: [
-        { name: "Opening & Fitting of Caliper Pin", included: true },
-        { name: "Free Pickup & Drop", included: true },
-        { name: "Caliper Pin Lubrication", included: true }
-      ],
-      moreServicesCount: 0,
-      originalPrice: 1899,
-      discountedPrice: 1599,
-      duration: "60 Mins",
-      specialLabel: "NEW",
-      isRecommended: false,
-      descriptions: [
-        "Eliminates brake squeal by replacing worn pins and lubricating bushings.",
-        "Complete inspection of caliper guide sleeves and dust boots."
-      ]
-    },
-    {
-      id: "brake-drums-turning",
-      name: "Brake Drums Turning",
-      thumbnail: "/images/product_images/Car services/break_drums_turning.png",
-      warranty: "1 Month Warranty",
-      recommended: "Recommended : In Case of Screeching Noise from Brakes",
-      features: [
-        { name: "Brake Drums Turning", included: true },
-        { name: "Refacing of Brake Drums", included: true },
-        { name: "Free Pickup & Drop", included: true },
-        { name: "Opening & Fitting of Brake Drums", included: true },
-        { name: "Applicable for Set of 2 Brake Drums", included: true }
-      ],
-      moreServicesCount: 0,
-      originalPrice: 1124,
-      discountedPrice: 899,
-      duration: "4 Hours",
-      specialLabel: "LABOUR INCLUDED",
-      isRecommended: false,
-      descriptions: [
-        "Professional brake drums turning restores smooth braking performance.",
-        "Includes drum runout measurement and brake shoes adjustment procedure."
-      ]
-    },
-    {
-      id: "handbrake-wire-replacement",
-      name: "Handbrake Wire Replacement",
-      thumbnail: "/images/product_images/Car services/handbrack_wire.png",
-      warranty: "1 Month Warranty",
-      recommended: "Restores handbrake bite & safety",
-      features: [
-        { name: "Replacement with OEM Handbrake Cable", included: true },
-        { name: "Adjustment of Handbrake Lever", included: true },
-        { name: "Lubrication of Linkages", included: true },
-        { name: "Free Pickup & Drop", included: true }
-      ],
-      moreServicesCount: 0,
-      originalPrice: 1999,
-      discountedPrice: 1699,
-      duration: "90 Mins",
-      specialLabel: "NEW",
-      isRecommended: false,
-      descriptions: [
-        "Ensures optimal parking brake hold with fresh OEM cables and adjusters.",
-        "Includes underbody inspection and corrosion protection for linkages."
-      ]
-    },
-    {
-      id: "wheel-cylinder-replacement",
-      name: "Wheel Cylinder Replacement",
-      thumbnail: "/images/product_images/Car services/wheel_cylinder_replacement.png",
-      warranty: "Recommended : In case of Poor Braking",
-      recommended: "Wheel Cylinder Replacement (OES)",
-      features: [
-        { name: "Wheel Cylinder Replacement (OES)", included: true },
-        { name: "Brake Shoe & Brake Fluid Cost Additional", included: true },
-        { name: "Spare Part Price Only", included: true },
-        { name: "Free Pickup & Drop", included: true }
-      ],
-      moreServicesCount: 0,
-      originalPrice: 1476,
-      discountedPrice: 1181,
-      duration: "6 Hours",
-      specialLabel: "LABOUR INCLUDED",
-      isRecommended: false,
-      descriptions: [
-        "Professional wheel cylinder replacement service with OES parts.",
-        "Includes brake system inspection and performance verification."
-      ]
-    },
+      {
+        id: "comprehensive-service",
+        name: "Comprehensive Service",
+        thumbnail: "/images/product_images/Car services/Comprehensive Service.png",
+        warranty: "1000 Kms or 1 Month Warranty",
+        recommended: "Every 20,000 Kms or 12 Months (Recommended)",
+        features: [
+          { name: "AC Filter Replacement", included: true },
+          { name: "Car Scanning", included: true },
+          { name: "Interior Vacuuming (Carpet & Seats)", included: true },
+          { name: "Front Brake Pads Serviced", included: true },
+          { name: "Wheel Alignment", included: true },
+          { name: "Engine Oil Replacement", included: true },
+          { name: "Air Filter Replacement", included: true },
+          { name: "Gear Oil Top Up", included: true },
+          { name: "Spark Plug Inspection", included: true },
+          { name: "Fuel Filter Cleaning", included: true },
+          { name: "Rear Brake Shoes Serviced", included: true },
+          { name: "Wheel Balancing", included: true },
+          { name: "Tyre Rotation", included: true },
+          { name: "Throttle Body Cleaning", included: true },
+          { name: "Coolant Top Up (200 ml)", included: true },
+          { name: "Brake Fluid Top Up", included: true }
+        ],
+        moreServicesCount: 8,
+        originalPrice: 5299,
+        discountedPrice: 4199,
+        duration: "8 Hrs Taken",
+        specialLabel: "FREE AC GAS TOP-UP",
+        offer: {
+          price: 3799,
+          discount: "Extra ₹400 OFF",
+          badgeColor: "bg-green-500"
+        },
+        isRecommended: false,
+        descriptions: [
+          "Full synthetic oil service with OEM filter kit and complete top-up of all fluids.",
+          "50-point health check covering suspension, steering, drivetrain and electrical systems.",
+          "Includes wheel alignment & balancing, throttle body cleaning and brake servicing.",
+          "Exterior foam wash + interior deep clean with deodorisation and ozone sanitation."
+        ]
+      },
+      {
+        id: "brake-maintenance-heading",
+        name: "Brake Maintenance",
+        thumbnail: "",
+        warranty: "",
+        recommended: "",
+        features: [],
+        moreServicesCount: 0,
+        originalPrice: 0,
+        discountedPrice: 0,
+        duration: "",
+        sectionTitle: "Brake Maintenance",
+        isRecommended: false
+      },
+      {
+        id: "front-brake-pads",
+        name: "Front Brake Pads",
+        thumbnail: "/images/product_images/Car services/frontbrakes.png",
+        warranty: "1 Month Warranty",
+        recommended: "Every 20,000 Kms or 12 Months (Recommended)",
+        features: [
+          { name: "Opening & Fitting of Front Brake Pads", included: true },
+          { name: "Applicable for Set of 2 Front Brake Pads", included: true },
+          { name: "Front Brake Disc Cleaning", included: true },
+          { name: "Front Brake Pads Replacement (OES)", included: true },
+          { name: "Inspection of Front Brake Calipers", included: true }
+        ],
+        moreServicesCount: 1,
+        originalPrice: 2374,
+        discountedPrice: 1899,
+        duration: "3 Hours",
+        specialLabel: "OEM/BRAND INCLUDED",
+        isRecommended: false,
+        descriptions: [
+          "Premium ceramic brake pads with warranty on labour & fitment.",
+          "Includes disc brushing, caliper pin greasing and road test."
+        ]
+      },
+      {
+        id: "rear-brake-shoes",
+        name: "Rear Brake Shoes",
+        thumbnail: "/images/product_images/Car services/rearbreak_shoes.png",
+        warranty: "1 Month Warranty",
+        recommended: "Every 20,000 Kms or 12 Months (Recommended)",
+        features: [
+          { name: "Opening & Fitting of Rear Brake Shoes", included: true },
+          { name: "Applicable for Set of 2 Rear Brake Shoes", included: true },
+          { name: "Rear Brake Disc Cleaning", included: true },
+          { name: "Rear Brake Shoes Replacement (OEM)", included: true },
+          { name: "Inspection of Rear Brake Calipers", included: true }
+        ],
+        moreServicesCount: 1,
+        originalPrice: 2499,
+        discountedPrice: 2099,
+        duration: "90 Mins",
+        specialLabel: "LABOUR INCLUDED",
+        isRecommended: false,
+        descriptions: [
+          "Original equipment rear brake shoe set with warranty on labour.",
+          "Includes handbrake adjustment, drum cleaning and final inspection."
+        ]
+      },
+      {
+        id: "front-brake-discs",
+        name: "Front Brake Discs",
+        thumbnail: "/images/product_images/Car services/frontbrake_disk.png",
+        warranty: "1 Month Warranty • Corrosion Resistance",
+        recommended: "Best Performance (Single OE Unit)",
+        features: [
+          { name: "Opening & Fitting of Front Brake Disc", included: true },
+          { name: "Reduces Vibrations & Brake Noise", included: true },
+          { name: "Free Pickup & Drop", included: true },
+          { name: "Front Brake Disc Replacement", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 3599,
+        discountedPrice: 3099,
+        duration: "90 Mins",
+        specialLabel: "LABOUR INCLUDED",
+        isRecommended: false,
+        descriptions: [
+          "Replacement with OEM-spec rotors including torque tightening.",
+          "Brake bedding procedure and vibration test drive post fitment."
+        ]
+      },
+      {
+        id: "caliper-pin-replacement",
+        name: "Caliper Pin Replacement",
+        thumbnail: "/images/product_images/Car services/caliperpin_replacement.png",
+        warranty: "Recommended in case of noise from brakes",
+        recommended: "Caliper Pin Replacement (OES) • Caliper Assembly Cost Additional",
+        features: [
+          { name: "Opening & Fitting of Caliper Pin", included: true },
+          { name: "Free Pickup & Drop", included: true },
+          { name: "Caliper Pin Lubrication", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 1899,
+        discountedPrice: 1599,
+        duration: "60 Mins",
+        specialLabel: "NEW",
+        isRecommended: false,
+        descriptions: [
+          "Eliminates brake squeal by replacing worn pins and lubricating bushings.",
+          "Complete inspection of caliper guide sleeves and dust boots."
+        ]
+      },
+      {
+        id: "brake-drums-turning",
+        name: "Brake Drums Turning",
+        thumbnail: "/images/product_images/Car services/break_drums_turning.png",
+        warranty: "1 Month Warranty",
+        recommended: "Recommended : In Case of Screeching Noise from Brakes",
+        features: [
+          { name: "Brake Drums Turning", included: true },
+          { name: "Refacing of Brake Drums", included: true },
+          { name: "Free Pickup & Drop", included: true },
+          { name: "Opening & Fitting of Brake Drums", included: true },
+          { name: "Applicable for Set of 2 Brake Drums", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 1124,
+        discountedPrice: 899,
+        duration: "4 Hours",
+        specialLabel: "LABOUR INCLUDED",
+        isRecommended: false,
+        descriptions: [
+          "Professional brake drums turning restores smooth braking performance.",
+          "Includes drum runout measurement and brake shoes adjustment procedure."
+        ]
+      },
+      {
+        id: "handbrake-wire-replacement",
+        name: "Handbrake Wire Replacement",
+        thumbnail: "/images/product_images/Car services/handbrack_wire.png",
+        warranty: "1 Month Warranty",
+        recommended: "Restores handbrake bite & safety",
+        features: [
+          { name: "Replacement with OEM Handbrake Cable", included: true },
+          { name: "Adjustment of Handbrake Lever", included: true },
+          { name: "Lubrication of Linkages", included: true },
+          { name: "Free Pickup & Drop", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 1999,
+        discountedPrice: 1699,
+        duration: "90 Mins",
+        specialLabel: "NEW",
+        isRecommended: false,
+        descriptions: [
+          "Ensures optimal parking brake hold with fresh OEM cables and adjusters.",
+          "Includes underbody inspection and corrosion protection for linkages."
+        ]
+      },
+      {
+        id: "wheel-cylinder-replacement",
+        name: "Wheel Cylinder Replacement",
+        thumbnail: "/images/product_images/Car services/wheel_cylinder_replacement.png",
+        warranty: "Recommended : In case of Poor Braking",
+        recommended: "Wheel Cylinder Replacement (OES)",
+        features: [
+          { name: "Wheel Cylinder Replacement (OES)", included: true },
+          { name: "Brake Shoe & Brake Fluid Cost Additional", included: true },
+          { name: "Spare Part Price Only", included: true },
+          { name: "Free Pickup & Drop", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 1476,
+        discountedPrice: 1181,
+        duration: "6 Hours",
+        specialLabel: "LABOUR INCLUDED",
+        isRecommended: false,
+        descriptions: [
+          "Professional wheel cylinder replacement service with OES parts.",
+          "Includes brake system inspection and performance verification."
+        ]
+      },
 
-    {
-      id: "caliper-pin-greasing",
-      name: "Caliper Pin Greasing",
-      thumbnail: "/images/product_images/Car services/cliper_pin_greasing.png",
-      warranty: "",
-      recommended: "Recommended: In case of Brake Noise or Sticking",
-      features: [
-        { name: "Caliper Pin Greasing", included: true }
-      ],
-      moreServicesCount: 0,
-      originalPrice: 1499,
-      discountedPrice: 149,
-      duration: "1 Hour",
-      isRecommended: false
-    },
-    {
-      id: "front-brake-pads-cleaning",
-      name: "Front Brake Pads Cleaning",
-      thumbnail: "/images/product_images/Car services/front_breakpad_cleaning.png",
-      warranty: "",
-      recommended: "Recommended: In case of Brake Vibration or Noise",
-      features: [
-        { name: "Front Brake Pad Cleaning", included: true }
-      ],
-      moreServicesCount: 0,
-      originalPrice: 1499,
-      discountedPrice: 149,
-      duration: "Takes 1 Hour",
-      isRecommended: false
-    },
-    {
-      id: "rear-brake-pads-shoes-cleaning",
-      name: "Rear Brake Pads / Shoes Cleaning",
-      thumbnail: "/images/product_images/Car services/ Rear Brake Pads.png",
-      warranty: "",
-      recommended: "Recommended: In case of Brake Noise or Reduced Performance",
-      features: [
-        { name: "Rear Brake Shoe / Pad Cleaning", included: true }
-      ],
-      moreServicesCount: 0,
-      originalPrice: 1499,
-      discountedPrice: 149,
-      duration: "Takes 1 Hour",
-      isRecommended: false
-    },
-    {
-      id: "wiper-fluid-replacement",
-      name: "Wiper Fluid Replacement",
-      thumbnail: "/images/product_images/Car services/wiper_fluid.png",
-      warranty: "",
-      recommended: "Every 1 Month Recommended • Applicable on Walk-ins Only",
-      features: [
-        { name: "Wiper Fluid Replacement", included: true },
-        { name: "Wiper Assembly Check", included: true }
-      ],
-      moreServicesCount: 0,
-      originalPrice: 499,
-      discountedPrice: 49,
-      duration: "Takes 30 Minutes",
-      isRecommended: false
-    },
-    {
-      id: "headlight-adjustment",
-      name: "Headlight Adjustment",
-      thumbnail: "/images/product_images/Car services/headlight_adustment.png",
-      warranty: "",
-      recommended: "Recommended: In Case of Poor Road Visibility • Applicable on Walk-ins Only",
-      features: [
-        { name: "Headlight Bulb Adjustment", included: true },
-        { name: "Headlight Wiring Inspection", included: true }
-      ],
-      moreServicesCount: 0,
-      originalPrice: 499,
-      discountedPrice: 49,
-      duration: "Takes 30 Minutes",
-      isRecommended: false
-    }
+      {
+        id: "caliper-pin-greasing",
+        name: "Caliper Pin Greasing",
+        thumbnail: "/images/product_images/Car services/cliper_pin_greasing.png",
+        warranty: "",
+        recommended: "Recommended: In case of Brake Noise or Sticking",
+        features: [
+          { name: "Caliper Pin Greasing", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 1499,
+        discountedPrice: 149,
+        duration: "1 Hour",
+        isRecommended: false
+      },
+      {
+        id: "front-brake-pads-cleaning",
+        name: "Front Brake Pads Cleaning",
+        thumbnail: "/images/product_images/Car services/front_breakpad_cleaning.png",
+        warranty: "",
+        recommended: "Recommended: In case of Brake Vibration or Noise",
+        features: [
+          { name: "Front Brake Pad Cleaning", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 1499,
+        discountedPrice: 149,
+        duration: "Takes 1 Hour",
+        isRecommended: false
+      },
+      {
+        id: "rear-brake-pads-shoes-cleaning",
+        name: "Rear Brake Pads / Shoes Cleaning",
+        thumbnail: "/images/product_images/Car services/ Rear Brake Pads.png",
+        warranty: "",
+        recommended: "Recommended: In case of Brake Noise or Reduced Performance",
+        features: [
+          { name: "Rear Brake Shoe / Pad Cleaning", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 1499,
+        discountedPrice: 149,
+        duration: "Takes 1 Hour",
+        isRecommended: false
+      },
+      {
+        id: "wiper-fluid-replacement",
+        name: "Wiper Fluid Replacement",
+        thumbnail: "/images/product_images/Car services/wiper_fluid.png",
+        warranty: "",
+        recommended: "Every 1 Month Recommended • Applicable on Walk-ins Only",
+        features: [
+          { name: "Wiper Fluid Replacement", included: true },
+          { name: "Wiper Assembly Check", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 499,
+        discountedPrice: 49,
+        duration: "Takes 30 Minutes",
+        isRecommended: false
+      },
+      {
+        id: "headlight-adjustment",
+        name: "Headlight Adjustment",
+        thumbnail: "/images/product_images/Car services/headlight_adustment.png",
+        warranty: "",
+        recommended: "Recommended: In Case of Poor Road Visibility • Applicable on Walk-ins Only",
+        features: [
+          { name: "Headlight Bulb Adjustment", included: true },
+          { name: "Headlight Wiring Inspection", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 499,
+        discountedPrice: 49,
+        duration: "Takes 30 Minutes",
+        isRecommended: false
+      }
     ],
     "suspension-fitting": [
       {
@@ -3043,7 +3043,7 @@ const Services = () => {
         isRecommended: false
       }
     ],
-   "car-inspections": [
+    "car-inspections": [
       {
         id: "used-car-heading",
         name: "Used Car",
@@ -3328,226 +3328,226 @@ const Services = () => {
         specialLabel: "",
         isRecommended: false
       }
-   ],
+    ],
     "car-insurance": [
-     {
-       id: "policy-heading",
-       name: "Know Your Policy",
-       thumbnail: "",
-       warranty: "",
-       recommended: "",
-       features: [],
-       moreServicesCount: 0,
-       originalPrice: 0,
-       discountedPrice: 0,
-       duration: "",
-       sectionTitle: "Know Your Policy",
-       isRecommended: false
-     },
-     {
-       id: "know-your-policy",
-       name: "Know Your Policy",
-       thumbnail: "/images/product_images/Inurance/know_ur_polices.png",
-       warranty: "Coverage & Claim Guidance",
-       recommended: "Understand inclusions, exclusions and claim steps",
-       features: [
-         { name: "Explain Coverage & Endorsements", included: true },
-         { name: "Claim Paperwork Checklist", included: true },
-         { name: "Cashless / Reimbursement Process", included: true }
-       ],
-       moreServicesCount: 0,
-       originalPrice: 0,
-       discountedPrice: 0,
-       duration: "Takes 30-45 mins",
-       specialLabel: "",
-       isRecommended: false
-     },
- 
-     {
-       id: "accidental-repairs-heading",
-       name: "Accidental Repairs",
-       thumbnail: "",
-       warranty: "",
-       recommended: "",
-       features: [],
-       moreServicesCount: 0,
-       originalPrice: 0,
-       discountedPrice: 0,
-       duration: "",
-       sectionTitle: "Accidental Repairs",
-       isRecommended: false
-     },
-     {
-       id: "accidental-denting-painting-insured",
-       name: "Accidental Denting & Painting (For Insured Vehicles)",
-       thumbnail: "/images/product_images/Inurance/Accidental Denting & Painting.png",
-       warranty: "As per insurer",
-       recommended: "Cashless repairs at network garages",
-       features: [
-         { name: "Panel Repair / Replacement as per Policy", included: true },
-         { name: "Surveyor Coordination & Estimate", included: true },
-         { name: "Cashless Billing Support", included: true }
-       ],
-       moreServicesCount: 0,
-       originalPrice: 0,
-       discountedPrice: 0,
-       duration: "As per surveyor schedule",
-       specialLabel: "",
-       isRecommended: false
-     },
-     {
-       id: "fire-damage-assistance",
-       name: "Fire Damage Assistance (For Insured Vehicles)",
-       thumbnail: "/images/product_images/Inurance/Fire Damage Assistance  copy.png",
-       warranty: "As per insurer",
-       recommended: "Claim assistance for fire related damage",
-       features: [
-         { name: "On-site/Towing Arrangement", included: true },
-         { name: "Insurance Documentation Support", included: true },
-         { name: "Repair Estimate & Cashless Help", included: true }
-       ],
-       moreServicesCount: 0,
-       originalPrice: 0,
-       discountedPrice: 0,
-       duration: "Case dependent",
-       specialLabel: "",
-       isRecommended: false
-     },
-     {
-       id: "car-flood-damage",
-       name: "Car Flood Damage (For Insured Vehicles)",
-       thumbnail: "/images/product_images/Inurance/Car Flood Damage.png",
-       warranty: "As per insurer",
-       recommended: "Assistance for water ingress damage",
-       features: [
-         { name: "Water Ingress & Drying Procedure", included: true },
-         { name: "Electrical/Electronic Restoration", included: true },
-         { name: "Surveyor Coordination & Claim", included: true }
-       ],
-       moreServicesCount: 0,
-       originalPrice: 0,
-       discountedPrice: 0,
-       duration: "Case dependent",
-       specialLabel: "",
-       isRecommended: false
-     },
-     {
-       id: "windshield-replacement-insured",
-       name: "Windshield Replacement (For Insured Vehicles)",
-       thumbnail: "/images/product_images/Inurance/Windshield Replacement .png",
-       warranty: "As per insurer",
-       recommended: "Cashless OEM glass replacement",
-       features: [
-         { name: "OEM Glass & Sealant", included: true },
-         { name: "Cashless at Network Garages", included: true },
-         { name: "Leak & Noise Test", included: true }
-       ],
-       moreServicesCount: 0,
-       originalPrice: 0,
-       discountedPrice: 0,
-       duration: "Takes 3-4 hours",
-       specialLabel: "",
-       isRecommended: false
-     },
- 
-     {
-       id: "theft-lost-heading",
-       name: "Theft / Lost",
-       thumbnail: "",
-       warranty: "",
-       recommended: "",
-       features: [],
-       moreServicesCount: 0,
-       originalPrice: 0,
-       discountedPrice: 0,
-       duration: "",
-       sectionTitle: "Theft / Lost",
-       isRecommended: false
-     },
-     {
-       id: "car-theft-claim-insured",
-       name: "Car Theft Claim (For Insured Vehicles)",
-       thumbnail: "/images/product_images/Inurance/Car Theft Claim (For Insured Vehicles).png",
-       warranty: "As per insurer",
-       recommended: "End-to-end theft claim support",
-       features: [
-         { name: "FIR & Insurer Intimation Guidance", included: true },
-         { name: "Documentation & Settlement Follow-up", included: true }
-       ],
-       moreServicesCount: 0,
-       originalPrice: 0,
-       discountedPrice: 0,
-       duration: "As per authority timelines",
-       specialLabel: "",
-       isRecommended: false
-     },
- 
-     {
-       id: "insurance-inspection-heading",
-       name: "Inspection",
-       thumbnail: "",
-       warranty: "",
-       recommended: "",
-       features: [],
-       moreServicesCount: 0,
-       originalPrice: 0,
-       discountedPrice: 0,
-       duration: "",
-       sectionTitle: "Inspection",
-       isRecommended: false
-     },
-     {
-       id: "doorstep-accidental-inspection-insured",
-       name: "Doorstep Accidental Inspection",
-       thumbnail: "/images/product_images/Inurance/Doorstep Accidental Inspection.png",
-       warranty: "Photo Checklist Provided",
-       recommended: "Initial inspection before claim",
-       features: [
-         { name: "25+ Photos & Damage Notes", included: true },
-         { name: "On-spot Rough Estimate", included: true }
-       ],
-       moreServicesCount: 0,
-       originalPrice: 0,
-       discountedPrice: 0,
-       duration: "Takes 60-90 mins",
-       specialLabel: "",
-       isRecommended: false
-     },
-     {
-       id: "towing-for-insured-vehicle",
-       name: "Towing (For Insured Vehicle)",
-       thumbnail: "/images/product_images/Inurance/Towing (For Insured Vehicle).png",
-       warranty: "As per insurer",
-       recommended: "Breakdown/accident towing assistance",
-       features: [
-         { name: "Flatbed/Crane Arrangement", included: true },
-         { name: "Cashless at Partner Networks", included: true }
-       ],
-       moreServicesCount: 0,
-       originalPrice: 0,
-       discountedPrice: 0,
-       duration: "As needed",
-       specialLabel: "",
-       isRecommended: false
-    },
-     {
-       id: "insurance-claim-inspection-insured",
-       name: "Insurance Claim Inspection",
-       thumbnail: "/images/product_images/Inurance/Insurance Claim Inspection1.png",
-       warranty: "Photos & Estimate Support",
-       recommended: "For insurance damage claims",
-       features: [
-         { name: "Damage Assessment", included: true },
-         { name: "Photographic Evidence", included: true },
-         { name: "Repair Estimate Preparation", included: true }
-       ],
-       moreServicesCount: 0,
-       originalPrice: 0,
-       discountedPrice: 0,
-       duration: "Takes 60-90 mins",
-       specialLabel: "",
-       isRecommended: false
-     }
+      {
+        id: "policy-heading",
+        name: "Know Your Policy",
+        thumbnail: "",
+        warranty: "",
+        recommended: "",
+        features: [],
+        moreServicesCount: 0,
+        originalPrice: 0,
+        discountedPrice: 0,
+        duration: "",
+        sectionTitle: "Know Your Policy",
+        isRecommended: false
+      },
+      {
+        id: "know-your-policy",
+        name: "Know Your Policy",
+        thumbnail: "/images/product_images/Inurance/know_ur_polices.png",
+        warranty: "Coverage & Claim Guidance",
+        recommended: "Understand inclusions, exclusions and claim steps",
+        features: [
+          { name: "Explain Coverage & Endorsements", included: true },
+          { name: "Claim Paperwork Checklist", included: true },
+          { name: "Cashless / Reimbursement Process", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 0,
+        discountedPrice: 0,
+        duration: "Takes 30-45 mins",
+        specialLabel: "",
+        isRecommended: false
+      },
+
+      {
+        id: "accidental-repairs-heading",
+        name: "Accidental Repairs",
+        thumbnail: "",
+        warranty: "",
+        recommended: "",
+        features: [],
+        moreServicesCount: 0,
+        originalPrice: 0,
+        discountedPrice: 0,
+        duration: "",
+        sectionTitle: "Accidental Repairs",
+        isRecommended: false
+      },
+      {
+        id: "accidental-denting-painting-insured",
+        name: "Accidental Denting & Painting (For Insured Vehicles)",
+        thumbnail: "/images/product_images/Inurance/Accidental Denting & Painting.png",
+        warranty: "As per insurer",
+        recommended: "Cashless repairs at network garages",
+        features: [
+          { name: "Panel Repair / Replacement as per Policy", included: true },
+          { name: "Surveyor Coordination & Estimate", included: true },
+          { name: "Cashless Billing Support", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 0,
+        discountedPrice: 0,
+        duration: "As per surveyor schedule",
+        specialLabel: "",
+        isRecommended: false
+      },
+      {
+        id: "fire-damage-assistance",
+        name: "Fire Damage Assistance (For Insured Vehicles)",
+        thumbnail: "/images/product_images/Inurance/Fire Damage Assistance  copy.png",
+        warranty: "As per insurer",
+        recommended: "Claim assistance for fire related damage",
+        features: [
+          { name: "On-site/Towing Arrangement", included: true },
+          { name: "Insurance Documentation Support", included: true },
+          { name: "Repair Estimate & Cashless Help", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 0,
+        discountedPrice: 0,
+        duration: "Case dependent",
+        specialLabel: "",
+        isRecommended: false
+      },
+      {
+        id: "car-flood-damage",
+        name: "Car Flood Damage (For Insured Vehicles)",
+        thumbnail: "/images/product_images/Inurance/Car Flood Damage.png",
+        warranty: "As per insurer",
+        recommended: "Assistance for water ingress damage",
+        features: [
+          { name: "Water Ingress & Drying Procedure", included: true },
+          { name: "Electrical/Electronic Restoration", included: true },
+          { name: "Surveyor Coordination & Claim", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 0,
+        discountedPrice: 0,
+        duration: "Case dependent",
+        specialLabel: "",
+        isRecommended: false
+      },
+      {
+        id: "windshield-replacement-insured",
+        name: "Windshield Replacement (For Insured Vehicles)",
+        thumbnail: "/images/product_images/Inurance/Windshield Replacement .png",
+        warranty: "As per insurer",
+        recommended: "Cashless OEM glass replacement",
+        features: [
+          { name: "OEM Glass & Sealant", included: true },
+          { name: "Cashless at Network Garages", included: true },
+          { name: "Leak & Noise Test", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 0,
+        discountedPrice: 0,
+        duration: "Takes 3-4 hours",
+        specialLabel: "",
+        isRecommended: false
+      },
+
+      {
+        id: "theft-lost-heading",
+        name: "Theft / Lost",
+        thumbnail: "",
+        warranty: "",
+        recommended: "",
+        features: [],
+        moreServicesCount: 0,
+        originalPrice: 0,
+        discountedPrice: 0,
+        duration: "",
+        sectionTitle: "Theft / Lost",
+        isRecommended: false
+      },
+      {
+        id: "car-theft-claim-insured",
+        name: "Car Theft Claim (For Insured Vehicles)",
+        thumbnail: "/images/product_images/Inurance/Car Theft Claim (For Insured Vehicles).png",
+        warranty: "As per insurer",
+        recommended: "End-to-end theft claim support",
+        features: [
+          { name: "FIR & Insurer Intimation Guidance", included: true },
+          { name: "Documentation & Settlement Follow-up", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 0,
+        discountedPrice: 0,
+        duration: "As per authority timelines",
+        specialLabel: "",
+        isRecommended: false
+      },
+
+      {
+        id: "insurance-inspection-heading",
+        name: "Inspection",
+        thumbnail: "",
+        warranty: "",
+        recommended: "",
+        features: [],
+        moreServicesCount: 0,
+        originalPrice: 0,
+        discountedPrice: 0,
+        duration: "",
+        sectionTitle: "Inspection",
+        isRecommended: false
+      },
+      {
+        id: "doorstep-accidental-inspection-insured",
+        name: "Doorstep Accidental Inspection",
+        thumbnail: "/images/product_images/Inurance/Doorstep Accidental Inspection.png",
+        warranty: "Photo Checklist Provided",
+        recommended: "Initial inspection before claim",
+        features: [
+          { name: "25+ Photos & Damage Notes", included: true },
+          { name: "On-spot Rough Estimate", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 0,
+        discountedPrice: 0,
+        duration: "Takes 60-90 mins",
+        specialLabel: "",
+        isRecommended: false
+      },
+      {
+        id: "towing-for-insured-vehicle",
+        name: "Towing (For Insured Vehicle)",
+        thumbnail: "/images/product_images/Inurance/Towing (For Insured Vehicle).png",
+        warranty: "As per insurer",
+        recommended: "Breakdown/accident towing assistance",
+        features: [
+          { name: "Flatbed/Crane Arrangement", included: true },
+          { name: "Cashless at Partner Networks", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 0,
+        discountedPrice: 0,
+        duration: "As needed",
+        specialLabel: "",
+        isRecommended: false
+      },
+      {
+        id: "insurance-claim-inspection-insured",
+        name: "Insurance Claim Inspection",
+        thumbnail: "/images/product_images/Inurance/Insurance Claim Inspection1.png",
+        warranty: "Photos & Estimate Support",
+        recommended: "For insurance damage claims",
+        features: [
+          { name: "Damage Assessment", included: true },
+          { name: "Photographic Evidence", included: true },
+          { name: "Repair Estimate Preparation", included: true }
+        ],
+        moreServicesCount: 0,
+        originalPrice: 0,
+        discountedPrice: 0,
+        duration: "Takes 60-90 mins",
+        specialLabel: "",
+        isRecommended: false
+      }
     ]
   };
 
@@ -3658,7 +3658,7 @@ const Services = () => {
     if (!serviceCardsRef.current) return;
 
     const cards = serviceCardsRef.current.querySelectorAll(".service-card-animate");
-    
+
     gsap.fromTo(
       cards,
       { y: 30, opacity: 0 },
@@ -3710,16 +3710,16 @@ const Services = () => {
 
       // Find the element that the mouse is actually over
       const target = e.target as HTMLElement;
-      
+
       // Check if target or its parents are scrollable
       let scrollableElement: HTMLElement | null = null;
       let current: HTMLElement | null = target;
 
       while (current && current !== sidebarElement) {
         const style = window.getComputedStyle(current);
-        const hasOverflow = style.overflow === 'auto' || style.overflow === 'scroll' || 
-                           style.overflowY === 'auto' || style.overflowY === 'scroll';
-        
+        const hasOverflow = style.overflow === 'auto' || style.overflow === 'scroll' ||
+          style.overflowY === 'auto' || style.overflowY === 'scroll';
+
         if (hasOverflow && current.scrollHeight > current.clientHeight) {
           scrollableElement = current;
           break;
@@ -3774,103 +3774,99 @@ const Services = () => {
             <div className="flex-1 max-w-[1280px]">
               {/* Category Navigation */}
               <div ref={categoryTabsRef} className="mb-6">
-              <CategoryTabs
-                categories={serviceCategories}
-                activeCategory={selectedCategory}
-                onCategoryChange={setSelectedCategory}
-              />
-            </div>
+                <CategoryTabs
+                  categories={serviceCategories}
+                  activeCategory={selectedCategory}
+                  onCategoryChange={setSelectedCategory}
+                />
+              </div>
 
               {/* Service Packages Section */}
               <div className="mb-8">
                 <h2 className="text-2xl font-bold text-gray-900 mb-8">
                   {selectedCategory === "ac-service" ? "Service Packages" :
-                   selectedCategory === "batteries" ? "Batteries" :
-                   selectedCategory === "tyres" ? "Premium Tyres" :
-                   selectedCategory === "windshield-lights" ? "" :
-                   selectedCategory === "car-spa" ? "Spa" :
-                   selectedCategory === "detailing" ? "Polishing" :
-                   selectedCategory === "suspension-fitting" ? "Suspension & Fitting" :
-                   selectedCategory === "clutch-body-parts" ? "Clutch & Body Parts" :
-                   selectedCategory === "car-inspections" ? "Car Inspections" :
-                   selectedCategory === "car-insurance" ? "Insurance Claims" : "Scheduled Packages"}
+                    selectedCategory === "batteries" ? "Batteries" :
+                      selectedCategory === "tyres" ? "Premium Tyres" :
+                        selectedCategory === "windshield-lights" ? "" :
+                          selectedCategory === "car-spa" ? "Spa" :
+                            selectedCategory === "detailing" ? "Polishing" :
+                              selectedCategory === "suspension-fitting" ? "Suspension & Fitting" :
+                                selectedCategory === "clutch-body-parts" ? "Clutch & Body Parts" :
+                                  selectedCategory === "car-inspections" ? "Car Inspections" :
+                                    selectedCategory === "car-insurance" ? "Insurance Claims" : "Scheduled Packages"}
                 </h2>
 
-          <div ref={serviceCardsRef} className="space-y-6">
+                <div ref={serviceCardsRef} className="space-y-6">
                   {(servicePackages[selectedCategory as keyof typeof servicePackages] || servicePackages["car-services"])
                     .map((pkg) => (
-                    <Fragment key={`${selectedCategory}-${pkg.id}`}>
-                      {pkg.sectionTitle ? (
-                        <h3 className="text-lg font-semibold text-gray-700 uppercase tracking-wide mt-10">
-                          {pkg.sectionTitle}
-                        </h3>
-                      ) : (
-              <div className="service-card-animate">
-              <ServiceCard
-                id={pkg.id}
-                name={pkg.name}
-                thumbnail={pkg.thumbnail}
-                warranty={pkg.warranty}
-                recommended={pkg.recommended}
-                features={pkg.features}
-                moreServicesCount={pkg.moreServicesCount}
-                originalPrice={pkg.originalPrice}
-                discountedPrice={pkg.discountedPrice}
-                duration={pkg.duration}
-                offer={pkg.offer}
-                isRecommended={pkg.isRecommended}
-                specialLabel={pkg.specialLabel}
-                descriptions={pkg.descriptions}
-                variant={
-                  pkg.id === "front-brake-pads" 
-                    ? "reference" 
-                    : ["car-services", "batteries"].includes(selectedCategory) 
-                    ? "gom" 
-                    : "default"
-                }
-                onAddToCart={handleAddToCart}
-              />
+                      <Fragment key={`${selectedCategory}-${pkg.id}`}>
+                        {pkg.sectionTitle ? (
+                          <h3 className="text-lg font-semibold text-gray-700 uppercase tracking-wide mt-10">
+                            {pkg.sectionTitle}
+                          </h3>
+                        ) : (
+                          <div className="service-card-animate">
+                            <ServiceCard
+                              id={pkg.id}
+                              name={pkg.name}
+                              thumbnail={pkg.thumbnail}
+                              warranty={pkg.warranty}
+                              recommended={pkg.recommended}
+                              features={pkg.features}
+                              moreServicesCount={pkg.moreServicesCount}
+                              originalPrice={pkg.originalPrice}
+                              discountedPrice={pkg.discountedPrice}
+                              duration={pkg.duration}
+                              offer={pkg.offer}
+                              isRecommended={pkg.isRecommended}
+                              specialLabel={pkg.specialLabel}
+                              descriptions={pkg.descriptions}
+                              variant={
+                                pkg.id === "front-brake-pads"
+                                  ? "reference"
+                                  : ["car-services", "batteries"].includes(selectedCategory)
+                                    ? "gom"
+                                    : "default"
+                              }
+                              onAddToCart={handleAddToCart}
+                            />
+                          </div>
+                        )}
+                      </Fragment>
+                    ))}
+                </div>
               </div>
-                      )}
-                    </Fragment>
-            ))}
-          </div>
-        </div>
 
               {/* Statistics Section */}
               <div className="bg-gray-100 rounded-2xl mt-16 py-12 px-8">
                 <div ref={statsRef} className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
                   <div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">150+ Services</h3>
-                <p className="text-gray-600">Comprehensive car care solutions</p>
-              </div>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">150+ Services</h3>
+                    <p className="text-gray-600">Comprehensive car care solutions</p>
+                  </div>
                   <div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">Free Pickup</h3>
-                <p className="text-gray-600">Doorstep service at your convenience</p>
-              </div>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Free Pickup</h3>
+                    <p className="text-gray-600">Doorstep service at your convenience</p>
+                  </div>
                   <div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">40% Off</h3>
-                <p className="text-gray-600">Best prices guaranteed</p>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">40% Off</h3>
+                    <p className="text-gray-600">Best prices guaranteed</p>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Right Sidebar - Select Manufacturer */}
-            <div ref={sidebarRef} className="w-full xl:w-[400px] flex-shrink-0 mt-10 xl:mt-0 xl:ml-16">
-              <div 
+            <div ref={sidebarRef} className="w-full xl:w-[400px] flex-shrink-0 mt-10 xl:mt-0 xl:ml-16 relative">
+              <div
                 ref={sidebarContentRef}
-                className="xl:fixed xl:max-h-[calc(100vh-180px)] xl:z-30 xl:w-[400px]"
-                style={{
-                  right: 'max(calc((100% - 1400px) / 2 + 24px), 24px)',
-                  top: `${sidebarTop}px`
-                }}
+                className="xl:sticky xl:top-24 xl:z-30 xl:w-[400px]"
               >
                 <BrandSelectorModal
                   variant="sidebar"
                   selectedBrand={selectedBrand}
                   onBrandSelect={setSelectedBrand}
-                  className="h-auto max-h-[calc(100vh-200px)] overflow-y-auto overflow-x-hidden rounded-2xl shadow-[0px_6px_30px_rgba(0,0,0,0.25)] bg-white"
+                  className="h-auto max-h-[calc(100vh-120px)] overflow-y-auto overflow-x-hidden rounded-2xl shadow-[0px_6px_30px_rgba(0,0,0,0.25)] bg-white"
                 />
               </div>
             </div>

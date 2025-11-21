@@ -92,7 +92,7 @@ const carCatalog: CarBrand[] = [
       { id: "mercedes-slk-class", name: "SLK Class", fuelTypes: ["Petrol"] },
       { id: "mercedes-sl-500-amg", name: "SL 500 AMG", fuelTypes: ["Petrol"] },
       { id: "mercedes-amg-gt", name: "AMG GT", fuelTypes: ["Petrol"] },
-      { id: "mercedes-g63-amg", name: "G63 AMGr", fuelTypes: ["Petrol"] },
+      { id: "mercedes-g63-amg", name: "G63 AMG", fuelTypes: ["Petrol"] },
       { id: "mercedes-eqc", name: "EQC", fuelTypes: ["Electric"] },
       { id: "mercedes-eqs", name: "EQS", fuelTypes: ["Electric"] },
     ],

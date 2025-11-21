@@ -90,9 +90,9 @@ export async function loginUser(email: string, password: string): Promise<LoginR
   try {
     // Construct URL - handle empty API_BASE_URL for relative paths
     const url = API_BASE_URL ? `${API_BASE_URL}/api/v1/auth/login` : '/api/v1/auth/login';
-    
+
     console.log('[Auth] Login request URL:', url);
-    
+
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -110,23 +110,23 @@ export async function loginUser(email: string, password: string): Promise<LoginR
     }
 
     const data: LoginResponse = await response.json();
-    
+
     console.log('[Auth] Login successful, storing token. Token length:', data.access_token?.length || 0);
-    
+
     // Store the access token in localStorage
     setAuthToken(data.access_token);
-    
+
     // Verify token was stored
     const storedToken = localStorage.getItem('auth_token');
     console.log('[Auth] Token stored successfully:', !!storedToken, 'Length:', storedToken?.length || 0);
-    
+
     // Store user data in localStorage for persistence
     localStorage.setItem('user_data', JSON.stringify(data.user));
-    
+
     // Store in Zustand store
     const store = useAuthStore.getState();
     store.setAuthData(data.user, data.access_token, data.role);
-    
+
     return data;
   } catch (error) {
     if (error instanceof Error) {
@@ -150,7 +150,7 @@ export async function logoutUser() {
     // Remove token and user data from localStorage
     removeAuthToken();
     localStorage.removeItem('user_data');
-    
+
     // Clear Zustand store
     useAuthStore.getState().clearAuth();
   }
@@ -187,3 +187,35 @@ export function isAuthenticated(): boolean {
   return !!token;
 }
 
+/**
+ * Update user profile
+ */
+export async function updateUserProfile(data: Partial<User>): Promise<User> {
+  // Update user profile using the /auth/me endpoint which supports PATCH
+  // This endpoint was added to the backend to support profile updates
+
+  const response = await apiCall<User>('/api/v1/auth/me', {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  });
+
+  if (response.error) {
+    // If /users/me fails, let's try /auth/me just in case?
+    // No, that's bad practice to try-catch endpoints.
+
+    throw new Error(response.error);
+  }
+
+  if (response.data) {
+    // Update localStorage
+    localStorage.setItem('user_data', JSON.stringify(response.data));
+
+    // Update Zustand store
+    const store = useAuthStore.getState();
+    store.setUser(response.data);
+
+    return response.data;
+  }
+
+  throw new Error('Failed to update profile');
+}

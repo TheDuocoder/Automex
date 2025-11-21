@@ -455,6 +455,60 @@ async def get_current_user(
     return user
 
 
+@router.patch(
+    "/me",
+    response_model=UserRead,
+    summary="Update Current User",
+    description="Update the currently authenticated user's information",
+    tags=["Authentication"],
+    responses={
+        200: {
+            "description": "User information updated successfully",
+        },
+        401: {"description": "Not authenticated"},
+        400: {"description": "Bad Request - Invalid data"},
+    }
+)
+async def update_current_user(
+    user_update: UserUpdate,
+    user: User = Depends(current_active_user),
+    user_manager: UserManager = Depends(get_user_manager),
+    session: AsyncSession = Depends(get_async_session),
+):
+    """
+    Update current authenticated user.
+    """
+    try:
+        # Update user using user manager
+        updated_user = await user_manager.update(user_update, user, safe=True)
+        
+        # Load role relationship for the response
+        # We need to reload it because user_manager.update might return a user without the relationship loaded
+        from sqlalchemy import select
+        from sqlalchemy.orm import selectinload
+        
+        result = await session.execute(
+            select(User).where(User.id == updated_user.id).options(selectinload(User.role))
+        )
+        user_with_role = result.scalar_one()
+        
+        return UserRead.model_validate(user_with_role)
+        
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+    except Exception as e:
+        import traceback
+        print(f"[ERROR] Update user error: {str(e)}")
+        print(f"[ERROR] Traceback:\n{traceback.format_exc()}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to update profile: {str(e)}"
+        )
+
+
 @router.get(
     "/user-info",
     response_model=UserRead,
