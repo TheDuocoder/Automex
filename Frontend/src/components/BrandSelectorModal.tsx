@@ -277,8 +277,8 @@ const BrandSelectorModal = ({
           // Special cases for different filename formats
           if (modelName === 'range_rover') {
             landRoverFileName = 'rangrover';
-          } else if (modelName === 'range_rover_sport') {
-            landRoverFileName = 'rangerover_sport';
+          } else if (modelName === 'range_rover_sport' || model.name === 'Range Rover Sport') {
+            landRoverFileName = 'Range Rover Sport';
           } else if (modelName === 'range_rover_velar') {
             landRoverFileName = 'rangerover_velar';
           } else if (modelName === 'range_rover_vogue') {
@@ -287,8 +287,8 @@ const BrandSelectorModal = ({
             landRoverFileName = 'rangerovere_evoque';
           } else if (modelName === 'freelander_2') {
             landRoverFileName = 'freelander2';
-          } else if (modelName === 'discovery_4') {
-            landRoverFileName = 'discover4';
+          } else if (modelName === 'discovery_4' || model.name === 'Discovery 4') {
+            landRoverFileName = 'Discovery 4';
           } else if (modelName === 'discovery_sport') {
             landRoverFileName = 'discovery_sport';
           }
@@ -296,9 +296,13 @@ const BrandSelectorModal = ({
         } else if (brandName === 'audi') {
           // Audi images are in "Audi_car" folder with capital A
           let audiFileName = modelName;
-          // Special case: A8 L uses underscore in filename
-          if (modelName === 'a8_l') {
-            audiFileName = 'a8_l';
+          // Special case: A8 L uses space and uppercase in filename
+          if (modelName === 'a8_l' || model.name === 'A8 L') {
+            audiFileName = 'A8 L';
+          }
+          // Special case: Q7 uses uppercase in filename
+          if (modelName === 'q7') {
+            audiFileName = 'Q7';
           }
           imagePath = `/images/Car_images/Audi_car/${audiFileName}.png`;
         } else if (brandName === 'volkswagen') {
@@ -331,6 +335,10 @@ const BrandSelectorModal = ({
           if (modelName === 'gle43_amg' || model.name === 'GLE43 AMG' || model.name === 'GLE 43 AMG') {
             mercedesFileName = 'GLE43 AMG';
           }
+          // Special case: GLE Class uses space format
+          if (modelName === 'gle_class' || model.name === 'GLE Class' || model.name === 'GLE-Class') {
+            mercedesFileName = 'GLE Class';
+          }
           imagePath = `/images/Car_images/Mercedes-Benz/${mercedesFileName}.png`;
         } else if (brandName === 'volvo') {
           // Volvo images are in "Volvo" folder with spaces in filenames
@@ -340,6 +348,30 @@ const BrandSelectorModal = ({
             volvoFileName = 'XC 40';
           }
           imagePath = `/images/Car_images/Volvo/${volvoFileName}.png`;
+        } else if (brandName === 'kia') {
+          // Kia images are in "Kia" folder with proper capitalization
+          let kiaFileName = model.name; // Use original name with proper capitalization
+          imagePath = `/images/Car_images/Kia/${kiaFileName}.png`;
+        } else if (brandName === 'mg') {
+          // MG images are in "MG" folder with proper capitalization
+          let mgFileName = model.name; // Use original name with proper capitalization
+          imagePath = `/images/Car_images/MG/${mgFileName}.png`;
+        } else if (brandName === 'mini') {
+          // Mini images are in "Mini" folder with proper capitalization
+          let miniFileName = model.name; // Use original name with proper capitalization
+          imagePath = `/images/Car_images/Mini/${miniFileName}.png`;
+        } else if (brandName === 'jaguar') {
+          // Jaguar images are in "Jaguar" folder with proper capitalization and hyphens
+          let jaguarFileName = model.name; // Use original name with proper capitalization
+          imagePath = `/images/Car_images/Jaguar/${jaguarFileName}.png`;
+        } else if (brandName === 'jeep') {
+          // Jeep images are in "Jeep" folder with proper capitalization
+          let jeepFileName = model.name; // Use original name with proper capitalization
+          imagePath = `/images/Car_images/Jeep/${jeepFileName}.png`;
+        } else if (brandName === 'nissan') {
+          // Nissan images are in "Nissan" folder with proper capitalization
+          let nissanFileName = model.name; // Use original name with proper capitalization
+          imagePath = `/images/Car_images/Nissan/${nissanFileName}.png`;
         } else {
           imagePath = `/images/Car_images/${brandName}_car/${modelName}.png`;
         }
@@ -349,35 +381,53 @@ const BrandSelectorModal = ({
             key={model.id}
             onClick={() => handleModelClick(model.id)}
             className={cn(
-              "flex flex-col items-center justify-center bg-white rounded-2xl transition-all duration-300 overflow-hidden group relative",
-              "hover:shadow-lg hover:-translate-y-1",
+              "flex flex-col items-center justify-center transition-all duration-300 overflow-hidden group relative",
+              "rounded-2xl",
               isSelected
-                ? "border-2 border-[#E74A3B] shadow-xl scale-105"
-                : "border border-gray-200 shadow-md hover:border-[#E74A3B]/50"
+                ? "border-2 border-[#E74A3B] scale-[1.02]"
+                : "border border-gray-200/50 hover:border-[#E74A3B]/40"
             )}
             style={{
               aspectRatio: '0.95',
-              padding: '10px'
+              padding: '8px',
+              backgroundColor: '#FFFFFF',
+              boxShadow: isSelected 
+                ? '0 8px 24px rgba(231, 74, 59, 0.15), 0 2px 8px rgba(0, 0, 0, 0.05)' 
+                : '0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02)',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
             }}
           >
-            {/* Car Image Container */}
-            <div className="flex-1 flex items-center justify-center w-full mb-2 relative bg-white rounded-lg">
+            {/* Car Image Container - Pure White Background */}
+            <div 
+              className="flex-1 flex items-center justify-center w-full mb-2 relative rounded-lg"
+              style={{
+                backgroundColor: '#FFFFFF'
+              }}
+            >
               <div className={cn(
-                "relative w-full h-full flex items-center justify-center transition-transform duration-300 bg-white rounded-lg",
-                isSelected ? "scale-105" : "group-hover:scale-110"
-              )}>
+                "relative w-full h-full flex items-center justify-center transition-transform duration-300 rounded-lg",
+                isSelected ? "scale-105" : "group-hover:scale-[1.08]"
+              )}
+              style={{
+                backgroundColor: '#FFFFFF'
+              }}
+              >
                 <img
                   src={imagePath}
                   alt={model.name}
                   className="w-full h-full object-contain"
                   style={{
-                    filter: 'drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15))',
-                    maxHeight: '80%',
-                    backgroundColor: 'white',
-                    mixBlendMode: 'multiply'
+                    filter: isSelected 
+                      ? 'drop-shadow(0 4px 12px rgba(231, 74, 59, 0.15))' 
+                      : 'drop-shadow(0 2px 6px rgba(0, 0, 0, 0.06))',
+                    maxHeight: '100%',
+                    backgroundColor: '#FFFFFF',
+                    padding: '2px',
+                    mixBlendMode: 'normal',
+                    imageRendering: 'crisp-edges',
+                    WebkitFontSmoothing: 'antialiased'
                   }}
                   onError={(e) => {
-                    // Fallback to a placeholder or default car icon
                     e.currentTarget.src = "/images/car_images/default_car.png";
                     e.currentTarget.style.filter = 'none';
                   }}
@@ -386,28 +436,41 @@ const BrandSelectorModal = ({
               </div>
             </div>
             
-            {/* Model Name */}
-            <div className={cn(
-              "text-center w-full px-0.5 py-2 transition-colors duration-200",
-              isSelected 
-                ? "bg-gradient-to-t from-red-50 to-transparent" 
-                : ""
-            )}>
+            {/* Model Name - Clean Typography */}
+            <div 
+              className={cn(
+                "text-center w-full px-1 py-2 rounded-lg transition-all duration-200",
+                isSelected && "bg-red-50/50"
+              )}
+              style={{
+                backgroundColor: isSelected ? 'rgba(254, 242, 242, 0.5)' : 'transparent'
+              }}
+            >
               <span className={cn(
-                "text-xs font-bold tracking-tight leading-tight block whitespace-nowrap overflow-hidden text-ellipsis",
+                "text-xs font-semibold tracking-tight leading-tight block whitespace-nowrap overflow-hidden text-ellipsis",
                 isSelected 
                   ? "text-[#E74A3B]" 
                   : "text-gray-800 group-hover:text-[#E74A3B]"
-              )}>
+              )}
+              style={{
+                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                letterSpacing: '-0.01em'
+              }}
+              >
                 {model.name}
               </span>
             </div>
             
-            {/* Selection Indicator */}
+            {/* Selection Indicator - Minimal Premium */}
             {isSelected && (
-              <div className="absolute top-2 right-2 w-6 h-6 bg-[#E74A3B] rounded-full flex items-center justify-center shadow-lg">
-                <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+              <div 
+                className="absolute top-3 right-3 w-6 h-6 bg-[#E74A3B] rounded-full flex items-center justify-center"
+                style={{
+                  boxShadow: '0 2px 8px rgba(231, 74, 59, 0.3)'
+                }}
+              >
+                <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
               </div>
             )}
