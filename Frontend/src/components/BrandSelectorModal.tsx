@@ -380,6 +380,10 @@ const BrandSelectorModal = ({
           // Hyundai images are in "Hyundai" folder with proper capitalization
           let hyundaiFileName = model.name; // Use original name with proper capitalization (matches image filenames exactly)
           imagePath = `/images/Car_images/Hyundai/${hyundaiFileName}.png`;
+        } else if (brandName === 'lexus') {
+          // Lexus images are in "Lexus" folder with proper capitalization
+          let lexusFileName = model.name; // Use original name with proper capitalization
+          imagePath = `/images/Car_images/Lexus/${lexusFileName}.png`;
         } else {
           imagePath = `/images/Car_images/${brandName}_car/${modelName}.png`;
         }
