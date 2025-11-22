@@ -17,6 +17,27 @@ from automex_backend.api.auth import current_active_user, get_current_user_with_
 router = APIRouter()
 
 
+async def is_admin_or_super_admin(user: User, session: AsyncSession) -> bool:
+    """
+    Check if user has Admin or Super Admin role
+    Returns True if user is superuser OR has role 'admin' or 'super'
+    """
+    # Check if user is superuser
+    if user.is_superuser:
+        return True
+    
+    # Check role name
+    if hasattr(user, 'role_id') and user.role_id:
+        from automex_backend.models.role import Role
+        role_stmt = select(Role).where(Role.id == user.role_id)
+        role_result = await session.execute(role_stmt)
+        role = role_result.scalar_one_or_none()
+        if role and role.name in ["admin", "super"]:
+            return True
+    
+    return False
+
+
 @router.get("/", response_model=List[BookingRead])
 async def get_bookings(
     skip: int = Query(0, ge=0),
@@ -26,13 +47,17 @@ async def get_bookings(
     user: User = Depends(current_active_user)
 ):
     """
-    Get list of bookings for current user
-    Superusers can see all bookings
+    Get list of bookings
+    Admin and Super Admin can see all bookings
+    Normal users can only see their own bookings
     """
     query = select(Booking)
     
-    # Non-superusers can only see their own bookings
-    if not user.is_superuser:
+    # Check if user is Admin or Super Admin
+    is_admin = await is_admin_or_super_admin(user, session)
+    
+    # Non-admin users can only see their own bookings
+    if not is_admin:
         query = query.where(Booking.user_id == user.id)
     
     if status_filter:
@@ -53,6 +78,8 @@ async def get_booking(
 ):
     """
     Get a specific booking by ID
+    Admin and Super Admin can view any booking
+    Normal users can only view their own bookings
     """
     result = await session.execute(
         select(Booking).where(Booking.id == booking_id)
@@ -66,7 +93,8 @@ async def get_booking(
         )
     
     # Check if user has permission to view this booking
-    if not user.is_superuser and booking.user_id != user.id:
+    is_admin = await is_admin_or_super_admin(user, session)
+    if not is_admin and booking.user_id != user.id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="You don't have permission to view this booking"
@@ -233,36 +261,13 @@ async def update_booking_status(
             detail=f"Invalid status value: {status_update.status}. Valid values are: {', '.join(sorted(valid_statuses))}"
         )
     
-    print(f"[DEBUG] Validated status: {new_status.name} = {new_status.value}")
+        print(f"[DEBUG] Validated status: {new_status.name} = {new_status.value}")
     
     try:
-        # Check if user is Admin or Super Admin
-        from automex_backend.models.role import Role
+        # Check if user is Admin or Super Admin using helper function
+        is_admin = await is_admin_or_super_admin(user, session)
         
-        # Check permissions: Super user OR role name is admin/super
-        is_admin_or_super = False
-        
-        if user.is_superuser:
-            is_admin_or_super = True
-            print(f"[DEBUG] User {user.id} is superuser")
-        else:
-            # Check role_id exists
-            if hasattr(user, 'role_id') and user.role_id:
-                print(f"[DEBUG] User {user.id} has role_id: {user.role_id}")
-                # Load role to check name
-                role_stmt = select(Role).where(Role.id == user.role_id)
-                role_result = await session.execute(role_stmt)
-                role = role_result.scalar_one_or_none()
-                if role:
-                    print(f"[DEBUG] User role name: {role.name}")
-                    if role.name in ["admin", "super"]:
-                        is_admin_or_super = True
-                else:
-                    print(f"[DEBUG] Role {user.role_id} not found")
-            else:
-                print(f"[DEBUG] User {user.id} has no role_id")
-        
-        if not is_admin_or_super:
+        if not is_admin:
             print(f"[DEBUG] User {user.id} is not admin or super, denying access")
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
@@ -378,6 +383,8 @@ async def update_booking(
 ):
     """
     Update an existing booking
+    Admin and Super Admin can update any booking
+    Normal users can only update their own bookings
     """
     result = await session.execute(
         select(Booking).where(Booking.id == booking_id)
@@ -391,7 +398,8 @@ async def update_booking(
         )
     
     # Check permissions
-    if not user.is_superuser and booking.user_id != user.id:
+    is_admin = await is_admin_or_super_admin(user, session)
+    if not is_admin and booking.user_id != user.id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="You don't have permission to update this booking"
@@ -419,6 +427,8 @@ async def cancel_booking(
 ):
     """
     Cancel a booking (sets status to CANCELLED)
+    Admin and Super Admin can cancel any booking
+    Normal users can only cancel their own bookings
     """
     result = await session.execute(
         select(Booking).where(Booking.id == booking_id)
@@ -432,7 +442,8 @@ async def cancel_booking(
         )
     
     # Check permissions
-    if not user.is_superuser and booking.user_id != user.id:
+    is_admin = await is_admin_or_super_admin(user, session)
+    if not is_admin and booking.user_id != user.id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="You don't have permission to cancel this booking"

@@ -2,12 +2,15 @@
 Booking models for service appointments
 """
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List, TYPE_CHECKING
 from enum import Enum as PyEnum
 from sqlalchemy import String, Integer, Text, DateTime, Enum, ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from automex_backend.database import Base
+
+if TYPE_CHECKING:
+    from automex_backend.models.cost import Cost
 
 
 class BookingStatus(str, PyEnum):
@@ -66,6 +69,9 @@ class Booking(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
     completed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+    
+    # Relationship to costs
+    costs: Mapped[List["Cost"]] = relationship("Cost", back_populates="booking", cascade="all, delete-orphan")
     
     @property
     def status_enum(self) -> BookingStatus:

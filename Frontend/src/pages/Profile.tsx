@@ -14,15 +14,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { User, Mail, Phone, Shield, CheckCircle, XCircle, Edit, Key, Package, Loader2 } from "lucide-react";
+import { User, Mail, Phone, Shield, CheckCircle, XCircle, Edit, Key, Package, Loader2, Eye, EyeOff } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
 import { updateUserProfile } from "@/services/authService";
 import { toast } from "sonner";
+import { usePasswordResetStore } from "@/stores/passwordResetStore";
 
 const Profile = () => {
   const navigate = useNavigate();
-  const { user: contextUser, isAuthenticated } = useAuth();
+  const { user: contextUser, isAuthenticated, logout } = useAuth();
   const { user, role, token } = useAuthStore();
 
   // State for Edit Profile Modal
@@ -33,6 +34,21 @@ const Profile = () => {
     email: "",
     phone_number: "",
   });
+
+  // State for Change Password Modal
+  const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
+  const [isPasswordLoading, setIsPasswordLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordData, setPasswordData] = useState({
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [passwordErrors, setPasswordErrors] = useState({
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const { setResetToken, resetToken, clearResetToken } = usePasswordResetStore();
 
   // Use Zustand user or context user (Zustand takes priority)
   const currentUser = user || contextUser;
@@ -63,12 +79,196 @@ const Profile = () => {
       toast.success("Profile updated successfully");
       setIsEditOpen(false);
     } catch (error) {
-      toast.error("Failed to update profile");
+      const errorMessage = error instanceof Error ? error.message : "Failed to update profile";
+      const errorLower = errorMessage.toLowerCase();
+      
+      // Check if it's a duplicate phone number error
+      if (errorLower.includes("phone") && (errorLower.includes("already exists") || errorLower.includes("already registered"))) {
+        toast.error("An account with this phone number already exists. Please use a different phone number.");
+      } else {
+        toast.error(errorMessage);
+      }
       console.error(error);
     } finally {
       setIsLoading(false);
     }
   };
+
+  // Handle Change Password - Step 1: Generate reset token
+  const handleRequestPasswordReset = async () => {
+    if (!currentUser?.email) {
+      toast.error("Email not found. Please contact support.");
+      return;
+    }
+
+    setIsPasswordLoading(true);
+    try {
+      const response = await fetch("/api/v1/auth/forgot-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: currentUser.email }),
+      });
+
+      if (response.ok || response.status === 202) {
+        let responseData: any = null;
+        try {
+          responseData = await response.json();
+        } catch {
+          // Response might be empty
+        }
+
+        // If token is returned (development mode), store it
+        if (responseData?.token) {
+          setResetToken(responseData.token, currentUser.email);
+          toast.success("Reset token generated successfully");
+        } else {
+          toast.success("Reset token has been sent to your email");
+        }
+      } else {
+        const errorData = await response.json().catch(() => ({ detail: "Failed to generate reset token" }));
+        throw new Error(errorData.detail || errorData.message || "Failed to generate reset token");
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to generate reset token");
+      console.error(error);
+    } finally {
+      setIsPasswordLoading(false);
+    }
+  };
+
+  // Handle Change Password - Step 2: Reset password
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Validate passwords
+    const errors = {
+      newPassword: "",
+      confirmPassword: "",
+    };
+
+    if (!passwordData.newPassword) {
+      errors.newPassword = "New password is required";
+    } else if (passwordData.newPassword.length < 8) {
+      errors.newPassword = "Password must be at least 8 characters";
+    }
+
+    if (!passwordData.confirmPassword) {
+      errors.confirmPassword = "Please confirm your password";
+    } else if (passwordData.newPassword !== passwordData.confirmPassword) {
+      errors.confirmPassword = "Passwords do not match";
+    }
+
+    setPasswordErrors(errors);
+
+    if (errors.newPassword || errors.confirmPassword) {
+      return;
+    }
+
+    // Check if we have a reset token
+    if (!resetToken) {
+      toast.error("Reset token is missing. Please close and try again.");
+      return;
+    }
+
+    handlePasswordReset();
+  };
+
+  const handlePasswordReset = async () => {
+    if (!resetToken) {
+      toast.error("Reset token is missing. Please try again.");
+      return;
+    }
+
+    setIsPasswordLoading(true);
+    try {
+      const response = await fetch("/api/v1/auth/reset-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          token: resetToken,
+          password: passwordData.newPassword,
+        }),
+      });
+
+      if (response.ok || response.status === 200 || response.status === 204) {
+        toast.success("Password changed successfully! You will be logged out and redirected to login.");
+        setIsChangePasswordOpen(false);
+        setPasswordData({ newPassword: "", confirmPassword: "" });
+        clearResetToken();
+        
+        // Logout user and redirect to landing page (login)
+        // Use logout from AuthContext to ensure all state is cleared
+        await logout();
+        setTimeout(() => {
+          navigate('/');
+        }, 1500); // Small delay to show success message
+      } else {
+        const errorData = await response.json().catch(() => ({ detail: "Failed to reset password" }));
+        throw new Error(errorData.detail || errorData.message || "Failed to reset password");
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to reset password");
+      console.error(error);
+    } finally {
+      setIsPasswordLoading(false);
+    }
+  };
+
+  // Initialize password reset when modal opens
+  useEffect(() => {
+    if (isChangePasswordOpen && currentUser?.email) {
+      // Clear previous state
+      setPasswordData({ newPassword: "", confirmPassword: "" });
+      setPasswordErrors({ newPassword: "", confirmPassword: "" });
+      clearResetToken();
+      
+      // Generate reset token automatically when modal opens
+      const requestToken = async () => {
+        setIsPasswordLoading(true);
+        try {
+          const response = await fetch("/api/v1/auth/forgot-password", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email: currentUser.email }),
+          });
+
+          if (response.ok || response.status === 202) {
+            let responseData: any = null;
+            try {
+              responseData = await response.json();
+            } catch {
+              // Response might be empty
+            }
+
+            // If token is returned (development mode), store it
+            if (responseData?.token) {
+              setResetToken(responseData.token, currentUser.email);
+              toast.success("Reset token generated successfully");
+            } else {
+              toast.success("Reset token has been sent to your email");
+            }
+          } else {
+            const errorData = await response.json().catch(() => ({ detail: "Failed to generate reset token" }));
+            toast.error(errorData.detail || errorData.message || "Failed to generate reset token");
+          }
+        } catch (error) {
+          toast.error(error instanceof Error ? error.message : "Failed to generate reset token");
+          console.error(error);
+        } finally {
+          setIsPasswordLoading(false);
+        }
+      };
+
+      requestToken();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isChangePasswordOpen]);
 
   if (!isAuthenticated && !user) {
     return null;
@@ -279,6 +479,7 @@ const Profile = () => {
                   <Button
                     variant="outline"
                     className="w-full justify-start gap-3 h-12 text-base font-medium transition-all hover:translate-x-1 hover:bg-primary/5 hover:text-primary hover:border-primary/20"
+                    onClick={() => setIsChangePasswordOpen(true)}
                   >
                     <Key className="h-5 w-5" />
                     Change Password
@@ -353,6 +554,124 @@ const Profile = () => {
               <Button type="submit" disabled={isLoading}>
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Save changes
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Change Password Modal */}
+      <Dialog open={isChangePasswordOpen} onOpenChange={setIsChangePasswordOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Change Password</DialogTitle>
+            <DialogDescription>
+              Enter your new password. A reset token has been generated for {currentUser?.email}.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleChangePassword}>
+            <div className="grid gap-4 py-4">
+              {/* Info Message */}
+              {resetToken ? (
+                <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                  <p className="text-xs text-green-700">
+                    ✓ Reset token generated successfully. You can now set your new password.
+                  </p>
+                </div>
+              ) : (
+                <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                  <p className="text-xs text-yellow-700">
+                    Generating reset token... Please wait.
+                  </p>
+                </div>
+              )}
+
+              {/* New Password Input */}
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="newPassword" className="text-right">
+                  New Password
+                </Label>
+                <div className="col-span-3 relative">
+                  <Input
+                    id="newPassword"
+                    type={showPassword ? "text" : "password"}
+                    value={passwordData.newPassword}
+                    onChange={(e) => {
+                      setPasswordData({ ...passwordData, newPassword: e.target.value });
+                      setPasswordErrors({ ...passwordErrors, newPassword: "" });
+                    }}
+                    className="pr-10"
+                    placeholder="Min. 8 characters"
+                    disabled={!resetToken || isPasswordLoading}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </button>
+                  {passwordErrors.newPassword && (
+                    <p className="text-xs text-red-500 mt-1">{passwordErrors.newPassword}</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Confirm Password Input */}
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="confirmPassword" className="text-right">
+                  Confirm
+                </Label>
+                <div className="col-span-3 relative">
+                  <Input
+                    id="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    value={passwordData.confirmPassword}
+                    onChange={(e) => {
+                      setPasswordData({ ...passwordData, confirmPassword: e.target.value });
+                      setPasswordErrors({ ...passwordErrors, confirmPassword: "" });
+                    }}
+                    className="pr-10"
+                    placeholder="Confirm new password"
+                    disabled={!resetToken || isPasswordLoading}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </button>
+                  {passwordErrors.confirmPassword && (
+                    <p className="text-xs text-red-500 mt-1">{passwordErrors.confirmPassword}</p>
+                  )}
+                </div>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setIsChangePasswordOpen(false);
+                  setPasswordData({ newPassword: "", confirmPassword: "" });
+                  clearResetToken();
+                }}
+                disabled={isPasswordLoading}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={!resetToken || isPasswordLoading}>
+                {isPasswordLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Change Password
               </Button>
             </DialogFooter>
           </form>

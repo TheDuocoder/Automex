@@ -37,7 +37,7 @@ async def init_db():
     """Initialize database and create tables"""
     async with engine.begin() as conn:
         # Import all models here to ensure they're registered
-        from automex_backend.models import role, user, service, booking
+        from automex_backend.models import role, user, service, booking, cost
         
         # In DEBUG mode, drop and recreate tables to ensure schema is up to date
         # This ensures new columns are always added

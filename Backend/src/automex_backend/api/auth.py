@@ -260,8 +260,29 @@ async def register(
     Register a new user (public endpoint - no authentication required)
     
     This endpoint allows users to create a new account without being authenticated.
+    Validates that email and phone_number are unique.
     """
     try:
+        # Check if email already exists
+        existing_user_by_email = await user_manager.user_db.get_by_email(user_create.email)
+        if existing_user_by_email:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="An account with this email address already exists. Please use a different email or try logging in."
+            )
+        
+        # Check if phone_number already exists (if provided)
+        if user_create.phone_number:
+            from sqlalchemy import select
+            phone_query = select(User).where(User.phone_number == user_create.phone_number)
+            result = await session.execute(phone_query)
+            existing_user_by_phone = result.scalar_one_or_none()
+            if existing_user_by_phone:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="An account with this phone number already exists. Please use a different phone number."
+                )
+        
         # Create user using the user manager (safe=True means it won't create superusers)
         user = await user_manager.create(user_create, safe=True)
         
@@ -273,13 +294,42 @@ async def register(
         
         # Return UserRead model
         return UserRead.model_validate(user_with_role)
+    except HTTPException:
+        # Re-raise HTTP exceptions (our custom validation errors)
+        raise
     except ValueError as e:
-        # Handle validation errors (e.g., user already exists)
+        # Handle validation errors from user manager
+        error_message = str(e)
+        # Check if it's a duplicate email error
+        if "email" in error_message.lower() or "already exists" in error_message.lower():
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="An account with this email address already exists. Please use a different email or try logging in."
+            )
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(e)
+            detail=error_message
         )
     except Exception as e:
+        # Handle database integrity errors (unique constraint violations)
+        error_message = str(e).lower()
+        if "duplicate entry" in error_message or "unique constraint" in error_message or "integrityerror" in error_message:
+            if "email" in error_message:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="An account with this email address already exists. Please use a different email or try logging in."
+                )
+            elif "phone_number" in error_message or "phone" in error_message:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="An account with this phone number already exists. Please use a different phone number."
+                )
+            else:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="A user with this information already exists. Please check your email and phone number."
+                )
+        
         # Handle any other unexpected errors
         import traceback
         error_trace = traceback.format_exc()
@@ -477,8 +527,24 @@ async def update_current_user(
 ):
     """
     Update current authenticated user.
+    Validates that phone_number is unique if being updated.
     """
     try:
+        # Check if phone_number is being updated and if it's already taken by another user
+        if user_update.phone_number and user_update.phone_number != user.phone_number:
+            from sqlalchemy import select
+            phone_query = select(User).where(
+                User.phone_number == user_update.phone_number,
+                User.id != user.id  # Exclude current user
+            )
+            result = await session.execute(phone_query)
+            existing_user_by_phone = result.scalar_one_or_none()
+            if existing_user_by_phone:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="An account with this phone number already exists. Please use a different phone number."
+                )
+        
         # Update user using user manager
         updated_user = await user_manager.update(user_update, user, safe=True)
         
@@ -494,12 +560,29 @@ async def update_current_user(
         
         return UserRead.model_validate(user_with_role)
         
+    except HTTPException:
+        # Re-raise HTTP exceptions (our custom validation errors)
+        raise
     except ValueError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(e)
         )
     except Exception as e:
+        # Handle database integrity errors (unique constraint violations)
+        error_message = str(e).lower()
+        if "duplicate entry" in error_message or "unique constraint" in error_message or "integrityerror" in error_message:
+            if "phone_number" in error_message or "phone" in error_message:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="An account with this phone number already exists. Please use a different phone number."
+                )
+            else:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="A user with this information already exists. Please check your phone number."
+                )
+        
         import traceback
         print(f"[ERROR] Update user error: {str(e)}")
         print(f"[ERROR] Traceback:\n{traceback.format_exc()}")

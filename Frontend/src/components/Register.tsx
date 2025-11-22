@@ -136,11 +136,41 @@ const Register = ({ onClose, onSwitchToLogin }: RegisterProps) => {
         }, 1500);
       }
     } catch (error) {
-      toast({
-        title: "Registration Failed",
-        description: error instanceof Error ? error.message : "An error occurred during registration",
-        variant: "destructive",
-      });
+      const errorMessage = error instanceof Error ? error.message : "An error occurred during registration";
+      
+      // Parse error message to determine if it's email or phone number duplicate
+      const errorLower = errorMessage.toLowerCase();
+      
+      if (errorLower.includes("email") && (errorLower.includes("already exists") || errorLower.includes("already registered"))) {
+        // Set email error
+        setErrors((prev) => ({
+          ...prev,
+          email: "An account with this email already exists. Please use a different email or try logging in.",
+        }));
+        toast({
+          title: "Email Already Exists",
+          description: "An account with this email address already exists. Please use a different email or try logging in.",
+          variant: "destructive",
+        });
+      } else if (errorLower.includes("phone") && (errorLower.includes("already exists") || errorLower.includes("already registered"))) {
+        // Set phone number error
+        setErrors((prev) => ({
+          ...prev,
+          phoneNumber: "An account with this phone number already exists. Please use a different phone number.",
+        }));
+        toast({
+          title: "Phone Number Already Exists",
+          description: "An account with this phone number already exists. Please use a different phone number.",
+          variant: "destructive",
+        });
+      } else {
+        // Generic error
+        toast({
+          title: "Registration Failed",
+          description: errorMessage,
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsLoading(false);
     }

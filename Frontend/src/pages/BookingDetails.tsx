@@ -19,7 +19,6 @@ import {
   Phone,
   User,
   FileText,
-  DollarSign,
   Wrench,
   MessageSquare,
   AlertCircle,
@@ -27,8 +26,37 @@ import {
   ShieldCheck
 } from "lucide-react";
 import { getBooking, cancelBooking, updateBookingStatus, type Booking, BookingStatus } from "@/services/bookingService";
+import { getBookingCosts, createCost, updateCost, deleteCost, type Cost } from "@/services/costService";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
+import { Input } from "@/components/ui/input";
+import { Trash2, Plus, Edit2, Save, X } from "lucide-react";
+
+// Helper function to format UTC date as IST (UTC+5:30)
+// IST is UTC+5:30, so we add 5 hours and 30 minutes
+const formatIST = (utcDateString: string, formatString: string): string => {
+  const utcDate = new Date(utcDateString);
+  // Get UTC time in milliseconds
+  const utcTime = utcDate.getTime();
+  // IST offset: +5 hours 30 minutes = +5.5 hours = 19800000 milliseconds
+  const istOffsetMs = 5.5 * 60 * 60 * 1000;
+  // Create a Date object with IST time added
+  const istTime = utcTime + istOffsetMs;
+  const istDateObj = new Date(istTime);
+  
+  // Extract UTC components (which now represent IST time after offset)
+  const year = istDateObj.getUTCFullYear();
+  const month = istDateObj.getUTCMonth();
+  const day = istDateObj.getUTCDate();
+  const hours = istDateObj.getUTCHours();
+  const minutes = istDateObj.getUTCMinutes();
+  const seconds = istDateObj.getUTCSeconds();
+  
+  // Create a local Date object with IST components
+  // This ensures format() displays the correct IST time regardless of browser timezone
+  const localISTDate = new Date(year, month, day, hours, minutes, seconds);
+  return format(localISTDate, formatString);
+};
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
@@ -41,6 +69,12 @@ const BookingDetails = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [cancellingId, setCancellingId] = useState<number | null>(null);
   const [updatingStatusId, setUpdatingStatusId] = useState<number | null>(null);
+  const [costs, setCosts] = useState<Cost[]>([]);
+  const [totalCost, setTotalCost] = useState<number>(0);
+  const [isLoadingCosts, setIsLoadingCosts] = useState(false);
+  const [editingCostId, setEditingCostId] = useState<number | null>(null);
+  const [newCostItem, setNewCostItem] = useState({ item_name: "", amount: "", description: "" });
+  const [editingCost, setEditingCost] = useState<Partial<Cost>>({});
 
   // Check if user is Admin or Super Admin
   const isAdmin = user?.role?.name === "admin" || user?.role?.name === "super" || user?.is_superuser;
@@ -65,6 +99,12 @@ const BookingDetails = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, bookingId, navigate]);
 
+  useEffect(() => {
+    if (booking?.id) {
+      loadCosts();
+    }
+  }, [booking?.id]);
+
   const loadBooking = async () => {
     if (!bookingId) return;
     
@@ -82,6 +122,118 @@ const BookingDetails = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const loadCosts = async () => {
+    if (!booking?.id) return;
+    
+    try {
+      setIsLoadingCosts(true);
+      const response = await getBookingCosts(booking.id);
+      setCosts(response.costs);
+      setTotalCost(response.total);
+    } catch (error) {
+      // Silently fail - costs might not exist yet
+      setCosts([]);
+      setTotalCost(0);
+    } finally {
+      setIsLoadingCosts(false);
+    }
+  };
+
+  const handleAddCost = async () => {
+    if (!booking?.id || !newCostItem.item_name || !newCostItem.amount) {
+      toast({
+        title: "Validation Error",
+        description: "Please fill in item name and amount",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      await createCost({
+        booking_id: booking.id,
+        item_name: newCostItem.item_name,
+        amount: parseFloat(newCostItem.amount),
+        description: newCostItem.description || undefined,
+      });
+      toast({
+        title: "Success",
+        description: "Cost item added successfully",
+      });
+      setNewCostItem({ item_name: "", amount: "", description: "" });
+      await loadCosts();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to add cost item",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleEditCost = (cost: Cost) => {
+    setEditingCostId(cost.id);
+    setEditingCost({ item_name: cost.item_name, amount: cost.amount, description: cost.description });
+  };
+
+  const handleSaveCost = async (costId: number) => {
+    if (!editingCost.item_name || !editingCost.amount) {
+      toast({
+        title: "Validation Error",
+        description: "Please fill in item name and amount",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      await updateCost(costId, {
+        item_name: editingCost.item_name,
+        amount: typeof editingCost.amount === 'string' ? parseFloat(editingCost.amount) : editingCost.amount,
+        description: editingCost.description,
+      });
+      toast({
+        title: "Success",
+        description: "Cost item updated successfully",
+      });
+      setEditingCostId(null);
+      setEditingCost({});
+      await loadCosts();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to update cost item",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDeleteCost = async (costId: number) => {
+    if (!confirm("Are you sure you want to delete this cost item?")) {
+      return;
+    }
+
+    try {
+      await deleteCost(costId);
+      toast({
+        title: "Success",
+        description: "Cost item deleted successfully",
+      });
+      await loadCosts();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to delete cost item",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingCostId(null);
+    setEditingCost({});
   };
 
   const handleCancel = async () => {
@@ -289,7 +441,7 @@ const BookingDetails = () => {
                 </Badge>
               </div>
               <p className="text-gray-500">
-                Created on {format(new Date(booking.created_at), "MMMM d, yyyy 'at' h:mm a")}
+                Created on {formatIST(booking.created_at, "MMMM d, yyyy 'at' h:mm a")}
               </p>
             </div>
 
@@ -332,26 +484,10 @@ const BookingDetails = () => {
                           </p>
                         </div>
                       </div>
-                      <div className="text-right hidden sm:block">
-                        <div className="text-sm text-gray-500">Time Slot</div>
-                        <div className="font-medium text-gray-900 bg-white px-3 py-1 rounded-md border shadow-sm mt-1 inline-flex items-center gap-2">
-                          <Clock className="h-3.5 w-3.5 text-gray-400" />
-                          {format(new Date(booking.booking_date), "h:mm a")}
-                        </div>
-                      </div>
                     </div>
                   </div>
                   
                   <CardContent className="p-6 grid gap-6">
-                    {/* Mobile Time Slot */}
-                    <div className="sm:hidden flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-100">
-                      <span className="text-sm text-gray-500">Time Slot</span>
-                      <span className="font-medium text-gray-900 flex items-center gap-2">
-                        <Clock className="h-4 w-4 text-gray-400" />
-                        {format(new Date(booking.booking_date), "h:mm a")}
-                      </span>
-                    </div>
-
                     <div className="grid sm:grid-cols-2 gap-6">
                       <div className="space-y-4">
                         <h4 className="text-sm font-medium text-gray-500 uppercase tracking-wider">Vehicle Details</h4>
@@ -471,43 +607,169 @@ const BookingDetails = () => {
             {/* Sidebar Column */}
             <div className="space-y-6">
               
-              {/* Cost Summary Card */}
+              {/* Payment Summary Card */}
               <motion.div variants={itemVariants}>
                 <Card className="shadow-md border-primary/10 overflow-hidden">
                   <div className="bg-gray-50/50 p-4 border-b border-gray-100">
                     <CardTitle className="text-base font-medium flex items-center gap-2">
-                      <DollarSign className="h-4 w-4 text-gray-500" />
+                      <span className="text-gray-500 text-lg">₹</span>
                       Payment Summary
                     </CardTitle>
                   </div>
                   <CardContent className="p-6 space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-500">Estimated Cost</span>
-                      <span className="font-medium text-gray-900">
-                        {booking.estimated_cost ? `₹${booking.estimated_cost.toLocaleString()}` : "Pending"}
-                      </span>
-                    </div>
-                    
-                    {booking.actual_cost && (
-                      <>
-                        <Separator />
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-900 font-medium">Final Amount</span>
-                          <span className="text-2xl font-bold text-primary">
-                            ₹{booking.actual_cost.toLocaleString()}
-                          </span>
-                        </div>
-                        <div className="bg-green-50 text-green-700 text-xs px-3 py-2 rounded-md flex items-center justify-center gap-1.5">
-                          <ShieldCheck className="h-3.5 w-3.5" />
-                          Verified Price
-                        </div>
-                      </>
-                    )}
-
-                    {!booking.actual_cost && !booking.estimated_cost && (
-                      <div className="text-center py-4 bg-gray-50 rounded-lg border border-dashed border-gray-200">
-                        <p className="text-sm text-gray-500">Cost will be calculated after inspection</p>
+                    {isLoadingCosts ? (
+                      <div className="flex items-center justify-center py-8">
+                        <Loader2 className="h-5 w-5 animate-spin text-gray-400" />
                       </div>
+                    ) : (
+                      <>
+                        {/* Cost Items List */}
+                        {costs.length > 0 ? (
+                          <div className="space-y-3">
+                            {costs.map((cost) => (
+                              <div key={cost.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100">
+                                {editingCostId === cost.id && isAdmin ? (
+                                  // Edit Mode (Admin/Super Admin only)
+                                  <div className="flex-1 space-y-2">
+                                    <div className="grid grid-cols-2 gap-2">
+                                      <Input
+                                        value={editingCost.item_name || ""}
+                                        onChange={(e) => setEditingCost({ ...editingCost, item_name: e.target.value })}
+                                        placeholder="Item name"
+                                        className="h-9 text-sm"
+                                      />
+                                      <Input
+                                        type="number"
+                                        value={editingCost.amount || ""}
+                                        onChange={(e) => setEditingCost({ ...editingCost, amount: e.target.value })}
+                                        placeholder="Amount"
+                                        className="h-9 text-sm"
+                                      />
+                                    </div>
+                                    <Input
+                                      value={editingCost.description || ""}
+                                      onChange={(e) => setEditingCost({ ...editingCost, description: e.target.value })}
+                                      placeholder="Description (optional)"
+                                      className="h-9 text-sm"
+                                    />
+                                    <div className="flex gap-2">
+                                      <Button
+                                        size="sm"
+                                        onClick={() => handleSaveCost(cost.id)}
+                                        className="h-9 flex-1"
+                                      >
+                                        <Save className="h-3.5 w-3.5 mr-2" />
+                                        Save
+                                      </Button>
+                                      <Button
+                                        size="sm"
+                                        variant="outline"
+                                        onClick={handleCancelEdit}
+                                        className="h-9"
+                                      >
+                                        <X className="h-3.5 w-3.5" />
+                                      </Button>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  // View Mode
+                                  <>
+                                    <div className="flex-1">
+                                      <p className="text-sm font-medium text-gray-900">{cost.item_name}</p>
+                                      {cost.description && (
+                                        <p className="text-xs text-gray-500 mt-0.5">{cost.description}</p>
+                                      )}
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                      <span className="text-sm font-semibold text-gray-900">
+                                        ₹{cost.amount.toLocaleString()}
+                                      </span>
+                                      {isAdmin && (
+                                        <div className="flex gap-1">
+                                          <Button
+                                            size="sm"
+                                            variant="ghost"
+                                            onClick={() => handleEditCost(cost)}
+                                            className="h-8 w-8 p-0"
+                                          >
+                                            <Edit2 className="h-3.5 w-3.5" />
+                                          </Button>
+                                          <Button
+                                            size="sm"
+                                            variant="ghost"
+                                            onClick={() => handleDeleteCost(cost.id)}
+                                            className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
+                                          >
+                                            <Trash2 className="h-3.5 w-3.5" />
+                                          </Button>
+                                        </div>
+                                      )}
+                                    </div>
+                                  </>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="text-center py-4 bg-gray-50 rounded-lg border border-dashed border-gray-200">
+                            <p className="text-sm text-gray-500">
+                              {isAdmin ? "No cost items added yet" : "Cost will be calculated after inspection"}
+                            </p>
+                          </div>
+                        )}
+
+                        {/* Add New Cost Item (Admin/Super Admin only) */}
+                        {isAdmin && (
+                          <>
+                            <Separator />
+                            <div className="space-y-2">
+                              <p className="text-sm font-medium text-gray-700">Add Cost Item</p>
+                              <div className="grid grid-cols-2 gap-2">
+                                <Input
+                                  value={newCostItem.item_name}
+                                  onChange={(e) => setNewCostItem({ ...newCostItem, item_name: e.target.value })}
+                                  placeholder="Item name"
+                                  className="h-9 text-sm"
+                                />
+                                <Input
+                                  type="number"
+                                  value={newCostItem.amount}
+                                  onChange={(e) => setNewCostItem({ ...newCostItem, amount: e.target.value })}
+                                  placeholder="Amount (₹)"
+                                  className="h-9 text-sm"
+                                />
+                              </div>
+                              <Input
+                                value={newCostItem.description}
+                                onChange={(e) => setNewCostItem({ ...newCostItem, description: e.target.value })}
+                                placeholder="Description (optional)"
+                                className="h-9 text-sm"
+                              />
+                              <Button
+                                onClick={handleAddCost}
+                                className="w-full h-9"
+                                size="sm"
+                              >
+                                <Plus className="h-4 w-4 mr-2" />
+                                Add Cost Item
+                              </Button>
+                            </div>
+                          </>
+                        )}
+
+                        {/* Total */}
+                        {costs.length > 0 && (
+                          <>
+                            <Separator />
+                            <div className="flex justify-between items-center pt-2">
+                              <span className="text-lg font-semibold text-gray-900">Total</span>
+                              <span className="text-2xl font-bold text-primary">
+                                ₹{totalCost.toLocaleString()}
+                              </span>
+                            </div>
+                          </>
+                        )}
+                      </>
                     )}
                   </CardContent>
                 </Card>
@@ -569,7 +831,7 @@ const BookingDetails = () => {
                           <div className="absolute -left-[21px] top-1 h-3 w-3 rounded-full bg-gray-300 ring-4 ring-white" />
                           <p className="text-sm font-medium text-gray-900">Last Updated</p>
                           <p className="text-xs text-gray-500 mt-0.5">
-                            {format(new Date(booking.updated_at), "MMM d, yyyy h:mm a")}
+                            {formatIST(booking.updated_at, "MMM d, yyyy h:mm a")}
                           </p>
                         </div>
                       )}
@@ -579,7 +841,7 @@ const BookingDetails = () => {
                           <div className="absolute -left-[21px] top-1 h-3 w-3 rounded-full bg-green-500 ring-4 ring-white" />
                           <p className="text-sm font-medium text-gray-900">Completed</p>
                           <p className="text-xs text-gray-500 mt-0.5">
-                            {format(new Date(booking.completed_at), "MMM d, yyyy h:mm a")}
+                            {formatIST(booking.completed_at, "MMM d, yyyy h:mm a")}
                           </p>
                         </div>
                       )}

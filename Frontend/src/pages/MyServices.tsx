@@ -307,9 +307,6 @@ const MyServices = () => {
               <p className="text-sm font-semibold text-gray-900">
                 {format(new Date(booking.booking_date), "EEE, MMM d, yyyy")}
               </p>
-              <p className="text-xs text-gray-500">
-                at {format(new Date(booking.booking_date), "h:mm a")}
-              </p>
             </div>
           </div>
 
