@@ -304,6 +304,10 @@ const BrandSelectorModal = ({
           if (modelName === 'q7') {
             audiFileName = 'Q7';
           }
+          // Special case: Q5 uses uppercase in filename
+          if (modelName === 'q5') {
+            audiFileName = 'Q5';
+          }
           imagePath = `/images/Car_images/Audi_car/${audiFileName}.png`;
         } else if (brandName === 'volkswagen') {
           // Volkswagen images are in "Volkswagen" folder with capital V
@@ -384,6 +388,18 @@ const BrandSelectorModal = ({
           // Lexus images are in "Lexus" folder with proper capitalization
           let lexusFileName = model.name; // Use original name with proper capitalization
           imagePath = `/images/Car_images/Lexus/${lexusFileName}.png`;
+        } else if (brandName === 'mahindra') {
+          // Mahindra images are in "Mahindra" folder with proper capitalization
+          let mahindraFileName = model.name; // Use original name with proper capitalization
+          imagePath = `/images/Car_images/Mahindra/${mahindraFileName}.png`;
+        } else if (brandName === 'toyota') {
+          // Toyota images are in "Toyota" folder with proper capitalization
+          let toyotaFileName = model.name; // Use original name with proper capitalization
+          // Special case: "Innova Hycross" uses full name with space
+          if (modelName === 'innova_hycross' || model.name === 'Innova Hycross') {
+            toyotaFileName = 'Innova Hycross';
+          }
+          imagePath = `/images/Car_images/Toyota/${toyotaFileName}.png`;
         } else {
           imagePath = `/images/Car_images/${brandName}_car/${modelName}.png`;
         }
