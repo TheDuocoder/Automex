@@ -262,26 +262,33 @@ const BrandSelectorModal = ({
           let skodaFileName = model.name; // Use original name with proper capitalization
           imagePath = `/images/Car_images/skoda/${skodaFileName}.png`;
         } else if (brandName === 'land_rover') {
-          // Land Rover images are in "Land rover" folder
-          let landRoverFileName = modelName;
-          // Special cases for different filename formats
-          if (modelName === 'range_rover') {
+          // Land Rover images are in "Land rover" folder with proper naming
+          let landRoverFileName = model.name; // Use original name with proper capitalization
+          
+          // Normalize model name for matching
+          const cleanLRName = modelName.replace(/[_\s-]/g, '').toLowerCase();
+          
+          // Map to exact filenames
+          if (cleanLRName === 'rangerover') {
             landRoverFileName = 'rangrover';
-          } else if (modelName === 'range_rover_sport' || model.name === 'Range Rover Sport') {
+          } else if (cleanLRName === 'rangeroversport') {
             landRoverFileName = 'Range Rover Sport';
-          } else if (modelName === 'range_rover_velar') {
-            landRoverFileName = 'rangerover_velar';
-          } else if (modelName === 'range_rover_vogue') {
-            landRoverFileName = 'rangerover_vogue';
-          } else if (modelName === 'range_rover_evoque') {
-            landRoverFileName = 'rangerovere_evoque';
-          } else if (modelName === 'freelander_2') {
-            landRoverFileName = 'freelander2';
-          } else if (modelName === 'discovery_4' || model.name === 'Discovery 4') {
+          } else if (cleanLRName === 'rangerovervelar') {
+            landRoverFileName = 'Range Rover Velar';
+          } else if (cleanLRName === 'rangerovervogue') {
+            landRoverFileName = 'Range Rover Vogue';
+          } else if (cleanLRName === 'rangeroverevoque') {
+            landRoverFileName = 'Range Rover Evoque';
+          } else if (cleanLRName === 'freelander2') {
+            landRoverFileName = 'Freelander 2';
+          } else if (cleanLRName === 'discovery4') {
             landRoverFileName = 'Discovery 4';
-          } else if (modelName === 'discovery_sport') {
-            landRoverFileName = 'discovery_sport';
+          } else if (cleanLRName === 'discoverysport') {
+            landRoverFileName = 'Discovery Sport';
+          } else if (cleanLRName === 'defender') {
+            landRoverFileName = 'defender';
           }
+          
           imagePath = `/images/Car_images/Land rover/${landRoverFileName}.png`;
         } else if (brandName === 'audi') {
           // Audi images are in "Audi_car" folder with mixed case naming
@@ -350,14 +357,23 @@ const BrandSelectorModal = ({
           
           imagePath = `/images/Car_images/Audi_car/${audiFileName}.png`;
         } else if (brandName === 'volkswagen') {
-          // Volkswagen images are in "Volkswagen" folder with capital V
-          let volkswagenFileName = modelName;
-          // Special cases for different filename formats
-          if (modelName === 'cross_polo') {
-            volkswagenFileName = 'cross_polo';
-          } else if (modelName === 't-roc') {
-            volkswagenFileName = 't_roc';
+          // Volkswagen images are in "Volkswagen" folder with proper capitalization
+          let volkswagenFileName = model.name; // Use original name with proper capitalization
+          
+          // Normalize model name for matching
+          const cleanVWName = modelName.replace(/[_\s-]/g, '').toLowerCase();
+          
+          // Map to exact filenames
+          if (cleanVWName === 'crosspolo') {
+            volkswagenFileName = 'Cross Polo';
+          } else if (cleanVWName === 'troc') {
+            volkswagenFileName = 'T-Roc';
+          } else if (cleanVWName === 'passat') {
+            volkswagenFileName = 'passat';
+          } else if (cleanVWName === 'polo') {
+            volkswagenFileName = 'polo';
           }
+          
           imagePath = `/images/Car_images/Volkswagen/${volkswagenFileName}.png`;
         } else if (brandName === 'bmw') {
           // BMW images are in "BMW" folder with spaces in filenames
@@ -367,9 +383,9 @@ const BrandSelectorModal = ({
         } else if (brandName === 'mercedes-benz' || brandName === 'mercedes_benz') {
           // Mercedes-Benz images are in "Mercedes-Benz" folder with spaces and hyphens
           let mercedesFileName = model.name; // Use original name with spaces and hyphens
-          // Special case: R Class has a leading space in filename
+          // Special case: R Class uses space format
           if (modelName === 'r_class' || model.name === 'R Class') {
-            mercedesFileName = ' R Class';
+            mercedesFileName = 'R Class';
           }
           // Special case: S-Class uses hyphen format
           if (modelName === 's-class' || modelName === 's_class' || model.name === 'S-Class' || model.name === 'S Class') {
