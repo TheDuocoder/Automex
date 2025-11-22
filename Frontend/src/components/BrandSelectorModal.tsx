@@ -372,6 +372,10 @@ const BrandSelectorModal = ({
           // Nissan images are in "Nissan" folder with proper capitalization
           let nissanFileName = model.name; // Use original name with proper capitalization
           imagePath = `/images/Car_images/Nissan/${nissanFileName}.png`;
+        } else if (brandName === 'maruti_suzuki' || brandName === 'maruti-suzuki') {
+          // Maruti Suzuki images are in "Maruti Suzuki" folder with proper capitalization
+          let marutiFileName = model.name; // Use original name with proper capitalization
+          imagePath = `/images/Car_images/Maruti Suzuki/${marutiFileName}.png`;
         } else {
           imagePath = `/images/Car_images/${brandName}_car/${modelName}.png`;
         }
