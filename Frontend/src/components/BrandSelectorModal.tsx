@@ -245,13 +245,9 @@ const BrandSelectorModal = ({
     <div
       className={cn(
         layout === "sidebar"
-          ? "grid grid-cols-3 gap-3 max-h-[580px] overflow-y-auto pr-1.5"
-          : "grid grid-cols-3 gap-5 max-h-[580px] overflow-y-auto"
+          ? "grid grid-cols-3 gap-3 pr-1.5 pb-4"
+          : "grid grid-cols-3 gap-5 pb-6"
       )}
-      style={{
-        scrollbarWidth: 'thin',
-        scrollbarColor: '#cbd5e1 #f8fafc'
-      }}
     >
       {filteredModelList.map((model) => {
         const isSelected = selectedModelId === model.id;
@@ -262,14 +258,8 @@ const BrandSelectorModal = ({
         // Special handling for Skoda, Land Rover, and Audi - use correct folder paths
         let imagePath;
         if (brandName === 'skoda') {
-          // For Skoda, all images use "skoda_modelname.png" format with underscores
-          let skodaFileName = `skoda_${modelName.replace(/_/g, '')}`;
-          // Special cases for different filename formats
-          if (modelName === 'yeti') {
-            skodaFileName = 'skoda_yati';
-          } else if (modelName === 'superb') {
-            skodaFileName = 'skodas_uperb'; // Note: typo in actual filename
-          }
+          // Skoda images are in "skoda" folder with proper capitalization
+          let skodaFileName = model.name; // Use original name with proper capitalization
           imagePath = `/images/Car_images/skoda/${skodaFileName}.png`;
         } else if (brandName === 'land_rover') {
           // Land Rover images are in "Land rover" folder
@@ -294,20 +284,70 @@ const BrandSelectorModal = ({
           }
           imagePath = `/images/Car_images/Land rover/${landRoverFileName}.png`;
         } else if (brandName === 'audi') {
-          // Audi images are in "Audi_car" folder with capital A
-          let audiFileName = modelName;
-          // Special case: A8 L uses space and uppercase in filename
-          if (modelName === 'a8_l' || model.name === 'A8 L') {
-            audiFileName = 'A8 L';
+          // Audi images are in "Audi_car" folder with mixed case naming
+          let audiFileName = model.name;
+          
+          // Create a clean version of the model name for matching
+          const cleanModelName = modelName.replace(/[_\s-]/g, '').toLowerCase();
+          
+          // Map to exact filenames based on what exists in the folder
+          switch(cleanModelName) {
+            case 'a3':
+              audiFileName = 'A3';
+              break;
+            case 'a4':
+              audiFileName = 'A4';
+              break;
+            case 'a5':
+              audiFileName = 'A5';
+              break;
+            case 'a6':
+              audiFileName = 'A6';
+              break;
+            case 'a7':
+              audiFileName = 'A7';
+              break;
+            case 'a8':
+              audiFileName = 'A8';
+              break;
+            case 'a8l':
+              audiFileName = 'A8 L';
+              break;
+            case 'etron':
+              audiFileName = 'e-tron';
+              break;
+            case 'q2':
+              audiFileName = 'Q2';
+              break;
+            case 'q3':
+              audiFileName = 'Q3';
+              break;
+            case 'q5':
+              audiFileName = 'Q5';
+              break;
+            case 'q7':
+              audiFileName = 'Q7';
+              break;
+            case 'q8':
+              audiFileName = 'Q8';
+              break;
+            case 'r8':
+              audiFileName = 'R8';
+              break;
+            case 'rs3':
+              audiFileName = 'RS3';
+              break;
+            case 'rs5':
+              audiFileName = 'RS5';
+              break;
+            case 's4':
+              audiFileName = 'S4';
+              break;
+            case 'tt':
+              audiFileName = 'TT';
+              break;
           }
-          // Special case: Q7 uses uppercase in filename
-          if (modelName === 'q7') {
-            audiFileName = 'Q7';
-          }
-          // Special case: Q5 uses uppercase in filename
-          if (modelName === 'q5') {
-            audiFileName = 'Q5';
-          }
+          
           imagePath = `/images/Car_images/Audi_car/${audiFileName}.png`;
         } else if (brandName === 'volkswagen') {
           // Volkswagen images are in "Volkswagen" folder with capital V
@@ -565,7 +605,7 @@ const BrandSelectorModal = ({
     );
     const gridWrapperClasses = cn(
       paddingX,
-      layout === "sidebar" ? "py-6" : "pb-6"
+      layout === "sidebar" ? "py-6 overflow-y-auto max-h-[600px]" : "pb-6 pt-4 overflow-y-auto max-h-[650px]"
     );
 
     return (
@@ -645,7 +685,13 @@ const BrandSelectorModal = ({
           </div>
         )}
 
-        <div className={gridWrapperClasses}>
+        <div 
+          className={gridWrapperClasses}
+          style={{
+            scrollbarWidth: 'thin',
+            scrollbarColor: '#cbd5e1 #f8fafc'
+          }}
+        >
           {stage === "brand" && renderBrandGrid(layout)}
           {stage === "model" && renderModelGrid(layout)}
           {stage === "fuel" && renderFuelOptions(layout)}
@@ -738,7 +784,7 @@ const BrandSelectorModal = ({
       </DialogTrigger>
 
       <DialogContent 
-        className="w-[400px] max-w-[400px] p-0 gap-0"
+        className="w-[400px] max-w-[400px] max-h-[90vh] p-0 gap-0 overflow-hidden flex flex-col"
         style={{
           background: 'linear-gradient(to bottom, #FFFFFF, #FAFAFA)'
         }}
