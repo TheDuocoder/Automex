@@ -652,7 +652,7 @@ const ContactUs = () => {
               <CardContent className="p-0">
                 <div className="w-full h-[250px] sm:h-[300px] md:h-[350px] lg:h-[400px] bg-gray-200 overflow-hidden" style={{ borderRadius: '20px' }}>
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3742.7447668847334!2d85.87199931490284!3d20.24088618657636!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a19a7a8d5ed5555%3A0x1234567890abcdef!2sBalianta%2C%20Bhubaneswar%2C%20Odisha%20752101!5e0!3m2!1sen!2sin!4v1234567890"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3742.3449!2d85.8812874!3d20.3131578!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a1909e93ac6dd85%3A0xfde0d57e3d8cd8de!2sForeign%20auto%20service!5e0!3m2!1sen!2sin!4v1732377366"
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
