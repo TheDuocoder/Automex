@@ -19,7 +19,7 @@ const carCatalog: CarBrand[] = [
   {
     id: "audi",
     name: "Audi",
-    logo: "/images/car_brands/audicarlogo.png",
+    logo: "/images/car_brands/Audi.png",
     models: [
       { id: "audi-a3", name: "A3", fuelTypes: ["Petrol", "Diesel"] },
       { id: "audi-a4", name: "A4", fuelTypes: ["Petrol", "Diesel"] },
@@ -44,7 +44,7 @@ const carCatalog: CarBrand[] = [
   {
     id: "bmw",
     name: "BMW",
-    logo: "/images/car_brands/bmwcarlogo.png",
+    logo: "/images/car_brands/BMW.png",
     models: [
       { id: "bmw-1-series", name: "1 Series", fuelTypes: ["Petrol", "Diesel"] },
       { id: "bmw-2-series", name: "2 Series", fuelTypes: ["Petrol", "Diesel"] },
@@ -100,7 +100,7 @@ const carCatalog: CarBrand[] = [
   {
     id: "skoda",
     name: "Skoda",
-    logo: "/images/car_brands/skoda.png",
+    logo: "/images/car_brands/Skoda.png",
     models: [
       { id: "skoda-rapid", name: "Rapid", fuelTypes: ["Petrol", "Diesel"] },
       { id: "skoda-fabia", name: "Fabia", fuelTypes: ["Petrol", "Diesel"] },
@@ -250,7 +250,7 @@ const carCatalog: CarBrand[] = [
   {
     id: "volvo",
     name: "Volvo",
-    logo: "/images/car_brands/volvocarlogo.png",
+    logo: "/images/car_brands/Volvo.png",
     models: [
       { id: "volvo-s60", name: "S60", fuelTypes: ["Petrol", "Hybrid"] },
       { id: "volvo-s80", name: "S80", fuelTypes: ["Petrol", "Diesel"] },
@@ -269,7 +269,7 @@ const carCatalog: CarBrand[] = [
   {
     id: "land-rover",
     name: "Land Rover",
-    logo: "/images/car_brands/landrover.png",
+    logo: "/images/car_brands/Land Rover.png",
     models: [
       { id: "landrover-range-rover", name: "Range Rover", fuelTypes: ["Petrol", "Diesel", "Hybrid"] },
       { id: "landrover-range-rover-sport", name: "Range Rover Sport", fuelTypes: ["Petrol", "Diesel", "Hybrid"] },

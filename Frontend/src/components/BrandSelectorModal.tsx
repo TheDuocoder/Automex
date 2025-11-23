@@ -258,9 +258,9 @@ const BrandSelectorModal = ({
         // Special handling for Skoda, Land Rover, and Audi - use correct folder paths
         let imagePath;
         if (brandName === 'skoda') {
-          // Skoda images are in "skoda" folder with proper capitalization
+          // Skoda images are in "Skoda" folder with proper capitalization
           let skodaFileName = model.name; // Use original name with proper capitalization
-          imagePath = `/images/Car_images/skoda/${skodaFileName}.png`;
+          imagePath = `/images/Car_images/Skoda/${skodaFileName}.png`;
         } else if (brandName === 'land_rover') {
           // Land Rover images are in "Land rover" folder with proper naming
           let landRoverFileName = model.name; // Use original name with proper capitalization
@@ -270,7 +270,7 @@ const BrandSelectorModal = ({
           
           // Map to exact filenames
           if (cleanLRName === 'rangerover') {
-            landRoverFileName = 'rangrover';
+            landRoverFileName = 'Rang Rover';
           } else if (cleanLRName === 'rangeroversport') {
             landRoverFileName = 'Range Rover Sport';
           } else if (cleanLRName === 'rangerovervelar') {
@@ -286,7 +286,7 @@ const BrandSelectorModal = ({
           } else if (cleanLRName === 'discoverysport') {
             landRoverFileName = 'Discovery Sport';
           } else if (cleanLRName === 'defender') {
-            landRoverFileName = 'defender';
+            landRoverFileName = 'Defender';
           }
           
           imagePath = `/images/Car_images/Land rover/${landRoverFileName}.png`;
