@@ -369,9 +369,11 @@ const BrandSelectorModal = ({
           } else if (cleanVWName === 'troc') {
             volkswagenFileName = 'T-Roc';
           } else if (cleanVWName === 'passat') {
-            volkswagenFileName = 'passat';
+            volkswagenFileName = 'Passat';
           } else if (cleanVWName === 'polo') {
             volkswagenFileName = 'polo';
+          } else if (cleanVWName === 'ameo') {
+            volkswagenFileName = 'Ameo';
           }
           
           imagePath = `/images/Car_images/Volkswagen/${volkswagenFileName}.png`;
