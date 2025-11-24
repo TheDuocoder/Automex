@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar, Car, Clock, CheckCircle2, XCircle, Loader2, AlertCircle, MapPin, Wrench } from "lucide-react";
 import { getUserBookings, cancelBooking, updateBookingStatus, type Booking, BookingStatus } from "@/services/bookingService";
+import { getBookingCosts } from "@/services/costService";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -24,6 +25,7 @@ const MyServices = () => {
   const [cancellingId, setCancellingId] = useState<number | null>(null);
   const [updatingStatusId, setUpdatingStatusId] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState<string>("all");
+  const [bookingCosts, setBookingCosts] = useState<Record<number, number>>({}); // booking_id -> total cost
 
   // Check if user is Admin or Super Admin
   const isAdmin = user?.role?.name === "admin" || user?.role?.name === "super" || user?.is_superuser;
@@ -46,6 +48,21 @@ const MyServices = () => {
       // Sort bookings by date (newest first)
       const sortedData = data.sort((a, b) => new Date(b.booking_date).getTime() - new Date(a.booking_date).getTime());
       setBookings(sortedData);
+      
+      // Load costs for all bookings
+      const costsMap: Record<number, number> = {};
+      await Promise.all(
+        sortedData.map(async (booking) => {
+          try {
+            const costsResponse = await getBookingCosts(booking.id);
+            costsMap[booking.id] = costsResponse.total;
+          } catch (error) {
+            // If costs don't exist yet, set to 0
+            costsMap[booking.id] = 0;
+          }
+        })
+      );
+      setBookingCosts(costsMap);
     } catch (error) {
       console.error('[MyServices] Error loading bookings:', error);
       const errorMessage = error instanceof Error ? error.message : "Failed to load bookings";
@@ -310,16 +327,18 @@ const MyServices = () => {
             </div>
           </div>
 
-          {/* Cost Info (if available) */}
-          {booking.estimated_cost && (
+          {/* Cost Info (show total cost from Payment Summary if available, otherwise estimated cost) */}
+          {(bookingCosts[booking.id] > 0 || booking.estimated_cost) && (
             <div className="flex items-start gap-3">
               <div className="p-2 bg-gray-100 rounded-lg text-gray-600 group-hover:bg-white group-hover:shadow-sm transition-all">
                 <span className="h-5 w-5 flex items-center justify-center font-bold text-sm">₹</span>
               </div>
               <div>
-                <p className="text-xs text-gray-500 font-medium uppercase tracking-wider">Est. Cost</p>
+                <p className="text-xs text-gray-500 font-medium uppercase tracking-wider">
+                  {bookingCosts[booking.id] > 0 ? "Total Cost" : "Est. Cost"}
+                </p>
                 <p className="text-sm font-semibold text-gray-900">
-                  ₹{booking.estimated_cost.toLocaleString()}
+                  ₹{(bookingCosts[booking.id] > 0 ? bookingCosts[booking.id] : booking.estimated_cost || 0).toLocaleString()}
                 </p>
               </div>
             </div>

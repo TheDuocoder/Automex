@@ -78,6 +78,9 @@ const BookingDetails = () => {
 
   // Check if user is Admin or Super Admin
   const isAdmin = user?.role?.name === "admin" || user?.role?.name === "super" || user?.is_superuser;
+  
+  // Check if booking is completed or cancelled (cost editing should be disabled)
+  const isBookingLocked = booking?.status === BookingStatus.COMPLETED || booking?.status === BookingStatus.CANCELLED;
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -628,7 +631,7 @@ const BookingDetails = () => {
                           <div className="space-y-3">
                             {costs.map((cost) => (
                               <div key={cost.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100">
-                                {editingCostId === cost.id && isAdmin ? (
+                                {editingCostId === cost.id && isAdmin && !isBookingLocked ? (
                                   // Edit Mode (Admin/Super Admin only)
                                   <div className="flex-1 space-y-2">
                                     <div className="grid grid-cols-2 gap-2">
@@ -684,7 +687,7 @@ const BookingDetails = () => {
                                       <span className="text-sm font-semibold text-gray-900">
                                         ₹{cost.amount.toLocaleString()}
                                       </span>
-                                      {isAdmin && (
+                                      {isAdmin && !isBookingLocked && (
                                         <div className="flex gap-1">
                                           <Button
                                             size="sm"
@@ -719,7 +722,7 @@ const BookingDetails = () => {
                         )}
 
                         {/* Add New Cost Item (Admin/Super Admin only) */}
-                        {isAdmin && (
+                        {isAdmin && !isBookingLocked && (
                           <>
                             <Separator />
                             <div className="space-y-2">
@@ -753,6 +756,17 @@ const BookingDetails = () => {
                                 <Plus className="h-4 w-4 mr-2" />
                                 Add Cost Item
                               </Button>
+                            </div>
+                          </>
+                        )}
+                        {/* Show message when booking is locked */}
+                        {isAdmin && isBookingLocked && (
+                          <>
+                            <Separator />
+                            <div className="text-center py-3 bg-gray-50 rounded-lg border border-gray-200">
+                              <p className="text-sm text-gray-500">
+                                Cost management is disabled for {booking?.status === BookingStatus.COMPLETED ? "completed" : "cancelled"} bookings.
+                              </p>
                             </div>
                           </>
                         )}
