@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/componen
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, Car, Clock, CheckCircle2, XCircle, Loader2, AlertCircle, MapPin, Wrench } from "lucide-react";
+import { Calendar, Car, Clock, CheckCircle2, XCircle, Loader2, AlertCircle, MapPin, Wrench, Search } from "lucide-react";
 import { getUserBookings, cancelBooking, updateBookingStatus, type Booking, BookingStatus } from "@/services/bookingService";
 import { getBookingCosts } from "@/services/costService";
 import { useToast } from "@/hooks/use-toast";
@@ -26,6 +26,7 @@ const MyServices = () => {
   const [updatingStatusId, setUpdatingStatusId] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState<string>("all");
   const [bookingCosts, setBookingCosts] = useState<Record<number, number>>({}); // booking_id -> total cost
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   // Check if user is Admin or Super Admin
   const isAdmin = user?.role?.name === "admin" || user?.role?.name === "super" || user?.is_superuser;
@@ -232,8 +233,29 @@ const MyServices = () => {
   };
 
   const filterBookings = (status: string) => {
-    if (status === "all") return bookings;
-    return bookings.filter((b) => b.status === status);
+    let filtered = status === "all" ? bookings : bookings.filter((b) => b.status === status);
+    
+    // Apply search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter((booking) => {
+        const serviceName = booking.service_name?.toLowerCase() || "";
+        const carBrand = booking.car_brand?.toLowerCase() || "";
+        const carModel = booking.car_model?.toLowerCase() || "";
+        const status = booking.status?.toLowerCase() || "";
+        const bookingId = booking.id.toString();
+        
+        return (
+          serviceName.includes(query) ||
+          carBrand.includes(query) ||
+          carModel.includes(query) ||
+          status.includes(query) ||
+          bookingId.includes(query)
+        );
+      });
+    }
+    
+    return filtered;
   };
 
   const containerVariants = {
@@ -414,13 +436,35 @@ const MyServices = () => {
               <h1 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight">My Services</h1>
               <p className="text-gray-500 mt-2 text-lg">Track and manage your vehicle service history</p>
             </div>
-            <Button
-              onClick={() => navigate('/services')}
-              className="bg-black text-white hover:bg-gray-800 rounded-full px-6 shadow-lg hover:shadow-xl transition-all"
-            >
-              <Wrench className="mr-2 h-4 w-4" />
-              Book New Service
-            </Button>
+            <div className="flex items-center gap-3">
+              <div className="relative flex items-center">
+                <input
+                  type="text"
+                  placeholder="Search bookings..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-48 md:w-64 px-4 py-2 pr-12 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
+                />
+                <Button
+                  variant="outline"
+                  className="absolute right-0 top-0 rounded-full px-4 text-white border-[#FF0000] shadow-md transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(255,0,0,0.5)] active:scale-95 active:shadow-[0_0_30px_rgba(255,0,0,0.7)]"
+                  style={{
+                    background: '#FF0000',
+                    animation: 'none'
+                  }}
+                  disabled
+                >
+                  <Search className="h-4 w-4" />
+                </Button>
+              </div>
+              <Button
+                onClick={() => navigate('/services')}
+                className="bg-black text-white hover:bg-gray-800 rounded-full px-6 shadow-lg hover:shadow-xl transition-all"
+              >
+                <Wrench className="mr-2 h-4 w-4" />
+                Book New Service
+              </Button>
+            </div>
           </div>
 
           {isLoading ? (
