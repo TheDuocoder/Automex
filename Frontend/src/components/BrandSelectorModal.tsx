@@ -290,30 +290,35 @@ const BrandSelectorModal = ({
           imagePath = `/images/Car_images/Land rover/${landRoverFileName}.png`;
         } else if (brandName === 'audi') {
           // Audi images are in "Audi_car" folder
-          // Most files are lowercase: a3.png, q7.png etc.
-          // Exception: "A8 L.png"
-
-          if (model.name === 'A8 L') {
-            imagePath = `/images/Car_images/Audi_car/A8 L.png`;
+          // Files use proper capitalization: A3.png, A4.png, Q7.png, etc.
+          // Exception: "e-tron.png" is lowercase
+          
+          const modelName = model.name;
+          
+          if (modelName.toLowerCase() === 'e-tron') {
+            imagePath = `/images/Car_images/Audi_car/e-tron.png`;
           } else {
-            // Default to lowercase for all others (a3, a4, q7, e-tron, etc.)
-            const cleanName = model.name.toLowerCase();
-            imagePath = `/images/Car_images/Audi_car/${cleanName}.png`;
+            // Use the model name as-is with proper capitalization (A3, A4, Q7, etc.)
+            imagePath = `/images/Car_images/Audi_car/${modelName}.png`;
           }
         } else if (brandName === 'volkswagen') {
           // Volkswagen images are in "Volkswagen" folder
-          // Exceptions with specific casing: "Cross Polo.png", "T-Roc.png"
-          // All others are lowercase: ameo.png, polo.png, etc.
+          // Most files are capitalized: Ameo.png, Vento.png, Jetta.png, Passat.png, etc.
+          // Exceptions: "polo.png" is lowercase, "Cross Polo.png" and "T-Roc.png" have specific casing
 
-          const cleanName = model.name.toLowerCase().replace(/\s+/g, ' ');
+          const modelName = model.name;
+          const cleanName = modelName.toLowerCase().replace(/\s+/g, ' ');
 
           if (cleanName === 'cross polo') {
             imagePath = `/images/Car_images/Volkswagen/Cross Polo.png`;
           } else if (cleanName === 't-roc' || cleanName === 't roc') {
             imagePath = `/images/Car_images/Volkswagen/T-Roc.png`;
+          } else if (cleanName === 'polo') {
+            imagePath = `/images/Car_images/Volkswagen/polo.png`;
           } else {
-            // Default to lowercase for others (ameo, beetle, jetta, passat, phaeton, polo, taigun, tiguan, vento, virtus)
-            imagePath = `/images/Car_images/Volkswagen/${cleanName}.png`;
+            // Default to capitalized first letter for others (Ameo, Beetle, Jetta, Passat, Phaeton, Taigun, Tiguan, Vento, Virtus)
+            const capitalizedName = modelName.charAt(0).toUpperCase() + modelName.slice(1).toLowerCase();
+            imagePath = `/images/Car_images/Volkswagen/${capitalizedName}.png`;
           }
         } else if (brandName === 'bmw') {
           // BMW images are in "BMW" folder with spaces in filenames

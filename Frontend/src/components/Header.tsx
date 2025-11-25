@@ -29,19 +29,23 @@ const Header = () => {
     navigate('/');
   };
 
-  // Determine if header should be transparent (home page) or solid (other pages)
-  const isTransparent = location.pathname === '/';
+  // Determine if header should be transparent (home page and contact page) or solid (other pages)
+  const isTransparent = location.pathname === '/' || location.pathname === '/contact-us';
   
   const headerPadding = isTransparent ? "py-0 md:py-1 lg:py-2" : "py-2 md:py-3 lg:py-4";
-  const logoHeights = isTransparent ? "h-24 md:h-32 lg:h-40" : "h-20 md:h-24 lg:h-28";
+  
+  // Same logo size for landing page and contact us page
+  const logoHeights = isTransparent 
+    ? "h-20 md:h-24 lg:h-28" // Same size for landing page and contact us page
+    : "h-20 md:h-24 lg:h-28"; // Standard size for other pages
 
   const navigationLinks: Array<
     | { label: string; type: "route"; href: string }
     | { label: string; type: "section"; target: string }
   > = [
-    ...(location.pathname !== '/services' ? [{ label: "About Us", type: "section", target: "about-us" } as const] : []),
-    ...(location.pathname !== '/services' ? [{ label: "Services", type: "route", href: "/services" } as const] : []),
-    ...(location.pathname !== '/services' ? [{ label: "Contact Us", type: "route", href: "/contact-us" } as const] : []),
+    ...(location.pathname !== '/services' && location.pathname !== '/my-services' ? [{ label: "About Us", type: "section", target: "about-us" } as const] : []),
+    ...(location.pathname !== '/services' && location.pathname !== '/my-services' ? [{ label: "Services", type: "route", href: "/services" } as const] : []),
+    ...(location.pathname !== '/services' && location.pathname !== '/my-services' ? [{ label: "Contact Us", type: "route", href: "/contact-us" } as const] : []),
   ];
 
   useLayoutEffect(() => {
@@ -127,12 +131,12 @@ const Header = () => {
           <div
             className={cn(
               "flex items-center cursor-pointer flex-shrink-0",
-              isTransparent && "-mt-2 md:-mt-3 lg:-mt-4"
+              isTransparent && "mt-2 md:mt-3 lg:mt-4"
             )}
             onClick={() => navigate('/')}
           >
             <img 
-              src="/images/Landing_page_images/Red_Automex.png" 
+              src="/images/Automex_icon/AUTOMEX_icon.png" 
               alt="AutoMex Logo" 
               className={cn("w-auto object-contain", logoHeights)}
               onError={(e) => {
@@ -141,7 +145,8 @@ const Header = () => {
             />
           </div>
 
-          {/* Navigation Links - Center (hidden when authenticated on mobile) */}
+          {/* Navigation Links - Center (hidden when authenticated on mobile, and hidden on contact-us and my-services pages) */}
+          {location.pathname !== '/contact-us' && location.pathname !== '/my-services' && (
           <motion.div
             ref={navLinksRef}
             initial={{ opacity: 0, x: 40 }}
@@ -197,56 +202,6 @@ const Header = () => {
               </motion.a>
             ))}
           </motion.div>
-
-          {/* Help Dropdown - Show on Services page when authenticated */}
-          {isAuthenticated && location.pathname === '/services' && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className={cn("hidden lg:block", isTransparent && "-mt-2")}
-            >
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className="flex items-center gap-2 text-white hover:opacity-90 h-auto px-4 py-2 rounded-full border border-white/25 backdrop-blur-sm transition-all duration-200 hover:border-white/40"
-                  >
-                    <HelpCircle className="h-4 w-4" />
-                    <span className="text-sm font-medium">Help</span>
-                    <ChevronDown className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48 bg-white">
-                  <DropdownMenuItem
-                    onClick={() => {
-                      navigate('/');
-                      setTimeout(() => {
-                        const element = document.getElementById('about-us');
-                        if (element) {
-                          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                        }
-                      }, 100);
-                    }}
-                    className="cursor-pointer"
-                  >
-                    About Us
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => navigate('/my-services')}
-                    className="cursor-pointer"
-                  >
-                    My Services
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => navigate('/contact-us')}
-                    className="cursor-pointer"
-                  >
-                    Contact Us
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </motion.div>
           )}
 
           {/* User Info - Right Side */}
@@ -256,6 +211,75 @@ const Header = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className={cn("flex items-center gap-3 md:gap-4 lg:gap-6 flex-shrink-0", isTransparent && "-mt-2 md:-mt-4 lg:-mt-6")}
           >
+              {/* Help Dropdown - Show when authenticated on all pages except home */}
+              {isAuthenticated && !isHomePage && (
+                <div className="hidden lg:block">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        className="flex items-center gap-2 text-white hover:opacity-90 h-auto px-4 py-2 rounded-full border border-white/25 backdrop-blur-sm transition-all duration-200 hover:border-white/40"
+                      >
+                        <HelpCircle className="h-4 w-4" />
+                        <span className="text-sm font-medium">Help</span>
+                        <ChevronDown className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-48 bg-white">
+                      <DropdownMenuItem
+                        onClick={() => navigate('/')}
+                        className="cursor-pointer"
+                      >
+                        Home
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          navigate('/');
+                          setTimeout(() => {
+                            const element = document.getElementById('about-us');
+                            if (element) {
+                              element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }
+                          }, 100);
+                        }}
+                        className="cursor-pointer"
+                      >
+                        About Us
+                      </DropdownMenuItem>
+                      {location.pathname === '/my-services' ? (
+                        <DropdownMenuItem
+                          onClick={() => navigate('/services')}
+                          className="cursor-pointer"
+                        >
+                          Services
+                        </DropdownMenuItem>
+                      ) : (
+                        <DropdownMenuItem
+                          onClick={() => navigate('/my-services')}
+                          className="cursor-pointer"
+                        >
+                          My Services
+                        </DropdownMenuItem>
+                      )}
+                      {location.pathname === '/contact-us' ? (
+                        <DropdownMenuItem
+                          onClick={() => navigate('/services')}
+                          className="cursor-pointer"
+                        >
+                          Services
+                        </DropdownMenuItem>
+                      ) : (
+                        <DropdownMenuItem
+                          onClick={() => navigate('/contact-us')}
+                          className="cursor-pointer"
+                        >
+                          Contact Us
+                        </DropdownMenuItem>
+                      )}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              )}
               {/* Profile Menu (if authenticated) - Hide on landing page */}
               {isAuthenticated && !isHomePage && (
                 <div className="hidden lg:block">
@@ -342,33 +366,37 @@ const Header = () => {
         {mobileMenuOpen && (
           <div className="md:hidden mt-3 pb-3 border-t border-white/20 bg-black/80 backdrop-blur-md rounded-lg">
             <nav className="flex flex-col space-y-3 pt-3">
-              {/* Main Navigation */}
-              <div className="text-xs text-white/70 mb-2 px-0">Navigation</div>
-              <a 
-                href="#about-us" 
-                className="text-sm text-white hover-automex py-2"
-                onClick={(e) => {
-                  e.preventDefault();
-                  const element = document.getElementById('about-us');
-                  if (element) {
-                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  }
-                  setMobileMenuOpen(false);
-                }}
-              >
-                About Us
-              </a>
-              <a 
-                href="/contact-us" 
-                className="text-sm text-white hover-automex py-2 cursor-pointer"
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigate('/contact-us');
-                  setMobileMenuOpen(false);
-                }}
-              >
-                Contact Us
-              </a>
+              {/* Main Navigation - Hidden on My Services page */}
+              {location.pathname !== '/my-services' && (
+                <>
+                  <div className="text-xs text-white/70 mb-2 px-0">Navigation</div>
+                  <a 
+                    href="#about-us" 
+                    className="text-sm text-white hover-automex py-2"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      const element = document.getElementById('about-us');
+                      if (element) {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    About Us
+                  </a>
+                  <a 
+                    href="/contact-us" 
+                    className="text-sm text-white hover-automex py-2 cursor-pointer"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigate('/contact-us');
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    Contact Us
+                  </a>
+                </>
+              )}
               <a 
                 href="#faq" 
                 className="text-sm text-white hover-automex py-2"
