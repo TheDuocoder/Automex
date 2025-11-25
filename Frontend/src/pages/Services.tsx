@@ -3756,7 +3756,7 @@ const Services = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-white font-inter relative overflow-hidden">
+    <div ref={containerRef} className="min-h-screen bg-white font-inter relative">
       {/* Animated background elements */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-20 left-10 w-96 h-96 bg-red-100/30 rounded-full blur-3xl animate-float-slow" />

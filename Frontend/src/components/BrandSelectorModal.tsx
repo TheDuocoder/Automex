@@ -70,15 +70,15 @@ const BrandSelectorModal = ({
   useEffect(() => {
     if (highlightTrigger && triggerButtonRef.current) {
       const button = triggerButtonRef.current;
-      
+
       // Add highlight animation classes
       button.classList.add("animate-pulse");
       button.style.borderColor = "#ef4444";
       button.style.boxShadow = "0 0 0 3px rgba(239, 68, 68, 0.3)";
-      
+
       // Scroll to button if not visible
       button.scrollIntoView({ behavior: "smooth", block: "center" });
-      
+
       // Remove animation after 2 seconds
       const timeout = setTimeout(() => {
         button.classList.remove("animate-pulse");
@@ -86,7 +86,7 @@ const BrandSelectorModal = ({
         button.style.boxShadow = "";
         clearHighlight();
       }, 2000);
-      
+
       return () => {
         clearTimeout(timeout);
         button.classList.remove("animate-pulse");
@@ -110,8 +110,8 @@ const BrandSelectorModal = ({
     () =>
       selectedBrandEntity
         ? selectedBrandEntity.models.filter((model) =>
-            model.name.toLowerCase().includes(normalizedSearch)
-          )
+          model.name.toLowerCase().includes(normalizedSearch)
+        )
         : [],
     [selectedBrandEntity, normalizedSearch]
   );
@@ -203,8 +203,8 @@ const BrandSelectorModal = ({
           >
             <div className={cn(
               "w-15 h-15 max-md:w-13 max-md:h-13 rounded-lg flex items-center justify-center mb-2 transition-all duration-300",
-              isSelected 
-                ? "bg-white shadow-sm" 
+              isSelected
+                ? "bg-white shadow-sm"
                 : "bg-white"
             )} style={{ backgroundColor: '#FFFFFF' }}>
               <img
@@ -214,7 +214,7 @@ const BrandSelectorModal = ({
                   "h-11 w-11 max-md:h-10 max-md:w-10 object-contain transition-all duration-300",
                   isSelected ? "scale-110" : "scale-100"
                 )}
-                style={{ 
+                style={{
                   filter: isSelected ? 'brightness(1.1) contrast(1.2)' : 'brightness(1.05) contrast(1.1)',
                   background: '#FFFFFF',
                   borderRadius: '4px',
@@ -254,7 +254,7 @@ const BrandSelectorModal = ({
         // Generate image path based on brand and model
         const brandName = selectedBrandEntity?.name.toLowerCase().replace(/\s+/g, '_') || '';
         const modelName = model.name.toLowerCase().replace(/\s+/g, '_');
-        
+
         // Special handling for Skoda, Land Rover, and Audi - use correct folder paths
         let imagePath;
         if (brandName === 'skoda') {
@@ -264,10 +264,10 @@ const BrandSelectorModal = ({
         } else if (brandName === 'land_rover') {
           // Land Rover images are in "Land rover" folder with proper naming
           let landRoverFileName = model.name; // Use original name with proper capitalization
-          
+
           // Normalize model name for matching
           const cleanLRName = modelName.replace(/[_\s-]/g, '').toLowerCase();
-          
+
           // Map to exact filenames
           if (cleanLRName === 'rangerover') {
             landRoverFileName = 'Rang Rover';
@@ -285,98 +285,36 @@ const BrandSelectorModal = ({
             landRoverFileName = 'Discovery 4';
           } else if (cleanLRName === 'discoverysport') {
             landRoverFileName = 'Discovery Sport';
-          } else if (cleanLRName === 'defender') {
-            landRoverFileName = 'Defender';
           }
-          
+
           imagePath = `/images/Car_images/Land rover/${landRoverFileName}.png`;
         } else if (brandName === 'audi') {
-          // Audi images are in "Audi_car" folder with mixed case naming
-          let audiFileName = model.name;
-          
-          // Create a clean version of the model name for matching
-          const cleanModelName = modelName.replace(/[_\s-]/g, '').toLowerCase();
-          
-          // Map to exact filenames based on what exists in the folder
-          switch(cleanModelName) {
-            case 'a3':
-              audiFileName = 'A3';
-              break;
-            case 'a4':
-              audiFileName = 'A4';
-              break;
-            case 'a5':
-              audiFileName = 'A5';
-              break;
-            case 'a6':
-              audiFileName = 'A6';
-              break;
-            case 'a7':
-              audiFileName = 'A7';
-              break;
-            case 'a8':
-              audiFileName = 'A8';
-              break;
-            case 'a8l':
-              audiFileName = 'A8 L';
-              break;
-            case 'etron':
-              audiFileName = 'e-tron';
-              break;
-            case 'q2':
-              audiFileName = 'Q2';
-              break;
-            case 'q3':
-              audiFileName = 'Q3';
-              break;
-            case 'q5':
-              audiFileName = 'Q5';
-              break;
-            case 'q7':
-              audiFileName = 'Q7';
-              break;
-            case 'q8':
-              audiFileName = 'Q8';
-              break;
-            case 'r8':
-              audiFileName = 'R8';
-              break;
-            case 'rs3':
-              audiFileName = 'RS3';
-              break;
-            case 'rs5':
-              audiFileName = 'RS5';
-              break;
-            case 's4':
-              audiFileName = 'S4';
-              break;
-            case 'tt':
-              audiFileName = 'TT';
-              break;
+          // Audi images are in "Audi_car" folder
+          // Most files are lowercase: a3.png, q7.png etc.
+          // Exception: "A8 L.png"
+
+          if (model.name === 'A8 L') {
+            imagePath = `/images/Car_images/Audi_car/A8 L.png`;
+          } else {
+            // Default to lowercase for all others (a3, a4, q7, e-tron, etc.)
+            const cleanName = model.name.toLowerCase();
+            imagePath = `/images/Car_images/Audi_car/${cleanName}.png`;
           }
-          
-          imagePath = `/images/Car_images/Audi_car/${audiFileName}.png`;
         } else if (brandName === 'volkswagen') {
-          // Volkswagen images are in "Volkswagen" folder with proper capitalization
-          let volkswagenFileName = model.name; // Use original name with proper capitalization
-          
-          // Normalize model name for matching
-          const cleanVWName = modelName.replace(/[_\s-]/g, '').toLowerCase();
-          
-          // Map to exact filenames
-          if (cleanVWName === 'crosspolo') {
-            volkswagenFileName = 'Cross Polo';
-          } else if (cleanVWName === 'troc') {
-            volkswagenFileName = 'T-Roc';
-          } else if (cleanVWName === 'passat') {
-            volkswagenFileName = 'Passat';
-          } else if (cleanVWName === 'polo') {
-            volkswagenFileName = 'polo';
-          } else if (cleanVWName === 'ameo') {
-            volkswagenFileName = 'Ameo';
+          // Volkswagen images are in "Volkswagen" folder
+          // Exceptions with specific casing: "Cross Polo.png", "T-Roc.png"
+          // All others are lowercase: ameo.png, polo.png, etc.
+
+          const cleanName = model.name.toLowerCase().replace(/\s+/g, ' ');
+
+          if (cleanName === 'cross polo') {
+            imagePath = `/images/Car_images/Volkswagen/Cross Polo.png`;
+          } else if (cleanName === 't-roc' || cleanName === 't roc') {
+            imagePath = `/images/Car_images/Volkswagen/T-Roc.png`;
+          } else {
+            // Default to lowercase for others (ameo, beetle, jetta, passat, phaeton, polo, taigun, tiguan, vento, virtus)
+            imagePath = `/images/Car_images/Volkswagen/${cleanName}.png`;
           }
-          
-          imagePath = `/images/Car_images/Volkswagen/${volkswagenFileName}.png`;
         } else if (brandName === 'bmw') {
           // BMW images are in "BMW" folder with spaces in filenames
           // Convert model name to have proper spacing and capitalization
@@ -461,7 +399,7 @@ const BrandSelectorModal = ({
         } else {
           imagePath = `/images/Car_images/${brandName}_car/${modelName}.png`;
         }
-        
+
         return (
           <button
             key={model.id}
@@ -477,14 +415,14 @@ const BrandSelectorModal = ({
               aspectRatio: '0.95',
               padding: '8px',
               backgroundColor: '#FFFFFF',
-              boxShadow: isSelected 
-                ? '0 8px 24px rgba(231, 74, 59, 0.15), 0 2px 8px rgba(0, 0, 0, 0.05)' 
+              boxShadow: isSelected
+                ? '0 8px 24px rgba(231, 74, 59, 0.15), 0 2px 8px rgba(0, 0, 0, 0.05)'
                 : '0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02)',
               transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
             }}
           >
             {/* Car Image Container - Pure White Background */}
-            <div 
+            <div
               className="flex-1 flex items-center justify-center w-full mb-2 relative rounded-lg"
               style={{
                 backgroundColor: '#FFFFFF'
@@ -494,17 +432,17 @@ const BrandSelectorModal = ({
                 "relative w-full h-full flex items-center justify-center transition-transform duration-300 rounded-lg",
                 isSelected ? "scale-105" : "group-hover:scale-[1.08]"
               )}
-              style={{
-                backgroundColor: '#FFFFFF'
-              }}
+                style={{
+                  backgroundColor: '#FFFFFF'
+                }}
               >
                 <img
                   src={imagePath}
                   alt={model.name}
                   className="w-full h-full object-contain"
                   style={{
-                    filter: isSelected 
-                      ? 'drop-shadow(0 4px 12px rgba(231, 74, 59, 0.15))' 
+                    filter: isSelected
+                      ? 'drop-shadow(0 4px 12px rgba(231, 74, 59, 0.15))'
                       : 'drop-shadow(0 2px 6px rgba(0, 0, 0, 0.06))',
                     maxHeight: '100%',
                     backgroundColor: '#FFFFFF',
@@ -521,9 +459,9 @@ const BrandSelectorModal = ({
                 />
               </div>
             </div>
-            
+
             {/* Model Name - Clean Typography */}
-            <div 
+            <div
               className={cn(
                 "text-center w-full px-1 py-2 rounded-lg transition-all duration-200",
                 isSelected && "bg-red-50/50"
@@ -534,22 +472,22 @@ const BrandSelectorModal = ({
             >
               <span className={cn(
                 "text-xs font-semibold tracking-tight leading-tight block whitespace-nowrap overflow-hidden text-ellipsis",
-                isSelected 
-                  ? "text-[#E74A3B]" 
+                isSelected
+                  ? "text-[#E74A3B]"
                   : "text-gray-800 group-hover:text-[#E74A3B]"
               )}
-              style={{
-                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-                letterSpacing: '-0.01em'
-              }}
+                style={{
+                  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                  letterSpacing: '-0.01em'
+                }}
               >
                 {model.name}
               </span>
             </div>
-            
+
             {/* Selection Indicator - Minimal Premium */}
             {isSelected && (
-              <div 
+              <div
                 className="absolute top-3 right-3 w-6 h-6 bg-[#E74A3B] rounded-full flex items-center justify-center"
                 style={{
                   boxShadow: '0 2px 8px rgba(231, 74, 59, 0.3)'
@@ -589,16 +527,16 @@ const BrandSelectorModal = ({
               )}
             >
               {fuel === 'Petrol' && (
-                <img 
-                  src="/images/Car_images/Petrol_nozzle.png" 
-                  alt="Petrol" 
+                <img
+                  src="/images/Car_images/Petrol_nozzle.png"
+                  alt="Petrol"
                   className="w-5 h-5 object-contain"
                 />
               )}
               {fuel === 'Diesel' && (
-                <img 
-                  src="/images/Car_images/Diesel_nozzle.png" 
-                  alt="Diesel" 
+                <img
+                  src="/images/Car_images/Diesel_nozzle.png"
+                  alt="Diesel"
                   className="w-5 h-5 object-contain"
                 />
               )}
@@ -623,7 +561,7 @@ const BrandSelectorModal = ({
     );
     const gridWrapperClasses = cn(
       paddingX,
-      layout === "sidebar" ? "py-6 overflow-y-auto max-h-[600px]" : "pb-6 pt-4 overflow-y-auto max-h-[650px]"
+      layout === "sidebar" ? "py-6 overflow-y-auto max-h-[340px]" : "pb-6 pt-4 overflow-y-auto max-h-[650px]"
     );
 
     return (
@@ -631,14 +569,14 @@ const BrandSelectorModal = ({
         {showSearch && (
           <div className={searchContainerClasses}>
             <div className="relative">
-              <svg 
+              <svg
                 className="absolute top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4"
                 style={{ left: '12px' }}
-                viewBox="0 0 24 24" 
-                fill="none" 
-                stroke="currentColor" 
-                strokeWidth="2" 
-                strokeLinecap="round" 
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
                 strokeLinejoin="round"
               >
                 <circle cx="11" cy="11" r="8" />
@@ -670,7 +608,7 @@ const BrandSelectorModal = ({
                   src={selectedBrandEntity.logo}
                   alt={`${selectedBrandEntity.name} logo`}
                   className="h-7 w-7 object-contain"
-                  style={{ 
+                  style={{
                     filter: 'brightness(1.05) contrast(1.1)',
                     background: '#FFFFFF',
                     borderRadius: '50%',
@@ -703,7 +641,7 @@ const BrandSelectorModal = ({
           </div>
         )}
 
-        <div 
+        <div
           className={gridWrapperClasses}
           style={{
             scrollbarWidth: 'thin',
@@ -729,10 +667,10 @@ const BrandSelectorModal = ({
           titleElement.classList.add("animate-pulse");
           titleElement.style.color = "#ef4444";
           titleElement.style.textShadow = "0 0 8px rgba(239, 68, 68, 0.5)";
-          
+
           // Scroll to sidebar if not visible
           sidebar.scrollIntoView({ behavior: "smooth", block: "center" });
-          
+
           // Remove animation after 2 seconds
           const timeout = setTimeout(() => {
             titleElement.classList.remove("animate-pulse");
@@ -740,7 +678,7 @@ const BrandSelectorModal = ({
             titleElement.style.textShadow = "";
             clearHighlight();
           }, 2000);
-          
+
           return () => {
             clearTimeout(timeout);
             titleElement.classList.remove("animate-pulse");
@@ -801,13 +739,13 @@ const BrandSelectorModal = ({
         </Button>
       </DialogTrigger>
 
-      <DialogContent 
+      <DialogContent
         className="w-[400px] max-w-[400px] max-h-[90vh] p-0 gap-0 overflow-hidden flex flex-col"
         style={{
           background: 'linear-gradient(to bottom, #FFFFFF, #FAFAFA)'
         }}
       >
-        <DialogHeader className="px-6 py-6" style={{paddingBottom: '6px'}}>
+        <DialogHeader className="px-6 py-6" style={{ paddingBottom: '6px' }}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               {stage !== "brand" && (
