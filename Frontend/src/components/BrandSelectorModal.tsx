@@ -545,6 +545,13 @@ const BrandSelectorModal = ({
                   className="w-5 h-5 object-contain"
                 />
               )}
+              {fuel === 'Electric' && (
+                <img
+                  src="/images/Car_images/Electric.png"
+                  alt="Electric"
+                  className="w-5 h-5 object-contain"
+                />
+              )}
               {fuel}
             </button>
           );

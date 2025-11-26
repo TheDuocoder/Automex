@@ -43,9 +43,9 @@ const Header = () => {
     | { label: string; type: "route"; href: string }
     | { label: string; type: "section"; target: string }
   > = [
-    ...(location.pathname !== '/services' && location.pathname !== '/my-services' ? [{ label: "About Us", type: "section", target: "about-us" } as const] : []),
-    ...(location.pathname !== '/services' && location.pathname !== '/my-services' ? [{ label: "Services", type: "route", href: "/services" } as const] : []),
-    ...(location.pathname !== '/services' && location.pathname !== '/my-services' ? [{ label: "Contact Us", type: "route", href: "/contact-us" } as const] : []),
+    ...(location.pathname !== '/services' && location.pathname !== '/my-services' && location.pathname !== '/profile' ? [{ label: "About Us", type: "section", target: "about-us" } as const] : []),
+    ...(location.pathname !== '/services' && location.pathname !== '/my-services' && location.pathname !== '/profile' ? [{ label: "Services", type: "route", href: "/services" } as const] : []),
+    ...(location.pathname !== '/services' && location.pathname !== '/my-services' && location.pathname !== '/profile' ? [{ label: "Contact Us", type: "route", href: "/contact-us" } as const] : []),
   ];
 
   useLayoutEffect(() => {
@@ -246,14 +246,13 @@ const Header = () => {
                       >
                         About Us
                       </DropdownMenuItem>
-                      {location.pathname === '/my-services' ? (
-                        <DropdownMenuItem
-                          onClick={() => navigate('/services')}
-                          className="cursor-pointer"
-                        >
-                          Services
-                        </DropdownMenuItem>
-                      ) : (
+                      <DropdownMenuItem
+                        onClick={() => navigate('/services')}
+                        className="cursor-pointer"
+                      >
+                        Services
+                      </DropdownMenuItem>
+                      {location.pathname !== '/my-services' && (
                         <DropdownMenuItem
                           onClick={() => navigate('/my-services')}
                           className="cursor-pointer"
