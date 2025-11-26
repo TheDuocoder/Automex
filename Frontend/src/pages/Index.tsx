@@ -10,8 +10,6 @@ import FAQ from "@/components/FAQ";
 import AboutUs from "@/components/AboutUs";
 import Footer from "@/components/Footer";
 import Lenis from "lenis";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState("Our Services");
@@ -36,7 +34,7 @@ const Index = () => {
 
       // Find the section that is currently in view
       const sections = Object.entries(sectionRefs.current);
-      
+
       for (let i = sections.length - 1; i >= 0; i--) {
         const [tabName, ref] = sections[i];
         if (ref) {
@@ -56,8 +54,6 @@ const Index = () => {
   useLayoutEffect(() => {
     if (typeof window === "undefined") return;
 
-    gsap.registerPlugin(ScrollTrigger);
-
     const lenis = new Lenis({
       duration: 1.2,
       smoothWheel: true,
@@ -74,44 +70,11 @@ const Index = () => {
 
     lenisRafRef.current = requestAnimationFrame(raf);
 
-    lenis.on("scroll", ScrollTrigger.update);
-
-    const ctx = gsap.context(() => {
-      gsap.from(".hero-animation", {
-        autoAlpha: 0,
-        y: 40,
-        duration: 0.8,
-        ease: "power2.out",
-        delay: 0.15,
-      });
-
-      gsap.utils
-        .toArray<HTMLElement>(".landing-section")
-        .forEach((section) => {
-          gsap.from(section, {
-            autoAlpha: 0,
-            y: 60,
-            duration: 0.9,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: section,
-              start: "top 80%",
-              once: true,
-            },
-          });
-        });
-    }, rootRef);
-
-    ScrollTrigger.refresh();
-
     return () => {
-      ctx.revert();
-      lenis.off("scroll", ScrollTrigger.update);
       lenis.destroy();
       if (lenisRafRef.current) {
         cancelAnimationFrame(lenisRafRef.current);
       }
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
   }, []);
 
@@ -122,11 +85,11 @@ const Index = () => {
       if (lenisRef.current) {
         lenisRef.current.scrollTo(section, { offset: -100 });
       } else {
-      const offset = section.offsetTop - 100; // Adjust for fixed header and tabs
-      window.scrollTo({
-        top: offset,
-        behavior: 'smooth'
-      });
+        const offset = section.offsetTop - 100; // Adjust for fixed header and tabs
+        window.scrollTo({
+          top: offset,
+          behavior: 'smooth'
+        });
       }
     }
   };
@@ -134,43 +97,26 @@ const Index = () => {
   return (
     <div ref={rootRef} className="min-h-screen bg-background">
       <Header />
-      <div className="hero-animation">
       <Hero />
-      </div>
       <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
       <div className="pt-4">
-        <div
-          className="landing-section"
-          ref={el => sectionRefs.current["Our Services"] = el}
-        >
+        <div ref={el => sectionRefs.current["Our Services"] = el}>
           <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
         </div>
-        <div
-          className="landing-section"
-          ref={el => sectionRefs.current["Summer Services"] = el}
-        >
+        <div ref={el => sectionRefs.current["Summer Services"] = el}>
           <SummerServices />
         </div>
-        <div
-          className="landing-section"
-          ref={el => sectionRefs.current["How AutoMex Works"] = el}
-        >
+        <div ref={el => sectionRefs.current["How AutoMex Works"] = el}>
           <HowItWorks />
         </div>
-        <div
-          className="landing-section"
-          ref={el => sectionRefs.current["Rating & Reviews"] = el}
-        >
+        <div ref={el => sectionRefs.current["Rating & Reviews"] = el}>
           <Reviews />
         </div>
-        <div
-          className="landing-section"
-          ref={el => sectionRefs.current["FAQ"] = el}
-        >
+        <div ref={el => sectionRefs.current["FAQ"] = el}>
           <FAQ />
         </div>
       </div>
-      <div className="landing-section" ref={aboutUsRef}>
+      <div ref={aboutUsRef}>
         <AboutUs />
       </div>
       <Footer />

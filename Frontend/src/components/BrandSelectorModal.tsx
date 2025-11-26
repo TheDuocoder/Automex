@@ -293,9 +293,9 @@ const BrandSelectorModal = ({
           // Audi images are in "Audi_car" folder
           // Files use proper capitalization: A3.png, A4.png, Q7.png, etc.
           // Exception: "e-tron.png" is lowercase
-          
+
           const modelName = model.name;
-          
+
           if (modelName.toLowerCase() === 'e-tron') {
             imagePath = `/images/Car_images/Audi_car/e-tron.png`;
           } else {
