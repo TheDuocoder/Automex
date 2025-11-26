@@ -308,7 +308,6 @@ const carCatalog: CarBrand[] = [
       { id: "toyota-etios-liva", name: "Etios Liva", fuelTypes: ["Petrol", "Diesel"] },
       { id: "toyota-yaris", name: "Yaris", fuelTypes: ["Petrol"] },
       { id: "toyota-glanza", name: "Glanza", fuelTypes: ["Petrol", "CNG"] },
-      { id: "toyota-sera", name: "Sera", fuelTypes: ["Petrol"] },
     ],
   },
   {

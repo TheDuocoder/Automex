@@ -175,7 +175,7 @@ const BrandSelectorModal = ({
       className={cn(
         layout === "sidebar"
           ? "grid grid-cols-3 gap-3.5 max-h-[340px] overflow-y-auto pr-2"
-          : "grid grid-cols-3 gap-4 max-h-60 overflow-y-auto"
+          : "grid grid-cols-3 gap-4 pb-8"
       )}
       style={{
         scrollbarWidth: 'thin',
@@ -190,7 +190,7 @@ const BrandSelectorModal = ({
             onClick={() => handleBrandClick(brand.id, brand.name)}
             className={cn(
               "flex flex-col items-center justify-center bg-white",
-              "w-[96px] h-[96px] md:w-[100px] md:h-[100px] max-md:w-[88px] max-md:h-[88px] rounded-xl relative overflow-hidden",
+              "w-[96px] h-[108px] md:w-[100px] md:h-[112px] max-md:w-[88px] max-md:h-[100px] rounded-xl relative overflow-hidden",
               // Hover state with red theme
               "hover:border-[#E74A3B] hover:ring-2 hover:ring-inset hover:ring-[#E74A3B] hover:shadow-sm",
               "active:scale-[0.98] active:shadow-sm",
@@ -211,7 +211,7 @@ const BrandSelectorModal = ({
                 src={brand.logo}
                 alt={`${brand.name} logo`}
                 className={cn(
-                  "h-11 w-11 max-md:h-10 max-md:w-10 object-contain transition-all duration-300",
+                  "h-14 w-14 max-md:h-12 max-md:w-12 object-contain transition-all duration-300",
                   isSelected ? "scale-110" : "scale-100"
                 )}
                 style={{
@@ -476,14 +476,14 @@ const BrandSelectorModal = ({
               }}
             >
               <span className={cn(
-                "text-xs font-semibold tracking-tight leading-tight block whitespace-nowrap overflow-hidden text-ellipsis",
+                "text-[9px] font-semibold tracking-tight leading-tight block whitespace-nowrap",
                 isSelected
                   ? "text-[#E74A3B]"
                   : "text-gray-800 group-hover:text-[#E74A3B]"
               )}
                 style={{
                   fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-                  letterSpacing: '-0.01em'
+                  letterSpacing: '-0.02em'
                 }}
               >
                 {model.name}
@@ -566,7 +566,7 @@ const BrandSelectorModal = ({
     );
     const gridWrapperClasses = cn(
       paddingX,
-      layout === "sidebar" ? "py-6 overflow-y-auto max-h-[340px]" : "pb-6 pt-4 overflow-y-auto max-h-[650px]"
+      layout === "sidebar" ? "py-6 overflow-y-auto max-h-[340px]" : "pb-8 pt-6 overflow-y-auto max-h-[calc(85vh-120px)]"
     );
 
     return (
