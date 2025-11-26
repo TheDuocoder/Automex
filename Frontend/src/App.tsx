@@ -11,6 +11,7 @@ import Services from "./pages/Services";
 import Profile from "./pages/Profile";
 import MyServices from "./pages/MyServices";
 import BookingDetails from "./pages/BookingDetails";
+import ServicesDemo from "./pages/ServicesDemo";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,6 +28,7 @@ const App = () => {
               <Route path="/" element={<Index />} />
               <Route path="/contact-us" element={<ContactUs />} />
               <Route path="/services" element={<Services />} />
+              <Route path="/services-demo" element={<ServicesDemo />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/my-services" element={<MyServices />} />
               <Route path="/booking/:bookingId" element={<BookingDetails />} />
