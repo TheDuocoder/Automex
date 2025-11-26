@@ -189,7 +189,7 @@ const BrandSelectorModal = ({
             key={brand.id}
             onClick={() => handleBrandClick(brand.id, brand.name)}
             className={cn(
-              "flex flex-col items-center justify-center bg-white",
+              "flex flex-col items-center justify-center bg-white group",
               "w-[96px] h-[108px] md:w-[100px] md:h-[112px] max-md:w-[88px] max-md:h-[100px] rounded-xl relative overflow-hidden",
               // Hover state with red theme
               "hover:border-[#E74A3B] hover:ring-2 hover:ring-inset hover:ring-[#E74A3B] hover:shadow-sm",
@@ -212,7 +212,8 @@ const BrandSelectorModal = ({
                 alt={`${brand.name} logo`}
                 className={cn(
                   "h-14 w-14 max-md:h-12 max-md:w-12 object-contain transition-all duration-300",
-                  isSelected ? "scale-110" : "scale-100"
+                  isSelected ? "scale-110" : "scale-100",
+                  "group-hover:scale-110"
                 )}
                 style={{
                   filter: isSelected ? 'brightness(1.1) contrast(1.2)' : 'brightness(1.05) contrast(1.1)',
