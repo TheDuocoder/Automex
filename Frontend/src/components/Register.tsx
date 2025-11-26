@@ -192,7 +192,7 @@ const Register = ({ onClose, onSwitchToLogin }: RegisterProps) => {
       {/* Logo/Icon */}
       <div className="flex justify-center mb-4">
         <img 
-          src="/images/Automex_icon/AUTOMEX__DP.png" 
+          src="/images/Automex_icon/AUTOMEX (4).png" 
           alt="AutoMex Logo" 
           className="h-32 w-auto object-contain drop-shadow-2xl"
           onError={(e) => {

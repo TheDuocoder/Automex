@@ -43,9 +43,9 @@ const Header = () => {
     | { label: string; type: "route"; href: string }
     | { label: string; type: "section"; target: string }
   > = [
-    ...(location.pathname !== '/services' && location.pathname !== '/my-services' && location.pathname !== '/profile' ? [{ label: "About Us", type: "section", target: "about-us" } as const] : []),
-    ...(location.pathname !== '/services' && location.pathname !== '/my-services' && location.pathname !== '/profile' ? [{ label: "Services", type: "route", href: "/services" } as const] : []),
-    ...(location.pathname !== '/services' && location.pathname !== '/my-services' && location.pathname !== '/profile' ? [{ label: "Contact Us", type: "route", href: "/contact-us" } as const] : []),
+    ...(location.pathname !== '/services' && location.pathname !== '/my-services' && location.pathname !== '/profile' && !location.pathname.startsWith('/booking') ? [{ label: "About Us", type: "section", target: "about-us" } as const] : []),
+    ...(location.pathname !== '/services' && location.pathname !== '/my-services' && location.pathname !== '/profile' && !location.pathname.startsWith('/booking') ? [{ label: "Services", type: "route", href: "/services" } as const] : []),
+    ...(location.pathname !== '/services' && location.pathname !== '/my-services' && location.pathname !== '/profile' && !location.pathname.startsWith('/booking') ? [{ label: "Contact Us", type: "route", href: "/contact-us" } as const] : []),
   ];
 
   useLayoutEffect(() => {
@@ -136,7 +136,7 @@ const Header = () => {
             onClick={() => navigate('/')}
           >
             <img 
-              src="/images/Automex_icon/AUTOMEX_icon.png" 
+              src="/images/Automex_icon/AUTOMEX (2).png" 
               alt="AutoMex Logo" 
               className={cn("w-auto object-contain", logoHeights)}
               onError={(e) => {
