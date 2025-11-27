@@ -85,7 +85,7 @@ const Footer = () => {
             {/* Social Media Icons - Positioned to the right */}
             <div className="absolute right-0 flex items-center gap-5">
               <a
-                href="https://facebook.com"
+                href="https://www.facebook.com/profile.php?id=61584491903750"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white transition-all duration-300 hover:scale-110"
@@ -102,7 +102,7 @@ const Footer = () => {
               </a>
 
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/automex__/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white transition-all duration-300 hover:scale-110"
@@ -119,7 +119,7 @@ const Footer = () => {
               </a>
 
               <a
-                href="https://x.com"
+                href="https://x.com/Automex__"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white transition-all duration-300 hover:scale-110"
