@@ -39,9 +39,9 @@ All colors MUST be HSL.
     --muted: 0 0% 95%;
     --muted-foreground: 0 0% 40%;
 
-    /* AutoMex Orange Accent - Energetic */
-    --accent: 25 95% 53%;
-    --accent-foreground: 0 0% 5%;
+    /* AutoMex Red Accent - Active/Selected */
+    --accent: 0 100% 40%;
+    --accent-foreground: 0 0% 98%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
@@ -93,9 +93,9 @@ All colors MUST be HSL.
     --muted: 0 0% 16%;
     --muted-foreground: 0 0% 60%;
 
-    /* AutoMex Orange Accent - Energetic */
-    --accent: 25 95% 53%;
-    --accent-foreground: 0 0% 5%;
+    /* AutoMex Red Accent - Active/Selected */
+    --accent: 0 100% 40%;
+    --accent-foreground: 0 0% 98%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;

@@ -136,7 +136,7 @@ const Header = () => {
             onClick={() => navigate('/')}
           >
             <img 
-              src="/images/Automex_icon/AUTOMEX (2).png" 
+              src="/images/Automex_icon/AUTOMEX_logo.png" 
               alt="AutoMex Logo" 
               className={cn("w-auto object-contain", logoHeights)}
               onError={(e) => {
