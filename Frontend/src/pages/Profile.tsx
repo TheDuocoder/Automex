@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -23,9 +23,11 @@ import { motion } from "framer-motion";
 import { updateUserProfile } from "@/services/authService";
 import { toast } from "sonner";
 import { usePasswordResetStore } from "@/stores/passwordResetStore";
+import HelpDropdown from "@/components/HelpDropdown";
 
 const Profile = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user: contextUser, isAuthenticated, logout } = useAuth();
   const { user, role, token } = useAuthStore();
 
@@ -386,8 +388,13 @@ const Profile = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="bg-gradient-to-r from-red-600 via-red-500 to-red-600 px-8 py-5"
+          className="bg-gradient-to-r from-red-600 via-red-500 to-red-600 px-8 py-5 relative"
         >
+          {/* Help Dropdown - Top Right */}
+          <div className="absolute top-5 right-8">
+            <HelpDropdown variant="dark" />
+          </div>
+
           <div className="flex items-center gap-5 mb-4">
             <div className="relative group">
               <div className="h-28 w-28 rounded-full bg-white/20 backdrop-blur-md border-4 border-white/30 flex items-center justify-center text-white font-bold text-3xl shadow-2xl transition-all group-hover:border-white/50">

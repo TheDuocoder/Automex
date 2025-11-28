@@ -1,11 +1,12 @@
 import { Button } from "@/components/ui/button";
-import { ChevronDown, Menu, X, User, LogOut, Settings, ShoppingBag, HelpCircle } from "lucide-react";
+import { ChevronDown, Menu, X, User, LogOut, Settings, ShoppingBag } from "lucide-react";
 import { useState, useLayoutEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import { gsap } from "gsap";
 import { motion } from "framer-motion";
+import HelpDropdown from "@/components/HelpDropdown";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -223,69 +224,7 @@ const Header = () => {
               {/* Help Dropdown - Show when authenticated on all pages except home */}
               {isAuthenticated && !isHomePage && (
                 <div className="hidden lg:block">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        className="flex items-center gap-2 text-white hover:opacity-90 h-auto px-4 py-2 rounded-full border border-white/25 backdrop-blur-sm transition-all duration-200 hover:border-white/40"
-                      >
-                        <HelpCircle className="h-4 w-4" />
-                        <span className="text-sm font-medium">Help</span>
-                        <ChevronDown className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-48 bg-white">
-                      <DropdownMenuItem
-                        onClick={() => navigate('/')}
-                        className="cursor-pointer"
-                      >
-                        Home
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => {
-                          navigate('/');
-                          setTimeout(() => {
-                            const element = document.getElementById('about-us');
-                            if (element) {
-                              element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                            }
-                          }, 100);
-                        }}
-                        className="cursor-pointer"
-                      >
-                        About Us
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => navigate('/services')}
-                        className="cursor-pointer"
-                      >
-                        Services
-                      </DropdownMenuItem>
-                      {location.pathname !== '/my-services' && (
-                        <DropdownMenuItem
-                          onClick={() => navigate('/my-services')}
-                          className="cursor-pointer"
-                        >
-                          My Services
-                        </DropdownMenuItem>
-                      )}
-                      {location.pathname === '/contact-us' ? (
-                        <DropdownMenuItem
-                          onClick={() => navigate('/services')}
-                          className="cursor-pointer"
-                        >
-                          Services
-                        </DropdownMenuItem>
-                      ) : (
-                        <DropdownMenuItem
-                          onClick={() => navigate('/contact-us')}
-                          className="cursor-pointer"
-                        >
-                          Contact Us
-                        </DropdownMenuItem>
-                      )}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  <HelpDropdown variant="light" />
                 </div>
               )}
               {/* Profile Menu (if authenticated) - Hide on landing page */}
