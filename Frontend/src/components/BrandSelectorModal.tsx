@@ -175,7 +175,7 @@ const BrandSelectorModal = ({
       className={cn(
         layout === "sidebar"
           ? "grid grid-cols-3 gap-3.5 max-h-[340px] overflow-y-auto pr-2"
-          : "grid grid-cols-3 gap-4 pb-8"
+          : "grid grid-cols-3 gap-4 pb-16"
       )}
       style={{
         scrollbarWidth: 'thin',
@@ -574,7 +574,7 @@ const BrandSelectorModal = ({
     );
     const gridWrapperClasses = cn(
       paddingX,
-      layout === "sidebar" ? "py-6 overflow-y-auto max-h-[340px]" : "pb-8 pt-6 overflow-y-auto max-h-[calc(85vh-120px)]"
+      layout === "sidebar" ? "py-6 overflow-y-auto max-h-[340px]" : "pb-16 pt-6 overflow-y-auto max-h-[calc(75vh-120px)]"
     );
 
     return (
@@ -753,7 +753,7 @@ const BrandSelectorModal = ({
       </DialogTrigger>
 
       <DialogContent
-        className="w-[400px] max-w-[400px] max-h-[90vh] p-0 gap-0 overflow-hidden flex flex-col"
+        className="w-[400px] max-w-[400px] max-h-[80vh] p-0 gap-0 overflow-hidden flex flex-col"
         style={{
           background: 'linear-gradient(to bottom, #FFFFFF, #FAFAFA)'
         }}

@@ -130,7 +130,7 @@ const Header = () => {
           {/* Logo - Left Side */}
           <div
             className={cn(
-              "flex items-center cursor-pointer flex-shrink-0",
+              "flex items-center cursor-pointer flex-shrink-0 group",
               isTransparent && "mt-2 md:mt-3 lg:mt-4"
             )}
             onClick={() => navigate('/')}
@@ -138,7 +138,16 @@ const Header = () => {
             <img 
               src="/images/Automex_icon/AUTOMEX_logo.png" 
               alt="AutoMex Logo" 
-              className={cn("w-auto object-contain", logoHeights)}
+              className={cn(
+                "w-auto object-contain transition-all duration-300 ease-in-out",
+                "group-hover:scale-105 group-hover:drop-shadow-[0_0_12px_rgba(205,0,0,0.4)]",
+                "group-hover:rotate-1",
+                logoHeights
+              )}
+              style={{
+                filter: 'drop-shadow(0 0 0 transparent)',
+                transition: 'all 0.3s ease-in-out'
+              }}
               onError={(e) => {
                 e.currentTarget.src = "/images/Landing_page_images/AUTOMEX.png";
               }}

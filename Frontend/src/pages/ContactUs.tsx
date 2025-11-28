@@ -52,12 +52,12 @@ const ContactUs = () => {
       <Header />
       
       {/* Hero Section */}
-      <section className="relative text-white pt-32 pb-12 sm:pt-36 sm:pb-16 md:pt-40 md:pb-20 lg:pt-44 lg:pb-24 overflow-hidden">
+      <section className="relative text-white pt-32 pb-12 overflow-hidden">
         {/* Gradient Background */}
         <div 
           className="absolute inset-0 z-0"
           style={{
-            background: 'linear-gradient(180deg, #000000, #1a1a1a)'
+            background: 'linear-gradient(180deg, #0a0a0a, #1a1a1a)'
           }}
         />
         
@@ -68,56 +68,59 @@ const ContactUs = () => {
             backgroundImage: 'url("/images/Landing_page_images/automexfrontpage3.jpg")',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
-            filter: 'blur(4px) brightness(0.6)'
+            filter: 'blur(5px) brightness(0.4)'
           }}
         />
         
-        {/* Black Overlay for Better Contrast */}
+        {/* Subtle Dark Overlay */}
         <div 
           className="absolute inset-0 z-[2]"
           style={{
-            background: 'rgba(0, 0, 0, 0.45)'
+            background: 'rgba(0, 0, 0, 0.6)'
           }}
         />
         
         {/* Content */}
-        <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-10 max-w-7xl relative z-[3] flex flex-col justify-center min-h-[200px] sm:min-h-[240px] md:min-h-[280px]">
-          <div 
-            className="flex flex-col sm:flex-row sm:items-center gap-6 sm:gap-8 md:gap-10 mb-6 sm:mb-8 animate-fade-in"
+        <div className="container mx-auto px-4 sm:px-6 md:px-8 max-w-4xl relative z-[3] flex flex-col justify-center items-center text-center">
+          <h1 
+            className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-3"
             style={{
               animation: 'fadeInUp 0.8s ease-out forwards',
-              opacity: 0
+              opacity: 0,
+              letterSpacing: '-0.02em'
             }}
           >
-            <h1 
-              className="text-3xl sm:text-4xl md:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight relative inline-block pb-4"
-              style={{
-                textShadow: '0 0 20px rgba(255, 0, 0, 0.5), 0 0 40px rgba(255, 0, 0, 0.3)',
-                animation: 'fadeInUp 0.8s ease-out 0.2s forwards',
-                opacity: 0
-              }}
-            >
-              Get In Touch
-              {/* Custom Accent Underline - More Balanced */}
-              <span 
-                className="absolute bottom-0 left-1/2 -translate-x-1/2 h-1 w-3/4"
-                style={{
-                  background: `linear-gradient(to right, transparent, #FF0000 20%, #FF0000 80%, transparent)`,
-                  boxShadow: '0 2px 12px rgba(255, 0, 0, 0.5)',
-                  filter: 'blur(0.5px)'
-                }}
-              />
-            </h1>
-          </div>
+            Get In Touch
+          </h1>
+          
+          {/* Minimal Red Accent Line */}
+          <div 
+            className="h-0.5 w-20 mb-6"
+            style={{
+              background: '#FF0000',
+              animation: 'fadeInUp 0.8s ease-out 0.2s forwards',
+              opacity: 0
+            }}
+          />
+          
           <p 
-            className="text-sm sm:text-base md:text-base lg:text-lg xl:text-xl max-w-2xl md:max-w-3xl leading-relaxed" 
+            className="text-base sm:text-lg text-gray-300 max-w-2xl leading-relaxed"
             style={{ 
-              color: '#F2F2F2',
               animation: 'fadeInUp 0.8s ease-out 0.4s forwards',
-              opacity: 0
+              opacity: 0,
+              fontWeight: '300'
             }}
           >
-            Have questions about our services? We're here to help.<br />
+            Have questions about our services? We're here to help.
+          </p>
+          <p 
+            className="text-base sm:text-lg text-gray-300 max-w-2xl mt-2"
+            style={{ 
+              animation: 'fadeInUp 0.8s ease-out 0.5s forwards',
+              opacity: 0,
+              fontWeight: '300'
+            }}
+          >
             Reach out to us, and our team will get back to you as soon as possible.
           </p>
         </div>
@@ -149,16 +152,16 @@ const ContactUs = () => {
           }
         `}</style>
         
-        {/* Curved Wave Transition */}
-        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none" style={{ height: '80px' }}>
+        {/* Minimal Wave Transition */}
+        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none" style={{ height: '40px' }}>
           <svg 
             className="relative block w-full" 
-            style={{ height: '80px' }}
+            style={{ height: '40px' }}
             viewBox="0 0 1200 120" 
             preserveAspectRatio="none"
           >
             <path 
-              d="M0,0 C150,100 350,0 600,50 C850,100 1050,0 1200,50 L1200,120 L0,120 Z" 
+              d="M0,60 C300,100 900,20 1200,60 L1200,120 L0,120 Z" 
               style={{ fill: '#ffffff' }}
             />
           </svg>
@@ -166,52 +169,56 @@ const ContactUs = () => {
       </section>
 
       {/* Contact Section */}
-      <section className="py-6 sm:py-8 md:py-8 lg:py-10 xl:py-12 bg-white">
-        <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-10 max-w-[1400px]">
+      <section className="py-16 sm:py-20 md:py-24 bg-white">
+        <div className="container mx-auto px-4 sm:px-6 md:px-8 max-w-[1400px]">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-6 sm:mb-8 md:mb-10 lg:mb-12">
             {/* Contact Information Cards */}
+            {/* Phone Card */}
             <Card 
-              className="sm:col-span-2 lg:col-span-1 transition-all duration-300 cursor-pointer group border-0"
+              className="sm:col-span-2 lg:col-span-1 transition-all duration-300 cursor-pointer group border-0 bg-white"
               style={{
-                boxShadow: '0 8px 20px rgba(0, 0, 0, 0.06)',
-                borderRadius: '16px'
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
+                borderRadius: '14px'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-3px)';
-                e.currentTarget.style.boxShadow = '0 12px 30px rgba(0, 0, 0, 0.08)';
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.boxShadow = '0 6px 16px rgba(0, 0, 0, 0.08)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.06)';
+                e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.04)';
               }}
             >
-              <CardContent className="p-8 py-10">
+              <CardContent className="p-10">
                 <div className="flex flex-col items-start">
                   <div 
-                    className="w-20 h-20 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-110 relative overflow-hidden icon-bounce-hover"
+                    className="w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-105"
                     style={{
-                      background: 'linear-gradient(135deg, #FF4444 0%, #FF0000 40%, #CC0000 100%)',
-                      boxShadow: '0 6px 20px rgba(255, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.3)'
+                      background: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 50%, #c44569 100%)',
+                      boxShadow: '0 2px 12px rgba(238, 90, 111, 0.2)'
                     }}
                   >
-                    {/* Subtle white reflection overlay */}
-                    <div 
-                      className="absolute inset-0 rounded-full"
-                      style={{
-                        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, transparent 50%)'
-                      }}
-                    />
-                    <Phone className="w-8 h-8 text-white relative z-10" style={{ filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2))' }} />
+                    <Phone className="w-6 h-6 text-white" strokeWidth={1.5} />
                   </div>
-                  <h3 className="font-bold mt-5" style={{ fontSize: '20px', color: '#111' }}>Phone</h3>
-                  <p className="mt-3.5" style={{ fontSize: '14px', color: '#777' }}>
+                  <h3 className="font-bold mt-6 text-gray-900" style={{ fontSize: '18px', letterSpacing: '-0.01em' }}>
+                    Phone
+                  </h3>
+                  <p className="mt-2 text-gray-500" style={{ fontSize: '14px', lineHeight: '1.6' }}>
                     Call us for immediate assistance
                   </p>
-                  <div className="space-y-2 mt-5">
-                    <a href="tel:+918249614004" className="font-semibold block break-all transition-colors hover:underline" style={{ fontSize: '15px', color: '#FF0000' }}>
+                  <div className="space-y-2 mt-6">
+                    <a 
+                      href="tel:+918249614004" 
+                      className="font-semibold block break-all transition-colors hover:underline text-gray-700 hover:text-red-600" 
+                      style={{ fontSize: '15px' }}
+                    >
                       +91 8249614004
                     </a>
-                    <a href="tel:+919776433334" className="font-semibold block break-all transition-colors hover:underline" style={{ fontSize: '15px', color: '#FF0000' }}>
+                    <a 
+                      href="tel:+919776433334" 
+                      className="font-semibold block break-all transition-colors hover:underline text-gray-700 hover:text-red-600" 
+                      style={{ fontSize: '15px' }}
+                    >
                       +91 9776433334
                     </a>
                   </div>
@@ -219,94 +226,90 @@ const ContactUs = () => {
               </CardContent>
             </Card>
 
+            {/* Email Card */}
             <Card 
-              className="transition-all duration-300 cursor-pointer group border-0"
+              className="transition-all duration-300 cursor-pointer group border-0 bg-white"
               style={{
-                boxShadow: '0 8px 20px rgba(0, 0, 0, 0.06)',
-                borderRadius: '16px'
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
+                borderRadius: '14px'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-3px)';
-                e.currentTarget.style.boxShadow = '0 12px 30px rgba(0, 0, 0, 0.08)';
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.boxShadow = '0 6px 16px rgba(0, 0, 0, 0.08)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.06)';
+                e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.04)';
               }}
             >
-              <CardContent className="p-8 py-10">
+              <CardContent className="p-10">
                 <div className="flex flex-col items-start">
                   <div 
-                    className="w-20 h-20 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-110 relative overflow-hidden icon-bounce-hover"
+                    className="w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-105"
                     style={{
-                      background: 'linear-gradient(135deg, #FF4444 0%, #FF0000 40%, #CC0000 100%)',
-                      boxShadow: '0 6px 20px rgba(255, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.3)'
+                      background: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 50%, #c44569 100%)',
+                      boxShadow: '0 2px 12px rgba(238, 90, 111, 0.2)'
                     }}
                   >
-                    {/* Subtle white reflection overlay */}
-                    <div 
-                      className="absolute inset-0 rounded-full"
-                      style={{
-                        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, transparent 50%)'
-                      }}
-                    />
-                    <Mail className="w-8 h-8 text-white relative z-10" style={{ filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2))' }} />
+                    <Mail className="w-6 h-6 text-white" strokeWidth={1.5} />
                   </div>
-                  <h3 className="font-bold mt-5" style={{ fontSize: '20px', color: '#111' }}>Email</h3>
-                  <p className="mt-3.5" style={{ fontSize: '14px', color: '#777' }}>
+                  <h3 className="font-bold mt-6 text-gray-900" style={{ fontSize: '18px', letterSpacing: '-0.01em' }}>
+                    Email
+                  </h3>
+                  <p className="mt-2 text-gray-500" style={{ fontSize: '14px', lineHeight: '1.6' }}>
                     Send us an email anytime
                   </p>
-                  <a href="mailto:sales@automex.in" className="font-semibold break-all transition-colors hover:underline mt-5" style={{ fontSize: '15px', color: '#FF0000' }}>
+                  <a 
+                    href="mailto:sales@automex.in" 
+                    className="font-semibold break-all transition-colors hover:underline mt-6 text-gray-700 hover:text-red-600" 
+                    style={{ fontSize: '15px' }}
+                  >
                     sales@automex.in
                   </a>
                 </div>
               </CardContent>
             </Card>
 
+            {/* Location Card */}
             <Card 
-              className="transition-all duration-300 cursor-pointer group border-0"
+              className="transition-all duration-300 cursor-pointer group border-0 bg-white"
               style={{
-                boxShadow: '0 8px 20px rgba(0, 0, 0, 0.06)',
-                borderRadius: '16px'
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
+                borderRadius: '14px'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-3px)';
-                e.currentTarget.style.boxShadow = '0 12px 30px rgba(0, 0, 0, 0.08)';
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.boxShadow = '0 6px 16px rgba(0, 0, 0, 0.08)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 8px 20px rgba(0, 0, 0, 0.06)';
+                e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.04)';
               }}
             >
-              <CardContent className="p-8 py-10">
+              <CardContent className="p-10">
                 <div className="flex flex-col items-start">
                   <div 
-                    className="w-20 h-20 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-110 relative overflow-hidden icon-bounce-hover"
+                    className="w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-105"
                     style={{
-                      background: 'linear-gradient(135deg, #FF4444 0%, #FF0000 40%, #CC0000 100%)',
-                      boxShadow: '0 6px 20px rgba(255, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.3)'
+                      background: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 50%, #c44569 100%)',
+                      boxShadow: '0 2px 12px rgba(238, 90, 111, 0.2)'
                     }}
                   >
-                    {/* Subtle white reflection overlay */}
-                    <div 
-                      className="absolute inset-0 rounded-full"
-                      style={{
-                        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, transparent 50%)'
-                      }}
-                    />
-                    <MapPin className="w-8 h-8 text-white relative z-10" style={{ filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2))' }} />
+                    <MapPin className="w-6 h-6 text-white" strokeWidth={1.5} />
                   </div>
-                  <h3 className="font-bold mt-5" style={{ fontSize: '20px', color: '#111' }}>Location</h3>
-                  <p className="mt-3.5" style={{ fontSize: '14px', color: '#777' }}>
+                  <h3 className="font-bold mt-6 text-gray-900" style={{ fontSize: '18px', letterSpacing: '-0.01em' }}>
+                    Location
+                  </h3>
+                  <p className="mt-2 text-gray-500" style={{ fontSize: '14px', lineHeight: '1.6' }}>
                     Visit our main office
                   </p>
-                  <div className="mt-5">
-                    <p className="font-semibold leading-relaxed" style={{ fontSize: '15px', color: '#111' }}>
+                  <div className="mt-6">
+                    <p className="font-semibold leading-relaxed text-gray-700" style={{ fontSize: '15px' }}>
                       AUTOMEX,<br />
                       Hanspal puri, colony, Balianta road<br />
                       Bhubaneswar, Odisha - 752101
                     </p>
-                    <p className="mt-2" style={{ fontSize: '14px', color: '#777' }}>
+                    <p className="mt-3 text-gray-500" style={{ fontSize: '14px' }}>
                       Contact: Tapas Parida
                     </p>
                   </div>
@@ -319,13 +322,15 @@ const ContactUs = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 md:gap-8 lg:gap-10 xl:gap-12">
             {/* Contact Form */}
             <div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 sm:mb-8" style={{ fontSize: '2.2rem' }}>Send Us a Message</h2>
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-8 text-gray-900" style={{ fontSize: '2rem', letterSpacing: '-0.02em' }}>
+                Send Us a Message
+              </h2>
+              <form onSubmit={handleSubmit} className="space-y-5">
                 <div className="relative">
                   <label 
                     className={`absolute left-3 transition-all duration-300 pointer-events-none ${
                       focusedField === 'name' || formData.name 
-                        ? 'top-1 text-xs text-[#FF0000]' 
+                        ? 'top-1 text-xs text-gray-600' 
                         : 'top-1/2 -translate-y-1/2 text-sm text-gray-400'
                     }`}
                     htmlFor="name"
@@ -333,7 +338,7 @@ const ContactUs = () => {
                     Full Name *
                   </label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                     <Input
                       id="name"
                       name="name"
@@ -344,26 +349,23 @@ const ContactUs = () => {
                       onFocus={() => setFocusedField('name')}
                       onBlur={() => setFocusedField(null)}
                       required
-                      className={`w-full pl-10 pr-4 py-3 text-base rounded-xl transition-all duration-300 ${
-                        focusedField === 'name' 
-                          ? 'border-[#FF0000] ring-2 ring-[#FF0000]/20 bg-white/90' 
-                          : 'border-gray-300/50 bg-white/80'
-                      }`}
+                      className="w-full pl-10 pr-4 py-3.5 text-base bg-white transition-all duration-300 border"
                       style={{
-                        borderColor: focusedField === 'name' ? '#FF0000' : 'rgba(0,0,0,0.1)',
-                        boxShadow: focusedField === 'name' ? '0 0 10px rgba(255, 45, 45, 0.4)' : '0 2px 8px rgba(0,0,0,0.05)',
-                        borderRadius: '20px'
+                        borderWidth: '1px',
+                        borderColor: focusedField === 'name' ? '#e5e5e5' : '#e8e8e8',
+                        borderRadius: '10px',
+                        boxShadow: focusedField === 'name' ? '0 0 0 3px rgba(0, 0, 0, 0.02)' : 'none'
                       }}
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div className="relative">
                     <label 
                       className={`absolute left-3 transition-all duration-300 pointer-events-none ${
                         focusedField === 'email' || formData.email 
-                          ? 'top-1 text-xs text-[#FF0000]' 
+                          ? 'top-1 text-xs text-gray-600' 
                           : 'top-1/2 -translate-y-1/2 text-sm text-gray-400'
                       }`}
                       htmlFor="email"
@@ -371,7 +373,7 @@ const ContactUs = () => {
                       Email Address *
                     </label>
                     <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                      <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                       <Input
                         id="email"
                         name="email"
@@ -382,15 +384,12 @@ const ContactUs = () => {
                         onFocus={() => setFocusedField('email')}
                         onBlur={() => setFocusedField(null)}
                         required
-                        className={`w-full pl-10 pr-4 py-3 text-base rounded-xl transition-all duration-300 ${
-                          focusedField === 'email' 
-                            ? 'border-[#FF0000] ring-2 ring-[#FF0000]/20 bg-white/90' 
-                            : 'border-gray-300/50 bg-white/80'
-                        }`}
+                        className="w-full pl-10 pr-4 py-3.5 text-base bg-white transition-all duration-300 border"
                         style={{
-                          borderColor: focusedField === 'email' ? '#FF0000' : 'rgba(0,0,0,0.1)',
-                          boxShadow: focusedField === 'email' ? '0 0 10px rgba(255, 45, 45, 0.4)' : '0 2px 8px rgba(0,0,0,0.05)',
-                          borderRadius: '20px'
+                          borderWidth: '1px',
+                          borderColor: focusedField === 'email' ? '#e5e5e5' : '#e8e8e8',
+                          borderRadius: '10px',
+                          boxShadow: focusedField === 'email' ? '0 0 0 3px rgba(0, 0, 0, 0.02)' : 'none'
                         }}
                       />
                     </div>
@@ -399,7 +398,7 @@ const ContactUs = () => {
                     <label 
                       className={`absolute left-3 transition-all duration-300 pointer-events-none ${
                         focusedField === 'phone' || formData.phone 
-                          ? 'top-1 text-xs text-[#FF0000]' 
+                          ? 'top-1 text-xs text-gray-600' 
                           : 'top-1/2 -translate-y-1/2 text-sm text-gray-400'
                       }`}
                       htmlFor="phone"
@@ -407,7 +406,7 @@ const ContactUs = () => {
                       Phone Number *
                     </label>
                     <div className="relative">
-                      <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                      <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                       <Input
                         id="phone"
                         name="phone"
@@ -418,15 +417,12 @@ const ContactUs = () => {
                         onFocus={() => setFocusedField('phone')}
                         onBlur={() => setFocusedField(null)}
                         required
-                        className={`w-full pl-10 pr-4 py-3 text-base rounded-xl transition-all duration-300 ${
-                          focusedField === 'phone' 
-                            ? 'border-[#FF0000] ring-2 ring-[#FF0000]/20 bg-white/90' 
-                            : 'border-gray-300/50 bg-white/80'
-                        }`}
+                        className="w-full pl-10 pr-4 py-3.5 text-base bg-white transition-all duration-300 border"
                         style={{
-                          borderColor: focusedField === 'phone' ? '#FF0000' : 'rgba(0,0,0,0.1)',
-                          boxShadow: focusedField === 'phone' ? '0 0 10px rgba(255, 45, 45, 0.4)' : '0 2px 8px rgba(0,0,0,0.05)',
-                          borderRadius: '20px'
+                          borderWidth: '1px',
+                          borderColor: focusedField === 'phone' ? '#e5e5e5' : '#e8e8e8',
+                          borderRadius: '10px',
+                          boxShadow: focusedField === 'phone' ? '0 0 0 3px rgba(0, 0, 0, 0.02)' : 'none'
                         }}
                       />
                     </div>
@@ -437,7 +433,7 @@ const ContactUs = () => {
                   <label 
                     className={`absolute left-3 transition-all duration-300 pointer-events-none ${
                       focusedField === 'subject' || formData.subject 
-                        ? 'top-1 text-xs text-[#FF0000]' 
+                        ? 'top-1 text-xs text-gray-600' 
                         : 'top-1/2 -translate-y-1/2 text-sm text-gray-400'
                     }`}
                     htmlFor="subject"
@@ -445,7 +441,7 @@ const ContactUs = () => {
                     Subject *
                   </label>
                   <div className="relative">
-                    <MessageSquare className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <MessageSquare className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                     <Input
                       id="subject"
                       name="subject"
@@ -456,15 +452,12 @@ const ContactUs = () => {
                       onFocus={() => setFocusedField('subject')}
                       onBlur={() => setFocusedField(null)}
                       required
-                      className={`w-full pl-10 pr-4 py-3 text-base rounded-xl transition-all duration-300 ${
-                        focusedField === 'subject' 
-                          ? 'border-[#FF0000] ring-2 ring-[#FF0000]/20 bg-white/90' 
-                          : 'border-gray-300/50 bg-white/80'
-                      }`}
+                      className="w-full pl-10 pr-4 py-3.5 text-base bg-white transition-all duration-300 border"
                       style={{
-                        borderColor: focusedField === 'subject' ? '#FF0000' : 'rgba(0,0,0,0.1)',
-                        boxShadow: focusedField === 'subject' ? '0 0 10px rgba(255, 45, 45, 0.4)' : '0 2px 8px rgba(0,0,0,0.05)',
-                        borderRadius: '20px'
+                        borderWidth: '1px',
+                        borderColor: focusedField === 'subject' ? '#e5e5e5' : '#e8e8e8',
+                        borderRadius: '10px',
+                        boxShadow: focusedField === 'subject' ? '0 0 0 3px rgba(0, 0, 0, 0.02)' : 'none'
                       }}
                     />
                   </div>
@@ -474,7 +467,7 @@ const ContactUs = () => {
                   <label 
                     className={`absolute left-3 top-2 transition-all duration-300 pointer-events-none ${
                       focusedField === 'message' || formData.message 
-                        ? 'text-xs text-[#FF0000]' 
+                        ? 'text-xs text-gray-600' 
                         : 'text-sm text-gray-400'
                     }`}
                     htmlFor="message"
@@ -490,15 +483,12 @@ const ContactUs = () => {
                     onFocus={() => setFocusedField('message')}
                     onBlur={() => setFocusedField(null)}
                     required
-                    className={`w-full min-h-[150px] text-base rounded-xl transition-all duration-300 resize-none pt-6 ${
-                      focusedField === 'message' 
-                        ? 'border-[#FF0000] ring-2 ring-[#FF0000]/20 bg-white/90' 
-                        : 'border-gray-300/50 bg-white/80'
-                    }`}
+                    className="w-full min-h-[150px] text-base bg-white transition-all duration-300 resize-none pt-6 border"
                     style={{
-                      borderColor: focusedField === 'message' ? '#FF0000' : 'rgba(0,0,0,0.1)',
-                      boxShadow: focusedField === 'message' ? '0 0 10px rgba(255, 45, 45, 0.4)' : '0 2px 8px rgba(0,0,0,0.05)',
-                      borderRadius: '20px'
+                      borderWidth: '1px',
+                      borderColor: focusedField === 'message' ? '#e5e5e5' : '#e8e8e8',
+                      borderRadius: '10px',
+                      boxShadow: focusedField === 'message' ? '0 0 0 3px rgba(0, 0, 0, 0.02)' : 'none'
                     }}
                   />
                 </div>
@@ -506,14 +496,23 @@ const ContactUs = () => {
                 <Button 
                   type="submit" 
                   size="lg" 
-                  className="w-full sm:w-auto text-base sm:text-lg px-8 py-6 font-bold rounded-xl transition-all duration-300 hover:shadow-xl hover:scale-105 text-white"
+                  className="w-full sm:w-auto text-base px-8 py-6 font-semibold transition-all duration-300 text-white border-0"
                   style={{
-                    background: 'linear-gradient(90deg, #FF0000, #CC0000)',
-                    borderRadius: '20px',
-                    boxShadow: '0 4px 15px rgba(255, 0, 0, 0.4)'
+                    background: 'linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)',
+                    borderRadius: '10px',
+                    boxShadow: '0 2px 8px rgba(220, 38, 38, 0.2)',
+                    letterSpacing: '-0.01em'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(220, 38, 38, 0.3)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(220, 38, 38, 0.2)';
                   }}
                 >
-                  <Send className="w-5 h-5 mr-2" />
+                  <Send className="w-4 h-4 mr-2" />
                   Send Message
                 </Button>
               </form>
@@ -521,116 +520,121 @@ const ContactUs = () => {
 
             {/* Additional Information */}
             <div 
-              className="p-6 sm:p-8 rounded-2xl"
+              className="p-8 sm:p-10 rounded-2xl"
               style={{
-                backgroundColor: '#121212',
-                borderRadius: '20px'
+                backgroundColor: '#2a2a2a',
+                borderRadius: '12px'
               }}
             >
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-8" style={{ fontSize: '2.2rem' }}>Why Choose AutoMex?</h2>
+              <h2 className="text-2xl sm:text-3xl font-bold mb-10 text-white" style={{ fontSize: '2rem', letterSpacing: '-0.02em' }}>
+                Why Choose AutoMex?
+              </h2>
               
               {/* Three Column Layout */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-10">
                 {/* Business Hours */}
                 <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
                   <div 
-                    className="w-16 h-16 rounded-full flex items-center justify-center mb-4 transition-transform duration-300 hover:scale-110"
+                    className="w-14 h-14 rounded-full flex items-center justify-center mb-5 transition-all duration-300 hover:scale-105"
                     style={{
-                      background: 'linear-gradient(135deg, #FF0000 0%, #FF0000 50%, #C0C0C0 100%)',
-                      boxShadow: '0 4px 15px rgba(255, 0, 0, 0.4)',
-                      animation: 'redPulse 3s ease-in-out infinite'
+                      background: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 50%, #c44569 100%)',
+                      boxShadow: '0 2px 12px rgba(238, 90, 111, 0.25)'
                     }}
                   >
-                    <Clock className="w-8 h-8 text-white" />
+                    <Clock className="w-6 h-6 text-white" strokeWidth={1.5} />
                   </div>
-                  <h3 className="text-lg font-bold mb-2">Business Hours</h3>
-                  <p className="text-sm" style={{ color: '#888' }}>
+                  <h3 className="text-base font-bold mb-3 text-white" style={{ letterSpacing: '-0.01em' }}>
+                    Business Hours
+                  </h3>
+                  <p className="text-sm leading-relaxed text-gray-400">
                     Monday - Saturday:<br />
                     8:00 AM - 8:00 PM<br />
-                    <span className="text-xs">Sunday: 9:00 AM - 6:00 PM</span>
+                    <span className="text-xs text-gray-500">Sunday: 9:00 AM - 6:00 PM</span>
                   </p>
                 </div>
 
                 {/* Expertise */}
                 <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
                   <div 
-                    className="w-16 h-16 rounded-full flex items-center justify-center mb-4 transition-transform duration-300 hover:scale-110"
+                    className="w-14 h-14 rounded-full flex items-center justify-center mb-5 transition-all duration-300 hover:scale-105"
                     style={{
-                      background: 'linear-gradient(135deg, #FF0000 0%, #FF0000 50%, #C0C0C0 100%)',
-                      boxShadow: '0 4px 15px rgba(255, 0, 0, 0.4)',
-                      animation: 'redPulse 3s ease-in-out infinite',
-                      animationDelay: '0.5s'
+                      background: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 50%, #c44569 100%)',
+                      boxShadow: '0 2px 12px rgba(238, 90, 111, 0.25)'
                     }}
                   >
-                    <Wrench className="w-8 h-8 text-white" />
+                    <Wrench className="w-6 h-6 text-white" strokeWidth={1.5} />
                   </div>
-                  <h3 className="text-lg font-bold mb-2">Expertise</h3>
-                  <p className="text-sm" style={{ color: '#888' }}>
+                  <h3 className="text-base font-bold mb-3 text-white" style={{ letterSpacing: '-0.01em' }}>
+                    Expertise
+                  </h3>
+                  <p className="text-sm leading-relaxed text-gray-400">
                     10+ Years Experience<br />
                     Certified Technicians<br />
-                    <span className="text-xs">Premium Tools & Parts</span>
+                    <span className="text-xs text-gray-500">Premium Tools & Parts</span>
                   </p>
                 </div>
 
                 {/* Service Guarantee */}
                 <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
                   <div 
-                    className="w-16 h-16 rounded-full flex items-center justify-center mb-4 transition-transform duration-300 hover:scale-110"
+                    className="w-14 h-14 rounded-full flex items-center justify-center mb-5 transition-all duration-300 hover:scale-105"
                     style={{
-                      background: 'linear-gradient(135deg, #FF0000 0%, #FF0000 50%, #C0C0C0 100%)',
-                      boxShadow: '0 4px 15px rgba(255, 0, 0, 0.4)',
-                      animation: 'redPulse 3s ease-in-out infinite',
-                      animationDelay: '1s'
+                      background: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 50%, #c44569 100%)',
+                      boxShadow: '0 2px 12px rgba(238, 90, 111, 0.25)'
                     }}
                   >
-                    <ShieldCheck className="w-8 h-8 text-white" />
+                    <ShieldCheck className="w-6 h-6 text-white" strokeWidth={1.5} />
                   </div>
-                  <h3 className="text-lg font-bold mb-2">Service Guarantee</h3>
-                  <p className="text-sm" style={{ color: '#888' }}>
+                  <h3 className="text-base font-bold mb-3 text-white" style={{ letterSpacing: '-0.01em' }}>
+                    Service Guarantee
+                  </h3>
+                  <p className="text-sm leading-relaxed text-gray-400">
                     100% Genuine Parts<br />
                     Transparent Pricing<br />
-                    <span className="text-xs">Quality Assured</span>
+                    <span className="text-xs text-gray-500">Quality Assured</span>
                   </p>
                 </div>
               </div>
 
               {/* Services Card */}
               <Card 
-                className="mt-8"
+                className="bg-white border-0"
                 style={{
-                  boxShadow: '0 8px 20px rgba(255, 0, 0, 0.1)',
-                  borderRadius: '20px'
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
+                  borderRadius: '12px'
                 }}
               >
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-bold mb-4">Our Services</h3>
-                  <ul className="space-y-2 text-sm" style={{ color: '#888' }}>
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#FF0000] text-lg">✓</span>
+                <CardContent className="p-8">
+                  <h3 className="text-lg font-bold mb-6 text-gray-900" style={{ letterSpacing: '-0.01em' }}>
+                    Our Services
+                  </h3>
+                  <ul className="space-y-3 text-sm text-gray-700">
+                    <li className="flex items-center gap-3">
+                      <span className="text-red-600 text-base font-bold">✓</span>
                       <span>Premium Car Services</span>
                     </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#FF0000] text-lg">✓</span>
+                    <li className="flex items-center gap-3">
+                      <span className="text-red-600 text-base font-bold">✓</span>
                       <span>AC Service & Repair</span>
                     </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#FF0000] text-lg">✓</span>
+                    <li className="flex items-center gap-3">
+                      <span className="text-red-600 text-base font-bold">✓</span>
                       <span>Battery Replacement</span>
                     </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#FF0000] text-lg">✓</span>
+                    <li className="flex items-center gap-3">
+                      <span className="text-red-600 text-base font-bold">✓</span>
                       <span>Tyres & Wheel Care</span>
                     </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#FF0000] text-lg">✓</span>
+                    <li className="flex items-center gap-3">
+                      <span className="text-red-600 text-base font-bold">✓</span>
                       <span>Denting & Painting</span>
                     </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#FF0000] text-lg">✓</span>
+                    <li className="flex items-center gap-3">
+                      <span className="text-red-600 text-base font-bold">✓</span>
                       <span>Car Detailing & Spa</span>
                     </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#FF0000] text-lg">✓</span>
+                    <li className="flex items-center gap-3">
+                      <span className="text-red-600 text-base font-bold">✓</span>
                       <span>Car Inspections</span>
                     </li>
                   </ul>
@@ -672,15 +676,6 @@ const ContactUs = () => {
       
       {/* CSS Animations */}
       <style>{`
-        @keyframes redPulse {
-          0%, 100% {
-            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
-          }
-          50% {
-            box-shadow: 0 4px 25px rgba(255, 0, 0, 0.7), 0 0 30px rgba(255, 0, 0, 0.3);
-          }
-        }
-        
         @keyframes fadeInUp {
           from {
             opacity: 0;
@@ -692,17 +687,16 @@ const ContactUs = () => {
           }
         }
         
-        /* Smooth hover glow effects */
+        /* Smooth hover effects */
         .hover-glow:hover {
-          box-shadow: 0 8px 25px rgba(255, 45, 45, 0.3) !important;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
           transition: all 0.3s ease;
         }
         
-        /* Input focus glow */
+        /* Input focus styles */
         input:focus,
         textarea:focus {
           outline: none;
-          box-shadow: 0 0 0 3px rgba(255, 45, 45, 0.1);
         }
       `}</style>
     </div>
