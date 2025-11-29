@@ -13,11 +13,11 @@ const FAQ = () => {
     },
     {
       question: "Is pickup and drop service free?",
-      answer: "Yes, we offer complimentary doorstep pickup and drop service for all our car services across Bhubaneswar. Our team will collect your car from your preferred location and deliver it back after the service is completed.",
+      answer: "Absolutely. Enjoy free doorstep pickup and drop for all our services across Bhubaneswar. We'll pick up your car from your preferred location and bring it back to you after the service is completed.",
     },
     {
       question: "How can I track my car service?",
-      answer: "You can track your car service in real-time through our mobile app or website. We provide regular updates at each stage of the service, including photos and videos of the work being done on your vehicle.",
+      answer: "Stay updated in real time through our website. We share progress at every stage of your car's service, complete with photos and videos so you always know what's happening.",
     },
     {
       question: "Are your prices competitive?",
@@ -25,11 +25,11 @@ const FAQ = () => {
     },
     {
       question: "Do you provide warranty on your services?",
-      answer: "Yes, all our services come with a comprehensive warranty. The warranty period varies depending on the type of service. We stand behind the quality of our work and use only genuine or equivalent parts.",
+      answer: "Absolutely. Every service we offer includes a warranty, with the duration varying by service type. We use only genuine or equivalent high-quality parts to ensure reliable and long-lasting results.",
     },
     {
       question: "How do I book a service?",
-      answer: "You can book a service online through our website or mobile app. Simply select your car model, choose the service you need, pick a convenient time slot, and confirm your booking. You can also call us for assistance.",
+      answer: "You can easily book a service online through our website. Just select your car's manufacturer, model, and fuel type, choose the service you need, pick a suitable time slot, and confirm your booking. If you need help, our team is always available over the phone.",
     },
   ];
 

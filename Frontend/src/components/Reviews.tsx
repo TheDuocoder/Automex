@@ -34,28 +34,45 @@ const Reviews = () => {
   ];
 
   return (
-    <section id="reviews" className="py-16 bg-background">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
+    <section 
+      id="reviews" 
+      className="py-20 md:py-24" 
+      style={{ backgroundColor: '#F5F7FA' }}
+    >
+      <div className="container mx-auto px-4 md:px-6 lg:px-8">
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 md:mb-16">
           What Car Owners In Bhubaneswar Say
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           {reviews.map((review, index) => (
-            <Card key={index} className="hover:shadow-lg transition-shadow">
-              <CardContent className="p-6">
-                <Quote className="w-8 h-8 text-primary mb-4" />
-                <h3 className="text-lg font-bold mb-3">{review.title}</h3>
-                <p className="text-muted-foreground mb-4 text-sm leading-relaxed">
+            <Card 
+              key={index} 
+              className="bg-white hover:shadow-xl transition-all duration-300 border-0"
+              style={{
+                borderRadius: '16px',
+                boxShadow: '0 2px 10px rgba(0, 0, 0, 0.06)',
+              }}
+            >
+              <CardContent className="p-7 md:p-9">
+                <Quote className="w-10 h-10 text-primary mb-5" style={{ marginTop: '-2px' }} />
+                <h3 className="text-lg font-bold mb-3" style={{ color: '#111' }}>
+                  {review.title}
+                </h3>
+                <p className="mb-4 text-sm leading-relaxed" style={{ color: '#555' }}>
                   {review.text}
                 </p>
                 <div className="flex items-center justify-between pt-4 border-t">
                   <div>
-                    <p className="font-semibold">{review.author}</p>
-                    <p className="text-sm text-muted-foreground">{review.platform}</p>
+                    <p className="font-bold" style={{ color: '#222' }}>
+                      {review.author}
+                    </p>
+                    <p className="text-sm" style={{ color: '#777' }}>
+                      {review.platform}
+                    </p>
                   </div>
                 </div>
-                <p className="text-xs text-muted-foreground mt-3">
+                <p className="text-xs mt-3" style={{ color: '#999' }}>
                   Workshop: {review.workshop}
                 </p>
               </CardContent>
