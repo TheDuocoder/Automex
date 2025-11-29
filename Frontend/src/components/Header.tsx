@@ -215,8 +215,8 @@ const Header = ({ onLoginClick }: HeaderProps) => {
                 ></span>
               </motion.a>
             ))}
-            {/* Login Button - Show when not authenticated */}
-            {!isAuthenticated && (
+            {/* Login Button - Show when not authenticated on landing page */}
+            {!isAuthenticated && isHomePage && (
               <motion.button
                 initial={false}
                 whileHover={{ scale: 1.04 }}
@@ -250,6 +250,16 @@ const Header = ({ onLoginClick }: HeaderProps) => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className={cn("flex items-center gap-3 md:gap-4 lg:gap-6 flex-shrink-0", isTransparent && "-mt-2 md:-mt-4 lg:-mt-6")}
           >
+              {/* Login Button - Show when not authenticated on services page */}
+              {!isAuthenticated && location.pathname === '/services' && (
+                <Button
+                  onClick={() => navigate('/')}
+                  className="hidden lg:flex items-center gap-2 h-10 px-4 font-medium bg-red-500 text-white hover:bg-red-600 transition-all duration-300 rounded-full"
+                >
+                  <User className="h-4 w-4" />
+                  Login
+                </Button>
+              )}
               {/* Help Dropdown - Show when authenticated on all pages except home */}
               {isAuthenticated && !isHomePage && (
                 <div className="hidden lg:block">

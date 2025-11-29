@@ -67,6 +67,46 @@ async def get_car(
     
     return car
 
+@router.patch("/{car_id}", response_model=CarRead)
+async def update_car(
+    car_id: int,
+    car_data: CarUpdate,
+    session: AsyncSession = Depends(get_async_session),
+    user: User = Depends(current_active_user)
+):
+    """
+    Update a car
+    """
+    query = select(Car).where(Car.id == car_id, Car.user_id == user.id)
+    result = await session.execute(query)
+    car = result.scalar_one_or_none()
+    
+    if not car:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Car not found")
+    
+    # Check if registration number is being updated and if it already exists
+    update_data = car_data.model_dump(exclude_unset=True)
+    if "registration_number" in update_data:
+        existing_car = await session.execute(
+            select(Car).where(
+                Car.registration_number == update_data["registration_number"],
+                Car.id != car_id
+            )
+        )
+        if existing_car.scalar_one_or_none():
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Car with this registration number already exists"
+            )
+    
+    # Update car fields
+    for field, value in update_data.items():
+        setattr(car, field, value)
+    
+    await session.commit()
+    await session.refresh(car)
+    return car
+
 @router.delete("/{car_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_car(
     car_id: int,

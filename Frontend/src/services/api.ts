@@ -179,6 +179,10 @@ export const carService = {
     method: 'POST',
     body: JSON.stringify(data),
   }),
+  update: (id: number, data: Partial<CarCreate>) => apiCall<Car>(`/api/v1/cars/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  }),
   delete: (id: number) => apiCall<void>(`/api/v1/cars/${id}`, {
     method: 'DELETE',
   }),

@@ -7,6 +7,7 @@ import ServiceCard from "@/components/ServiceCard";
 import CategoryTabs from "@/components/CategoryTabs";
 import BrandSelectorModal from "@/components/BrandSelectorModal";
 import { useCarSelectionStore } from "@/stores/carSelectionStore";
+import { Button } from "@/components/ui/button";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";

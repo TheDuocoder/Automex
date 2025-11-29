@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,6 +24,7 @@ interface ServiceHistoryWithCar extends ServiceHistoryType {
 }
 
 const ServiceHistory = () => {
+    const navigate = useNavigate();
     const [cars, setCars] = useState<Car[]>([]);
     const [selectedCarId, setSelectedCarId] = useState<string>("");
     const [allHistory, setAllHistory] = useState<ServiceHistoryWithCar[]>([]);
@@ -47,30 +49,35 @@ const ServiceHistory = () => {
         try {
             // Fetch all cars
             const carsResponse = await carService.getAll();
-            if (carsResponse.data && carsResponse.data.length > 0) {
+            if (carsResponse.data) {
                 setCars(carsResponse.data);
 
-                // Fetch service history for all cars
-                const historyPromises = carsResponse.data.map(async (car) => {
-                    const historyResponse = await serviceHistoryService.getAll(car.id);
-                    if (historyResponse.data) {
-                        return historyResponse.data.map(record => ({
-                            ...record,
-                            car: car
-                        }));
-                    }
-                    return [];
-                });
+                if (carsResponse.data.length > 0) {
+                    // Fetch service history for all cars
+                    const historyPromises = carsResponse.data.map(async (car) => {
+                        const historyResponse = await serviceHistoryService.getAll(car.id);
+                        if (historyResponse.data) {
+                            return historyResponse.data.map(record => ({
+                                ...record,
+                                car: car
+                            }));
+                        }
+                        return [];
+                    });
 
-                const allHistoryArrays = await Promise.all(historyPromises);
-                const combinedHistory = allHistoryArrays.flat();
+                    const allHistoryArrays = await Promise.all(historyPromises);
+                    const combinedHistory = allHistoryArrays.flat();
 
-                // Sort by date (most recent first)
-                combinedHistory.sort((a, b) =>
-                    new Date(b.service_date).getTime() - new Date(a.service_date).getTime()
-                );
+                    // Sort by date (most recent first)
+                    combinedHistory.sort((a, b) =>
+                        new Date(b.service_date).getTime() - new Date(a.service_date).getTime()
+                    );
 
-                setAllHistory(combinedHistory);
+                    setAllHistory(combinedHistory);
+                } else {
+                    // No cars, clear history
+                    setAllHistory([]);
+                }
             }
         } catch (error) {
             console.error("Failed to fetch data:", error);
@@ -196,6 +203,23 @@ const ServiceHistory = () => {
                 {isLoading ? (
                     <div className="flex justify-center p-8">
                         <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                    </div>
+                ) : cars.length === 0 ? (
+                    <div className="text-center p-8">
+                        <div className="mb-4">
+                            <CarIcon className="h-16 w-16 mx-auto text-gray-300 mb-3" />
+                        </div>
+                        <p className="text-lg font-semibold text-gray-700 mb-2">No Vehicles Added</p>
+                        <p className="text-sm text-gray-500 mb-4 max-w-md mx-auto">
+                            Please add your vehicles in the <span className="font-semibold text-primary">My Cars</span> section to avail our services and track your service history.
+                        </p>
+                        <Button
+                            onClick={() => navigate('/profile', { state: { view: 'my-cars' } })}
+                            className="gap-2"
+                        >
+                            <CarIcon className="h-4 w-4" />
+                            Go to My Cars
+                        </Button>
                     </div>
                 ) : allHistory.length === 0 ? (
                     <div className="text-center p-8 text-gray-500">

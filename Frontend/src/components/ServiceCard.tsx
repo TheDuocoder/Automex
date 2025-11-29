@@ -1,10 +1,13 @@
 import React from 'react';
 import { Clock, Plus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useCarSelectionStore } from "@/stores/carSelectionStore";
+import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { toast as sonnerToast } from "sonner";
 import DatePickerModal from "./DatePickerModal";
 
 interface ServiceFeature {
@@ -59,6 +62,8 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 }) => {
   const { isCarSelected, selectPart, triggerHighlight } = useCarSelectionStore();
   const { toast } = useToast();
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   const [isDatePickerOpen, setIsDatePickerOpen] = React.useState(false);
   const DEFAULT_VISIBLE = 4;
   const [showMore, setShowMore] = React.useState(false);
@@ -69,6 +74,21 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   const showPrice = discountedPrice > 0;
 
   const handleBookClick = () => {
+    // Check if user is authenticated
+    if (!isAuthenticated) {
+      // Show info message using sonner toast
+      sonnerToast.info("Login Required", {
+        description: "Please login to book a service. You will be redirected to the login page.",
+        duration: 3000,
+      });
+      
+      // Redirect to landing page after a short delay to show the message
+      setTimeout(() => {
+        navigate('/');
+      }, 1000);
+      return;
+    }
+
     if (!isCarSelected()) {
       // Show notification
       toast({

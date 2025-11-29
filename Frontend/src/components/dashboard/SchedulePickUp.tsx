@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,14 +14,15 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { Calendar, MapPin, Clock, Loader2, MessageSquare, Navigation, Car as CarIcon, User } from "lucide-react";
-import { pickupRequestService, carService, Car, PickUpRequest, PickUpRequestCreate, PickUpRequestUpdate } from "@/services/api";
+import { Calendar, MapPin, Clock, Loader2, MessageSquare, Navigation, Car as CarIcon, Car, User } from "lucide-react";
+import { pickupRequestService, carService, Car as CarType, PickUpRequest, PickUpRequestCreate, PickUpRequestUpdate } from "@/services/api";
 import { toast } from "sonner";
 import { useAuthStore } from "@/stores/authStore";
 
 const SchedulePickUp = () => {
+    const navigate = useNavigate();
     const { role } = useAuthStore();
-    const [cars, setCars] = useState<Car[]>([]);
+    const [cars, setCars] = useState<CarType[]>([]);
     const [requests, setRequests] = useState<PickUpRequest[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -206,6 +208,23 @@ const SchedulePickUp = () => {
                             <div className="flex justify-center p-4">
                                 <Loader2 className="h-6 w-6 animate-spin text-primary" />
                             </div>
+                        ) : cars.length === 0 ? (
+                            <div className="text-center py-6">
+                                <Car className="h-12 w-12 mx-auto text-gray-300 mb-3" />
+                                <p className="text-sm font-semibold text-gray-700 mb-2">No Vehicles Added</p>
+                                <p className="text-xs text-gray-500 mb-4">
+                                    Please add your vehicles in the <span className="font-semibold text-primary">My Cars</span> section to schedule a pickup.
+                                </p>
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => navigate('/profile', { state: { view: 'my-cars' } })}
+                                    className="gap-1 text-xs"
+                                >
+                                    <Car className="h-3 w-3" />
+                                    Go to My Cars
+                                </Button>
+                            </div>
                         ) : requests.length === 0 ? (
                             <div className="text-center text-gray-500 py-4">
                                 No active pick up requests.
@@ -218,12 +237,14 @@ const SchedulePickUp = () => {
                                     onClick={() => handleCardClick(req.id)}
                                 >
                                     <div className="flex justify-between items-start mb-2">
-                                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${req.status === 'Pending' ? 'bg-yellow-100 text-yellow-700' :
-                                                req.status === 'Approved' ? 'bg-blue-100 text-blue-700' :
-                                                    req.status === 'Completed' ? 'bg-green-100 text-green-700' :
-                                                        'bg-gray-100 text-gray-700'
-                                            }`}>
-                                            {req.status}
+                                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                            req.status?.toLowerCase() === 'pending' ? 'bg-yellow-100 text-yellow-700 border border-yellow-300' :
+                                            req.status?.toLowerCase() === 'approved' ? 'bg-blue-100 text-blue-700 border border-blue-300' :
+                                            req.status?.toLowerCase() === 'completed' ? 'bg-green-100 text-green-700 border border-green-300' :
+                                            req.status?.toLowerCase() === 'cancelled' ? 'bg-red-100 text-red-700 border border-red-300' :
+                                            'bg-gray-100 text-gray-700 border border-gray-300'
+                                        }`}>
+                                            {req.status || 'Pending'}
                                         </span>
                                         <span className="text-xs text-gray-500">
                                             {new Date(req.scheduled_date).toLocaleDateString()}
@@ -277,6 +298,22 @@ const SchedulePickUp = () => {
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="p-8">
+                        {cars.length === 0 ? (
+                            <div className="text-center py-12">
+                                <Car className="h-16 w-16 mx-auto text-gray-300 mb-4" />
+                                <p className="text-lg font-semibold text-gray-700 mb-2">No Vehicles Added</p>
+                                <p className="text-sm text-gray-500 mb-6 max-w-md mx-auto">
+                                    Please add your vehicles in the <span className="font-semibold text-primary">My Cars</span> section to schedule a pickup and avail our services.
+                                </p>
+                                <Button
+                                    onClick={() => navigate('/profile', { state: { view: 'my-cars' } })}
+                                    className="gap-2"
+                                >
+                                    <Car className="h-4 w-4" />
+                                    Go to My Cars
+                                </Button>
+                            </div>
+                        ) : (
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <div className="grid gap-6">
                                 <div className="space-y-2">
@@ -344,6 +381,7 @@ const SchedulePickUp = () => {
                                         type="datetime-local"
                                         value={formData.scheduled_date}
                                         onChange={(e) => setFormData({ ...formData, scheduled_date: e.target.value })}
+                                        min={new Date().toISOString().slice(0, 16)}
                                         required
                                     />
                                 </div>
@@ -356,6 +394,7 @@ const SchedulePickUp = () => {
                                 </Button>
                             </div>
                         </form>
+                        )}
                     </CardContent>
                 </Card>
             </div>
@@ -382,12 +421,13 @@ const SchedulePickUp = () => {
                                     <Label className="text-gray-500 text-xs">Status</Label>
                                     <div className="mt-1">
                                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                            selectedRequest.status === 'Pending' ? 'bg-yellow-100 text-yellow-700' :
-                                            selectedRequest.status === 'Approved' ? 'bg-blue-100 text-blue-700' :
-                                            selectedRequest.status === 'Completed' ? 'bg-green-100 text-green-700' :
-                                            'bg-gray-100 text-gray-700'
+                                            selectedRequest.status?.toLowerCase() === 'pending' ? 'bg-yellow-100 text-yellow-700 border border-yellow-300' :
+                                            selectedRequest.status?.toLowerCase() === 'approved' ? 'bg-blue-100 text-blue-700 border border-blue-300' :
+                                            selectedRequest.status?.toLowerCase() === 'completed' ? 'bg-green-100 text-green-700 border border-green-300' :
+                                            selectedRequest.status?.toLowerCase() === 'cancelled' ? 'bg-red-100 text-red-700 border border-red-300' :
+                                            'bg-gray-100 text-gray-700 border border-gray-300'
                                         }`}>
-                                            {selectedRequest.status}
+                                            {selectedRequest.status || 'Pending'}
                                         </span>
                                     </div>
                                 </div>
