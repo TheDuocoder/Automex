@@ -1,0 +1,501 @@
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
+import { Calendar, MapPin, Clock, Loader2, MessageSquare, Navigation, Car as CarIcon, User } from "lucide-react";
+import { pickupRequestService, carService, Car, PickUpRequest, PickUpRequestCreate, PickUpRequestUpdate } from "@/services/api";
+import { toast } from "sonner";
+import { useAuthStore } from "@/stores/authStore";
+
+const SchedulePickUp = () => {
+    const { role } = useAuthStore();
+    const [cars, setCars] = useState<Car[]>([]);
+    const [requests, setRequests] = useState<PickUpRequest[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isGettingLocation, setIsGettingLocation] = useState(false);
+    const [selectedRequest, setSelectedRequest] = useState<PickUpRequest | null>(null);
+    const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+    const [isUpdating, setIsUpdating] = useState(false);
+    const [updateData, setUpdateData] = useState<PickUpRequestUpdate>({
+        status: "",
+        admin_comment: "",
+    });
+    const [formData, setFormData] = useState<PickUpRequestCreate>({
+        car_id: 0,
+        location: "",
+        latitude: undefined,
+        longitude: undefined,
+        scheduled_date: "",
+    });
+
+    // Check if user is admin or super admin
+    const isAdmin = role?.name === "admin" || role?.name === "super";
+
+    const fetchData = async () => {
+        setIsLoading(true);
+        const [carsRes, requestsRes] = await Promise.all([
+            carService.getAll(),
+            pickupRequestService.getAll(),
+        ]);
+
+        if (carsRes.data) setCars(carsRes.data);
+        if (requestsRes.data) setRequests(requestsRes.data);
+        setIsLoading(false);
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const handleGetCurrentLocation = () => {
+        if (!navigator.geolocation) {
+            toast.error("Geolocation is not supported by your browser");
+            return;
+        }
+
+        setIsGettingLocation(true);
+        navigator.geolocation.getCurrentPosition(
+            async (position) => {
+                const { latitude, longitude } = position.coords;
+
+                // Use reverse geocoding to get address
+                try {
+                    const response = await fetch(
+                        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=YOUR_GOOGLE_MAPS_API_KEY`
+                    );
+                    const data = await response.json();
+
+                    if (data.results && data.results[0]) {
+                        setFormData({
+                            ...formData,
+                            location: data.results[0].formatted_address,
+                            latitude,
+                            longitude,
+                        });
+                        toast.success("Location detected successfully");
+                    } else {
+                        // Fallback: just set coordinates
+                        setFormData({
+                            ...formData,
+                            location: `Lat: ${latitude.toFixed(6)}, Lng: ${longitude.toFixed(6)}`,
+                            latitude,
+                            longitude,
+                        });
+                        toast.success("Location coordinates captured");
+                    }
+                } catch (error) {
+                    // Fallback: just set coordinates without address
+                    setFormData({
+                        ...formData,
+                        location: `Lat: ${latitude.toFixed(6)}, Lng: ${longitude.toFixed(6)}`,
+                        latitude,
+                        longitude,
+                    });
+                    toast.success("Location coordinates captured");
+                }
+                setIsGettingLocation(false);
+            },
+            (error) => {
+                setIsGettingLocation(false);
+                toast.error("Unable to get your location. Please enter manually.");
+                console.error("Geolocation error:", error);
+            }
+        );
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!formData.car_id) {
+            toast.error("Please select a car");
+            return;
+        }
+
+        setIsSubmitting(true);
+        // Ensure date is in ISO format for backend
+        const dateObj = new Date(formData.scheduled_date);
+        const isoDate = dateObj.toISOString();
+
+        const response = await pickupRequestService.create({
+            ...formData,
+            scheduled_date: isoDate,
+        });
+
+        if (response.data) {
+            toast.success("Pick up scheduled successfully");
+            setFormData({
+                car_id: 0,
+                location: "",
+                latitude: undefined,
+                longitude: undefined,
+                scheduled_date: "",
+            });
+            fetchData();
+        } else {
+            toast.error(response.error || "Failed to schedule pick up");
+        }
+        setIsSubmitting(false);
+    };
+
+    const getCarName = (carId: number) => {
+        const car = cars.find(c => c.id === carId);
+        return car ? `${car.make} ${car.model}` : "Unknown Car";
+    };
+
+    const openInGoogleMaps = (lat: number, lng: number) => {
+        window.open(`https://www.google.com/maps?q=${lat},${lng}`, '_blank');
+    };
+
+    const handleCardClick = async (requestId: number) => {
+        setIsDetailsOpen(true);
+        setIsLoading(true);
+        const response = await pickupRequestService.getById(requestId);
+        if (response.data) {
+            setSelectedRequest(response.data);
+            setUpdateData({
+                status: response.data.status,
+                admin_comment: response.data.admin_comment || "",
+            });
+        } else {
+            toast.error(response.error || "Failed to load pickup request details");
+        }
+        setIsLoading(false);
+    };
+
+    const handleUpdateRequest = async () => {
+        if (!selectedRequest) return;
+
+        setIsUpdating(true);
+        const response = await pickupRequestService.update(selectedRequest.id, updateData);
+        
+        if (response.data) {
+            toast.success("Pickup request updated successfully");
+            setIsDetailsOpen(false);
+            setSelectedRequest(null);
+            fetchData(); // Refresh the list
+        } else {
+            toast.error(response.error || "Failed to update pickup request");
+        }
+        setIsUpdating(false);
+    };
+
+    return (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Left Side: Pick Up Details & Status */}
+            <div className="lg:col-span-1 space-y-6">
+                <Card className="shadow-lg border-none h-full">
+                    <CardHeader className="border-b bg-gray-50/50 pb-4">
+                        <CardTitle className="flex items-center gap-2 text-xl">
+                            <Clock className="h-5 w-5 text-primary" />
+                            Pick Up Status
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-6 space-y-6">
+                        {isLoading ? (
+                            <div className="flex justify-center p-4">
+                                <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                            </div>
+                        ) : requests.length === 0 ? (
+                            <div className="text-center text-gray-500 py-4">
+                                No active pick up requests.
+                            </div>
+                        ) : (
+                            requests.map((req) => (
+                                <div 
+                                    key={req.id} 
+                                    className="bg-white border border-gray-100 rounded-xl p-4 shadow-sm cursor-pointer hover:shadow-md transition-shadow"
+                                    onClick={() => handleCardClick(req.id)}
+                                >
+                                    <div className="flex justify-between items-start mb-2">
+                                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${req.status === 'Pending' ? 'bg-yellow-100 text-yellow-700' :
+                                                req.status === 'Approved' ? 'bg-blue-100 text-blue-700' :
+                                                    req.status === 'Completed' ? 'bg-green-100 text-green-700' :
+                                                        'bg-gray-100 text-gray-700'
+                                            }`}>
+                                            {req.status}
+                                        </span>
+                                        <span className="text-xs text-gray-500">
+                                            {new Date(req.scheduled_date).toLocaleDateString()}
+                                        </span>
+                                    </div>
+                                    <h4 className="font-semibold text-gray-900 mb-1">{getCarName(req.car_id)}</h4>
+                                    <div className="text-sm text-gray-600 mb-3">
+                                        <div className="flex items-start gap-1">
+                                            <MapPin className="h-3 w-3 mt-0.5 flex-shrink-0" />
+                                            <span className="flex-1">{req.location}</span>
+                                        </div>
+                                        {req.latitude && req.longitude && (
+                                            <Button
+                                                variant="link"
+                                                size="sm"
+                                                className="h-auto p-0 text-xs text-blue-600 mt-1"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    openInGoogleMaps(req.latitude!, req.longitude!);
+                                                }}
+                                            >
+                                                <Navigation className="h-3 w-3 mr-1" />
+                                                View on Google Maps
+                                            </Button>
+                                        )}
+                                    </div>
+
+                                    {req.admin_comment && (
+                                        <div className="bg-gray-50 p-3 rounded-lg border border-gray-100 mt-2">
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <MessageSquare className="h-3 w-3 text-primary" />
+                                                <span className="text-xs font-semibold text-gray-700">Admin Comment</span>
+                                            </div>
+                                            <p className="text-xs text-gray-600 italic">"{req.admin_comment}"</p>
+                                        </div>
+                                    )}
+                                </div>
+                            ))
+                        )}
+                    </CardContent>
+                </Card>
+            </div>
+
+            {/* Right Side: Schedule Form */}
+            <div className="lg:col-span-2">
+                <Card className="shadow-lg border-none">
+                    <CardHeader className="border-b bg-gray-50/50 pb-4">
+                        <CardTitle className="flex items-center gap-2 text-xl">
+                            <Calendar className="h-5 w-5 text-primary" />
+                            Schedule New Pick Up
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-8">
+                        <form onSubmit={handleSubmit} className="space-y-6">
+                            <div className="grid gap-6">
+                                <div className="space-y-2">
+                                    <Label htmlFor="car">Select Vehicle</Label>
+                                    <Select
+                                        value={formData.car_id.toString()}
+                                        onValueChange={(val) => setFormData({ ...formData, car_id: parseInt(val) })}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select a car" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {cars.map((car) => (
+                                                <SelectItem key={car.id} value={car.id.toString()}>
+                                                    {car.make} {car.model} ({car.registration_number})
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="location">Pick Up Location</Label>
+                                    <div className="flex gap-2">
+                                        <div className="relative flex-1">
+                                            <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                                            <Input
+                                                id="location"
+                                                className="pl-9"
+                                                placeholder="Enter full address"
+                                                value={formData.location}
+                                                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                                                required
+                                            />
+                                        </div>
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            onClick={handleGetCurrentLocation}
+                                            disabled={isGettingLocation}
+                                            className="flex-shrink-0"
+                                        >
+                                            {isGettingLocation ? (
+                                                <Loader2 className="h-4 w-4 animate-spin" />
+                                            ) : (
+                                                <Navigation className="h-4 w-4" />
+                                            )}
+                                        </Button>
+                                    </div>
+                                    <p className="text-xs text-gray-500">
+                                        Click the location icon to use your current location
+                                    </p>
+                                    {formData.latitude && formData.longitude && (
+                                        <p className="text-xs text-green-600 flex items-center gap-1">
+                                            <MapPin className="h-3 w-3" />
+                                            Location coordinates captured
+                                        </p>
+                                    )}
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="datetime">Preferred Date & Time</Label>
+                                    <Input
+                                        id="datetime"
+                                        type="datetime-local"
+                                        value={formData.scheduled_date}
+                                        onChange={(e) => setFormData({ ...formData, scheduled_date: e.target.value })}
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="pt-4">
+                                <Button type="submit" className="w-full" disabled={isSubmitting}>
+                                    {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                    Schedule Pick Up
+                                </Button>
+                            </div>
+                        </form>
+                    </CardContent>
+                </Card>
+            </div>
+
+            {/* Details Dialog */}
+            <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
+                <DialogContent className="sm:max-w-[600px]">
+                    <DialogHeader>
+                        <DialogTitle>Pickup Request Details</DialogTitle>
+                        <DialogDescription>
+                            View and manage pickup request information
+                        </DialogDescription>
+                    </DialogHeader>
+                    
+                    {isLoading ? (
+                        <div className="flex justify-center p-8">
+                            <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                        </div>
+                    ) : selectedRequest ? (
+                        <div className="space-y-4">
+                            {/* Request Info */}
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <Label className="text-gray-500 text-xs">Status</Label>
+                                    <div className="mt-1">
+                                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                            selectedRequest.status === 'Pending' ? 'bg-yellow-100 text-yellow-700' :
+                                            selectedRequest.status === 'Approved' ? 'bg-blue-100 text-blue-700' :
+                                            selectedRequest.status === 'Completed' ? 'bg-green-100 text-green-700' :
+                                            'bg-gray-100 text-gray-700'
+                                        }`}>
+                                            {selectedRequest.status}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <Label className="text-gray-500 text-xs">Scheduled Date</Label>
+                                    <p className="text-sm font-medium mt-1">
+                                        {new Date(selectedRequest.scheduled_date).toLocaleString()}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div>
+                                <Label className="text-gray-500 text-xs flex items-center gap-1">
+                                    <CarIcon className="h-3 w-3" />
+                                    Vehicle
+                                </Label>
+                                <p className="text-sm font-medium mt-1">{getCarName(selectedRequest.car_id)}</p>
+                            </div>
+
+                            <div>
+                                <Label className="text-gray-500 text-xs flex items-center gap-1">
+                                    <MapPin className="h-3 w-3" />
+                                    Pickup Location
+                                </Label>
+                                <p className="text-sm mt-1">{selectedRequest.location}</p>
+                                {selectedRequest.latitude && selectedRequest.longitude && (
+                                    <Button
+                                        variant="link"
+                                        size="sm"
+                                        className="h-auto p-0 text-xs text-blue-600 mt-1"
+                                        onClick={() => openInGoogleMaps(selectedRequest.latitude!, selectedRequest.longitude!)}
+                                    >
+                                        <Navigation className="h-3 w-3 mr-1" />
+                                        View on Google Maps
+                                    </Button>
+                                )}
+                            </div>
+
+                            {/* Admin Controls */}
+                            {isAdmin && (
+                                <div className="border-t pt-4 space-y-4">
+                                    <div>
+                                        <Label htmlFor="status" className="text-sm font-medium">
+                                            Update Status
+                                        </Label>
+                                        <Select
+                                            value={updateData.status}
+                                            onValueChange={(value) => setUpdateData({ ...updateData, status: value })}
+                                        >
+                                            <SelectTrigger className="mt-2">
+                                                <SelectValue placeholder="Select status" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="Pending">Pending</SelectItem>
+                                                <SelectItem value="Approved">Approved</SelectItem>
+                                                <SelectItem value="Completed">Completed</SelectItem>
+                                                <SelectItem value="Cancelled">Cancelled</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+
+                                    <div>
+                                        <Label htmlFor="comment" className="text-sm font-medium">
+                                            Admin Comment
+                                        </Label>
+                                        <Textarea
+                                            id="comment"
+                                            className="mt-2"
+                                            placeholder="Add a comment or note..."
+                                            value={updateData.admin_comment}
+                                            onChange={(e) => setUpdateData({ ...updateData, admin_comment: e.target.value })}
+                                            rows={3}
+                                        />
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Existing Admin Comment (read-only) */}
+                            {selectedRequest.admin_comment && !isAdmin && (
+                                <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <MessageSquare className="h-4 w-4 text-primary" />
+                                        <span className="text-xs font-semibold text-gray-700">Admin Comment</span>
+                                    </div>
+                                    <p className="text-sm text-gray-600 italic">"{selectedRequest.admin_comment}"</p>
+                                </div>
+                            )}
+                        </div>
+                    ) : null}
+
+                    <DialogFooter>
+                        {isAdmin && (
+                            <Button
+                                onClick={handleUpdateRequest}
+                                disabled={isUpdating}
+                            >
+                                {isUpdating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                Update Request
+                            </Button>
+                        )}
+                        <Button variant="outline" onClick={() => setIsDetailsOpen(false)}>
+                            Close
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+        </div>
+    );
+};
+
+export default SchedulePickUp;

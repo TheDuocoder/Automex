@@ -1,0 +1,140 @@
+"""
+Pick Up Requests API routes
+"""
+from typing import List
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from automex_backend.database import get_async_session
+from automex_backend.models.pickup_request import PickUpRequest
+from automex_backend.models.car import Car
+from automex_backend.models.user import User
+from automex_backend.schemas.pickup_request import PickUpRequestRead, PickUpRequestCreate, PickUpRequestUpdate
+from automex_backend.api.auth import current_active_user, get_current_user_with_role
+
+router = APIRouter()
+
+
+async def check_is_admin_or_super(user: User, session: AsyncSession) -> bool:
+    """
+    Check if user has Admin or Super Admin role
+    Returns True if user is superuser OR has role 'admin' or 'super'
+    """
+    # Check if user is superuser
+    if user.is_superuser:
+        return True
+    
+    # Check role name
+    if hasattr(user, 'role_id') and user.role_id:
+        from automex_backend.models.role import Role
+        role_stmt = select(Role).where(Role.id == user.role_id)
+        role_result = await session.execute(role_stmt)
+        role = role_result.scalar_one_or_none()
+        if role and role.name in ["admin", "super"]:
+            return True
+    
+    return False
+
+
+@router.get("/", response_model=List[PickUpRequestRead])
+async def get_pickup_requests(
+    session: AsyncSession = Depends(get_async_session),
+    user: User = Depends(current_active_user)
+):
+    """
+    Get list of user's pickup requests
+    """
+    query = select(PickUpRequest).where(PickUpRequest.user_id == user.id).order_by(PickUpRequest.scheduled_date.desc())
+    result = await session.execute(query)
+    return result.scalars().all()
+
+
+@router.get("/{pickup_id}", response_model=PickUpRequestRead)
+async def get_pickup_request(
+    pickup_id: int,
+    session: AsyncSession = Depends(get_async_session),
+    user: User = Depends(current_active_user)
+):
+    """
+    Get a single pickup request by ID
+    Users can only view their own requests, admins can view all
+    """
+    query = select(PickUpRequest).where(PickUpRequest.id == pickup_id)
+    result = await session.execute(query)
+    request = result.scalar_one_or_none()
+    
+    if not request:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Pickup request not found")
+    
+    # Check if user owns the request or is admin/super
+    user_with_role = await get_current_user_with_role(user, session)
+    is_admin = await check_is_admin_or_super(user_with_role, session)
+    
+    if request.user_id != user.id and not is_admin:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized to view this pickup request")
+    
+    return request
+
+
+@router.post("/", response_model=PickUpRequestRead, status_code=status.HTTP_201_CREATED)
+async def create_pickup_request(
+    request_data: PickUpRequestCreate,
+    session: AsyncSession = Depends(get_async_session),
+    user: User = Depends(current_active_user)
+):
+    """
+    Create a new pickup request
+    """
+    # Verify car belongs to user
+    car_query = select(Car).where(Car.id == request_data.car_id, Car.user_id == user.id)
+    car_result = await session.execute(car_query)
+    if not car_result.scalar_one_or_none():
+         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Car not found")
+
+    request = PickUpRequest(**request_data.model_dump(), user_id=user.id)
+    session.add(request)
+    await session.commit()
+    await session.refresh(request)
+    return request
+
+
+@router.patch("/{pickup_id}", response_model=PickUpRequestRead)
+async def update_pickup_request(
+    pickup_id: int,
+    request_data: PickUpRequestUpdate,
+    session: AsyncSession = Depends(get_async_session),
+    user: User = Depends(current_active_user)
+):
+    """
+    Update pickup request status and admin comment
+    Only ADMIN and SUPER_ADMIN can update status and add comments
+    """
+    # Get user with role
+    user_with_role = await get_current_user_with_role(user, session)
+    
+    # Check if user is admin or super admin
+    is_admin = await check_is_admin_or_super(user_with_role, session)
+    
+    if not is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only administrators can update pickup request status and comments"
+        )
+    
+    # Get the pickup request
+    query = select(PickUpRequest).where(PickUpRequest.id == pickup_id)
+    result = await session.execute(query)
+    request = result.scalar_one_or_none()
+    
+    if not request:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Pickup request not found")
+    
+    # Update fields
+    update_data = request_data.model_dump(exclude_unset=True)
+    for field, value in update_data.items():
+        setattr(request, field, value)
+    
+    await session.commit()
+    await session.refresh(request)
+    return request
