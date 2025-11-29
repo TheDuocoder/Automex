@@ -173,12 +173,13 @@ export interface CarCreate {
 }
 
 export const carService = {
-  getAll: () => apiCall<Car[]>('/cars/'),
-  create: (data: CarCreate) => apiCall<Car>('/cars/', {
+  getAll: () => apiCall<Car[]>('/api/v1/cars/'),
+  get: (id: number) => apiCall<Car>(`/api/v1/cars/${id}`),
+  create: (data: CarCreate) => apiCall<Car>('/api/v1/cars/', {
     method: 'POST',
     body: JSON.stringify(data),
   }),
-  delete: (id: number) => apiCall<void>(`/cars/${id}`, {
+  delete: (id: number) => apiCall<void>(`/api/v1/cars/${id}`, {
     method: 'DELETE',
   }),
 };
@@ -202,8 +203,8 @@ export interface ServiceHistoryCreate {
 }
 
 export const serviceHistoryService = {
-  getAll: (carId: number) => apiCall<ServiceHistory[]>(`/service-history/?car_id=${carId}`),
-  create: (data: ServiceHistoryCreate) => apiCall<ServiceHistory>('/service-history/', {
+  getAll: (carId: number) => apiCall<ServiceHistory[]>(`/api/v1/service-history/?car_id=${carId}`),
+  create: (data: ServiceHistoryCreate) => apiCall<ServiceHistory>('/api/v1/service-history/', {
     method: 'POST',
     body: JSON.stringify(data),
   }),
@@ -215,6 +216,8 @@ export interface PickUpRequest {
   user_id: number;
   car_id: number;
   location: string;
+  latitude?: number;
+  longitude?: number;
   scheduled_date: string;
   status: string;
   admin_comment?: string;
@@ -223,12 +226,14 @@ export interface PickUpRequest {
 export interface PickUpRequestCreate {
   car_id: number;
   location: string;
+  latitude?: number;
+  longitude?: number;
   scheduled_date: string;
 }
 
 export const pickupRequestService = {
-  getAll: () => apiCall<PickUpRequest[]>('/pickup-requests/'),
-  create: (data: PickUpRequestCreate) => apiCall<PickUpRequest>('/pickup-requests/', {
+  getAll: () => apiCall<PickUpRequest[]>('/api/v1/pickup-requests/'),
+  create: (data: PickUpRequestCreate) => apiCall<PickUpRequest>('/api/v1/pickup-requests/', {
     method: 'POST',
     body: JSON.stringify(data),
   }),

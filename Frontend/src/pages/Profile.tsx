@@ -28,14 +28,26 @@ import MyCars from "@/components/dashboard/MyCars";
 import ServiceHistory from "@/components/dashboard/ServiceHistory";
 import SchedulePickUp from "@/components/dashboard/SchedulePickUp";
 
+import { carService, Car as CarModel, serviceHistoryService, ServiceHistory as ServiceHistoryModel } from "@/services/api";
+
 const Profile = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user: contextUser, isAuthenticated, logout, isLoading: authLoading } = useAuth();
+  const { user: contextUser, isAuthenticated, logout } = useAuth();
   const { user, role, token } = useAuthStore();
 
   // State for active view
   const [activeView, setActiveView] = useState("dashboard");
+
+  useEffect(() => {
+    if (location.state && (location.state as any).view) {
+      setActiveView((location.state as any).view);
+    }
+  }, [location]);
+
+  // Dashboard Data State
+  const [dashboardCars, setDashboardCars] = useState<CarModel[]>([]);
+  const [dashboardHistory, setDashboardHistory] = useState<ServiceHistoryModel[]>([]);
 
   // State for Edit Profile Modal
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -64,19 +76,42 @@ const Profile = () => {
   // Use Zustand user or context user (Zustand takes priority)
   const currentUser = user || contextUser;
 
-  // Redirect if not authenticated (but wait for auth to finish loading)
+  // Redirect if not authenticated
   useEffect(() => {
-    // Don't redirect while still loading auth state
-    if (authLoading) {
-      return;
-    }
-
-    // Only redirect if definitely not authenticated
     if (!isAuthenticated && !user) {
-      console.log('Not authenticated, redirecting to home');
       navigate('/');
     }
-  }, [isAuthenticated, user, navigate, authLoading]);
+  }, [isAuthenticated, user, navigate]);
+
+  // Fetch Dashboard Data
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        // Fetch Cars
+        const carsResponse = await carService.getAll();
+        if (carsResponse.data) {
+          setDashboardCars(carsResponse.data);
+
+          // Fetch Service History for all cars
+          // For dashboard, we'll just fetch history for the first car for now, 
+          // or we could fetch for all and aggregate. Let's fetch for the first car if available.
+          if (carsResponse.data.length > 0) {
+            const firstCarId = carsResponse.data[0].id;
+            const historyResponse = await serviceHistoryService.getAll(firstCarId);
+            if (historyResponse.data) {
+              setDashboardHistory(historyResponse.data);
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch dashboard data:", error);
+      }
+    };
+
+    if (currentUser) {
+      fetchDashboardData();
+    }
+  }, [currentUser]);
 
   // Initialize form data when modal opens
   useEffect(() => {
@@ -288,18 +323,6 @@ const Profile = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isChangePasswordOpen]);
 
-  // Show loading state while checking authentication
-  if (authLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto mb-4" />
-          <p className="text-gray-600">Loading your profile...</p>
-        </div>
-      </div>
-    );
-  }
-
   if (!isAuthenticated && !user) {
     return null;
   }
@@ -464,8 +487,14 @@ const Profile = () => {
                   <Hash className="h-5 w-5 text-white" />
                 </div>
                 <div>
-                  <p className="text-white/70 text-xs">Vehicle Number</p>
-                  <p className="text-white font-bold text-base">XYZ 789</p>
+                  <p className="text-white/70 text-xs">
+                    {dashboardCars.length > 1 ? 'Total Vehicles' : 'Vehicle Number'}
+                  </p>
+                  <p className="text-white font-bold text-base">
+                    {dashboardCars.length === 0 ? 'No Vehicle' :
+                      dashboardCars.length === 1 ? dashboardCars[0].registration_number :
+                        `${dashboardCars.length} Vehicles`}
+                  </p>
                 </div>
               </div>
             </div>
@@ -502,8 +531,27 @@ const Profile = () => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="p-8 space-y-4">
-                    <p className="text-gray-500">Your recent service history and activities will appear here.</p>
-                    <Button variant="outline" onClick={() => setActiveView('service-history')}>
+                    {dashboardHistory.length > 0 ? (
+                      <div className="space-y-4">
+                        {dashboardHistory.slice(0, 3).map((history) => (
+                          <div key={history.id} className="flex items-center justify-between border-b pb-2 last:border-0">
+                            <div>
+                              <p className="font-medium">{history.service_name}</p>
+                              <p className="text-sm text-gray-500">{new Date(history.service_date).toLocaleDateString()}</p>
+                            </div>
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${history.status === 'Completed' ? 'bg-green-100 text-green-700' :
+                              history.status === 'In Progress' ? 'bg-blue-100 text-blue-700' :
+                                'bg-gray-100 text-gray-700'
+                              }`}>
+                              {history.status}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-gray-500">No recent activity found.</p>
+                    )}
+                    <Button variant="outline" onClick={() => setActiveView('service-history')} className="w-full mt-4">
                       View Full History
                     </Button>
                   </CardContent>
@@ -523,8 +571,24 @@ const Profile = () => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="p-8 space-y-6">
-                    <p className="text-gray-500">Manage your vehicles and schedule services.</p>
-                    <Button variant="outline" onClick={() => setActiveView('my-cars')}>
+                    {dashboardCars.length > 0 ? (
+                      <div className="space-y-4">
+                        {dashboardCars.slice(0, 3).map((car) => (
+                          <div key={car.id} className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
+                            <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center shadow-sm">
+                              <Car className="h-5 w-5 text-gray-500" />
+                            </div>
+                            <div>
+                              <p className="font-medium">{car.make} {car.model}</p>
+                              <p className="text-sm text-gray-500">{car.registration_number}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-gray-500">No vehicles added yet.</p>
+                    )}
+                    <Button variant="outline" onClick={() => setActiveView('my-cars')} className="w-full">
                       Manage Vehicles
                     </Button>
                   </CardContent>
