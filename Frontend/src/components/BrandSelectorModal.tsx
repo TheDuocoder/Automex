@@ -190,7 +190,7 @@ const BrandSelectorModal = ({
             onClick={() => handleBrandClick(brand.id, brand.name)}
             className={cn(
               "flex flex-col items-center justify-center bg-white group",
-              "w-[96px] h-[108px] md:w-[100px] md:h-[112px] max-md:w-[88px] max-md:h-[100px] rounded-xl relative overflow-hidden",
+              "w-full h-[108px] md:h-[112px] max-md:h-[100px] rounded-xl relative overflow-hidden",
               // Hover state with red theme
               "hover:border-[#E74A3B] hover:ring-2 hover:ring-inset hover:ring-[#E74A3B] hover:shadow-sm",
               "active:scale-[0.98] active:shadow-sm",
@@ -247,7 +247,7 @@ const BrandSelectorModal = ({
       className={cn(
         layout === "sidebar"
           ? "grid grid-cols-3 gap-3 pr-1.5 pb-4"
-          : "grid grid-cols-3 gap-5 pb-6"
+          : "grid grid-cols-3 gap-5 pb-6 min-h-[300px]"
       )}
     >
       {filteredModelList.map((model) => {
@@ -574,7 +574,7 @@ const BrandSelectorModal = ({
     );
     const gridWrapperClasses = cn(
       paddingX,
-      layout === "sidebar" ? "py-6 overflow-y-auto max-h-[340px]" : "pb-16 pt-6 overflow-y-auto max-h-[calc(75vh-120px)]"
+      layout === "sidebar" ? "py-6 overflow-y-auto max-h-[340px]" : "pb-16 pt-6 overflow-y-auto max-h-[calc(75vh-120px)] min-h-[400px]"
     );
 
     return (
@@ -717,7 +717,13 @@ const BrandSelectorModal = ({
           <h3 className={cn(
             "text-xl font-semibold text-gray-900 mb-4 transition-all duration-300",
             highlightTrigger && "text-red-500"
-          )}>Select Manufacturer</h3>
+          )}>
+            {stage === "brand"
+              ? "Select Manufacturer"
+              : stage === "model"
+                ? "Select Model"
+                : "Select Fuel Type"}
+          </h3>
           {stage !== "brand" && (
             <button
               onClick={handleBack}

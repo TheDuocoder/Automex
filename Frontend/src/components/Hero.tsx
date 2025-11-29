@@ -7,7 +7,12 @@ import Register from "./Register";
 import { Button } from "@/components/ui/button";
 import { ShoppingBag, Calendar, Settings, ArrowRight, CheckCircle2, Sparkles, LogOut } from "lucide-react";
 
-const Hero = () => {
+interface HeroProps {
+  showLoginForm?: boolean;
+  onCloseLogin?: () => void;
+}
+
+const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showRegisterForm, setShowRegisterForm] = useState(false);
   const heroRef = useRef<HTMLElement | null>(null);
@@ -170,7 +175,7 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* Right side - Login/Register Form or Welcome Section */}
+          {/* Right side - Empty initially, Welcome Section when authenticated */}
           <div className="w-full md:w-[540px]">
             <div className="hero-auth-card w-full">
               {isAuthenticated ? (
@@ -274,16 +279,23 @@ const Hero = () => {
                 </div>
               </div>
             ) : (
-              // Login/Register Form for Non-authenticated Users
+              // Login/Register Form for Non-authenticated Users - Show when login button is clicked
               <>
-                {!showRegisterForm ? (
+                {showLoginForm && !showRegisterForm ? (
                   <Login 
+                    onClose={onCloseLogin}
                     onSwitchToRegister={() => setShowRegisterForm(true)} 
                   />
-                ) : (
+                ) : showRegisterForm ? (
                   <Register 
-                    onSwitchToLogin={() => setShowRegisterForm(false)}
+                    onSwitchToLogin={() => {
+                      setShowRegisterForm(false);
+                      onCloseLogin?.();
+                    }}
                   />
+                ) : (
+                  // Empty space initially
+                  <div className="w-full md:w-[540px]"></div>
                 )}
               </>
             )}

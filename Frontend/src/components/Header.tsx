@@ -16,7 +16,11 @@ import {
   DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 
-const Header = () => {
+interface HeaderProps {
+  onLoginClick?: () => void;
+}
+
+const Header = ({ onLoginClick }: HeaderProps) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [customerDropdownOpen, setCustomerDropdownOpen] = useState(false);
   const navigate = useNavigate();
@@ -211,6 +215,31 @@ const Header = () => {
                 ></span>
               </motion.a>
             ))}
+            {/* Login Button - Show when not authenticated */}
+            {!isAuthenticated && (
+              <motion.button
+                initial={false}
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ type: "spring", stiffness: 260, damping: 18 }}
+                onClick={() => onLoginClick?.()}
+                className="nav-link relative lg:flex items-center justify-center overflow-hidden rounded-full border border-white/25 px-4 py-2 text-xs xl:text-sm font-medium tracking-[0.08em] text-white/90 backdrop-blur-sm transition-colors duration-200 hover:text-white"
+              >
+                <span className="nav-link-label relative z-20 select-none">Login</span>
+                <span className="pointer-events-none absolute inset-0 rounded-full bg-white/5 opacity-40 mix-blend-screen"></span>
+                <span
+                  className="nav-link-light pointer-events-none absolute inset-0 rounded-full mix-blend-screen"
+                  style={{
+                    background:
+                      "conic-gradient(from var(--angle, 0deg), rgba(239,68,68,0) 0deg, rgba(239,68,68,0.9) 16deg, rgba(239,68,68,0) 32deg)",
+                    WebkitMask:
+                      "radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 1px))",
+                    mask: "radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 1px))",
+                    opacity: 0
+                  }}
+                ></span>
+              </motion.button>
+            )}
           </motion.div>
           )}
 

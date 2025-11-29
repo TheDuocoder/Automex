@@ -34,7 +34,7 @@ const Profile = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user: contextUser, isAuthenticated, logout } = useAuth();
-  const { user, role, token } = useAuthStore();
+  const { user } = useAuthStore();
 
   // State for active view
   const [activeView, setActiveView] = useState("dashboard");
@@ -623,10 +623,6 @@ const Profile = () => {
                     <div>
                       <Label className="text-gray-500">Phone Number</Label>
                       <p className="text-lg font-medium">{currentUser?.phone_number || 'Not set'}</p>
-                    </div>
-                    <div>
-                      <Label className="text-gray-500">Role</Label>
-                      <p className="text-lg font-medium capitalize">{role?.name || 'User'}</p>
                     </div>
                   </div>
                   <div className="pt-6 flex gap-4">

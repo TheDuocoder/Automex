@@ -231,10 +231,20 @@ export interface PickUpRequestCreate {
   scheduled_date: string;
 }
 
+export interface PickUpRequestUpdate {
+  status?: string;
+  admin_comment?: string;
+}
+
 export const pickupRequestService = {
   getAll: () => apiCall<PickUpRequest[]>('/api/v1/pickup-requests/'),
+  getById: (id: number) => apiCall<PickUpRequest>(`/api/v1/pickup-requests/${id}`),
   create: (data: PickUpRequestCreate) => apiCall<PickUpRequest>('/api/v1/pickup-requests/', {
     method: 'POST',
+    body: JSON.stringify(data),
+  }),
+  update: (id: number, data: PickUpRequestUpdate) => apiCall<PickUpRequest>(`/api/v1/pickup-requests/${id}`, {
+    method: 'PATCH',
     body: JSON.stringify(data),
   }),
 };

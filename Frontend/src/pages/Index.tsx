@@ -13,6 +13,7 @@ import Lenis from "lenis";
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState("Our Services");
+  const [showLoginForm, setShowLoginForm] = useState(false);
   const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const aboutUsRef = useRef<HTMLDivElement | null>(null);
   const rootRef = useRef<HTMLDivElement | null>(null);
@@ -95,8 +96,8 @@ const Index = () => {
 
   return (
     <div ref={rootRef} className="min-h-screen bg-background">
-      <Header />
-      <Hero />
+      <Header onLoginClick={() => setShowLoginForm(true)} />
+      <Hero showLoginForm={showLoginForm} onCloseLogin={() => setShowLoginForm(false)} />
       <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
       <div className="pt-4">
         <div ref={el => sectionRefs.current["Our Services"] = el}>
