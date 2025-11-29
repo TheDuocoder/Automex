@@ -510,7 +510,7 @@ const MyCars = () => {
                                         </button>
                                         <button
                                             className="group flex items-center justify-center gap-3 h-14 bg-transparent border-2 border-[#F4C542] text-[#F4C542] hover:bg-[#F4C542] hover:text-white hover:border-[#F4C542] font-bold rounded-[16px] shadow-sm hover:shadow-[0_6px_24px_rgba(244,197,66,0.3)] transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 w-full"
-                                            onClick={() => navigate('/profile', { state: { view: 'schedule-pickup' } })}
+                                            onClick={() => navigate('/services')}
                                         >
                                             <Wrench className="h-5 w-5" strokeWidth={2.5} />
                                             <span className="text-base">Book Service</span>

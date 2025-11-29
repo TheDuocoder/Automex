@@ -191,12 +191,15 @@ const BrandSelectorModal = ({
             className={cn(
               "flex flex-col items-center justify-center bg-white group",
               "w-full h-[108px] md:h-[112px] max-md:h-[100px] rounded-xl relative overflow-hidden",
-              // Hover state with red theme
-              "hover:border-[#E74A3B] hover:ring-2 hover:ring-inset hover:ring-[#E74A3B] hover:shadow-sm",
-              "active:scale-[0.98] active:shadow-sm",
+              // Neumorphic soft shadows - subtle elevation
+              "shadow-[2px_2px_6px_rgba(0,0,0,0.08),-2px_-2px_6px_rgba(255,255,255,0.9)]",
+              // Hover state with red theme and enhanced neumorphic shadow
+              "hover:border-[#E74A3B] hover:ring-2 hover:ring-inset hover:ring-[#E74A3B]",
+              "hover:shadow-[3px_3px_10px_rgba(0,0,0,0.12),-3px_-3px_10px_rgba(255,255,255,0.95)]",
+              "active:scale-[0.98] active:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.1)]",
               // Selection state with red border and warm background
               isSelected
-                ? "border-[#E74A3B] border-2 bg-[#FFF9E5] shadow-[0_4px_25px_rgba(0,0,0,0.06)]"
+                ? "border-[#E74A3B] border-2 bg-[#FFF9E5] shadow-[4px_4px_12px_rgba(0,0,0,0.1),-2px_-2px_8px_rgba(255,255,255,0.95)]"
                 : "border border-gray-200"
             )}
             style={{ transition: 'all 0.10s ease' }}
@@ -228,8 +231,8 @@ const BrandSelectorModal = ({
               />
             </div>
             <span className={cn(
-              "text-[10px] text-center font-medium leading-tight px-0.5 transition-all duration-300",
-              isSelected ? "text-[#E74A3B] font-semibold" : "text-gray-700"
+              "text-[10px] text-center font-medium leading-tight px-0.5 transition-all duration-300 -translate-y-1",
+              isSelected ? "text-[#E74A3B] font-semibold" : "text-gray-800"
             )}>
               {brand.name}
             </span>
@@ -583,7 +586,10 @@ const BrandSelectorModal = ({
           <div className={searchContainerClasses}>
             <div className="relative">
               <svg
-                className="absolute top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4"
+                className={cn(
+                  "absolute top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4 transition-all duration-300",
+                  searchTerm && "text-[#E74A3B]"
+                )}
                 style={{ left: '12px' }}
                 viewBox="0 0 24 24"
                 fill="none"
@@ -600,9 +606,12 @@ const BrandSelectorModal = ({
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className={cn(
-                  "pl-10 border-gray-200 rounded-xl bg-white transition-all duration-200",
+                  "pl-10 border-gray-200 rounded-[16px] bg-white transition-all duration-300",
                   "focus:outline-none focus:ring-2 focus:ring-[#E74A3B] focus:border-[#E74A3B] focus:bg-white",
-                  "hover:border-gray-300 hover:shadow-sm",
+                  "hover:border-gray-300 hover:shadow-lg",
+                  "shadow-[0_4px_16px_rgba(0,0,0,0.1)]",
+                  "placeholder:text-gray-500 placeholder:font-medium",
+                  searchTerm && "animate-in fade-in duration-300",
                   layout === "sidebar" ? "h-11" : "h-12"
                 )}
                 style={{
