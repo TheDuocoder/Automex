@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ChevronDown, Menu, X, User, LogOut, Settings, ShoppingBag } from "lucide-react";
+import { ChevronDown, Menu, X, User, LogOut, ShoppingBag } from "lucide-react";
 import { useState, useLayoutEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -308,10 +308,6 @@ const Header = ({ onLoginClick }: HeaderProps) => {
                     >
                       <User className="mr-2 h-4 w-4" />
                       <span>Profile</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="cursor-pointer">
-                      <Settings className="mr-2 h-4 w-4" />
-                      <span>Settings</span>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
