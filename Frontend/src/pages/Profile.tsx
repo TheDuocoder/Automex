@@ -13,8 +13,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { 
-  User, Mail, Phone, Shield, CheckCircle, XCircle, Edit, Key, Package, 
+import {
+  User, Mail, Phone, Shield, CheckCircle, XCircle, Edit, Key, Package,
   Loader2, Eye, EyeOff, LayoutDashboard, Car, Award, History, Settings,
   LogOut, Bell, Calendar, Hash, Trophy, ChevronRight, Camera
 } from "lucide-react";
@@ -24,12 +24,18 @@ import { updateUserProfile } from "@/services/authService";
 import { toast } from "sonner";
 import { usePasswordResetStore } from "@/stores/passwordResetStore";
 import HelpDropdown from "@/components/HelpDropdown";
+import MyCars from "@/components/dashboard/MyCars";
+import ServiceHistory from "@/components/dashboard/ServiceHistory";
+import SchedulePickUp from "@/components/dashboard/SchedulePickUp";
 
 const Profile = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user: contextUser, isAuthenticated, logout } = useAuth();
+  const { user: contextUser, isAuthenticated, logout, isLoading: authLoading } = useAuth();
   const { user, role, token } = useAuthStore();
+
+  // State for active view
+  const [activeView, setActiveView] = useState("dashboard");
 
   // State for Edit Profile Modal
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -58,12 +64,19 @@ const Profile = () => {
   // Use Zustand user or context user (Zustand takes priority)
   const currentUser = user || contextUser;
 
-  // Redirect if not authenticated
+  // Redirect if not authenticated (but wait for auth to finish loading)
   useEffect(() => {
+    // Don't redirect while still loading auth state
+    if (authLoading) {
+      return;
+    }
+
+    // Only redirect if definitely not authenticated
     if (!isAuthenticated && !user) {
+      console.log('Not authenticated, redirecting to home');
       navigate('/');
     }
-  }, [isAuthenticated, user, navigate]);
+  }, [isAuthenticated, user, navigate, authLoading]);
 
   // Initialize form data when modal opens
   useEffect(() => {
@@ -86,7 +99,7 @@ const Profile = () => {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Failed to update profile";
       const errorLower = errorMessage.toLowerCase();
-      
+
       // Check if it's a duplicate phone number error
       if (errorLower.includes("phone") && (errorLower.includes("already exists") || errorLower.includes("already registered"))) {
         toast.error("An account with this phone number already exists. Please use a different phone number.");
@@ -204,7 +217,7 @@ const Profile = () => {
         setIsChangePasswordOpen(false);
         setPasswordData({ newPassword: "", confirmPassword: "" });
         clearResetToken();
-        
+
         // Logout user and redirect to landing page (login)
         // Use logout from AuthContext to ensure all state is cleared
         await logout();
@@ -230,7 +243,7 @@ const Profile = () => {
       setPasswordData({ newPassword: "", confirmPassword: "" });
       setPasswordErrors({ newPassword: "", confirmPassword: "" });
       clearResetToken();
-      
+
       // Generate reset token automatically when modal opens
       const requestToken = async () => {
         setIsPasswordLoading(true);
@@ -275,35 +288,26 @@ const Profile = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isChangePasswordOpen]);
 
+  // Show loading state while checking authentication
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto mb-4" />
+          <p className="text-gray-600">Loading your profile...</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!isAuthenticated && !user) {
     return null;
   }
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5
-      }
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* Left Sidebar */}
-      <motion.aside 
+      <motion.aside
         initial={{ x: -300, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -315,13 +319,13 @@ const Profile = () => {
       >
         {/* Logo */}
         <div className="px-6 py-5 border-b border-white/10 flex items-center justify-center">
-          <button 
+          <button
             onClick={() => navigate('/')}
             className="focus:outline-none focus:ring-2 focus:ring-white/20 rounded-lg"
           >
-            <img 
-              src="/images/Automex_icon/AUTOMEX_logo.png" 
-              alt="Automex" 
+            <img
+              src="/images/Automex_icon/AUTOMEX_logo.png"
+              alt="Automex"
               className="h-20 w-auto transform hover:scale-105 transition-transform duration-300 cursor-pointer"
             />
           </button>
@@ -329,49 +333,65 @@ const Profile = () => {
 
         {/* Navigation */}
         <nav className="p-4 space-y-3">
-          <button 
-            onClick={() => navigate('/profile')}
-            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg bg-primary/90 text-white text-sm font-medium transition-all hover:bg-primary shadow-lg shadow-primary/20"
+          <button
+            onClick={() => setActiveView('dashboard')}
+            className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${activeView === 'dashboard'
+              ? 'bg-primary/90 text-white shadow-lg shadow-primary/20'
+              : 'text-gray-400 hover:bg-white/5 hover:text-white'
+              }`}
           >
             <LayoutDashboard className="h-4 w-4" />
             Dashboard
           </button>
-          
-          <button 
-            onClick={() => navigate('/profile')}
-            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white text-sm font-medium transition-all"
+
+          <button
+            onClick={() => setActiveView('profile')}
+            className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${activeView === 'profile'
+              ? 'bg-primary/90 text-white shadow-lg shadow-primary/20'
+              : 'text-gray-400 hover:bg-white/5 hover:text-white'
+              }`}
           >
             <User className="h-4 w-4" />
             Profile
           </button>
-          
-          <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white text-sm font-medium transition-all">
+
+          <button
+            onClick={() => setActiveView('my-cars')}
+            className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${activeView === 'my-cars'
+              ? 'bg-primary/90 text-white shadow-lg shadow-primary/20'
+              : 'text-gray-400 hover:bg-white/5 hover:text-white'
+              }`}
+          >
             <Car className="h-4 w-4" />
             My Cars
           </button>
-          
-          <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white text-sm font-medium transition-all">
-            <Award className="h-4 w-4" />
-            Rewards
-          </button>
-          
-          <button 
-            onClick={() => navigate('/my-services')}
-            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white text-sm font-medium transition-all"
+
+          <button
+            onClick={() => setActiveView('service-history')}
+            className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${activeView === 'service-history'
+              ? 'bg-primary/90 text-white shadow-lg shadow-primary/20'
+              : 'text-gray-400 hover:bg-white/5 hover:text-white'
+              }`}
           >
             <History className="h-4 w-4" />
             Service History
           </button>
-          
-          <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-400 hover:bg-white/5 hover:text-white text-sm font-medium transition-all">
-            <Settings className="h-4 w-4" />
-            Settings
+
+          <button
+            onClick={() => setActiveView('schedule-pickup')}
+            className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${activeView === 'schedule-pickup'
+              ? 'bg-primary/90 text-white shadow-lg shadow-primary/20'
+              : 'text-gray-400 hover:bg-white/5 hover:text-white'
+              }`}
+          >
+            <Calendar className="h-4 w-4" />
+            Schedule Pick Up
           </button>
         </nav>
 
         {/* Logout Button at Bottom */}
         <div className="absolute bottom-8 left-4 right-4">
-          <button 
+          <button
             onClick={logout}
             className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:text-red-300 text-sm font-medium transition-all border border-red-500/20"
           >
@@ -384,7 +404,7 @@ const Profile = () => {
       {/* Main Content */}
       <div className="flex-1 ml-64">
         {/* Profile Header with Gradient */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -401,14 +421,14 @@ const Profile = () => {
                 {currentUser?.full_name?.charAt(0) || 'U'}
               </div>
               {/* Edit Icon Badge */}
-              <button 
+              <button
                 className="absolute bottom-2 right-2 h-8 w-8 rounded-full bg-white shadow-md flex items-center justify-center text-primary hover:bg-gray-50 transition-all hover:scale-110 border border-gray-200"
                 onClick={() => toast.info('Profile picture upload coming soon!')}
               >
                 <Camera className="h-4 w-4" />
               </button>
             </div>
-            
+
             <div className="text-white">
               <h2 className="text-3xl font-bold mb-1">{currentUser?.full_name || 'User'}</h2>
               <p className="text-white/90 flex items-center gap-2 mb-2">
@@ -464,225 +484,129 @@ const Profile = () => {
           </div>
         </motion.div>
 
-        {/* Main Content Grid */}
+        {/* Dynamic Content Area */}
         <div className="px-8 py-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-            {/* Left Column - Service History */}
+          {activeView === 'dashboard' && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+              {/* Dashboard View - Summary */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
+                <Card className="shadow-lg border-none h-full">
+                  <CardHeader className="border-b bg-gray-50/50 pb-4">
+                    <CardTitle className="flex items-center gap-2 text-xl">
+                      <History className="h-5 w-5 text-primary" />
+                      Recent Activity
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-8 space-y-4">
+                    <p className="text-gray-500">Your recent service history and activities will appear here.</p>
+                    <Button variant="outline" onClick={() => setActiveView('service-history')}>
+                      View Full History
+                    </Button>
+                  </CardContent>
+                </Card>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+              >
+                <Card className="shadow-lg border-none h-full">
+                  <CardHeader className="border-b bg-gray-50/50 pb-4">
+                    <CardTitle className="flex items-center gap-2 text-xl">
+                      <Car className="h-5 w-5 text-primary" />
+                      My Vehicles
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-8 space-y-6">
+                    <p className="text-gray-500">Manage your vehicles and schedule services.</p>
+                    <Button variant="outline" onClick={() => setActiveView('my-cars')}>
+                      Manage Vehicles
+                    </Button>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            </div>
+          )}
+
+          {activeView === 'profile' && (
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
             >
-              <Card className="shadow-lg border-none">
+              <Card className="shadow-lg border-none max-w-2xl mx-auto">
                 <CardHeader className="border-b bg-gray-50/50 pb-4">
                   <CardTitle className="flex items-center gap-2 text-xl">
-                    <History className="h-5 w-5 text-primary" />
-                    Service History
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-8 space-y-4">
-                  {/* Service Card 1 */}
-                  <div className="bg-white border border-gray-100 rounded-xl p-5 hover:shadow-md transition-all group">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-gray-900 text-lg mb-1">Oil Change & Tire Rotation</h3>
-                        <p className="text-sm text-gray-500">2024</p>
-                      </div>
-                      <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
-                        <CheckCircle className="h-5 w-5 text-green-600" />
-                      </div>
-                    </div>
-                    <p className="text-sm text-gray-600 mb-3">Regular maintenance service including oil change and tire rotation for optimal performance.</p>
-                    <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                      <span className="text-xs font-medium text-green-600">Completed</span>
-                      <ChevronRight className="h-4 w-4 text-gray-400 group-hover:text-primary transition-colors" />
-                    </div>
-                  </div>
-
-                  {/* Service Card 2 */}
-                  <div className="bg-white border border-gray-100 rounded-xl p-5 hover:shadow-md transition-all group">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-gray-900 text-lg mb-1">Brake Pad Replacement</h3>
-                        <p className="text-sm text-gray-500">2024</p>
-                      </div>
-                      <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
-                        <CheckCircle className="h-5 w-5 text-green-600" />
-                      </div>
-                    </div>
-                    <p className="text-sm text-gray-600 mb-3">Complete brake pad replacement service ensuring safety and optimal braking performance.</p>
-                    <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                      <span className="text-xs font-medium text-green-600">Completed</span>
-                      <ChevronRight className="h-4 w-4 text-gray-400 group-hover:text-primary transition-colors" />
-                    </div>
-                  </div>
-
-                  {/* Service Card 3 */}
-                  <div className="bg-white border border-gray-100 rounded-xl p-5 hover:shadow-md transition-all group">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-gray-900 text-lg mb-1">General Service</h3>
-                        <p className="text-sm text-gray-500">2023</p>
-                      </div>
-                      <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
-                        <CheckCircle className="h-5 w-5 text-green-600" />
-                      </div>
-                    </div>
-                    <p className="text-sm text-gray-600 mb-3">Comprehensive general service including fluid checks, filter replacement, and system diagnostics.</p>
-                    <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                      <span className="text-xs font-medium text-green-600">Completed</span>
-                      <ChevronRight className="h-4 w-4 text-gray-400 group-hover:text-primary transition-colors" />
-                    </div>
-                  </div>
-
-                  {/* Service Card 4 */}
-                  <div className="bg-white border border-gray-100 rounded-xl p-5 hover:shadow-md transition-all group">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-gray-900 text-lg mb-1">Vehicle Inspection</h3>
-                        <p className="text-sm text-gray-500">2023</p>
-                      </div>
-                      <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
-                        <CheckCircle className="h-5 w-5 text-green-600" />
-                      </div>
-                    </div>
-                    <p className="text-sm text-gray-600 mb-3">Complete vehicle inspection covering all major systems and safety components.</p>
-                    <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                      <span className="text-xs font-medium text-green-600">Completed</span>
-                      <ChevronRight className="h-4 w-4 text-gray-400 group-hover:text-primary transition-colors" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            {/* Right Column - My Vehicles */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-            >
-              <Card className="shadow-lg border-none">
-                <CardHeader className="border-b bg-gray-50/50 pb-4">
-                  <CardTitle className="flex items-center gap-2 text-xl">
-                    <Car className="h-5 w-5 text-primary" />
-                    My Vehicles
+                    <User className="h-5 w-5 text-primary" />
+                    Profile Details
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-8 space-y-6">
-                  {/* Vehicle Card 1 */}
-                  <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-xl transition-all">
-                    <div className="flex items-center justify-between mb-4">
-                      <div>
-                        <h3 className="font-bold text-xl text-gray-900">Toyota Camry</h3>
-                        <p className="text-sm text-gray-500">2022</p>
-                      </div>
-                      <div className="bg-primary/10 px-3 py-1 rounded-full">
-                        <p className="text-sm font-medium text-primary">XYZ 789</p>
-                      </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <Label className="text-gray-500">Full Name</Label>
+                      <p className="text-lg font-medium">{currentUser?.full_name}</p>
                     </div>
-                    
-                    <div className="mb-4 rounded-xl overflow-hidden bg-gray-100">
-                      <img 
-                        src="/images/car_images/toyota-camry.jpg" 
-                        alt="Toyota Camry"
-                        className="w-full h-48 object-cover"
-                        onError={(e) => {
-                          e.currentTarget.src = "/images/Car_images/default-car.jpg";
-                        }}
-                      />
+                    <div>
+                      <Label className="text-gray-500">Email</Label>
+                      <p className="text-lg font-medium">{currentUser?.email}</p>
                     </div>
-                    
-                    <div className="flex gap-3">
-                      <Button className="flex-1 bg-blue-600 hover:bg-blue-700">
-                        Book Service
-                      </Button>
-                      <Button variant="outline" className="flex-1">
-                        Vehicle Details
-                      </Button>
+                    <div>
+                      <Label className="text-gray-500">Phone Number</Label>
+                      <p className="text-lg font-medium">{currentUser?.phone_number || 'Not set'}</p>
+                    </div>
+                    <div>
+                      <Label className="text-gray-500">Role</Label>
+                      <p className="text-lg font-medium capitalize">{role?.name || 'User'}</p>
                     </div>
                   </div>
-
-                  {/* Vehicle Card 2 */}
-                  <div className="bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-2xl p-6 hover:shadow-xl transition-all">
-                    <div className="flex items-center justify-between mb-4">
-                      <div>
-                        <h3 className="font-bold text-xl text-gray-900">Honda CR-V</h3>
-                        <p className="text-sm text-gray-500">2021</p>
-                      </div>
-                      <div className="bg-primary/10 px-3 py-1 rounded-full">
-                        <p className="text-sm font-medium text-primary">ABC 123</p>
-                      </div>
-                    </div>
-                    
-                    <div className="mb-4 rounded-xl overflow-hidden bg-gray-100">
-                      <img 
-                        src="/images/car_images/honda-crv.jpg" 
-                        alt="Honda CR-V"
-                        className="w-full h-48 object-cover"
-                        onError={(e) => {
-                          e.currentTarget.src = "/images/Car_images/default-car.jpg";
-                        }}
-                      />
-                    </div>
-                    
-                    <div className="flex gap-3">
-                      <Button className="flex-1 bg-blue-600 hover:bg-blue-700">
-                        Book Service
-                      </Button>
-                      <Button variant="outline" className="flex-1">
-                        Vehicle Details
-                      </Button>
-                    </div>
+                  <div className="pt-6 flex gap-4">
+                    <Button onClick={() => setIsEditOpen(true)}>
+                      <Edit className="mr-2 h-4 w-4" /> Edit Profile
+                    </Button>
+                    <Button variant="outline" onClick={() => setIsChangePasswordOpen(true)}>
+                      <Key className="mr-2 h-4 w-4" /> Change Password
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
             </motion.div>
-          </div>
+          )}
 
-          {/* Quick Actions Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="mt-8"
-          >
-            <Card className="shadow-lg border-none">
-              <CardHeader className="border-b bg-gray-50/50">
-                <CardTitle className="text-xl">Quick Actions</CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <Button
-                    variant="outline"
-                    className="h-16 justify-start gap-3 hover:bg-primary/5 hover:border-primary/30 hover:text-primary transition-all"
-                    onClick={() => setIsEditOpen(true)}
-                  >
-                    <Edit className="h-5 w-5" />
-                    <span className="font-medium">Edit Profile</span>
-                  </Button>
-                  
-                  <Button
-                    variant="outline"
-                    className="h-16 justify-start gap-3 hover:bg-primary/5 hover:border-primary/30 hover:text-primary transition-all"
-                    onClick={() => setIsChangePasswordOpen(true)}
-                  >
-                    <Key className="h-5 w-5" />
-                    <span className="font-medium">Change Password</span>
-                  </Button>
-                  
-                  <Button
-                    variant="outline"
-                    className="h-16 justify-start gap-3 hover:bg-primary/5 hover:border-primary/30 hover:text-primary transition-all"
-                    onClick={() => navigate('/my-services')}
-                  >
-                    <Package className="h-5 w-5" />
-                    <span className="font-medium">View All Services</span>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
+          {activeView === 'my-cars' && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <MyCars />
+            </motion.div>
+          )}
+
+          {activeView === 'service-history' && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <ServiceHistory />
+            </motion.div>
+          )}
+
+          {activeView === 'schedule-pickup' && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <SchedulePickUp />
+            </motion.div>
+          )}
         </div>
       </div>
 
@@ -778,64 +702,46 @@ const Profile = () => {
                     id="newPassword"
                     type={showPassword ? "text" : "password"}
                     value={passwordData.newPassword}
-                    onChange={(e) => {
-                      setPasswordData({ ...passwordData, newPassword: e.target.value });
-                      setPasswordErrors({ ...passwordErrors, newPassword: "" });
-                    }}
-                    className="pr-10"
-                    placeholder="Min. 8 characters"
-                    disabled={!resetToken || isPasswordLoading}
+                    onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
+                    className={passwordErrors.newPassword ? "border-red-500" : ""}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
                   >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
-                  {passwordErrors.newPassword && (
-                    <p className="text-xs text-red-500 mt-1">{passwordErrors.newPassword}</p>
-                  )}
                 </div>
+                {passwordErrors.newPassword && (
+                  <p className="col-span-4 text-right text-xs text-red-500 mt-1">{passwordErrors.newPassword}</p>
+                )}
               </div>
 
               {/* Confirm Password Input */}
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="confirmPassword" className="text-right">
-                  Confirm
+                  Confirm Password
                 </Label>
                 <div className="col-span-3 relative">
                   <Input
                     id="confirmPassword"
                     type={showConfirmPassword ? "text" : "password"}
                     value={passwordData.confirmPassword}
-                    onChange={(e) => {
-                      setPasswordData({ ...passwordData, confirmPassword: e.target.value });
-                      setPasswordErrors({ ...passwordErrors, confirmPassword: "" });
-                    }}
-                    className="pr-10"
-                    placeholder="Confirm new password"
-                    disabled={!resetToken || isPasswordLoading}
+                    onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
+                    className={passwordErrors.confirmPassword ? "border-red-500" : ""}
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
                   >
-                    {showConfirmPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
+                    {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
-                  {passwordErrors.confirmPassword && (
-                    <p className="text-xs text-red-500 mt-1">{passwordErrors.confirmPassword}</p>
-                  )}
                 </div>
+                {passwordErrors.confirmPassword && (
+                  <p className="col-span-4 text-right text-xs text-red-500 mt-1">{passwordErrors.confirmPassword}</p>
+                )}
               </div>
             </div>
             <DialogFooter>

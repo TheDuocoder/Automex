@@ -57,7 +57,6 @@ const Index = () => {
     const lenis = new Lenis({
       duration: 1.2,
       smoothWheel: true,
-      smoothTouch: false,
       easing: (t) => 1 - Math.pow(1 - t, 3),
     });
 

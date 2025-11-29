@@ -27,27 +27,27 @@ export async function apiCall<T>(
   try {
     // Construct URL - handle empty API_BASE_URL for relative paths
     const url = API_BASE_URL ? `${API_BASE_URL}${endpoint}` : endpoint;
-    
+
     // Get auth token and include it in headers
     const authHeader = getAuthHeader();
     const token = getAuthToken();
-    
+
     // Debug: Log token presence (always log in dev, and log errors)
     if (!token) {
       console.warn('[API] No auth token found in localStorage for endpoint:', endpoint);
     }
-    
+
     // Build headers - ensure auth header is included
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
       ...authHeader, // This includes Authorization: Bearer <token> if token exists
     };
-    
+
     // Merge with any headers passed in options
     if (options.headers) {
       Object.assign(headers, options.headers);
     }
-    
+
     // Debug: Log request details
     console.log('[API] Request:', {
       url,
@@ -57,7 +57,7 @@ export async function apiCall<T>(
       tokenLength: token?.length || 0,
       authPrefix: headers.Authorization ? headers.Authorization.substring(0, 25) + '...' : 'none',
     });
-    
+
     const response = await fetch(url, {
       ...options,
       headers,
@@ -77,7 +77,7 @@ export async function apiCall<T>(
           responseData: data,
         });
       }
-      
+
       return {
         error: data?.detail || `Request failed with status ${response.status}`,
         status: response.status,
@@ -102,7 +102,7 @@ export async function apiCall<T>(
 export function getAuthToken(): string | null {
   // First try localStorage (primary source)
   let token = localStorage.getItem('auth_token');
-  
+
   // If not found, try to get from Zustand store as fallback
   if (!token && typeof window !== 'undefined') {
     try {
@@ -121,7 +121,7 @@ export function getAuthToken(): string | null {
       console.warn('[API] Failed to read token from Zustand store:', e);
     }
   }
-  
+
   return token;
 }
 
@@ -152,3 +152,84 @@ export function getAuthHeader(): Record<string, string> {
   return { Authorization: `Bearer ${cleanToken}` };
 }
 
+
+// --- Cars API ---
+export interface Car {
+  id: number;
+  user_id: number;
+  make: string;
+  model: string;
+  year: number;
+  registration_number: string;
+  image_url?: string;
+}
+
+export interface CarCreate {
+  make: string;
+  model: string;
+  year: number;
+  registration_number: string;
+  image_url?: string;
+}
+
+export const carService = {
+  getAll: () => apiCall<Car[]>('/cars/'),
+  create: (data: CarCreate) => apiCall<Car>('/cars/', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  }),
+  delete: (id: number) => apiCall<void>(`/cars/${id}`, {
+    method: 'DELETE',
+  }),
+};
+
+// --- Service History API ---
+export interface ServiceHistory {
+  id: number;
+  car_id: number;
+  service_name: string;
+  service_date: string;
+  description?: string;
+  status: string;
+}
+
+export interface ServiceHistoryCreate {
+  car_id: number;
+  service_name: string;
+  service_date: string;
+  description?: string;
+  status?: string;
+}
+
+export const serviceHistoryService = {
+  getAll: (carId: number) => apiCall<ServiceHistory[]>(`/service-history/?car_id=${carId}`),
+  create: (data: ServiceHistoryCreate) => apiCall<ServiceHistory>('/service-history/', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  }),
+};
+
+// --- Pick Up Requests API ---
+export interface PickUpRequest {
+  id: number;
+  user_id: number;
+  car_id: number;
+  location: string;
+  scheduled_date: string;
+  status: string;
+  admin_comment?: string;
+}
+
+export interface PickUpRequestCreate {
+  car_id: number;
+  location: string;
+  scheduled_date: string;
+}
+
+export const pickupRequestService = {
+  getAll: () => apiCall<PickUpRequest[]>('/pickup-requests/'),
+  create: (data: PickUpRequestCreate) => apiCall<PickUpRequest>('/pickup-requests/', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  }),
+};
