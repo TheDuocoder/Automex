@@ -15,7 +15,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { History, Plus, CheckCircle, ChevronRight, Loader2, Car as CarIcon } from "lucide-react";
+import { History, Plus, CheckCircle, ChevronRight, Loader2, Car as CarIcon, Check } from "lucide-react";
 import { serviceHistoryService, carService, Car, ServiceHistory as ServiceHistoryType, ServiceHistoryCreate } from "@/services/api";
 import { toast } from "sonner";
 
@@ -228,26 +228,70 @@ const ServiceHistory = () => {
                     </div>
                 ) : (
                     allHistory.map((record) => (
-                        <div key={record.id} className="bg-white border border-gray-100 rounded-xl p-5 hover:shadow-md transition-all group">
-                            <div className="flex items-start justify-between mb-3">
-                                <div className="flex-1">
-                                    <h3 className="font-semibold text-gray-900 text-lg mb-1">{record.service_name}</h3>
-                                    <div className="flex items-center gap-2 text-sm text-gray-500 mb-1">
-                                        <CarIcon className="h-3.5 w-3.5" />
-                                        <span>{record.car?.make} {record.car?.model} - {record.car?.registration_number}</span>
+                        <div 
+                            key={record.id} 
+                            className="bg-white rounded-2xl p-7 shadow-[0_2px_12px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)] transition-all duration-300 border border-gray-100 relative group"
+                        >
+                            <div className="flex items-start justify-between mb-5">
+                                <div className="flex-1 space-y-3">
+                                    {/* Service Title */}
+                                    <h3 className="font-bold text-xl text-gray-900">{record.service_name}</h3>
+                                    
+                                    {/* Car Details Row */}
+                                    <div className="flex items-center gap-2.5 text-sm">
+                                        <CarIcon className="h-4 w-4 text-gray-400" strokeWidth={1.5} />
+                                        <span className="font-semibold text-gray-700">
+                                            {record.car?.make} {record.car?.model}
+                                        </span>
+                                        <span className="text-gray-400">•</span>
+                                        <span className="text-gray-600 font-medium uppercase tracking-wide text-xs">
+                                            {record.car?.registration_number}
+                                        </span>
                                     </div>
-                                    <p className="text-sm text-gray-500">{new Date(record.service_date).toLocaleDateString()}</p>
+                                    
+                                    {/* Date */}
+                                    <p className="text-sm text-gray-500">
+                                        {new Date(record.service_date).toLocaleDateString('en-US', { 
+                                            year: 'numeric', 
+                                            month: 'short', 
+                                            day: 'numeric' 
+                                        })}
+                                    </p>
                                 </div>
-                                <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
-                                    <CheckCircle className="h-5 w-5 text-green-600" />
+                                
+                                {/* Status Check Circle */}
+                                <div className="h-10 w-10 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0 ring-1 ring-green-200">
+                                    <Check className="h-5 w-5 text-green-600" strokeWidth={2.5} />
                                 </div>
                             </div>
+                            
+                            {/* Description (if exists) */}
                             {record.description && (
-                                <p className="text-sm text-gray-600 mb-3 bg-gray-50 p-3 rounded-lg">{record.description}</p>
+                                <div className="mb-5">
+                                    <p className="text-sm text-gray-600 bg-gray-50/80 p-4 rounded-xl leading-relaxed">
+                                        {record.description}
+                                    </p>
+                                </div>
                             )}
-                            <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                                <span className="text-xs font-medium text-green-600">{record.status}</span>
-                                <ChevronRight className="h-4 w-4 text-gray-400 group-hover:text-primary transition-colors" />
+                            
+                            {/* Divider */}
+                            <div className="border-t border-gray-200 my-4"></div>
+                            
+                            {/* Bottom Row */}
+                            <div className="flex items-center justify-between">
+                                {/* Status Badge */}
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-green-100 text-green-700 ring-1 ring-green-200">
+                                    <CheckCircle className="h-3.5 w-3.5" />
+                                    {record.status}
+                                </span>
+                                
+                                {/* Floating Arrow Button */}
+                                <button 
+                                    className="h-9 w-9 rounded-full bg-[#CD0000] hover:bg-[#A30000] flex items-center justify-center text-white shadow-sm hover:shadow-md transition-all duration-200 hover:scale-110 group-hover:translate-x-1"
+                                    aria-label="View details"
+                                >
+                                    <ChevronRight className="h-4 w-4" strokeWidth={2.5} />
+                                </button>
                             </div>
                         </div>
                     ))

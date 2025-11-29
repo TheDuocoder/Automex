@@ -14,7 +14,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { Calendar, MapPin, Clock, Loader2, MessageSquare, Navigation, Car as CarIcon, Car, User } from "lucide-react";
+import { Calendar, MapPin, Clock, Loader2, MessageSquare, Navigation, Car as CarIcon, Car, User, XCircle } from "lucide-react";
 import { pickupRequestService, carService, Car as CarType, PickUpRequest, PickUpRequestCreate, PickUpRequestUpdate } from "@/services/api";
 import { toast } from "sonner";
 import { useAuthStore } from "@/stores/authStore";
@@ -196,14 +196,14 @@ const SchedulePickUp = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left Side: Pick Up Details & Status */}
             <div className="lg:col-span-1 space-y-6">
-                <Card className="shadow-lg border-none h-full">
-                    <CardHeader className="border-b bg-gray-50/50 pb-4">
-                        <CardTitle className="flex items-center gap-2 text-xl">
+                <Card className="shadow-[0_4px_20px_rgba(0,0,0,0.06)] border-none rounded-[20px] h-full">
+                    <CardHeader className="border-b bg-gray-50/50 pb-5 px-7 pt-6">
+                        <CardTitle className="flex items-center gap-2.5 text-xl font-bold">
                             <Clock className="h-5 w-5 text-primary" />
                             Pick Up Status
                         </CardTitle>
                     </CardHeader>
-                    <CardContent className="p-6 space-y-6">
+                    <CardContent className="p-7 space-y-5">
                         {isLoading ? (
                             <div className="flex justify-center p-4">
                                 <Loader2 className="h-6 w-6 animate-spin text-primary" />
@@ -233,52 +233,55 @@ const SchedulePickUp = () => {
                             requests.map((req) => (
                                 <div 
                                     key={req.id} 
-                                    className="bg-white border border-gray-100 rounded-xl p-4 shadow-sm cursor-pointer hover:shadow-md transition-shadow"
+                                    className="bg-white border border-gray-100 rounded-[18px] p-6 shadow-sm cursor-pointer hover:shadow-md transition-all duration-200"
                                     onClick={() => handleCardClick(req.id)}
                                 >
-                                    <div className="flex justify-between items-start mb-2">
-                                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                            req.status?.toLowerCase() === 'pending' ? 'bg-yellow-100 text-yellow-700 border border-yellow-300' :
-                                            req.status?.toLowerCase() === 'approved' ? 'bg-blue-100 text-blue-700 border border-blue-300' :
-                                            req.status?.toLowerCase() === 'completed' ? 'bg-green-100 text-green-700 border border-green-300' :
-                                            req.status?.toLowerCase() === 'cancelled' ? 'bg-red-100 text-red-700 border border-red-300' :
-                                            'bg-gray-100 text-gray-700 border border-gray-300'
+                                    <div className="flex justify-between items-start mb-4">
+                                        <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold ${
+                                            req.status?.toLowerCase() === 'pending' ? 'bg-yellow-50 text-yellow-700 ring-1 ring-yellow-200' :
+                                            req.status?.toLowerCase() === 'approved' ? 'bg-blue-50 text-blue-700 ring-1 ring-blue-200' :
+                                            req.status?.toLowerCase() === 'completed' ? 'bg-green-50 text-green-700 ring-1 ring-green-200' :
+                                            req.status?.toLowerCase() === 'cancelled' ? 'bg-[#FDE8E8] text-[#D93737] ring-1 ring-red-200' :
+                                            'bg-gray-50 text-gray-700 ring-1 ring-gray-200'
                                         }`}>
+                                            {req.status?.toLowerCase() === 'cancelled' && <XCircle className="h-3.5 w-3.5" />}
                                             {req.status || 'Pending'}
                                         </span>
-                                        <span className="text-xs text-gray-500">
-                                            {new Date(req.scheduled_date).toLocaleDateString()}
+                                        <span className="text-xs text-gray-500 font-medium">
+                                            {new Date(req.scheduled_date).toLocaleDateString('en-US', { 
+                                                month: 'short', 
+                                                day: 'numeric', 
+                                                year: 'numeric' 
+                                            })}
                                         </span>
                                     </div>
-                                    <h4 className="font-semibold text-gray-900 mb-1">{getCarName(req.car_id)}</h4>
-                                    <div className="text-sm text-gray-600 mb-3">
-                                        <div className="flex items-start gap-1">
-                                            <MapPin className="h-3 w-3 mt-0.5 flex-shrink-0" />
-                                            <span className="flex-1">{req.location}</span>
+                                    <h4 className="font-bold text-gray-900 mb-3 text-lg">{getCarName(req.car_id)}</h4>
+                                    <div className="text-sm text-gray-600 space-y-2">
+                                        <div className="flex items-start gap-2">
+                                            <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0 text-gray-400" />
+                                            <span className="flex-1 leading-relaxed">Lat: {req.latitude?.toFixed(6)}, Lng: {req.longitude?.toFixed(6)}</span>
                                         </div>
                                         {req.latitude && req.longitude && (
-                                            <Button
-                                                variant="link"
-                                                size="sm"
-                                                className="h-auto p-0 text-xs text-blue-600 mt-1"
+                                            <button
+                                                className="flex items-center gap-1.5 text-xs text-[#0056FF] hover:underline font-medium transition-all ml-6"
                                                 onClick={(e) => {
                                                     e.stopPropagation();
                                                     openInGoogleMaps(req.latitude!, req.longitude!);
                                                 }}
                                             >
-                                                <Navigation className="h-3 w-3 mr-1" />
+                                                <Navigation className="h-3.5 w-3.5" />
                                                 View on Google Maps
-                                            </Button>
+                                            </button>
                                         )}
                                     </div>
 
                                     {req.admin_comment && (
-                                        <div className="bg-gray-50 p-3 rounded-lg border border-gray-100 mt-2">
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <MessageSquare className="h-3 w-3 text-primary" />
+                                        <div className="bg-gray-50/80 p-3 rounded-xl border border-gray-200 mt-4">
+                                            <div className="flex items-center gap-2 mb-1.5">
+                                                <MessageSquare className="h-3.5 w-3.5 text-primary" />
                                                 <span className="text-xs font-semibold text-gray-700">Admin Comment</span>
                                             </div>
-                                            <p className="text-xs text-gray-600 italic">"{req.admin_comment}"</p>
+                                            <p className="text-xs text-gray-600 italic leading-relaxed">"{req.admin_comment}"</p>
                                         </div>
                                     )}
                                 </div>
@@ -290,11 +293,11 @@ const SchedulePickUp = () => {
 
             {/* Right Side: Schedule Form */}
             <div className="lg:col-span-2">
-                <Card className="shadow-lg border-none">
-                    <CardHeader className="border-b bg-gray-50/50 pb-4">
-                        <CardTitle className="flex items-center gap-2 text-xl">
+                <Card className="shadow-[0_4px_20px_rgba(0,0,0,0.06)] border-none rounded-[22px]">
+                    <CardHeader className="border-b bg-gray-50/50 pb-5 px-8 pt-7">
+                        <CardTitle className="flex items-center gap-2.5 text-xl font-bold">
                             <Calendar className="h-5 w-5 text-primary" />
-                            Schedule New Pick Up
+                            Schedule Your Pickup
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="p-8">
@@ -314,15 +317,16 @@ const SchedulePickUp = () => {
                                 </Button>
                             </div>
                         ) : (
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            <div className="grid gap-6">
-                                <div className="space-y-2">
-                                    <Label htmlFor="car">Select Vehicle</Label>
+                        <form onSubmit={handleSubmit} className="space-y-7">
+                            <div className="grid gap-7">
+                                {/* Select Vehicle */}
+                                <div className="space-y-3">
+                                    <Label htmlFor="car" className="text-sm font-semibold text-gray-700">Select Vehicle</Label>
                                     <Select
                                         value={formData.car_id.toString()}
                                         onValueChange={(val) => setFormData({ ...formData, car_id: parseInt(val) })}
                                     >
-                                        <SelectTrigger>
+                                        <SelectTrigger className="h-12 bg-[#F8F8F8] border-gray-300 rounded-[14px] px-4 text-sm font-medium hover:border-gray-400 transition-colors">
                                             <SelectValue placeholder="Select a car" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -335,14 +339,15 @@ const SchedulePickUp = () => {
                                     </Select>
                                 </div>
 
-                                <div className="space-y-2">
-                                    <Label htmlFor="location">Pick Up Location</Label>
-                                    <div className="flex gap-2">
+                                {/* Pick Up Location */}
+                                <div className="space-y-3">
+                                    <Label htmlFor="location" className="text-sm font-semibold text-gray-700">Pick Up Location</Label>
+                                    <div className="flex gap-3">
                                         <div className="relative flex-1">
-                                            <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                                            <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" strokeWidth={1.5} />
                                             <Input
                                                 id="location"
-                                                className="pl-9"
+                                                className="h-12 pl-12 pr-4 bg-[#F8F8F8] border-gray-300 rounded-[14px] text-sm placeholder:text-gray-400 hover:border-gray-400 focus:bg-white transition-all"
                                                 placeholder="Enter full address"
                                                 value={formData.location}
                                                 onChange={(e) => setFormData({ ...formData, location: e.target.value })}
@@ -354,42 +359,52 @@ const SchedulePickUp = () => {
                                             variant="outline"
                                             onClick={handleGetCurrentLocation}
                                             disabled={isGettingLocation}
-                                            className="flex-shrink-0"
+                                            className="h-12 w-12 flex-shrink-0 rounded-[14px] border-gray-300 hover:bg-gray-100 hover:border-gray-400 transition-all"
                                         >
                                             {isGettingLocation ? (
-                                                <Loader2 className="h-4 w-4 animate-spin" />
+                                                <Loader2 className="h-5 w-5 animate-spin" />
                                             ) : (
-                                                <Navigation className="h-4 w-4" />
+                                                <Navigation className="h-5 w-5 text-gray-600" />
                                             )}
                                         </Button>
                                     </div>
-                                    <p className="text-xs text-gray-500">
+                                    <p className="text-xs text-gray-500 ml-1">
                                         Click the location icon to use your current location
                                     </p>
                                     {formData.latitude && formData.longitude && (
-                                        <p className="text-xs text-green-600 flex items-center gap-1">
-                                            <MapPin className="h-3 w-3" />
+                                        <p className="text-xs text-green-600 flex items-center gap-1.5 ml-1 font-medium">
+                                            <MapPin className="h-3.5 w-3.5" />
                                             Location coordinates captured
                                         </p>
                                     )}
                                 </div>
 
-                                <div className="space-y-2">
-                                    <Label htmlFor="datetime">Preferred Date & Time</Label>
-                                    <Input
-                                        id="datetime"
-                                        type="datetime-local"
-                                        value={formData.scheduled_date}
-                                        onChange={(e) => setFormData({ ...formData, scheduled_date: e.target.value })}
-                                        min={new Date().toISOString().slice(0, 16)}
-                                        required
-                                    />
+                                {/* Preferred Date & Time */}
+                                <div className="space-y-3">
+                                    <Label htmlFor="datetime" className="text-sm font-semibold text-gray-700">Preferred Date & Time</Label>
+                                    <div className="relative">
+                                        <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none z-10" strokeWidth={1.5} />
+                                        <Input
+                                            id="datetime"
+                                            type="datetime-local"
+                                            className="h-12 pl-12 pr-4 bg-[#F8F8F8] border-gray-300 rounded-[14px] text-sm hover:border-gray-400 focus:bg-white transition-all"
+                                            value={formData.scheduled_date}
+                                            onChange={(e) => setFormData({ ...formData, scheduled_date: e.target.value })}
+                                            min={new Date().toISOString().slice(0, 16)}
+                                            required
+                                        />
+                                    </div>
                                 </div>
                             </div>
 
-                            <div className="pt-4">
-                                <Button type="submit" className="w-full" disabled={isSubmitting}>
-                                    {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            {/* Submit Button */}
+                            <div className="pt-2">
+                                <Button 
+                                    type="submit" 
+                                    className="w-full h-12 bg-[#CD0000] hover:bg-[#A30000] text-white font-bold text-base rounded-[14px] shadow-sm hover:shadow-md transition-all duration-200" 
+                                    disabled={isSubmitting}
+                                >
+                                    {isSubmitting && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
                                     Schedule Pick Up
                                 </Button>
                             </div>
