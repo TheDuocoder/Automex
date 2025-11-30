@@ -180,4 +180,14 @@ All colors MUST be HSL.
     transform: translate(-50%, -50%);
     z-index: 1000;
   }
+
+  /* Button Shimmer Animation */
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
 }

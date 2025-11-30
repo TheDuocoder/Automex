@@ -180,21 +180,50 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
             <div className="hero-auth-card w-full">
               {isAuthenticated ? (
                 // Welcome Section for Logged-in Users
-                <div className="welcome-section w-full bg-black/60 backdrop-blur-md border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_60px_rgba(255,81,47,0.2),0_0_100px_rgba(221,36,118,0.15)] rounded-3xl p-8 relative">
+                <div className="welcome-section w-full bg-black/60 backdrop-blur-md border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_60px_rgba(255,81,47,0.2),0_0_100px_rgba(221,36,118,0.15)] rounded-3xl p-6 relative">
                 {/* Welcome Header */}
-                <div className="text-center mb-6">
-                  <div className="flex justify-center mb-4">
-                    <img 
-                      src="/images/Automex_icon/AUTOMEX_logo.png" 
-                      alt="AutoMex"
-                      className="h-32 w-auto object-contain drop-shadow-2xl"
-                      onError={(e) => {
-                        e.currentTarget.src = "/images/Landing_page_images/Red_Automex.png";
-                      }}
-                    />
+                <div className="text-center mb-4">
+                  <div className="flex justify-center mb-3 -mt-2">
+                    <div className="relative">
+                      {/* White glow background */}
+                      <div className="absolute inset-0 bg-white/20 blur-3xl rounded-full scale-110"></div>
+                      
+                      {/* Logo */}
+                      <img 
+                        src="/images/Automex_icon/AUTOMEX_logo.png" 
+                        alt="AutoMex"
+                        className="relative h-40 w-auto object-contain drop-shadow-[0_8px_32px_rgba(255,255,255,0.3)]"
+                        style={{
+                          filter: 'drop-shadow(0 8px 32px rgba(255,255,255,0.3))',
+                        }}
+                        onError={(e) => {
+                          e.currentTarget.src = "/images/Landing_page_images/Red_Automex.png";
+                        }}
+                      />
+                      
+                      {/* Subtle reflection/bottom fade */}
+                      <div 
+                        className="absolute bottom-0 left-0 right-0 h-12 pointer-events-none"
+                        style={{
+                          background: 'linear-gradient(to bottom, transparent, rgba(255,255,255,0.05))',
+                          transform: 'scaleY(-1)',
+                          opacity: 0.4,
+                        }}
+                      ></div>
+                    </div>
                   </div>
-                  <h2 className="text-3xl font-bold text-white mb-2 drop-shadow-lg">
-                    Welcome back, {user?.full_name?.split(' ')[0] || 'User'}!
+                  <h2 
+                    className="text-3xl mb-2"
+                    style={{
+                      fontWeight: 900,
+                      letterSpacing: '-0.5px',
+                      background: 'linear-gradient(90deg, #fff, #d9d9d9)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      backgroundClip: 'text',
+                    }}
+                  >
+                    Welcome back, {user?.full_name?.split(' ')[0]?.charAt(0).toUpperCase() + user?.full_name?.split(' ')[0]?.slice(1).toLowerCase() || 'User'}
                   </h2>
                   <p className="text-white/80 text-sm">
                     Ready to take care of your vehicle?
@@ -205,36 +234,68 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
                 <div className="space-y-3 mb-6">
                   <Button
                     onClick={() => navigate('/my-services')}
-                    className="w-full h-14 text-white text-base font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl group"
+                    className="w-full h-16 text-white text-lg font-bold transition-all duration-300 group relative overflow-hidden"
                     style={{
-                      backgroundImage: 'linear-gradient(to right, #FF512F 0%, #DD2476 51%, #FF512F 100%)',
-                      backgroundSize: '200% auto',
+                      backgroundImage: 'linear-gradient(135deg, #FF512F 0%, #DD2476 100%)',
+                      borderRadius: '20px',
+                      boxShadow: '0 6px 18px rgba(255, 79, 87, 0.35)',
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundPosition = 'right center';
+                      e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
+                      e.currentTarget.style.boxShadow = '0 10px 30px rgba(255, 79, 87, 0.5)';
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundPosition = 'left center';
+                      e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                      e.currentTarget.style.boxShadow = '0 6px 18px rgba(255, 79, 87, 0.35)';
                     }}
                   >
-                    <ShoppingBag className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
-                    My Services
-                    <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                    {/* Ripple effect on hover */}
+                    <span 
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:animate-[shimmer_1s_ease-in-out] pointer-events-none"
+                      style={{
+                        transform: 'translateX(-100%)',
+                      }}
+                    ></span>
+                    <ShoppingBag className="w-6 h-6 mr-3 group-hover:scale-110 transition-transform relative z-10" />
+                    <span className="relative z-10">My Services</span>
+                    <ArrowRight className="w-6 h-6 ml-3 group-hover:translate-x-2 transition-transform relative z-10" />
                   </Button>
 
                   <Button
                     onClick={() => navigate('/services')}
-                    variant="outline"
-                    className="w-full h-12 text-white border-white/30 bg-white/5 hover:bg-white/10 rounded-xl transition-all duration-300"
+                    className="w-full h-14 text-white/90 font-semibold transition-all duration-300 group"
+                    style={{
+                      border: '1px solid rgba(255,255,255,0.25)',
+                      background: 'rgba(255,255,255,0.03)',
+                      borderRadius: '18px',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = 'rgba(255,255,255,0.08)';
+                      e.currentTarget.style.borderColor = 'rgba(255,255,255,0.5)';
+                      e.currentTarget.style.boxShadow = '0 0 20px rgba(255,255,255,0.3), inset 0 0 20px rgba(255,255,255,0.1)';
+                      e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'rgba(255,255,255,0.03)';
+                      e.currentTarget.style.borderColor = 'rgba(255,255,255,0.25)';
+                      e.currentTarget.style.boxShadow = 'none';
+                      e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                    }}
                   >
-                    <Calendar className="w-4 h-4 mr-2" />
+                    <Calendar className="w-5 h-5 mr-2 brightness-125" />
                     Schedule Service
                   </Button>
                 </div>
 
                 {/* Features Highlight */}
-                <div className="border-t border-white/10 pt-6">
-                  <p className="text-white/70 text-xs font-medium mb-3 uppercase tracking-wider">Quick Access</p>
+                <div className="pt-3">
+                  {/* Divider with title */}
+                  <div className="flex items-center mb-3">
+                    <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+                    <p className="text-white/70 text-xs font-medium uppercase tracking-wider px-4">Quick Access</p>
+                    <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+                  </div>
+                  
                   <div className="space-y-2">
                     <div className="flex items-center gap-3 text-white/90 text-sm">
                       <CheckCircle2 className="w-4 h-4 text-green-400 flex-shrink-0" />
@@ -253,14 +314,28 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
 
                 {/* Account Info */}
                 <div className="mt-6 pt-6 border-t border-white/10">
-                  <div className="flex gap-2">
+                  <div className="flex gap-3">
                     <Button
                       onClick={() => navigate('/profile')}
-                      variant="outline"
-                      size="sm"
-                      className="flex-1 text-white border-white/30 bg-white/5 hover:bg-white/10 rounded-lg"
+                      className="flex-1 text-white h-12 font-semibold transition-all duration-250"
+                      style={{
+                        background: 'rgba(255,255,255,0.05)',
+                        border: '1px solid rgba(255,255,255,0.15)',
+                        borderRadius: '14px',
+                        padding: '14px 26px',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-2px)';
+                        e.currentTarget.style.boxShadow = '0 8px 20px rgba(0,0,0,0.35)';
+                        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.25)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = 'none';
+                        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)';
+                      }}
                     >
-                      <Settings className="w-4 h-4 mr-1.5" />
+                      <Settings className="w-4 h-4 mr-2" />
                       Edit Profile
                     </Button>
                     <Button
@@ -268,11 +343,25 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
                         await logout();
                         navigate('/');
                       }}
-                      variant="outline"
-                      size="sm"
-                      className="flex-1 text-white border-white/30 bg-white/5 hover:bg-white/10 rounded-lg"
+                      className="flex-1 text-white h-12 font-semibold transition-all duration-250"
+                      style={{
+                        background: 'rgba(255,255,255,0.05)',
+                        border: '1px solid rgba(255,255,255,0.15)',
+                        borderRadius: '14px',
+                        padding: '14px 26px',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-2px)';
+                        e.currentTarget.style.boxShadow = '0 8px 20px rgba(0,0,0,0.35)';
+                        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.25)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = 'none';
+                        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)';
+                      }}
                     >
-                      <LogOut className="w-4 h-4 mr-1.5" />
+                      <LogOut className="w-4 h-4 mr-2" />
                       Logout
                     </Button>
                   </div>

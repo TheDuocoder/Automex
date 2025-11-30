@@ -236,20 +236,9 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
                   </div>
                 )}
 
-                <div className="flex items-end justify-between pt-2">
-                  {showPrice && (
-                    <div className="space-y-1">
-                      <div className="text-sm text-[#757575] line-through">
-                        Rs. {originalPrice.toLocaleString()}
-                      </div>
-                      <div className="text-2xl font-semibold text-[#212121]">
-                        ₹ {discountedPrice.toLocaleString()}
-                      </div>
-                    </div>
-                  )}
-
+                <div className="flex items-end justify-end pt-2">
                   <Button
-                    className="bg-white border border-[#E53935] text-[#E53935] hover:bg-[#E53935] hover:text-white px-6 py-2 rounded font-medium transition-colors"
+                    className="bg-white border-[3px] border-[#E53935] text-[#E53935] hover:bg-[#E53935] hover:text-white px-8 h-[48px] rounded-[12px] font-bold uppercase text-sm tracking-wider transition-all duration-300 min-w-[140px] hover:scale-105 hover:shadow-lg ml-auto"
                     onClick={handleBookClick}
                   >
                     Book
@@ -307,20 +296,9 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
                   </div>
                 )}
 
-                <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 pt-1">
-                  {showPrice && (
-                    <div className="text-gray-700 space-y-1 md:space-y-2">
-                      <div className={`${variant === "gom" ? "text-[13px]" : "text-sm"} text-gray-400 line-through whitespace-nowrap`}>
-                        Rs. {originalPrice.toLocaleString()}
-                      </div>
-                      <div className={`${variant === "gom" ? "text-[16px] font-semibold" : "text-[24px] font-bold"} text-gray-900 whitespace-nowrap`}>
-                        ₹ {discountedPrice.toLocaleString()}
-                      </div>
-                    </div>
-                  )}
-
+                <div className="flex flex-col md:flex-row md:items-end md:justify-end gap-3 pt-1">
                   <Button
-                    className={`${variant === "gom" ? "uppercase tracking-wider text-[14px] font-semibold border border-red-500 text-red-500 bg-white hover:bg-red-50 hover:text-red-600 w-[127px] h-[40px] rounded" : "uppercase tracking-wider text-sm font-semibold border-2 border-red-500 text-red-500 bg-white hover:bg-red-50 hover:text-red-600 px-5 py-2 rounded-md"}`}
+                    className="uppercase tracking-wider text-sm font-bold border-[3px] border-red-500 text-red-500 bg-white hover:bg-red-500 hover:text-white px-8 h-[48px] rounded-[12px] min-w-[140px] transition-all duration-300 hover:scale-105 hover:shadow-lg ml-auto"
                     onClick={handleBookClick}
                   >
                     Book
