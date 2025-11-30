@@ -22,7 +22,8 @@ class PickUpRequest(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)
     car_id: Mapped[int] = mapped_column(ForeignKey("car.id"), nullable=False)
     
-    location: Mapped[str] = mapped_column(String(500), nullable=False)
+    location: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
+    address: Mapped[str] = mapped_column(String(500), nullable=False)
     latitude: Mapped[Optional[float]] = mapped_column(nullable=True)
     longitude: Mapped[Optional[float]] = mapped_column(nullable=True)
     scheduled_date: Mapped[datetime] = mapped_column(DateTime, nullable=False)

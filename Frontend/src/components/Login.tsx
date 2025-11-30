@@ -91,7 +91,7 @@ const Login = ({ onClose, onSwitchToRegister }: LoginProps) => {
         onClose();
       }
       // Redirect to my services page after successful login
-      navigate('/my-services');
+      navigate('/services');
     } catch (error) {
       toast({
         title: "Login Failed",
@@ -125,12 +125,12 @@ const Login = ({ onClose, onSwitchToRegister }: LoginProps) => {
           <X className="w-5 h-5" />
         </button>
       )}
-      
+
       {/* Logo/Icon */}
       <div className="flex justify-center mb-4">
-        <img 
-          src="/images/Automex_icon/AUTOMEX_logo.png" 
-          alt="AutoMex Logo" 
+        <img
+          src="/images/Automex_icon/AUTOMEX_logo.png"
+          alt="AutoMex Logo"
           className="h-32 w-auto object-contain drop-shadow-2xl"
           onError={(e) => {
             e.currentTarget.src = "/images/Landing_page_images/Red_Automex.png";
@@ -186,7 +186,7 @@ const Login = ({ onClose, onSwitchToRegister }: LoginProps) => {
         </div>
 
         {/* Login Button */}
-        <Button 
+        <Button
           type="submit"
           disabled={isLoading}
           className="w-full h-12 text-white text-base font-semibold rounded-xl mb-4 disabled:opacity-50 disabled:cursor-not-allowed uppercase transition-all duration-500 shadow-[0_0_20px_rgba(255,81,47,0.4),0_8px_30px_rgba(221,36,118,0.3),0_4px_15px_rgba(0,0,0,0.2)]"
@@ -236,7 +236,7 @@ const Login = ({ onClose, onSwitchToRegister }: LoginProps) => {
       {/* Register Link */}
       <p className="text-center text-sm text-white/90">
         You Don't have an account?{" "}
-        <button 
+        <button
           onClick={onSwitchToRegister}
           className="font-semibold transition-colors"
           style={{ color: '#DD2476' }}

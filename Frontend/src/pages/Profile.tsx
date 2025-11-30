@@ -454,9 +454,13 @@ const Profile = () => {
 
             <div className="text-white">
               <h2 className="text-3xl font-bold mb-1">{currentUser?.full_name || 'User'}</h2>
-              <p className="text-white/90 flex items-center gap-2 mb-2">
+              <p className="text-white/90 flex items-center gap-2 mb-1">
                 <Mail className="h-4 w-4" />
                 {currentUser?.email}
+              </p>
+              <p className="text-white/90 flex items-center gap-2 mb-2">
+                <Phone className="h-4 w-4" />
+                {currentUser?.phone_number || 'No phone number'}
               </p>
               <div className="flex items-center gap-3">
                 <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-500/30 border border-green-400/30 text-white backdrop-blur-md">

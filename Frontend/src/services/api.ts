@@ -219,7 +219,8 @@ export interface PickUpRequest {
   id: number;
   user_id: number;
   car_id: number;
-  location: string;
+  location?: string;
+  address: string;
   latitude?: number;
   longitude?: number;
   scheduled_date: string;
@@ -229,7 +230,8 @@ export interface PickUpRequest {
 
 export interface PickUpRequestCreate {
   car_id: number;
-  location: string;
+  location?: string;
+  address: string;
   latitude?: number;
   longitude?: number;
   scheduled_date: string;
@@ -238,6 +240,12 @@ export interface PickUpRequestCreate {
 export interface PickUpRequestUpdate {
   status?: string;
   admin_comment?: string;
+  car_id?: number;
+  location?: string;
+  address?: string;
+  latitude?: number;
+  longitude?: number;
+  scheduled_date?: string;
 }
 
 export const pickupRequestService = {

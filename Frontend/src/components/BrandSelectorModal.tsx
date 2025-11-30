@@ -174,7 +174,7 @@ const BrandSelectorModal = ({
     <div
       className={cn(
         layout === "sidebar"
-          ? "grid grid-cols-3 gap-3.5 max-h-[340px] overflow-y-auto pr-2"
+          ? "grid grid-cols-3 gap-3.5 max-h-[420px] overflow-y-auto pr-2"
           : "grid grid-cols-3 gap-4 pb-16"
       )}
       style={{
@@ -577,7 +577,7 @@ const BrandSelectorModal = ({
     );
     const gridWrapperClasses = cn(
       paddingX,
-      layout === "sidebar" ? "py-6 overflow-y-auto max-h-[340px]" : "pb-16 pt-6 overflow-y-auto max-h-[calc(75vh-120px)] min-h-[400px]"
+      layout === "sidebar" ? "py-6 overflow-y-auto max-h-[420px]" : "pb-16 pt-6 overflow-y-auto max-h-[calc(75vh-120px)] min-h-[400px]"
     );
 
     return (

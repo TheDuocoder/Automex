@@ -110,29 +110,46 @@ async def update_pickup_request(
     Update pickup request status and admin comment
     Only ADMIN and SUPER_ADMIN can update status and add comments
     """
-    # Get user with role
-    user_with_role = await get_current_user_with_role(user, session)
-    
-    # Check if user is admin or super admin
-    is_admin = await check_is_admin_or_super(user_with_role, session)
-    
-    if not is_admin:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only administrators can update pickup request status and comments"
-        )
-    
-    # Get the pickup request
+    # Get the pickup request first to check ownership
     query = select(PickUpRequest).where(PickUpRequest.id == pickup_id)
     result = await session.execute(query)
     request = result.scalar_one_or_none()
     
     if not request:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Pickup request not found")
+
+    # Get user with role
+    user_with_role = await get_current_user_with_role(user, session)
     
-    # Update fields
+    # Check if user is admin or super admin
+    is_admin = await check_is_admin_or_super(user_with_role, session)
+    is_owner = request.user_id == user.id
+    
+    if not is_admin and not is_owner:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to update this pickup request"
+        )
+    
+    # Update fields based on role
     update_data = request_data.model_dump(exclude_unset=True)
-    for field, value in update_data.items():
+    allowed_updates = {}
+    
+    if is_admin:
+        # Admin can update status and comment
+        if 'status' in update_data: allowed_updates['status'] = update_data['status']
+        if 'admin_comment' in update_data: allowed_updates['admin_comment'] = update_data['admin_comment']
+        
+    if is_owner:
+        # Owner can update details but NOT status/comment
+        # Fields: address, location, latitude, longitude, scheduled_date, car_id
+        owner_fields = ['address', 'location', 'latitude', 'longitude', 'scheduled_date', 'car_id']
+        for field in owner_fields:
+            if field in update_data:
+                allowed_updates[field] = update_data[field]
+
+    # Apply updates
+    for field, value in allowed_updates.items():
         setattr(request, field, value)
     
     await session.commit()
