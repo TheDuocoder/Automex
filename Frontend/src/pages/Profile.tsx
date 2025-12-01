@@ -532,7 +532,7 @@ const Profile = () => {
                   <CardHeader className="border-b bg-gray-50/50 pb-2 pt-3">
                     <CardTitle className="flex items-center gap-2 text-base">
                       <History className="h-4 w-4 text-primary" />
-                      Recent Activity
+                      Service History
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="p-4 space-y-2.5">

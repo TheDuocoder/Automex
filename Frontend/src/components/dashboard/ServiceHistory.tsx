@@ -15,7 +15,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { History, Plus, CheckCircle, ChevronRight, Loader2, Car as CarIcon, Check } from "lucide-react";
+import { History, Plus, CheckCircle, ChevronRight, Loader2, Car as CarIcon, Check, Pencil, Trash2 } from "lucide-react";
 import { serviceHistoryService, carService, Car, ServiceHistory as ServiceHistoryType, ServiceHistoryCreate } from "@/services/api";
 import { toast } from "sonner";
 
@@ -31,6 +31,7 @@ const ServiceHistory = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isAddOpen, setIsAddOpen] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [editingId, setEditingId] = useState<number | null>(null);
     const [formData, setFormData] = useState<ServiceHistoryCreate>({
         car_id: 0,
         service_name: "",
@@ -100,10 +101,17 @@ const ServiceHistory = () => {
             car_id: parseInt(selectedCarId),
         };
 
-        const response = await serviceHistoryService.create(dataToSend);
+        let response;
+        if (editingId) {
+            response = await serviceHistoryService.update(editingId, dataToSend);
+        } else {
+            response = await serviceHistoryService.create(dataToSend);
+        }
+
         if (response.data) {
-            toast.success("Service record added successfully");
+            toast.success(editingId ? "Service record updated" : "Service record added successfully");
             setIsAddOpen(false);
+            setEditingId(null);
             setFormData({
                 car_id: 0,
                 service_name: "",
@@ -114,9 +122,47 @@ const ServiceHistory = () => {
             setSelectedCarId("");
             fetchAllData(); // Refresh all data
         } else {
-            toast.error(response.error || "Failed to add service record");
+            toast.error(response.error || "Failed to save service record");
         }
         setIsSubmitting(false);
+    };
+
+    const handleEdit = (record: ServiceHistoryWithCar) => {
+        setEditingId(record.id);
+        setFormData({
+            car_id: record.car_id,
+            service_name: record.service_name,
+            service_date: record.service_date,
+            description: record.description || "",
+            status: record.status,
+        });
+        setSelectedCarId(record.car_id.toString());
+        setIsAddOpen(true);
+    };
+
+    const handleDelete = async (id: number) => {
+        if (confirm("Are you sure you want to delete this record?")) {
+            const response = await serviceHistoryService.delete(id);
+            if (!response.error) {
+                toast.success("Service record deleted");
+                fetchAllData();
+            } else {
+                toast.error(response.error || "Failed to delete record");
+            }
+        }
+    };
+
+    const openAddModal = () => {
+        setEditingId(null);
+        setFormData({
+            car_id: 0,
+            service_name: "",
+            service_date: new Date().toISOString().split('T')[0],
+            description: "",
+            status: "Completed",
+        });
+        setSelectedCarId("");
+        setIsAddOpen(true);
     };
 
     return (
@@ -128,15 +174,15 @@ const ServiceHistory = () => {
                 </CardTitle>
                 <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
                     <DialogTrigger asChild>
-                        <Button size="sm" className="gap-1" disabled={cars.length === 0}>
+                        <Button size="sm" className="gap-1" disabled={cars.length === 0} onClick={openAddModal}>
                             <Plus className="h-4 w-4" /> Add Record
                         </Button>
                     </DialogTrigger>
                     <DialogContent>
                         <DialogHeader>
-                            <DialogTitle>Add Service Record</DialogTitle>
+                            <DialogTitle>{editingId ? "Edit Service Record" : "Add Service Record"}</DialogTitle>
                             <DialogDescription>
-                                Record a past service for your vehicle.
+                                {editingId ? "Update the details of your service record." : "Record a past service for your vehicle."}
                             </DialogDescription>
                         </DialogHeader>
                         <form onSubmit={handleAddService}>
@@ -192,7 +238,7 @@ const ServiceHistory = () => {
                             <DialogFooter>
                                 <Button type="submit" disabled={isSubmitting || !selectedCarId}>
                                     {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                    Add Record
+                                    {editingId ? "Update Record" : "Add Record"}
                                 </Button>
                             </DialogFooter>
                         </form>
@@ -228,15 +274,15 @@ const ServiceHistory = () => {
                     </div>
                 ) : (
                     allHistory.map((record) => (
-                        <div 
-                            key={record.id} 
+                        <div
+                            key={record.id}
                             className="bg-white rounded-2xl p-7 shadow-[0_2px_12px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)] transition-all duration-300 border border-gray-100 relative group"
                         >
                             <div className="flex items-start justify-between mb-5">
                                 <div className="flex-1 space-y-3">
                                     {/* Service Title */}
                                     <h3 className="font-bold text-xl text-gray-900">{record.service_name}</h3>
-                                    
+
                                     {/* Car Details Row */}
                                     <div className="flex items-center gap-2.5 text-sm">
                                         <CarIcon className="h-4 w-4 text-gray-400" strokeWidth={1.5} />
@@ -248,23 +294,42 @@ const ServiceHistory = () => {
                                             {record.car?.registration_number}
                                         </span>
                                     </div>
-                                    
+
                                     {/* Date */}
                                     <p className="text-sm text-gray-500">
-                                        {new Date(record.service_date).toLocaleDateString('en-US', { 
-                                            year: 'numeric', 
-                                            month: 'short', 
-                                            day: 'numeric' 
+                                        {new Date(record.service_date).toLocaleDateString('en-US', {
+                                            year: 'numeric',
+                                            month: 'short',
+                                            day: 'numeric'
                                         })}
                                     </p>
                                 </div>
-                                
-                                {/* Status Check Circle */}
-                                <div className="h-10 w-10 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0 ring-1 ring-green-200">
-                                    <Check className="h-5 w-5 text-green-600" strokeWidth={2.5} />
+
+                                <div className="flex items-start gap-3">
+                                    <div className="flex gap-1">
+                                        <button
+                                            onClick={() => handleEdit(record)}
+                                            className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
+                                            title="Edit"
+                                        >
+                                            <Pencil className="h-4 w-4" />
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(record.id)}
+                                            className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors"
+                                            title="Delete"
+                                        >
+                                            <Trash2 className="h-4 w-4" />
+                                        </button>
+                                    </div>
+
+                                    {/* Status Check Circle */}
+                                    <div className="h-10 w-10 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0 ring-1 ring-green-200">
+                                        <Check className="h-5 w-5 text-green-600" strokeWidth={2.5} />
+                                    </div>
                                 </div>
                             </div>
-                            
+
                             {/* Description (if exists) */}
                             {record.description && (
                                 <div className="mb-5">
@@ -273,10 +338,10 @@ const ServiceHistory = () => {
                                     </p>
                                 </div>
                             )}
-                            
+
                             {/* Divider */}
                             <div className="border-t border-gray-200 my-4"></div>
-                            
+
                             {/* Bottom Row */}
                             <div className="flex items-center justify-between">
                                 {/* Status Badge */}
@@ -284,9 +349,9 @@ const ServiceHistory = () => {
                                     <CheckCircle className="h-3.5 w-3.5" />
                                     {record.status}
                                 </span>
-                                
+
                                 {/* Floating Arrow Button */}
-                                <button 
+                                <button
                                     className="h-9 w-9 rounded-full bg-[#CD0000] hover:bg-[#A30000] flex items-center justify-center text-white shadow-sm hover:shadow-md transition-all duration-200 hover:scale-110 group-hover:translate-x-1"
                                     aria-label="View details"
                                 >

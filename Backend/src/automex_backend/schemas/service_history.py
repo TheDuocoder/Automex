@@ -11,6 +11,9 @@ class ServiceHistoryBase(BaseModel):
 class ServiceHistoryCreate(ServiceHistoryBase):
     car_id: int
 
+class ServiceHistoryUpdate(ServiceHistoryBase):
+    pass
+
 class ServiceHistoryRead(ServiceHistoryBase):
     id: int
     car_id: int

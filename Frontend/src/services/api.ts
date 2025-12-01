@@ -212,6 +212,13 @@ export const serviceHistoryService = {
     method: 'POST',
     body: JSON.stringify(data),
   }),
+  update: (id: number, data: Partial<ServiceHistoryCreate>) => apiCall<ServiceHistory>(`/api/v1/service-history/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  }),
+  delete: (id: number) => apiCall<void>(`/api/v1/service-history/${id}`, {
+    method: 'DELETE',
+  }),
 };
 
 // --- Pick Up Requests API ---
