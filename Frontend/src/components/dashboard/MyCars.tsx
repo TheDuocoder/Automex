@@ -441,11 +441,16 @@ const MyCars = () => {
                             className="bg-white rounded-[22px] p-8 shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_6px_28px_rgba(0,0,0,0.1)] transition-all duration-300 border border-gray-100"
                         >
                             {/* Top Header Section - Car Name & Action Buttons */}
-                            <div className="flex items-start justify-between mb-6">
+                            <div className="flex items-center justify-between mb-6">
                                 {/* Car Name and Year - Left */}
                                 <div>
                                     <h3 className="font-bold text-2xl text-gray-900 tracking-tight">{car.make} {car.model}</h3>
                                     <p className="text-base text-gray-500 font-medium mt-1">{car.year}</p>
+                                </div>
+                                
+                                {/* Number Plate Badge - Center */}
+                                <div className="bg-white border-2 border-[#CD0000] rounded-[8px] px-4 py-2 shadow-[0_3px_10px_rgba(205,0,0,0.12)]">
+                                    <p className="text-base font-black text-gray-900 uppercase tracking-wider">{car.registration_number}</p>
                                 </div>
                                 
                                 {/* Edit & Delete Buttons - Right */}
@@ -468,58 +473,51 @@ const MyCars = () => {
                             </div>
 
                             {/* Main Content Section - Image & Details */}
-                            <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-10">
+                            <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6">
                                 {/* LEFT SIDE - Car Image */}
                                 <div className="flex items-start justify-center">
-                                    <div className="w-[380px] h-[280px] shadow-[0_12px_48px_rgba(0,0,0,0.15)] hover:shadow-[0_16px_56px_rgba(0,0,0,0.2)] transition-all duration-500 rounded-[20px]">
+                                    <div className="w-[280px] h-[200px] shadow-[0_8px_32px_rgba(0,0,0,0.12)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-[16px]">
                                         {car.image_url ? (
-                                            <div className="w-full h-full rounded-[20px] overflow-hidden">
+                                            <div className="w-full h-full rounded-[16px] overflow-hidden">
                                                 <CarImageWithFallback 
                                                     src={car.image_url}
                                                     alt={`${car.make} ${car.model}`}
                                                 />
                                             </div>
                                         ) : (
-                                            <div className="w-full h-full flex flex-col items-center justify-center bg-[#fafafa] rounded-[20px] border-2 border-dashed border-[#d3d3d3] p-6">
-                                                <CarIcon className="h-[90px] w-[90px] text-gray-400 opacity-60 mb-4" strokeWidth={1.5} />
-                                                <p className="text-sm text-gray-500 font-semibold">No image added</p>
-                                                <p className="text-xs text-gray-400 mt-1">Please add your car image.</p>
+                                            <div className="w-full h-full flex flex-col items-center justify-center bg-[#fafafa] rounded-[16px] border-2 border-dashed border-[#d3d3d3] p-4">
+                                                <CarIcon className="h-[60px] w-[60px] text-gray-400 opacity-60 mb-2" strokeWidth={1.5} />
+                                                <p className="text-xs text-gray-500 font-semibold">No image added</p>
+                                                <p className="text-xs text-gray-400 mt-0.5">Please add your car image.</p>
                                             </div>
                                         )}
                                     </div>
                                 </div>
 
-                                {/* RIGHT SIDE - Number Plate & Buttons */}
-                                <div className="flex flex-col justify-start">
-                                    {/* Number Plate Badge - Aligned with image top */}
-                                    <div className="flex justify-center mb-10">
-                                        <div className="bg-white border-2 border-[#CD0000] rounded-[10px] px-6 py-3 shadow-[0_4px_12px_rgba(205,0,0,0.12)]">
-                                            <p className="text-lg font-black text-gray-900 uppercase tracking-widest">{car.registration_number}</p>
-                                        </div>
-                                    </div>
-
-                                    {/* Action Buttons - Stacked Vertically */}
-                                    <div className="flex flex-col gap-4">
+                                {/* RIGHT SIDE - Buttons */}
+                                <div className="flex flex-col justify-center">
+                                    {/* Action Buttons - Single Row */}
+                                    <div className="flex gap-2.5">
                                         <button
-                                            className="group flex items-center justify-center gap-3 h-14 bg-transparent border-2 border-emerald-500 text-emerald-600 hover:bg-emerald-500 hover:text-white hover:border-emerald-500 font-bold rounded-[16px] shadow-sm hover:shadow-[0_6px_20px_rgba(16,185,129,0.3)] transition-all duration-300 hover:scale-[1.02] w-full"
+                                            className="group flex items-center justify-center gap-2 h-10 bg-transparent border-2 border-emerald-500 text-emerald-600 hover:bg-emerald-500 hover:text-white hover:border-emerald-500 font-bold rounded-[12px] shadow-sm hover:shadow-[0_4px_16px_rgba(16,185,129,0.3)] transition-all duration-300 hover:scale-[1.02] flex-1"
                                             onClick={() => navigate('/profile', { state: { view: 'schedule-pickup' } })}
                                         >
-                                            <Calendar className="h-5 w-5" strokeWidth={2.5} />
-                                            <span className="text-base">Schedule Pick Up</span>
+                                            <Calendar className="h-4 w-4" strokeWidth={2.5} />
+                                            <span className="text-sm">Schedule Pick Up</span>
                                         </button>
                                         <button
-                                            className="group flex items-center justify-center gap-3 h-14 bg-transparent border-2 border-[#F4C542] text-[#F4C542] hover:bg-[#F4C542] hover:text-white hover:border-[#F4C542] font-bold rounded-[16px] shadow-sm hover:shadow-[0_6px_20px_rgba(244,197,66,0.3)] transition-all duration-300 hover:scale-[1.02] w-full"
+                                            className="group flex items-center justify-center gap-2 h-10 bg-transparent border-2 border-[#FCD202] text-[#FCD202] hover:bg-[#FCD202] hover:text-white hover:border-[#FCD202] font-bold rounded-[12px] shadow-sm hover:shadow-[0_4px_16px_rgba(252,210,2,0.3)] transition-all duration-300 hover:scale-[1.02] flex-1"
                                             onClick={() => navigate('/services')}
                                         >
-                                            <Wrench className="h-5 w-5" strokeWidth={2.5} />
-                                            <span className="text-base">Book Service</span>
+                                            <Wrench className="h-4 w-4" strokeWidth={2.5} />
+                                            <span className="text-sm">Book Service</span>
                                         </button>
                                         <button
-                                            className="group flex items-center justify-center gap-3 h-14 bg-transparent border-2 border-[#FF4F93] text-[#FF4F93] hover:bg-[#FF4F93] hover:text-white hover:border-[#FF4F93] font-bold rounded-[16px] shadow-sm hover:shadow-[0_6px_20px_rgba(255,79,147,0.3)] transition-all duration-300 hover:scale-[1.02] w-full"
+                                            className="group flex items-center justify-center gap-2 h-10 bg-transparent border-2 border-[#FF4F93] text-[#FF4F93] hover:bg-[#FF4F93] hover:text-white hover:border-[#FF4F93] font-bold rounded-[12px] shadow-sm hover:shadow-[0_4px_16px_rgba(255,79,147,0.3)] transition-all duration-300 hover:scale-[1.02] flex-1"
                                             onClick={() => navigate(`/vehicle/${car.id}`)}
                                         >
-                                            <FileText className="h-5 w-5" strokeWidth={2.5} />
-                                            <span className="text-base">Vehicle Details</span>
+                                            <FileText className="h-4 w-4" strokeWidth={2.5} />
+                                            <span className="text-sm">Vehicle Details</span>
                                         </button>
                                     </div>
                                 </div>

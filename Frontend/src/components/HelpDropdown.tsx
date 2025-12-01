@@ -83,7 +83,7 @@ const HelpDropdown = ({ variant = "light" }: HelpDropdownProps) => {
         <button 
           className="group flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-300 ease-out active:scale-95 relative overflow-hidden"
           style={{
-            background: 'rgba(0, 0, 0, 0.35)',
+            background: 'transparent',
             backdropFilter: 'blur(8px)',
             border: '1.5px solid rgba(255, 255, 255, 0.75)',
             boxShadow: `

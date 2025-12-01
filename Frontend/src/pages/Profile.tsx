@@ -431,70 +431,71 @@ const Profile = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="bg-gradient-to-r from-red-600 via-red-500 to-red-600 px-8 py-5 relative"
+          className="px-6 py-5 relative"
+          style={{ backgroundColor: '#912F56' }}
         >
           {/* Help Dropdown - Top Right */}
-          <div className="absolute top-5 right-8">
+          <div className="absolute top-4 right-6">
             <HelpDropdown variant="dark" />
           </div>
 
-          <div className="flex items-center gap-5 mb-4">
+          <div className="flex items-center gap-4 mb-4">
             <div className="relative group">
-              <div className="h-28 w-28 rounded-full bg-white/20 backdrop-blur-md border-4 border-white/30 flex items-center justify-center text-white font-bold text-3xl shadow-2xl transition-all group-hover:border-white/50">
+              <div className="h-20 w-20 rounded-full bg-white/20 backdrop-blur-md border-3 border-white/30 flex items-center justify-center text-white font-bold text-xl shadow-xl transition-all group-hover:border-white/50">
                 {currentUser?.full_name?.charAt(0) || 'U'}
               </div>
               {/* Edit Icon Badge */}
               <button
-                className="absolute bottom-2 right-2 h-8 w-8 rounded-full bg-white shadow-md flex items-center justify-center text-primary hover:bg-gray-50 transition-all hover:scale-110 border border-gray-200"
+                className="absolute bottom-0 right-0 h-6 w-6 rounded-full bg-white shadow-md flex items-center justify-center text-primary hover:bg-gray-50 transition-all hover:scale-110 border border-gray-200"
                 onClick={() => toast.info('Profile picture upload coming soon!')}
               >
-                <Camera className="h-4 w-4" />
+                <Camera className="h-3 w-3" />
               </button>
             </div>
 
             <div className="text-white">
-              <h2 className="text-3xl font-bold mb-1">{currentUser?.full_name || 'User'}</h2>
-              <p className="text-white/90 flex items-center gap-2 mb-1">
-                <Mail className="h-4 w-4" />
+              <h2 className="text-xl font-bold mb-0.5">{currentUser?.full_name || 'User'}</h2>
+              <p className="text-white/90 flex items-center gap-1.5 mb-0.5 text-xs">
+                <Mail className="h-3 w-3" />
                 {currentUser?.email}
               </p>
-              <p className="text-white/90 flex items-center gap-2 mb-2">
-                <Phone className="h-4 w-4" />
+              <p className="text-white/90 flex items-center gap-1.5 mb-1.5 text-xs">
+                <Phone className="h-3 w-3" />
                 {currentUser?.phone_number || 'No phone number'}
               </p>
-              <div className="flex items-center gap-3">
-                <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-500/30 border border-green-400/30 text-white backdrop-blur-md">
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-green-500/30 border border-green-400/30 text-white backdrop-blur-md">
                   Active Account
                 </span>
-                <span className="text-sm text-white/80">Member Since: 2021</span>
+                <span className="text-xs text-white/80">Member Since: 2021</span>
               </div>
             </div>
           </div>
 
           {/* Info Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3 border border-white/20 hover:bg-white/15 transition-all shadow-lg">
-              <div className="flex items-center gap-3">
-                <div className="h-11 w-11 rounded-lg bg-white/20 flex items-center justify-center">
-                  <Calendar className="h-5 w-5 text-white" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+            <div className="bg-white/10 backdrop-blur-md rounded-xl p-2.5 border border-white/20 hover:bg-white/15 transition-all shadow-lg">
+              <div className="flex items-center gap-2.5">
+                <div className="h-8 w-8 rounded-lg bg-white/20 flex items-center justify-center">
+                  <Calendar className="h-3.5 w-3.5 text-white" />
                 </div>
                 <div>
                   <p className="text-white/70 text-xs">Next Service Date</p>
-                  <p className="text-white font-bold text-base">Dec 15, 2025</p>
+                  <p className="text-white font-bold text-xs">Dec 15, 2025</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3 border border-white/20 hover:bg-white/15 transition-all shadow-lg">
-              <div className="flex items-center gap-3">
-                <div className="h-11 w-11 rounded-lg bg-white/20 flex items-center justify-center">
-                  <Hash className="h-5 w-5 text-white" />
+            <div className="bg-white/10 backdrop-blur-md rounded-xl p-2.5 border border-white/20 hover:bg-white/15 transition-all shadow-lg">
+              <div className="flex items-center gap-2.5">
+                <div className="h-8 w-8 rounded-lg bg-white/20 flex items-center justify-center">
+                  <Hash className="h-3.5 w-3.5 text-white" />
                 </div>
                 <div>
                   <p className="text-white/70 text-xs">
                     {dashboardCars.length > 1 ? 'Total Vehicles' : 'Vehicle Number'}
                   </p>
-                  <p className="text-white font-bold text-base">
+                  <p className="text-white font-bold text-xs">
                     {dashboardCars.length === 0 ? 'No Vehicle' :
                       dashboardCars.length === 1 ? dashboardCars[0].registration_number :
                         `${dashboardCars.length} Vehicles`}
@@ -503,14 +504,14 @@ const Profile = () => {
               </div>
             </div>
 
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3 border border-white/20 hover:bg-white/15 transition-all shadow-lg">
-              <div className="flex items-center gap-3">
-                <div className="h-11 w-11 rounded-lg bg-white/20 flex items-center justify-center">
-                  <Trophy className="h-5 w-5 text-white" />
+            <div className="bg-white/10 backdrop-blur-md rounded-xl p-2.5 border border-white/20 hover:bg-white/15 transition-all shadow-lg">
+              <div className="flex items-center gap-2.5">
+                <div className="h-8 w-8 rounded-lg bg-white/20 flex items-center justify-center">
+                  <Trophy className="h-3.5 w-3.5 text-white" />
                 </div>
                 <div>
                   <p className="text-white/70 text-xs">Rewards Points</p>
-                  <p className="text-white font-bold text-base">2,450 pts</p>
+                  <p className="text-white font-bold text-xs">2,450 pts</p>
                 </div>
               </div>
             </div>
@@ -518,9 +519,9 @@ const Profile = () => {
         </motion.div>
 
         {/* Dynamic Content Area */}
-        <div className="px-8 py-8">
+        <div className="px-6 py-4">
           {activeView === 'dashboard' && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {/* Dashboard View - Summary */}
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
@@ -528,22 +529,22 @@ const Profile = () => {
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
                 <Card className="shadow-lg border-none h-full">
-                  <CardHeader className="border-b bg-gray-50/50 pb-4">
-                    <CardTitle className="flex items-center gap-2 text-xl">
-                      <History className="h-5 w-5 text-primary" />
+                  <CardHeader className="border-b bg-gray-50/50 pb-2 pt-3">
+                    <CardTitle className="flex items-center gap-2 text-base">
+                      <History className="h-4 w-4 text-primary" />
                       Recent Activity
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="p-8 space-y-4">
+                  <CardContent className="p-4 space-y-2.5">
                     {dashboardHistory.length > 0 ? (
-                      <div className="space-y-4">
+                      <div className="space-y-2.5">
                         {dashboardHistory.slice(0, 3).map((history) => (
-                          <div key={history.id} className="flex items-center justify-between border-b pb-2 last:border-0">
+                          <div key={history.id} className="flex items-center justify-between border-b pb-1.5 last:border-0">
                             <div>
-                              <p className="font-medium">{history.service_name}</p>
-                              <p className="text-sm text-gray-500">{new Date(history.service_date).toLocaleDateString()}</p>
+                              <p className="font-medium text-xs">{history.service_name}</p>
+                              <p className="text-xs text-gray-500">{new Date(history.service_date).toLocaleDateString()}</p>
                             </div>
-                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${history.status === 'Completed' ? 'bg-green-100 text-green-700' :
+                            <span className={`px-1.5 py-0.5 rounded-full text-xs font-medium ${history.status === 'Completed' ? 'bg-green-100 text-green-700' :
                               history.status === 'In Progress' ? 'bg-blue-100 text-blue-700' :
                                 'bg-gray-100 text-gray-700'
                               }`}>
@@ -553,9 +554,9 @@ const Profile = () => {
                         ))}
                       </div>
                     ) : (
-                      <p className="text-gray-500">No recent activity found.</p>
+                      <p className="text-gray-500 text-xs">No recent activity found.</p>
                     )}
-                    <Button variant="outline" onClick={() => setActiveView('service-history')} className="w-full mt-4">
+                    <Button variant="outline" onClick={() => setActiveView('service-history')} className="w-full mt-2 text-xs h-8">
                       View Full History
                     </Button>
                   </CardContent>
@@ -568,31 +569,31 @@ const Profile = () => {
                 transition={{ duration: 0.6, delay: 0.3 }}
               >
                 <Card className="shadow-lg border-none h-full">
-                  <CardHeader className="border-b bg-gray-50/50 pb-4">
-                    <CardTitle className="flex items-center gap-2 text-xl">
-                      <Car className="h-5 w-5 text-primary" />
+                  <CardHeader className="border-b bg-gray-50/50 pb-2 pt-3">
+                    <CardTitle className="flex items-center gap-2 text-base">
+                      <Car className="h-4 w-4 text-primary" />
                       My Vehicles
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="p-8 space-y-6">
+                  <CardContent className="p-4 space-y-2.5">
                     {dashboardCars.length > 0 ? (
-                      <div className="space-y-4">
+                      <div className="space-y-2">
                         {dashboardCars.slice(0, 3).map((car) => (
-                          <div key={car.id} className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
-                            <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center shadow-sm">
-                              <Car className="h-5 w-5 text-gray-500" />
+                          <div key={car.id} className="flex items-center gap-2.5 p-2 bg-gray-50 rounded-lg">
+                            <div className="h-8 w-8 rounded-full bg-white flex items-center justify-center shadow-sm">
+                              <Car className="h-3.5 w-3.5 text-gray-500" />
                             </div>
                             <div>
-                              <p className="font-medium">{car.make} {car.model}</p>
-                              <p className="text-sm text-gray-500">{car.registration_number}</p>
+                              <p className="font-medium text-xs">{car.make} {car.model}</p>
+                              <p className="text-xs text-gray-500">{car.registration_number}</p>
                             </div>
                           </div>
                         ))}
                       </div>
                     ) : (
-                      <p className="text-gray-500">No vehicles added yet.</p>
+                      <p className="text-gray-500 text-xs">No vehicles added yet.</p>
                     )}
-                    <Button variant="outline" onClick={() => setActiveView('my-cars')} className="w-full">
+                    <Button variant="outline" onClick={() => setActiveView('my-cars')} className="w-full text-xs h-8 mt-2">
                       Manage Vehicles
                     </Button>
                   </CardContent>
