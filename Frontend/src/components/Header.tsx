@@ -273,16 +273,56 @@ const Header = ({ onLoginClick }: HeaderProps) => {
                     <DropdownMenuTrigger asChild>
                       <Button
                         variant="ghost"
-                        className="flex items-center gap-2 text-white hover:opacity-90 h-auto px-3 py-2 rounded-lg bg-black border-2 border-pink-500/90 transition-all duration-200 hover:border-pink-500 relative"
+                        className="flex items-center gap-2 text-white hover:opacity-90 h-auto px-4 py-2.5 rounded-xl transition-all duration-300 relative overflow-hidden group"
                         title={`Logged in as: ${user?.full_name || user?.email?.split('@')[0] || 'User'}`}
                         style={{
-                          boxShadow: 'inset 0 0 0 1px rgba(255, 255, 255, 0.3)'
+                          background: 'rgba(0, 0, 0, 0.35)',
+                          backdropFilter: 'blur(8px)',
+                          border: '1.5px solid rgba(255, 255, 255, 0.75)',
+                          boxShadow: `
+                            0 0 15px rgba(255, 255, 255, 0.25),
+                            inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                            inset 0 -1px 0 rgba(0, 0, 0, 0.2)
+                          `,
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.boxShadow = `
+                            0 0 25px rgba(255, 255, 255, 0.4),
+                            0 0 40px rgba(255, 255, 255, 0.2),
+                            inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                            inset 0 -1px 0 rgba(0, 0, 0, 0.3)
+                          `;
+                          e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.9)';
+                          e.currentTarget.style.transform = 'translateY(-1px)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.boxShadow = `
+                            0 0 15px rgba(255, 255, 255, 0.25),
+                            inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                            inset 0 -1px 0 rgba(0, 0, 0, 0.2)
+                          `;
+                          e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.75)';
+                          e.currentTarget.style.transform = 'translateY(0)';
                         }}
                       >
-                        <div className="h-8 w-8 rounded-full bg-gray-700 flex items-center justify-center flex-shrink-0" title={`${user?.full_name || user?.email?.split('@')[0] || 'User'}`}>
-                          <User className="h-5 w-5 text-white" />
+                        {/* Glossy Highlight */}
+                        <div 
+                          className="absolute top-0 left-0 right-0 h-[40%] pointer-events-none"
+                          style={{
+                            background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, transparent 100%)',
+                            borderRadius: '12px 12px 0 0',
+                          }}
+                        />
+                        
+                        <div className="h-8 w-8 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center flex-shrink-0 relative" 
+                          style={{
+                            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+                          }}
+                          title={`${user?.full_name || user?.email?.split('@')[0] || 'User'}`}
+                        >
+                          <User className="h-5 w-5 text-white relative z-10" />
                         </div>
-                        <span className="text-sm font-medium whitespace-nowrap">
+                        <span className="text-sm font-medium whitespace-nowrap relative z-10">
                           {user?.full_name || user?.email?.split('@')[0] || 'User'}
                         </span>
                         <ChevronDown className="h-4 w-4 flex-shrink-0" />

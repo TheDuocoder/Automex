@@ -53,35 +53,714 @@ const ContactUs = () => {
       
       {/* Hero Section */}
       <section className="relative text-white pt-32 pb-12 overflow-hidden">
-        {/* Gradient Background */}
+        {/* Dark Workshop Gradient Background - Deep Black & Charcoal */}
         <div 
           className="absolute inset-0 z-0"
           style={{
-            background: 'linear-gradient(180deg, #0a0a0a, #1a1a1a)'
+            background: 'radial-gradient(ellipse at 50% 50%, #1a1a1a 0%, #0d0d0d 35%, #000000 100%)',
           }}
         />
         
-        {/* Soft Car Service Background Image Overlay */}
+        {/* Blurred Workshop Background with Enhanced Cinematic Depth */}
         <div 
           className="absolute inset-0 z-[1]"
           style={{
             backgroundImage: 'url("/images/Landing_page_images/automexfrontpage3.jpg")',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
-            filter: 'blur(5px) brightness(0.4)'
+            filter: 'blur(100px) brightness(0.18) contrast(0.65)',
+            opacity: 0.25,
           }}
         />
         
-        {/* Subtle Dark Overlay */}
+        {/* Soft Diffused Red Ambient Lighting */}
         <div 
           className="absolute inset-0 z-[2]"
           style={{
-            background: 'rgba(0, 0, 0, 0.6)'
+            background: 'radial-gradient(ellipse 1000px 700px at 45% 35%, rgba(139, 0, 0, 0.15) 0%, transparent 55%), radial-gradient(ellipse 800px 900px at 55% 65%, rgba(80, 0, 0, 0.12) 0%, transparent 50%)',
+            filter: 'blur(120px)',
           }}
         />
         
+        {/* PREMIUM METALLIC GRADIENT LAYER - Car Showroom Aesthetic */}
+        <div 
+          className="absolute z-[2.5]"
+          style={{
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '800px',
+            height: '800px',
+            pointerEvents: 'none',
+          }}
+        >
+          {/* Primary Metallic Gradient - Automotive Red Spectrum */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: 'radial-gradient(circle at 50% 50%, #FF2E2E 0%, #A00000 25%, #420000 50%, #550000 75%, transparent 100%)',
+              borderRadius: '50%',
+              filter: 'blur(150px)',
+              opacity: 0.4,
+              animation: 'metallicPulse 12s ease-in-out infinite',
+              mixBlendMode: 'screen',
+            }}
+          />
+          
+          {/* Secondary Gradient Layer - Depth & Warmth */}
+          <div
+            className="absolute"
+            style={{
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '600px',
+              height: '600px',
+              background: 'radial-gradient(circle at 40% 35%, #A00000 0%, #420000 40%, #550000 70%, transparent 100%)',
+              borderRadius: '50%',
+              filter: 'blur(100px)',
+              opacity: 0.35,
+              animation: 'metallicShift 15s ease-in-out infinite',
+              mixBlendMode: 'multiply',
+            }}
+          />
+          
+          {/* Tertiary Highlight Layer - Bright Red Center */}
+          <div
+            className="absolute"
+            style={{
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '400px',
+              height: '400px',
+              background: 'radial-gradient(circle at 45% 40%, #FF2E2E 0%, rgba(255, 46, 46, 0.6) 30%, transparent 60%)',
+              borderRadius: '50%',
+              filter: 'blur(80px)',
+              opacity: 0.25,
+              animation: 'metallicGlow 10s ease-in-out infinite',
+              mixBlendMode: 'screen',
+            }}
+          />
+          
+          {/* Premium Depth Layer - Dark Automotive Base */}
+          <div
+            className="absolute"
+            style={{
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '700px',
+              height: '700px',
+              background: 'radial-gradient(circle at 55% 60%, #420000 0%, #550000 35%, transparent 70%)',
+              borderRadius: '50%',
+              filter: 'blur(120px)',
+              opacity: 0.3,
+              animation: 'depthLayer 18s ease-in-out infinite',
+              mixBlendMode: 'darken',
+            }}
+          />
+        </div>
+        
+        {/* Premium Animated Liquid Glass Orb - Physics-Based Floating with Collision Detection */}
+        <div 
+          className="absolute z-[3]"
+          style={{
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '600px',
+            height: '500px',
+            pointerEvents: 'none',
+          }}
+        >
+          {/* Invisible Frame Boundary - The bulb bounces inside this */}
+          <div className="absolute inset-0">
+            {/* Moving Bulb Container - Physics-Based Path with Collision Rebounds */}
+            <div
+              className="absolute"
+              style={{
+                width: '200px',
+                height: '200px',
+                animation: 'physicsFloat 32s cubic-bezier(0.42, 0, 0.58, 1) infinite',
+              }}
+            >
+          {/* Main Glassy Liquid Bulb with Surface Tension */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: 'radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.18) 15%, rgba(205, 0, 0, 0.12) 35%, rgba(139, 0, 0, 0.08) 55%, transparent 85%)',
+              borderRadius: '50%',
+              filter: 'blur(45px)',
+              animation: 'liquidBulbMorph 10s ease-in-out infinite',
+              boxShadow: '0 0 120px rgba(205, 0, 0, 0.4), 0 0 80px rgba(255, 255, 255, 0.15), inset 0 0 60px rgba(255, 255, 255, 0.12)',
+            }}
+          />
+          
+          {/* Ultra-Glossy Inner Core */}
+          <div
+            className="absolute"
+            style={{
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '280px',
+              height: '280px',
+              background: 'radial-gradient(circle at 38% 32%, rgba(255, 255, 255, 0.5) 0%, rgba(255, 200, 200, 0.3) 18%, rgba(255, 81, 47, 0.2) 40%, rgba(221, 36, 118, 0.12) 65%, transparent 100%)',
+              borderRadius: '50%',
+              filter: 'blur(25px)',
+              animation: 'liquidWobble 7s ease-in-out infinite',
+              boxShadow: '0 0 70px rgba(255, 81, 47, 0.5), inset 0 0 50px rgba(255, 255, 255, 0.25)',
+            }}
+          />
+          
+          {/* Molten Glass Gel Layer - Translucent Effect */}
+          <div
+            className="absolute"
+            style={{
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '350px',
+              height: '350px',
+              background: 'radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.22) 0%, rgba(220, 220, 255, 0.15) 25%, rgba(205, 0, 0, 0.1) 50%, transparent 80%)',
+              borderRadius: '50%',
+              filter: 'blur(35px)',
+              animation: 'gelBreathe 9s ease-in-out infinite',
+              mixBlendMode: 'screen',
+            }}
+          />
+          
+          {/* Iridescent Light Refraction - Top Highlight */}
+          <div
+            className="absolute"
+            style={{
+              top: '22%',
+              left: '28%',
+              width: '130px',
+              height: '130px',
+              background: 'radial-gradient(circle, rgba(255, 255, 255, 0.7) 0%, rgba(200, 230, 255, 0.4) 25%, rgba(255, 255, 255, 0.15) 50%, transparent 75%)',
+              borderRadius: '50%',
+              filter: 'blur(18px)',
+              animation: 'iridescentShift 11s ease-in-out infinite',
+              mixBlendMode: 'overlay',
+            }}
+          />
+          
+          {/* Secondary Iridescent Reflection */}
+          <div
+            className="absolute"
+            style={{
+              bottom: '28%',
+              right: '25%',
+              width: '90px',
+              height: '90px',
+              background: 'radial-gradient(circle, rgba(255, 230, 230, 0.4) 0%, rgba(255, 200, 200, 0.2) 40%, transparent 70%)',
+              borderRadius: '50%',
+              filter: 'blur(22px)',
+              animation: 'secondaryRefraction 13s ease-in-out infinite',
+              mixBlendMode: 'screen',
+            }}
+          />
+          
+          {/* Crimson Neon Glow - Red to Deep Red Gradient */}
+          <div
+            className="absolute"
+            style={{
+              bottom: '20%',
+              right: '28%',
+              width: '140px',
+              height: '140px',
+              background: 'radial-gradient(circle, rgba(220, 20, 60, 0.3) 0%, rgba(205, 0, 0, 0.2) 30%, rgba(139, 0, 0, 0.12) 60%, transparent 100%)',
+              borderRadius: '50%',
+              filter: 'blur(40px)',
+              animation: 'crimsonPulse 8s ease-in-out infinite',
+            }}
+          />
+          
+          {/* Faint Red Neon Accent - Automotive Theme */}
+          <div
+            className="absolute"
+            style={{
+              top: '35%',
+              right: '20%',
+              width: '100px',
+              height: '100px',
+              background: 'radial-gradient(circle, rgba(255, 0, 0, 0.25) 0%, rgba(205, 0, 0, 0.15) 40%, transparent 75%)',
+              borderRadius: '50%',
+              filter: 'blur(30px)',
+              animation: 'neonAccent 12s ease-in-out infinite',
+            }}
+          />
+          
+          {/* Ultra-Glossy Edge with Light Refraction */}
+          <div
+            className="absolute inset-0"
+            style={{
+              borderRadius: '50%',
+              border: '1.5px solid rgba(255, 255, 255, 0.25)',
+              filter: 'blur(2px)',
+              animation: 'glossyEdge 6s ease-in-out infinite',
+              boxShadow: '0 0 50px rgba(205, 0, 0, 0.6), 0 0 30px rgba(255, 255, 255, 0.3), inset 0 0 40px rgba(255, 255, 255, 0.2)',
+            }}
+          />
+          
+          {/* Surface Tension Shimmer */}
+          <div
+            className="absolute"
+            style={{
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '320px',
+              height: '320px',
+              borderRadius: '50%',
+              background: 'conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(255, 255, 255, 0.08) 90deg, transparent 180deg, rgba(255, 255, 255, 0.08) 270deg, transparent 360deg)',
+              filter: 'blur(15px)',
+              animation: 'surfaceShimmer 15s linear infinite',
+              mixBlendMode: 'overlay',
+            }}
+          />
+          
+          {/* PREMIUM NEON RED HALO - Sharp Outer Ring */}
+          <div
+            className="absolute"
+            style={{
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '460px',
+              height: '460px',
+              borderRadius: '50%',
+              border: '2px solid rgba(255, 0, 0, 0.6)',
+              filter: 'blur(1px)',
+              animation: 'neonHaloPulse 5s ease-in-out infinite',
+              boxShadow: `
+                0 0 20px rgba(255, 0, 0, 0.8),
+                0 0 40px rgba(220, 20, 60, 0.6),
+                0 0 60px rgba(205, 0, 0, 0.4),
+                inset 0 0 20px rgba(255, 0, 0, 0.3)
+              `,
+            }}
+          />
+          
+          {/* NEON RED HALO - Secondary Glow Layer */}
+          <div
+            className="absolute"
+            style={{
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '470px',
+              height: '470px',
+              borderRadius: '50%',
+              background: 'radial-gradient(circle, transparent 48%, rgba(255, 0, 0, 0.15) 49%, rgba(220, 20, 60, 0.25) 50%, rgba(205, 0, 0, 0.1) 52%, transparent 54%)',
+              filter: 'blur(3px)',
+              animation: 'neonHaloPulse 5s ease-in-out infinite 0.5s',
+            }}
+          />
+          
+          {/* METALLIC SPECULAR HIGHLIGHTS - Top Right */}
+          <div
+            className="absolute"
+            style={{
+              top: '12%',
+              right: '18%',
+              width: '50px',
+              height: '50px',
+              background: 'radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(192, 192, 192, 0.6) 30%, transparent 70%)',
+              borderRadius: '50%',
+              filter: 'blur(4px)',
+              animation: 'metallicSpecular1 7s ease-in-out infinite',
+              mixBlendMode: 'overlay',
+            }}
+          />
+          
+          {/* METALLIC SPECULAR HIGHLIGHTS - Left Edge */}
+          <div
+            className="absolute"
+            style={{
+              top: '40%',
+              left: '8%',
+              width: '35px',
+              height: '35px',
+              background: 'radial-gradient(circle, rgba(192, 192, 192, 0.8) 0%, rgba(255, 255, 255, 0.5) 40%, transparent 75%)',
+              borderRadius: '50%',
+              filter: 'blur(3px)',
+              animation: 'metallicSpecular2 8s ease-in-out infinite',
+              mixBlendMode: 'screen',
+            }}
+          />
+          
+          {/* METALLIC SPECULAR HIGHLIGHTS - Bottom Right Arc */}
+          <div
+            className="absolute"
+            style={{
+              bottom: '15%',
+              right: '12%',
+              width: '60px',
+              height: '30px',
+              background: 'linear-gradient(90deg, transparent 0%, rgba(192, 192, 192, 0.7) 50%, rgba(255, 255, 255, 0.5) 70%, transparent 100%)',
+              borderRadius: '50%',
+              filter: 'blur(5px)',
+              animation: 'metallicSpecular3 9s ease-in-out infinite',
+              mixBlendMode: 'overlay',
+              transform: 'rotate(-25deg)',
+            }}
+          />
+          
+          {/* SHARP NEON RED ACCENT - AMG Style */}
+          <div
+            className="absolute"
+            style={{
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '455px',
+              height: '455px',
+              borderRadius: '50%',
+              border: '1px solid rgba(255, 0, 0, 0.4)',
+              filter: 'blur(0.5px)',
+              animation: 'sharpNeonEdge 4s ease-in-out infinite',
+              boxShadow: `
+                0 0 10px rgba(255, 0, 0, 0.9),
+                0 0 20px rgba(220, 20, 60, 0.7),
+                0 0 30px rgba(205, 0, 0, 0.5)
+              `,
+            }}
+          />
+          
+          {/* METALLIC CHROME REFLECTION - Top Arc */}
+          <div
+            className="absolute"
+            style={{
+              top: '8%',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: '180px',
+              height: '40px',
+              background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.15) 20%, rgba(192, 192, 192, 0.35) 50%, rgba(255, 255, 255, 0.15) 80%, transparent 100%)',
+              borderRadius: '50%',
+              filter: 'blur(8px)',
+              animation: 'chromeReflection 10s ease-in-out infinite',
+              mixBlendMode: 'overlay',
+            }}
+          />
+          
+          {/* Collision Deformation Layer - Squash & Stretch Effect */}
+          <div
+            className="absolute inset-0"
+            style={{
+              animation: 'collisionDeform 32s ease-in-out infinite',
+            }}
+          />
+            </div>
+          </div>
+        </div>
+        
+        {/* RED NEBULA FOG - Atmospheric Volume Around Orb */}
+        <div 
+          className="absolute z-[3.5]"
+          style={{
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '700px',
+            height: '700px',
+            pointerEvents: 'none',
+          }}
+        >
+          {/* Primary Nebula Layer */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: 'radial-gradient(circle at 50% 50%, rgba(255, 0, 0, 0.09) 0%, rgba(255, 0, 0, 0.06) 30%, rgba(139, 0, 0, 0.04) 50%, transparent 70%)',
+              borderRadius: '50%',
+              filter: 'blur(120px)',
+              animation: 'nebulaFloat1 18s ease-in-out infinite',
+              mixBlendMode: 'screen',
+            }}
+          />
+          
+          {/* Secondary Nebula Layer - Offset */}
+          <div
+            className="absolute"
+            style={{
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '600px',
+              height: '600px',
+              background: 'radial-gradient(circle at 40% 35%, rgba(255, 0, 0, 0.08) 0%, rgba(220, 20, 60, 0.05) 35%, transparent 65%)',
+              borderRadius: '50%',
+              filter: 'blur(100px)',
+              animation: 'nebulaFloat2 22s ease-in-out infinite',
+              mixBlendMode: 'screen',
+            }}
+          />
+          
+          {/* Tertiary Depth Fog */}
+          <div
+            className="absolute"
+            style={{
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '500px',
+              height: '500px',
+              background: 'radial-gradient(circle at 60% 55%, rgba(255, 40, 40, 0.07) 0%, rgba(205, 0, 0, 0.04) 40%, transparent 70%)',
+              borderRadius: '50%',
+              filter: 'blur(90px)',
+              animation: 'nebulaFloat3 20s ease-in-out infinite',
+              mixBlendMode: 'screen',
+            }}
+          />
+        </div>
+        
+        {/* CINEMATIC LIGHT SWEEP - Glossy Car Hood Reflection */}
+        <div 
+          className="absolute inset-0 z-[4] overflow-hidden"
+          style={{
+            pointerEvents: 'none',
+          }}
+        >
+          {/* Primary Light Sweep - Horizontal Movement */}
+          <div
+            className="absolute top-0 left-0 h-full"
+            style={{
+              width: '300px',
+              background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.05) 50%, transparent 100%)',
+              filter: 'blur(40px)',
+              animation: 'lightSweep 20s linear infinite',
+              transform: 'translateX(-300px) skewX(-15deg)',
+              opacity: 0.8,
+            }}
+          />
+          
+          {/* Secondary Light Sweep - Offset for Depth */}
+          <div
+            className="absolute top-0 left-0 h-full"
+            style={{
+              width: '200px',
+              background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.03) 50%, transparent 100%)',
+              filter: 'blur(60px)',
+              animation: 'lightSweep 20s linear infinite 5s',
+              transform: 'translateX(-200px) skewX(-12deg)',
+              opacity: 0.6,
+            }}
+          />
+          
+          {/* Tertiary Subtle Sweep - Additional Motion Layer */}
+          <div
+            className="absolute top-0 left-0 h-full"
+            style={{
+              width: '150px',
+              background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.02) 50%, transparent 100%)',
+              filter: 'blur(80px)',
+              animation: 'lightSweep 20s linear infinite 10s',
+              transform: 'translateX(-150px) skewX(-10deg)',
+              opacity: 0.4,
+            }}
+          />
+        </div>
+        
+        {/* Cinematic Shallow Depth of Field - Top Blur */}
+        <div 
+          className="absolute inset-x-0 top-0 h-56 z-[4]"
+          style={{
+            background: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%)',
+            filter: 'blur(15px)',
+          }}
+        />
+        
+        {/* Cinematic Shallow Depth of Field - Bottom Blur */}
+        <div 
+          className="absolute inset-x-0 bottom-0 h-56 z-[4]"
+          style={{
+            background: 'linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%)',
+            filter: 'blur(15px)',
+          }}
+        />
+        
+        {/* Premium Vignette for Depth */}
+        <div 
+          className="absolute inset-0 z-[5]"
+          style={{
+            background: 'radial-gradient(ellipse at center, transparent 0%, transparent 40%, rgba(0, 0, 0, 0.4) 80%, rgba(0, 0, 0, 0.7) 100%)',
+            pointerEvents: 'none',
+          }}
+        />
+        
+        {/* METALLIC PARTICLE SPARKS - Ultra Subtle Apple/Tesla Detail */}
+        <div 
+          className="absolute inset-0 z-[6] overflow-hidden"
+          style={{
+            pointerEvents: 'none',
+          }}
+        >
+          {/* Particle Group 1 - Top Left Quadrant */}
+          <div
+            className="absolute"
+            style={{
+              top: '15%',
+              left: '10%',
+              width: '2px',
+              height: '2px',
+              background: 'radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, transparent 100%)',
+              borderRadius: '50%',
+              filter: 'blur(0.5px)',
+              animation: 'particleFloat1 25s ease-in-out infinite',
+              opacity: 0.008,
+              boxShadow: '0 0 4px rgba(255, 255, 255, 0.3)',
+            }}
+          />
+          <div
+            className="absolute"
+            style={{
+              top: '25%',
+              left: '20%',
+              width: '1.5px',
+              height: '1.5px',
+              background: 'radial-gradient(circle, rgba(192, 192, 192, 0.9) 0%, transparent 100%)',
+              borderRadius: '50%',
+              filter: 'blur(0.5px)',
+              animation: 'particleFloat2 30s ease-in-out infinite',
+              opacity: 0.006,
+              boxShadow: '0 0 3px rgba(192, 192, 192, 0.2)',
+            }}
+          />
+          
+          {/* Particle Group 2 - Top Right Quadrant */}
+          <div
+            className="absolute"
+            style={{
+              top: '20%',
+              right: '15%',
+              width: '2px',
+              height: '2px',
+              background: 'radial-gradient(circle, rgba(255, 255, 255, 0.7) 0%, transparent 100%)',
+              borderRadius: '50%',
+              filter: 'blur(0.5px)',
+              animation: 'particleFloat3 28s ease-in-out infinite',
+              opacity: 0.007,
+              boxShadow: '0 0 4px rgba(255, 255, 255, 0.25)',
+            }}
+          />
+          <div
+            className="absolute"
+            style={{
+              top: '35%',
+              right: '25%',
+              width: '1px',
+              height: '1px',
+              background: 'radial-gradient(circle, rgba(255, 255, 255, 0.6) 0%, transparent 100%)',
+              borderRadius: '50%',
+              filter: 'blur(0.3px)',
+              animation: 'particleFloat4 35s ease-in-out infinite',
+              opacity: 0.005,
+              boxShadow: '0 0 2px rgba(255, 255, 255, 0.2)',
+            }}
+          />
+          
+          {/* Particle Group 3 - Center Area */}
+          <div
+            className="absolute"
+            style={{
+              top: '45%',
+              left: '30%',
+              width: '1.5px',
+              height: '1.5px',
+              background: 'radial-gradient(circle, rgba(220, 220, 220, 0.8) 0%, transparent 100%)',
+              borderRadius: '50%',
+              filter: 'blur(0.5px)',
+              animation: 'particleFloat5 32s ease-in-out infinite',
+              opacity: 0.006,
+              boxShadow: '0 0 3px rgba(220, 220, 220, 0.2)',
+            }}
+          />
+          <div
+            className="absolute"
+            style={{
+              top: '50%',
+              right: '35%',
+              width: '2px',
+              height: '2px',
+              background: 'radial-gradient(circle, rgba(255, 255, 255, 0.75) 0%, transparent 100%)',
+              borderRadius: '50%',
+              filter: 'blur(0.5px)',
+              animation: 'particleFloat6 27s ease-in-out infinite',
+              opacity: 0.007,
+              boxShadow: '0 0 4px rgba(255, 255, 255, 0.25)',
+            }}
+          />
+          
+          {/* Particle Group 4 - Bottom Left Quadrant */}
+          <div
+            className="absolute"
+            style={{
+              bottom: '30%',
+              left: '18%',
+              width: '1px',
+              height: '1px',
+              background: 'radial-gradient(circle, rgba(192, 192, 192, 0.7) 0%, transparent 100%)',
+              borderRadius: '50%',
+              filter: 'blur(0.3px)',
+              animation: 'particleFloat7 33s ease-in-out infinite',
+              opacity: 0.005,
+              boxShadow: '0 0 2px rgba(192, 192, 192, 0.2)',
+            }}
+          />
+          <div
+            className="absolute"
+            style={{
+              bottom: '25%',
+              left: '28%',
+              width: '1.5px',
+              height: '1.5px',
+              background: 'radial-gradient(circle, rgba(255, 255, 255, 0.65) 0%, transparent 100%)',
+              borderRadius: '50%',
+              filter: 'blur(0.5px)',
+              animation: 'particleFloat8 29s ease-in-out infinite',
+              opacity: 0.006,
+              boxShadow: '0 0 3px rgba(255, 255, 255, 0.2)',
+            }}
+          />
+          
+          {/* Particle Group 5 - Bottom Right Quadrant */}
+          <div
+            className="absolute"
+            style={{
+              bottom: '28%',
+              right: '20%',
+              width: '2px',
+              height: '2px',
+              background: 'radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, transparent 100%)',
+              borderRadius: '50%',
+              filter: 'blur(0.5px)',
+              animation: 'particleFloat9 31s ease-in-out infinite',
+              opacity: 0.007,
+              boxShadow: '0 0 4px rgba(255, 255, 255, 0.3)',
+            }}
+          />
+          <div
+            className="absolute"
+            style={{
+              bottom: '35%',
+              right: '12%',
+              width: '1px',
+              height: '1px',
+              background: 'radial-gradient(circle, rgba(220, 220, 220, 0.6) 0%, transparent 100%)',
+              borderRadius: '50%',
+              filter: 'blur(0.3px)',
+              animation: 'particleFloat10 36s ease-in-out infinite',
+              opacity: 0.005,
+              boxShadow: '0 0 2px rgba(220, 220, 220, 0.15)',
+            }}
+          />
+        </div>
+        
         {/* Content */}
-        <div className="container mx-auto px-4 sm:px-6 md:px-8 max-w-4xl relative z-[3] flex flex-col justify-center items-center text-center">
+        <div className="container mx-auto px-4 sm:px-6 md:px-8 max-w-4xl relative z-[10] flex flex-col justify-center items-center text-center">
           <h1 
             className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-3"
             style={{
@@ -93,13 +772,12 @@ const ContactUs = () => {
             Get In Touch
           </h1>
           
-          {/* Minimal Red Accent Line */}
+          {/* White Line Under Title */}
           <div 
-            className="h-0.5 w-20 mb-6"
+            className="w-32 h-1 bg-white mb-6"
             style={{
-              background: '#FF0000',
               animation: 'fadeInUp 0.8s ease-out 0.2s forwards',
-              opacity: 0
+              opacity: 0,
             }}
           />
           
@@ -144,6 +822,593 @@ const ContactUs = () => {
             }
             50% {
               transform: scale(1.1);
+            }
+          }
+          
+          @keyframes liquidBulbMorph {
+            0%, 100% {
+              border-radius: 50% 48% 52% 50%;
+              transform: scale(1) rotate(0deg);
+            }
+            20% {
+              border-radius: 48% 52% 50% 48%;
+              transform: scale(1.04) rotate(1.5deg);
+            }
+            40% {
+              border-radius: 52% 50% 48% 52%;
+              transform: scale(0.97) rotate(-1deg);
+            }
+            60% {
+              border-radius: 50% 48% 52% 50%;
+              transform: scale(1.02) rotate(0.8deg);
+            }
+            80% {
+              border-radius: 48% 52% 50% 48%;
+              transform: scale(0.99) rotate(-0.5deg);
+            }
+          }
+          
+          @keyframes liquidWobble {
+            0%, 100% {
+              border-radius: 50%;
+              transform: translate(-50%, -50%) scale(1);
+            }
+            25% {
+              border-radius: 48% 52% 50% 48%;
+              transform: translate(-50%, -50%) scale(1.06) translateY(-8px);
+            }
+            50% {
+              border-radius: 52% 48% 50% 52%;
+              transform: translate(-50%, -50%) scale(0.96) translateY(6px);
+            }
+            75% {
+              border-radius: 50% 48% 52% 50%;
+              transform: translate(-50%, -50%) scale(1.03) translateY(-4px);
+            }
+          }
+          
+          @keyframes gelBreathe {
+            0%, 100% {
+              transform: translate(-50%, -50%) scale(1);
+              opacity: 0.85;
+            }
+            33% {
+              transform: translate(-50%, -50%) scale(1.08);
+              opacity: 1;
+            }
+            66% {
+              transform: translate(-50%, -50%) scale(0.94);
+              opacity: 0.9;
+            }
+          }
+          
+          @keyframes iridescentShift {
+            0%, 100% {
+              transform: translate(0, 0);
+              opacity: 0.9;
+            }
+            25% {
+              transform: translate(18px, -12px);
+              opacity: 1;
+            }
+            50% {
+              transform: translate(-10px, 8px);
+              opacity: 0.85;
+            }
+            75% {
+              transform: translate(8px, -6px);
+              opacity: 0.95;
+            }
+          }
+          
+          @keyframes secondaryRefraction {
+            0%, 100% {
+              transform: translate(0, 0) scale(1);
+              opacity: 0.7;
+            }
+            50% {
+              transform: translate(-15px, 12px) scale(1.15);
+              opacity: 1;
+            }
+          }
+          
+          @keyframes crimsonPulse {
+            0%, 100% {
+              transform: scale(1);
+              opacity: 0.8;
+              box-shadow: 0 0 40px rgba(205, 0, 0, 0.4);
+            }
+            50% {
+              transform: scale(1.12);
+              opacity: 1;
+              box-shadow: 0 0 60px rgba(205, 0, 0, 0.6), 0 0 100px rgba(220, 20, 60, 0.4);
+            }
+          }
+          
+          @keyframes neonAccent {
+            0%, 100% {
+              transform: scale(1) rotate(0deg);
+              opacity: 0.6;
+            }
+            33% {
+              transform: scale(1.1) rotate(5deg);
+              opacity: 0.9;
+            }
+            66% {
+              transform: scale(0.95) rotate(-3deg);
+              opacity: 0.7;
+            }
+          }
+          
+          @keyframes glossyEdge {
+            0%, 100% {
+              box-shadow: 0 0 50px rgba(205, 0, 0, 0.6), 0 0 30px rgba(255, 255, 255, 0.3), inset 0 0 40px rgba(255, 255, 255, 0.2);
+              opacity: 0.85;
+            }
+            50% {
+              box-shadow: 0 0 70px rgba(205, 0, 0, 0.8), 0 0 45px rgba(255, 255, 255, 0.5), inset 0 0 55px rgba(255, 255, 255, 0.35);
+              opacity: 1;
+            }
+          }
+          
+          @keyframes surfaceShimmer {
+            0% {
+              transform: translate(-50%, -50%) rotate(0deg);
+            }
+            100% {
+              transform: translate(-50%, -50%) rotate(360deg);
+            }
+          }
+          
+          @keyframes neonHaloPulse {
+            0%, 100% {
+              opacity: 0.8;
+              box-shadow: 
+                0 0 20px rgba(255, 0, 0, 0.8),
+                0 0 40px rgba(220, 20, 60, 0.6),
+                0 0 60px rgba(205, 0, 0, 0.4),
+                inset 0 0 20px rgba(255, 0, 0, 0.3);
+            }
+            50% {
+              opacity: 1;
+              box-shadow: 
+                0 0 30px rgba(255, 0, 0, 1),
+                0 0 60px rgba(220, 20, 60, 0.8),
+                0 0 90px rgba(205, 0, 0, 0.6),
+                0 0 120px rgba(139, 0, 0, 0.4),
+                inset 0 0 30px rgba(255, 0, 0, 0.5);
+            }
+          }
+          
+          @keyframes sharpNeonEdge {
+            0%, 100% {
+              opacity: 0.7;
+              box-shadow: 
+                0 0 10px rgba(255, 0, 0, 0.9),
+                0 0 20px rgba(220, 20, 60, 0.7),
+                0 0 30px rgba(205, 0, 0, 0.5);
+            }
+            50% {
+              opacity: 1;
+              box-shadow: 
+                0 0 15px rgba(255, 0, 0, 1),
+                0 0 30px rgba(220, 20, 60, 0.9),
+                0 0 45px rgba(205, 0, 0, 0.7),
+                0 0 60px rgba(139, 0, 0, 0.5);
+            }
+          }
+          
+          @keyframes metallicSpecular1 {
+            0%, 100% {
+              opacity: 0.6;
+              transform: translate(0, 0) scale(1);
+            }
+            50% {
+              opacity: 1;
+              transform: translate(5px, -5px) scale(1.2);
+            }
+          }
+          
+          @keyframes metallicSpecular2 {
+            0%, 100% {
+              opacity: 0.5;
+              transform: translate(0, 0) scale(1);
+            }
+            50% {
+              opacity: 0.9;
+              transform: translate(-3px, 3px) scale(1.15);
+            }
+          }
+          
+          @keyframes metallicSpecular3 {
+            0%, 100% {
+              opacity: 0.4;
+              transform: rotate(-25deg) scale(1);
+            }
+            50% {
+              opacity: 0.8;
+              transform: rotate(-20deg) scale(1.1);
+            }
+          }
+          
+          @keyframes chromeReflection {
+            0%, 100% {
+              opacity: 0.5;
+              transform: translateX(-50%) scaleX(1);
+            }
+            50% {
+              opacity: 0.8;
+              transform: translateX(-50%) scaleX(1.1);
+            }
+          }
+          
+          @keyframes metallicPulse {
+            0%, 100% {
+              opacity: 0.4;
+              transform: translate(-50%, -50%) scale(1);
+            }
+            33% {
+              opacity: 0.5;
+              transform: translate(-50%, -50%) scale(1.05);
+            }
+            66% {
+              opacity: 0.35;
+              transform: translate(-50%, -50%) scale(0.98);
+            }
+          }
+          
+          @keyframes metallicShift {
+            0%, 100% {
+              opacity: 0.35;
+              transform: translate(-50%, -50%) scale(1) rotate(0deg);
+            }
+            50% {
+              opacity: 0.45;
+              transform: translate(-50%, -50%) scale(1.08) rotate(5deg);
+            }
+          }
+          
+          @keyframes metallicGlow {
+            0%, 100% {
+              opacity: 0.25;
+              transform: translate(-50%, -50%) scale(1);
+              filter: blur(80px) brightness(1);
+            }
+            50% {
+              opacity: 0.4;
+              transform: translate(-50%, -50%) scale(1.1);
+              filter: blur(90px) brightness(1.2);
+            }
+          }
+          
+          @keyframes depthLayer {
+            0%, 100% {
+              opacity: 0.3;
+              transform: translate(-50%, -50%) scale(1);
+            }
+            50% {
+              opacity: 0.4;
+              transform: translate(-50%, -50%) scale(1.06);
+            }
+          }
+          
+          @keyframes lightSweep {
+            0% {
+              transform: translateX(-300px) skewX(-15deg);
+            }
+            100% {
+              transform: translateX(calc(100vw + 300px)) skewX(-15deg);
+            }
+          }
+          
+          @keyframes particleFloat1 {
+            0%, 100% {
+              transform: translate(0, 0);
+              opacity: 0.008;
+            }
+            50% {
+              transform: translate(15px, -20px);
+              opacity: 0.010;
+            }
+          }
+          
+          @keyframes particleFloat2 {
+            0%, 100% {
+              transform: translate(0, 0);
+              opacity: 0.006;
+            }
+            50% {
+              transform: translate(-12px, 18px);
+              opacity: 0.009;
+            }
+          }
+          
+          @keyframes particleFloat3 {
+            0%, 100% {
+              transform: translate(0, 0);
+              opacity: 0.007;
+            }
+            50% {
+              transform: translate(-18px, -15px);
+              opacity: 0.010;
+            }
+          }
+          
+          @keyframes particleFloat4 {
+            0%, 100% {
+              transform: translate(0, 0);
+              opacity: 0.005;
+            }
+            50% {
+              transform: translate(10px, 22px);
+              opacity: 0.008;
+            }
+          }
+          
+          @keyframes particleFloat5 {
+            0%, 100% {
+              transform: translate(0, 0);
+              opacity: 0.006;
+            }
+            50% {
+              transform: translate(20px, -12px);
+              opacity: 0.009;
+            }
+          }
+          
+          @keyframes particleFloat6 {
+            0%, 100% {
+              transform: translate(0, 0);
+              opacity: 0.007;
+            }
+            50% {
+              transform: translate(-15px, 16px);
+              opacity: 0.010;
+            }
+          }
+          
+          @keyframes particleFloat7 {
+            0%, 100% {
+              transform: translate(0, 0);
+              opacity: 0.005;
+            }
+            50% {
+              transform: translate(14px, -18px);
+              opacity: 0.008;
+            }
+          }
+          
+          @keyframes particleFloat8 {
+            0%, 100% {
+              transform: translate(0, 0);
+              opacity: 0.006;
+            }
+            50% {
+              transform: translate(-16px, -14px);
+              opacity: 0.009;
+            }
+          }
+          
+          @keyframes particleFloat9 {
+            0%, 100% {
+              transform: translate(0, 0);
+              opacity: 0.007;
+            }
+            50% {
+              transform: translate(18px, 20px);
+              opacity: 0.010;
+            }
+          }
+          
+          @keyframes particleFloat10 {
+            0%, 100% {
+              transform: translate(0, 0);
+              opacity: 0.005;
+            }
+            50% {
+              transform: translate(-10px, -16px);
+              opacity: 0.007;
+            }
+          }
+          
+          @keyframes nebulaFloat1 {
+            0%, 100% {
+              transform: translate(-50%, -50%) scale(1);
+              opacity: 0.8;
+            }
+            50% {
+              transform: translate(-50%, -50%) scale(1.1) rotate(5deg);
+              opacity: 1;
+            }
+          }
+          
+          @keyframes nebulaFloat2 {
+            0%, 100% {
+              transform: translate(-50%, -50%) scale(1);
+              opacity: 0.7;
+            }
+            50% {
+              transform: translate(-50%, -50%) scale(1.15) rotate(-3deg);
+              opacity: 0.9;
+            }
+          }
+          
+          @keyframes nebulaFloat3 {
+            0%, 100% {
+              transform: translate(-50%, -50%) scale(1);
+              opacity: 0.75;
+            }
+            50% {
+              transform: translate(-50%, -50%) scale(1.12) rotate(4deg);
+              opacity: 0.95;
+            }
+          }
+          
+          /* Physics-Based Floating with Collision Detection & Rebounds */
+          @keyframes physicsFloat {
+            /* Start: Center, Drift Right */
+            0% {
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+            }
+            
+            /* Move to Right Wall - Approach */
+            8% {
+              top: 45%;
+              left: 62%;
+              transform: translate(-50%, -50%);
+            }
+            
+            /* Collision with Right Wall - Deformation */
+            10% {
+              top: 44%;
+              left: 64%;
+              transform: translate(-50%, -50%) scaleX(0.85) scaleY(1.12);
+            }
+            
+            /* Rebound from Right Wall */
+            12% {
+              top: 43%;
+              left: 61%;
+              transform: translate(-50%, -50%) scaleX(1.05) scaleY(0.97);
+            }
+            
+            /* Drift Toward Top Left */
+            20% {
+              top: 28%;
+              left: 38%;
+              transform: translate(-50%, -50%);
+            }
+            
+            /* Collision with Top Wall - Squash */
+            23% {
+              top: 24%;
+              left: 36%;
+              transform: translate(-50%, -50%) scaleX(1.14) scaleY(0.82);
+            }
+            
+            /* Rebound from Top */
+            26% {
+              top: 30%;
+              left: 35%;
+              transform: translate(-50%, -50%) scaleX(0.96) scaleY(1.06);
+            }
+            
+            /* Drift Toward Left Wall */
+            35% {
+              top: 55%;
+              left: 22%;
+              transform: translate(-50%, -50%);
+            }
+            
+            /* Collision with Left Wall */
+            38% {
+              top: 56%;
+              left: 19%;
+              transform: translate(-50%, -50%) scaleX(0.88) scaleY(1.10);
+            }
+            
+            /* Rebound from Left */
+            41% {
+              top: 57%;
+              left: 24%;
+              transform: translate(-50%, -50%) scaleX(1.04) scaleY(0.98);
+            }
+            
+            /* Drift Toward Bottom Right */
+            52% {
+              top: 72%;
+              left: 58%;
+              transform: translate(-50%, -50%);
+            }
+            
+            /* Collision with Bottom Wall */
+            55% {
+              top: 76%;
+              left: 59%;
+              transform: translate(-50%, -50%) scaleX(1.16) scaleY(0.80);
+            }
+            
+            /* Rebound from Bottom */
+            58% {
+              top: 71%;
+              left: 60%;
+              transform: translate(-50%, -50%) scaleX(0.94) scaleY(1.08);
+            }
+            
+            /* Drift Back Toward Top Right Corner */
+            68% {
+              top: 32%;
+              left: 65%;
+              transform: translate(-50%, -50%);
+            }
+            
+            /* Corner Collision - Top Right */
+            71% {
+              top: 26%;
+              left: 68%;
+              transform: translate(-50%, -50%) scaleX(0.86) scaleY(0.86) rotate(-8deg);
+            }
+            
+            /* Rebound from Corner - Dual Direction */
+            74% {
+              top: 34%;
+              left: 62%;
+              transform: translate(-50%, -50%) scaleX(1.08) scaleY(1.08) rotate(3deg);
+            }
+            
+            /* Float Toward Center-Left */
+            85% {
+              top: 50%;
+              left: 35%;
+              transform: translate(-50%, -50%) rotate(0deg);
+            }
+            
+            /* Gentle Drift Back to Center */
+            95% {
+              top: 50%;
+              left: 48%;
+              transform: translate(-50%, -50%);
+            }
+            
+            /* Return to Start Position */
+            100% {
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+            }
+          }
+          
+          /* Collision Deformation - Synced with Physics Float */
+          @keyframes collisionDeform {
+            0%, 8%, 12%, 20%, 26%, 35%, 41%, 52%, 58%, 68%, 74%, 85%, 100% {
+              border-radius: 50%;
+            }
+            
+            /* Right Wall Impact */
+            10% {
+              border-radius: 35% 50% 50% 35%;
+            }
+            
+            /* Top Wall Impact */
+            23% {
+              border-radius: 45% 45% 55% 55%;
+            }
+            
+            /* Left Wall Impact */
+            38% {
+              border-radius: 50% 35% 35% 50%;
+            }
+            
+            /* Bottom Wall Impact */
+            55% {
+              border-radius: 55% 55% 45% 45%;
+            }
+            
+            /* Corner Impact - Asymmetric Deformation */
+            71% {
+              border-radius: 40% 50% 45% 38%;
             }
           }
           

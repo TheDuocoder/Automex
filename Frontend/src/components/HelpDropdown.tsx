@@ -80,13 +80,60 @@ const HelpDropdown = ({ variant = "light" }: HelpDropdownProps) => {
   return (
     <DropdownMenu onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
-        <button className={buttonClasses}>
-          <div className={iconCircleClasses}>
+        <button 
+          className="group flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-300 ease-out active:scale-95 relative overflow-hidden"
+          style={{
+            background: 'rgba(0, 0, 0, 0.35)',
+            backdropFilter: 'blur(8px)',
+            border: '1.5px solid rgba(255, 255, 255, 0.75)',
+            boxShadow: `
+              0 0 15px rgba(255, 255, 255, 0.25),
+              inset 0 1px 0 rgba(255, 255, 255, 0.1),
+              inset 0 -1px 0 rgba(0, 0, 0, 0.2)
+            `,
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.boxShadow = `
+              0 0 25px rgba(255, 255, 255, 0.4),
+              0 0 40px rgba(255, 255, 255, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.15),
+              inset 0 -1px 0 rgba(0, 0, 0, 0.3)
+            `;
+            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.9)';
+            e.currentTarget.style.transform = 'translateY(-1px) scale(1.02)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.boxShadow = `
+              0 0 15px rgba(255, 255, 255, 0.25),
+              inset 0 1px 0 rgba(255, 255, 255, 0.1),
+              inset 0 -1px 0 rgba(0, 0, 0, 0.2)
+            `;
+            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.75)';
+            e.currentTarget.style.transform = 'translateY(0) scale(1)';
+          }}
+        >
+          {/* Glossy Highlight */}
+          <div 
+            className="absolute top-0 left-0 right-0 h-[40%] pointer-events-none"
+            style={{
+              background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, transparent 100%)',
+              borderRadius: '12px 12px 0 0',
+            }}
+          />
+          
+          <div 
+            className="h-6 w-6 rounded-full flex items-center justify-center flex-shrink-0 text-white transition-transform duration-300 group-hover:rotate-12 relative z-10"
+            style={{
+              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              boxShadow: '0 2px 6px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
+            }}
+          >
             <HelpCircle className="h-3.5 w-3.5 text-white" strokeWidth={2} />
           </div>
-          <span className="text-base font-medium text-white">Help</span>
+          <span className="text-base font-medium text-white relative z-10">Help</span>
           <ChevronDown 
-            className={`h-4 w-4 text-white transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} 
+            className={`h-4 w-4 text-white transition-transform duration-300 relative z-10 ${isOpen ? 'rotate-180' : ''}`} 
             strokeWidth={2} 
           />
         </button>
