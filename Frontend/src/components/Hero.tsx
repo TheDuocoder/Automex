@@ -132,6 +132,41 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
         ))}
       </div>
       
+      {/* Minimal Premium Scroll Indicator - Lower Right - Only visible when not authenticated and login form not open */}
+      {!isAuthenticated && !showLoginForm && (
+        <div className="absolute bottom-20 md:bottom-24 right-8 md:right-16 lg:right-20 z-[5] flex flex-col items-center gap-2 cursor-pointer group">
+          {/* Arrow with Glow */}
+          <div className="relative animate-bounce">
+            {/* Neon Red Glow */}
+            <div className="absolute inset-0 blur-xl opacity-50 group-hover:opacity-80 transition-opacity duration-300" 
+                 style={{
+                   background: 'radial-gradient(circle, rgba(239, 68, 68, 0.7) 0%, transparent 70%)',
+                 }}>
+            </div>
+            
+            {/* Arrow Icon */}
+            <svg 
+              className="w-7 h-7 md:w-9 md:h-9 text-white relative z-10 transition-all duration-300 group-hover:translate-y-1 group-hover:scale-110" 
+              fill="none" 
+              strokeWidth="1.5" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
+            </svg>
+          </div>
+          
+          {/* Text */}
+          <span className="text-white text-[9px] md:text-[10px] font-bold tracking-[0.25em] uppercase transition-all duration-300 group-hover:tracking-[0.3em]"
+                style={{ 
+                  fontFamily: "'Inter', 'SF Pro Display', -apple-system, sans-serif",
+                  textShadow: '0 2px 8px rgba(0, 0, 0, 0.5)'
+                }}>
+            Scroll to Explore
+          </span>
+        </div>
+      )}
+      
       <div className="container mx-auto px-4 md:px-6 lg:px-8 relative z-[4] h-full flex items-center pt-24 md:pt-32 pb-16 md:pb-20">
         <div className="grid md:grid-cols-[1fr_auto] gap-8 md:gap-12 lg:gap-16 items-start w-full">
           {/* Left side - Text content */}
@@ -176,11 +211,11 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
           </div>
 
           {/* Right side - Empty initially, Welcome Section when authenticated */}
-          <div className="w-full md:w-[540px]">
+          <div className="w-full md:w-[480px]">
             <div className="hero-auth-card w-full">
               {isAuthenticated ? (
                 // Welcome Section for Logged-in Users
-                <div className="welcome-section w-full bg-black/60 backdrop-blur-md border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_60px_rgba(255,81,47,0.2),0_0_100px_rgba(221,36,118,0.15)] rounded-3xl p-6 relative">
+                <div className="welcome-section w-full bg-black/60 backdrop-blur-md border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_60px_rgba(255,81,47,0.2),0_0_100px_rgba(221,36,118,0.15)] rounded-3xl p-5 relative scale-90 origin-top">
                 {/* Welcome Header */}
                 <div className="text-center mb-4">
                   <div className="flex justify-center mb-3 -mt-2">
@@ -263,27 +298,35 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
 
                   <Button
                     onClick={() => navigate('/services')}
-                    className="w-full h-14 text-white/90 font-semibold transition-all duration-300 group"
+                    className="w-full h-16 text-white text-lg font-bold transition-all duration-300 group relative overflow-hidden"
                     style={{
-                      border: '1px solid rgba(255,255,255,0.25)',
-                      background: 'rgba(255,255,255,0.03)',
-                      borderRadius: '18px',
+                      border: '1px solid rgba(255,122,0,0.4)',
+                      background: 'linear-gradient(45deg, #FF7A00 0%, #FF3B30 100%)',
+                      borderRadius: '20px',
+                      boxShadow: '0 0 25px rgba(255,122,0,0.4), 0 6px 18px rgba(255,59,48,0.35), inset 0 1px 0 rgba(255,255,255,0.2)',
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.background = 'rgba(255,255,255,0.08)';
-                      e.currentTarget.style.borderColor = 'rgba(255,255,255,0.5)';
-                      e.currentTarget.style.boxShadow = '0 0 20px rgba(255,255,255,0.3), inset 0 0 20px rgba(255,255,255,0.1)';
+                      e.currentTarget.style.background = 'linear-gradient(45deg, #FF8800 0%, #FF2020 100%)';
+                      e.currentTarget.style.boxShadow = '0 0 35px rgba(255,122,0,0.6), 0 10px 30px rgba(255,59,48,0.5), inset 0 1px 0 rgba(255,255,255,0.3)';
                       e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.background = 'rgba(255,255,255,0.03)';
-                      e.currentTarget.style.borderColor = 'rgba(255,255,255,0.25)';
-                      e.currentTarget.style.boxShadow = 'none';
+                      e.currentTarget.style.background = 'linear-gradient(45deg, #FF7A00 0%, #FF3B30 100%)';
+                      e.currentTarget.style.boxShadow = '0 0 25px rgba(255,122,0,0.4), 0 6px 18px rgba(255,59,48,0.35), inset 0 1px 0 rgba(255,255,255,0.2)';
                       e.currentTarget.style.transform = 'translateY(0) scale(1)';
                     }}
                   >
-                    <Calendar className="w-5 h-5 mr-2 brightness-125" />
-                    Schedule Service
+                    {/* Glossy overlay effect */}
+                    <div 
+                      className="absolute top-0 left-0 right-0 h-[45%] pointer-events-none"
+                      style={{
+                        background: 'linear-gradient(180deg, rgba(255,255,255,0.25) 0%, transparent 100%)',
+                        borderRadius: '20px 20px 0 0',
+                      }}
+                    />
+                    <Calendar className="w-6 h-6 mr-3 group-hover:scale-110 transition-transform relative z-10" />
+                    <span className="relative z-10">Schedule Service</span>
+                    <ArrowRight className="w-6 h-6 ml-3 group-hover:translate-x-2 transition-transform relative z-10" />
                   </Button>
                 </div>
 
@@ -299,15 +342,15 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
                   <div className="space-y-2">
                     <div className="flex items-center gap-3 text-white/90 text-sm">
                       <CheckCircle2 className="w-4 h-4 text-green-400 flex-shrink-0" />
-                      <span>Track your service requests</span>
+                      <span>Track your service in real time</span>
                     </div>
                     <div className="flex items-center gap-3 text-white/90 text-sm">
                       <CheckCircle2 className="w-4 h-4 text-green-400 flex-shrink-0" />
-                      <span>View service history</span>
+                      <span>Manage & View service history</span>
                     </div>
                     <div className="flex items-center gap-3 text-white/90 text-sm">
                       <CheckCircle2 className="w-4 h-4 text-green-400 flex-shrink-0" />
-                      <span>Manage your vehicles</span>
+                      <span>Free drop step pick up</span>
                     </div>
                   </div>
                 </div>
