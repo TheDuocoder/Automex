@@ -1571,7 +1571,7 @@ const ContactUs = () => {
                   <div className="mt-6">
                     <p className="font-semibold leading-relaxed text-gray-700" style={{ fontSize: '15px' }}>
                       AUTOMEX,<br />
-                      Hanspal puri, colony, Balianta road<br />
+                      Hanspal , Balianta market road<br />
                       Bhubaneswar, Odisha - 752101
                     </p>
                     <p className="mt-3 text-gray-500" style={{ fontSize: '14px' }}>
