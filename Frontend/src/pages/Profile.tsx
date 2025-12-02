@@ -431,8 +431,11 @@ const Profile = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="px-6 py-5 relative"
-          style={{ backgroundColor: '#912F56' }}
+          className="px-6 py-5 relative overflow-hidden"
+          style={{ 
+            backgroundColor: '#7C2558',
+            boxShadow: 'inset 0 0 60px rgba(0, 0, 0, 0.1)'
+          }}
         >
           {/* Help Dropdown - Top Right */}
           <div className="absolute top-4 right-6">

@@ -180,9 +180,19 @@ const MyCars = () => {
 
     return (
         <Card className="shadow-lg border-none">
-            <CardHeader className="border-b bg-gray-50/50 pb-4 flex flex-row items-center justify-between">
-                <CardTitle className="flex items-center gap-2 text-xl">
-                    <CarIcon className="h-5 w-5 text-primary" />
+            <CardHeader 
+                className="border-b pb-4 flex flex-row items-center justify-between relative overflow-hidden"
+                style={{
+                    background: `
+                        radial-gradient(circle at 100% 0%, rgba(253, 253, 245, 0.3) 0%, transparent 50%),
+                        radial-gradient(circle at 0% 0%, rgba(253, 253, 245, 0.3) 0%, transparent 50%),
+                        linear-gradient(135deg, #7C2558 0%, #F96161 40%, #FA887E 70%, #FDFDF5 100%)
+                    `,
+                    boxShadow: 'inset 0 0 60px rgba(0, 0, 0, 0.1)'
+                }}
+            >
+                <CardTitle className="flex items-center gap-2 text-xl text-white drop-shadow-md">
+                    <CarIcon className="h-5 w-5 text-white" />
                     My Vehicles
                 </CardTitle>
                 <Dialog 
@@ -195,7 +205,7 @@ const MyCars = () => {
                     }}
                 >
                     <DialogTrigger asChild>
-                        <Button size="sm" className="gap-1">
+                        <Button size="sm" className="gap-1 bg-white hover:bg-gray-50 border border-white shadow-lg hover:shadow-xl transition-all duration-300 font-semibold" style={{ color: '#7C2558' }}>
                             <Plus className="h-4 w-4" /> Add Car
                         </Button>
                     </DialogTrigger>
@@ -499,21 +509,63 @@ const MyCars = () => {
                                     {/* Action Buttons - Single Row */}
                                     <div className="flex gap-2.5">
                                         <button
-                                            className="group flex items-center justify-center gap-2 h-10 bg-transparent border-2 border-emerald-500 text-emerald-600 hover:bg-emerald-500 hover:text-white hover:border-emerald-500 font-bold rounded-[12px] shadow-sm hover:shadow-[0_4px_16px_rgba(16,185,129,0.3)] transition-all duration-300 hover:scale-[1.02] flex-1"
+                                            className="group flex items-center justify-center gap-2 h-10 bg-transparent border-2 font-bold rounded-[12px] shadow-sm transition-all duration-300 hover:scale-[1.02] flex-1 hover:text-white"
+                                            style={{
+                                                borderColor: '#7C2558',
+                                                color: '#7C2558',
+                                            }}
+                                            onMouseEnter={(e) => {
+                                                e.currentTarget.style.backgroundColor = '#7C2558';
+                                                e.currentTarget.style.color = 'white';
+                                                e.currentTarget.style.boxShadow = '0 4px 16px rgba(124, 37, 88, 0.3)';
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.currentTarget.style.backgroundColor = 'transparent';
+                                                e.currentTarget.style.color = '#7C2558';
+                                                e.currentTarget.style.boxShadow = '';
+                                            }}
                                             onClick={() => navigate('/profile', { state: { view: 'schedule-pickup' } })}
                                         >
                                             <Calendar className="h-4 w-4" strokeWidth={2.5} />
                                             <span className="text-sm">Schedule Pick Up</span>
                                         </button>
                                         <button
-                                            className="group flex items-center justify-center gap-2 h-10 bg-transparent border-2 border-[#FCD202] text-[#FCD202] hover:bg-[#FCD202] hover:text-white hover:border-[#FCD202] font-bold rounded-[12px] shadow-sm hover:shadow-[0_4px_16px_rgba(252,210,2,0.3)] transition-all duration-300 hover:scale-[1.02] flex-1"
+                                            className="group flex items-center justify-center gap-2 h-10 bg-transparent border-2 font-bold rounded-[12px] shadow-sm transition-all duration-300 hover:scale-[1.02] flex-1 hover:text-white"
+                                            style={{
+                                                borderColor: '#F96161',
+                                                color: '#F96161',
+                                            }}
+                                            onMouseEnter={(e) => {
+                                                e.currentTarget.style.backgroundColor = '#F96161';
+                                                e.currentTarget.style.color = 'white';
+                                                e.currentTarget.style.boxShadow = '0 4px 16px rgba(249, 97, 97, 0.3)';
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.currentTarget.style.backgroundColor = 'transparent';
+                                                e.currentTarget.style.color = '#F96161';
+                                                e.currentTarget.style.boxShadow = '';
+                                            }}
                                             onClick={() => navigate('/services')}
                                         >
                                             <Wrench className="h-4 w-4" strokeWidth={2.5} />
                                             <span className="text-sm">Book Service</span>
                                         </button>
                                         <button
-                                            className="group flex items-center justify-center gap-2 h-10 bg-transparent border-2 border-[#FF4F93] text-[#FF4F93] hover:bg-[#FF4F93] hover:text-white hover:border-[#FF4F93] font-bold rounded-[12px] shadow-sm hover:shadow-[0_4px_16px_rgba(255,79,147,0.3)] transition-all duration-300 hover:scale-[1.02] flex-1"
+                                            className="group flex items-center justify-center gap-2 h-10 bg-transparent border-2 font-bold rounded-[12px] shadow-sm transition-all duration-300 hover:scale-[1.02] flex-1 hover:text-white"
+                                            style={{
+                                                borderColor: '#FA887E',
+                                                color: '#FA887E',
+                                            }}
+                                            onMouseEnter={(e) => {
+                                                e.currentTarget.style.backgroundColor = '#FA887E';
+                                                e.currentTarget.style.color = 'white';
+                                                e.currentTarget.style.boxShadow = '0 4px 16px rgba(250, 136, 126, 0.3)';
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.currentTarget.style.backgroundColor = 'transparent';
+                                                e.currentTarget.style.color = '#FA887E';
+                                                e.currentTarget.style.boxShadow = '';
+                                            }}
                                             onClick={() => navigate(`/vehicle/${car.id}`)}
                                         >
                                             <FileText className="h-4 w-4" strokeWidth={2.5} />
