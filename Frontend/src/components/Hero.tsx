@@ -106,15 +106,24 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
           data-bg-index={index}
           style={{
             backgroundImage: `url("${image}")`,
-            filter: 'brightness(0.5) drop-shadow(0px 0px 20px rgba(255, 0, 0, 0.2))',
+            filter: 'brightness(0.5)',
             opacity: currentImageIndex === index ? 1 : 0,
             zIndex: currentImageIndex === index ? 1 : 0
           }}
         ></div>
       ))}
       
-      {/* Overlay gradient for better text readability */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-black/30 to-transparent z-[2]"></div>
+      {/* Enhanced Overlay - Vertical gradient + Deep vignette */}
+      <div 
+        className="absolute inset-0 z-[2]"
+        style={{
+          background: `
+            radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.5) 100%),
+            linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.35) 100%),
+            linear-gradient(to right, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.25) 50%, transparent 100%)
+          `
+        }}
+      ></div>
       
       {/* Image Indicators */}
       <div className="absolute bottom-8 md:bottom-12 left-1/2 transform -translate-x-1/2 z-[3] flex gap-2">
