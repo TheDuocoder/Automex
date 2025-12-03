@@ -110,8 +110,8 @@ const Header = ({ onLoginClick }: HeaderProps) => {
               )}
               style={{
                 position: 'absolute',
-                right: '2rem',
-                top: '40%',
+                right: isAuthenticated ? '7rem' : '2rem',
+                top: isAuthenticated ? '35%' : '40%',
                 transform: 'translateY(-50%)',
               }}
             >
