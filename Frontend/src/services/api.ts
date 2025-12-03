@@ -186,14 +186,97 @@ export interface CarCreate {
 export const carService = {
   getAll: () => apiCall<Car[]>('/api/v1/cars/'),
   get: (id: number) => apiCall<Car>(`/api/v1/cars/${id}`),
-  create: (data: CarCreate) => apiCall<Car>('/api/v1/cars/', {
-    method: 'POST',
-    body: JSON.stringify(data),
-  }),
-  update: (id: number, data: Partial<CarCreate>) => apiCall<Car>(`/api/v1/cars/${id}`, {
-    method: 'PATCH',
-    body: JSON.stringify(data),
-  }),
+  create: async (data: CarCreate, imageFile?: File): Promise<ApiResponse<Car>> => {
+    const formData = new FormData();
+    formData.append('make', data.make);
+    formData.append('model', data.model);
+    formData.append('year', data.year.toString());
+    formData.append('registration_number', data.registration_number);
+
+    if (imageFile) {
+      formData.append('image', imageFile);
+    }
+
+    // Get auth token and include it in headers
+    const authHeader = getAuthHeader();
+    const url = API_BASE_URL ? `${API_BASE_URL}/api/v1/cars/` : '/api/v1/cars/';
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          ...authHeader,
+          // Don't set Content-Type for FormData - browser will set it with boundary
+        },
+        body: formData,
+      });
+
+      const responseData = await response.json().catch(() => null);
+
+      if (!response.ok) {
+        return {
+          error: responseData?.detail || `Request failed with status ${response.status}`,
+          status: response.status,
+        };
+      }
+
+      return {
+        data: responseData,
+        status: response.status,
+      };
+    } catch (error) {
+      return {
+        error: error instanceof Error ? error.message : 'Network error occurred',
+        status: 0,
+      };
+    }
+  },
+  update: async (id: number, data: Partial<CarCreate>, imageFile?: File): Promise<ApiResponse<Car>> => {
+    const formData = new FormData();
+
+    if (data.make) formData.append('make', data.make);
+    if (data.model) formData.append('model', data.model);
+    if (data.year) formData.append('year', data.year.toString());
+    if (data.registration_number) formData.append('registration_number', data.registration_number);
+
+    if (imageFile) {
+      formData.append('image', imageFile);
+    }
+
+    // Get auth token and include it in headers
+    const authHeader = getAuthHeader();
+    const url = API_BASE_URL ? `${API_BASE_URL}/api/v1/cars/${id}` : `/api/v1/cars/${id}`;
+
+    try {
+      const response = await fetch(url, {
+        method: 'PATCH',
+        headers: {
+          ...authHeader,
+          // Don't set Content-Type for FormData - browser will set it with boundary
+        },
+        body: formData,
+      });
+
+      const responseData = await response.json().catch(() => null);
+
+      if (!response.ok) {
+        return {
+          error: responseData?.detail || `Request failed with status ${response.status}`,
+          status: response.status,
+        };
+      }
+
+      return {
+        data: responseData,
+        status: response.status,
+      };
+    } catch (error) {
+      return {
+        error: error instanceof Error ? error.message : 'Network error occurred',
+        status: 0,
+      };
+    }
+  },
   delete: (id: number) => apiCall<void>(`/api/v1/cars/${id}`, {
     method: 'DELETE',
   }),

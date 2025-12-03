@@ -110,7 +110,7 @@ const MyCars = () => {
     const handleAddCar = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
-        const response = await carService.create(formData);
+        const response = await carService.create(formData, selectedImage || undefined);
         if (response.data) {
             toast.success("Car added successfully");
             setIsAddOpen(false);
@@ -141,7 +141,7 @@ const MyCars = () => {
         if (!editingCarId) return;
 
         setIsSubmitting(true);
-        const response = await carService.update(editingCarId, formData);
+        const response = await carService.update(editingCarId, formData, selectedImage || undefined);
         if (response.data) {
             toast.success("Car updated successfully");
             setIsEditOpen(false);
