@@ -305,14 +305,14 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
       {step === 1 && (
         <form onSubmit={handleEmailSubmit}>
           <div className="mb-6">
-            <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+            <div className="premium-input-wrapper relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 z-10" />
               <Input
                 type="email"
                 value={emailData.email}
                 onChange={handleEmailChange}
                 placeholder="Enter your email address"
-                className="w-full h-12 pl-12 pr-4 text-sm bg-white/60 backdrop-blur-sm border-0 rounded-xl focus:ring-2 focus:ring-white/50 text-gray-900 placeholder-gray-700 shadow-[0_4px_20px_rgba(0,0,0,0.15),0_2px_10px_rgba(255,81,47,0.1)]"
+                className="premium-input w-full h-12 pl-12 pr-4 text-base rounded-xl"
               />
             </div>
             {errors.email && (
@@ -388,25 +388,25 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
 
           {/* New Password Input */}
           <div className="mb-4">
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+            <div className="premium-input-wrapper relative">
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 z-10" />
               <Input
                 type={showPassword ? "text" : "password"}
                 name="newPassword"
                 value={resetData.newPassword}
                 onChange={handleResetChange}
                 placeholder="New password (min. 8 characters)"
-                className="w-full h-12 pl-12 pr-12 text-sm bg-white/60 backdrop-blur-sm border-0 rounded-xl focus:ring-2 focus:ring-white/50 text-gray-900 placeholder-gray-700 shadow-[0_4px_20px_rgba(0,0,0,0.15),0_2px_10px_rgba(255,81,47,0.1)]"
+                className="premium-input w-full h-12 pl-12 pr-12 text-base rounded-xl"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                className="premium-eye-icon absolute right-3 top-1/2 -translate-y-1/2"
               >
                 {showPassword ? (
-                  <EyeOff className="w-5 h-5" />
+                  <EyeOff className="w-4 h-4" />
                 ) : (
-                  <Eye className="w-5 h-5" />
+                  <Eye className="w-4 h-4" />
                 )}
               </button>
             </div>
@@ -417,25 +417,25 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
 
           {/* Confirm Password Input */}
           <div className="mb-6">
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+            <div className="premium-input-wrapper relative">
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 z-10" />
               <Input
                 type={showConfirmPassword ? "text" : "password"}
                 name="confirmPassword"
                 value={resetData.confirmPassword}
                 onChange={handleResetChange}
                 placeholder="Confirm new password"
-                className="w-full h-12 pl-12 pr-12 text-sm bg-white/60 backdrop-blur-sm border-0 rounded-xl focus:ring-2 focus:ring-white/50 text-gray-900 placeholder-gray-700 shadow-[0_4px_20px_rgba(0,0,0,0.15),0_2px_10px_rgba(255,81,47,0.1)]"
+                className="premium-input w-full h-12 pl-12 pr-12 text-base rounded-xl"
               />
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                className="premium-eye-icon absolute right-3 top-1/2 -translate-y-1/2"
               >
                 {showConfirmPassword ? (
-                  <EyeOff className="w-5 h-5" />
+                  <EyeOff className="w-4 h-4" />
                 ) : (
-                  <Eye className="w-5 h-5" />
+                  <Eye className="w-4 h-4" />
                 )}
               </button>
             </div>

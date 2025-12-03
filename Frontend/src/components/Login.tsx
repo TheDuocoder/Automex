@@ -174,26 +174,14 @@ const Login = ({ onClose, onSwitchToRegister }: LoginProps) => {
 
       <form onSubmit={handleSubmit}>
         {/* Email Input */}
-        <div className="mb-4">
+        <div className="premium-input-wrapper mb-4">
           <Input
             type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
             placeholder="Username or email"
-            className="w-full h-12 px-4 text-sm bg-white/60 backdrop-blur-sm rounded-xl text-gray-900 placeholder-gray-700 transition-all duration-300"
-            style={{
-              border: '1px solid rgba(255, 255, 255, 0.25)',
-              boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.1), 0 4px 20px rgba(0, 0, 0, 0.15)'
-            }}
-            onFocus={(e) => {
-              e.currentTarget.style.boxShadow = 'inset 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 8px rgba(255, 0, 90, 0.3), 0 4px 20px rgba(0, 0, 0, 0.15)';
-              e.currentTarget.style.borderColor = 'rgba(255, 0, 90, 0.4)';
-            }}
-            onBlur={(e) => {
-              e.currentTarget.style.boxShadow = 'inset 0 2px 4px rgba(0, 0, 0, 0.1), 0 4px 20px rgba(0, 0, 0, 0.15)';
-              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.25)';
-            }}
+            className="premium-input w-full h-12 px-4 text-base rounded-xl"
           />
           {errors.email && (
             <p className="text-xs text-red-300 mt-1">{errors.email}</p>
@@ -201,7 +189,7 @@ const Login = ({ onClose, onSwitchToRegister }: LoginProps) => {
         </div>
 
         {/* Password Input */}
-        <div className="mb-6">
+        <div className="premium-input-wrapper mb-6">
           <div className="relative">
             <Input
               type={showPassword ? "text" : "password"}
@@ -209,24 +197,12 @@ const Login = ({ onClose, onSwitchToRegister }: LoginProps) => {
               value={formData.password}
               onChange={handleChange}
               placeholder="Password"
-              className="w-full h-12 px-4 pr-10 text-sm bg-white/60 backdrop-blur-sm rounded-xl text-gray-900 placeholder-gray-700 transition-all duration-300"
-              style={{
-                border: '1px solid rgba(255, 255, 255, 0.25)',
-                boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.1), 0 4px 20px rgba(0, 0, 0, 0.15)'
-              }}
-              onFocus={(e) => {
-                e.currentTarget.style.boxShadow = 'inset 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 8px rgba(255, 0, 90, 0.3), 0 4px 20px rgba(0, 0, 0, 0.15)';
-                e.currentTarget.style.borderColor = 'rgba(255, 0, 90, 0.4)';
-              }}
-              onBlur={(e) => {
-                e.currentTarget.style.boxShadow = 'inset 0 2px 4px rgba(0, 0, 0, 0.1), 0 4px 20px rgba(0, 0, 0, 0.15)';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.25)';
-              }}
+              className="premium-input w-full h-12 px-4 pr-12 text-base rounded-xl"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              className="premium-eye-icon absolute right-3 top-1/2 -translate-y-1/2"
             >
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>

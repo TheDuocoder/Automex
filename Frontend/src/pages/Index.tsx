@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useLayoutEffect } from "react";
+import { useLocation } from "react-router-dom";
 import Header from "@/components/Header";
 import TabNavigation from "@/components/TabNavigation";
 import Hero from "@/components/Hero";
@@ -12,6 +13,7 @@ import Footer from "@/components/Footer";
 import Lenis from "lenis";
 
 const Index = () => {
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState("Our Services");
   const [showLoginForm, setShowLoginForm] = useState(false);
   const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
@@ -19,6 +21,15 @@ const Index = () => {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const lenisRef = useRef<Lenis | null>(null);
   const lenisRafRef = useRef<number>();
+
+  // Check if user was redirected from Services page to show login form
+  useEffect(() => {
+    if (location.state?.showAuth) {
+      setShowLoginForm(true);
+      // Clear the state to prevent reopening on page refresh
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
 
   useEffect(() => {
     const handleScroll = () => {

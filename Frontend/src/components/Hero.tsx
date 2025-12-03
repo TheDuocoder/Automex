@@ -186,7 +186,7 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
         <div className="grid md:grid-cols-[1fr_auto] gap-8 md:gap-12 lg:gap-16 items-start w-full">
           {/* Left side - Text content */}
           <div 
-            className="relative text-white max-w-3xl pt-4 md:pt-8 px-6 md:px-8 py-8 md:py-10 rounded-lg"
+            className="relative text-white max-w-3xl pt-4 md:pt-8 px-6 md:px-8 py-8 md:py-10 rounded-lg -ml-4 md:-ml-8 lg:-ml-12"
             style={{
               background: 'linear-gradient(to right, rgba(0,0,0,0.55), rgba(0,0,0,0.15), transparent)',
               textShadow: '0 2px 6px rgba(0,0,0,0.45)'
@@ -435,6 +435,7 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
                   />
                 ) : showRegisterForm ? (
                   <Register 
+                    onClose={() => setShowRegisterForm(false)}
                     onSwitchToLogin={() => {
                       setShowRegisterForm(false);
                       setLocalShowLoginForm(true);

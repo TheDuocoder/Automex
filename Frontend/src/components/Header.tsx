@@ -212,7 +212,7 @@ const Header = ({ onLoginClick }: HeaderProps) => {
             {!isAuthenticated && location.pathname === '/services' && (
               <div className="nav-rainbow p-1 rounded-full">
                 <Button
-                  onClick={() => navigate('/')}
+                  onClick={() => navigate('/', { state: { showAuth: true } })}
                   className="hidden lg:flex items-center gap-2 h-10 px-6 font-bold text-white transition-all duration-300 rounded-full"
                   style={{
                     background: 'rgba(20, 20, 20, 0.65)',
@@ -238,35 +238,16 @@ const Header = ({ onLoginClick }: HeaderProps) => {
                   <DropdownMenuTrigger asChild>
                     <Button
                       variant="ghost"
-                      className="flex items-center gap-2 text-white hover:opacity-90 h-auto px-4 py-2.5 rounded-xl transition-all duration-300 relative overflow-hidden group"
+                      className="nav-button-rainbow flex items-center gap-2 text-white hover:opacity-90 h-auto px-4 py-2.5 rounded-xl transition-all duration-300 relative overflow-hidden group"
                       title={`Logged in as: ${user?.full_name || user?.email?.split('@')[0] || 'User'}`}
                       style={{
-                        background: 'rgba(0, 0, 0, 0.35)',
-                        backdropFilter: 'blur(8px)',
-                        border: '1.5px solid rgba(255, 255, 255, 0.75)',
-                        boxShadow: `
-                            0 0 15px rgba(255, 255, 255, 0.25),
-                            inset 0 1px 0 rgba(255, 255, 255, 0.1),
-                            inset 0 -1px 0 rgba(0, 0, 0, 0.2)
-                          `,
+                        background: 'transparent',
+                        backdropFilter: 'blur(10px)',
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.boxShadow = `
-                            0 0 25px rgba(255, 255, 255, 0.4),
-                            0 0 40px rgba(255, 255, 255, 0.2),
-                            inset 0 1px 0 rgba(255, 255, 255, 0.15),
-                            inset 0 -1px 0 rgba(0, 0, 0, 0.3)
-                          `;
-                        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.9)';
                         e.currentTarget.style.transform = 'translateY(-1px)';
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.boxShadow = `
-                            0 0 15px rgba(255, 255, 255, 0.25),
-                            inset 0 1px 0 rgba(255, 255, 255, 0.1),
-                            inset 0 -1px 0 rgba(0, 0, 0, 0.2)
-                          `;
-                        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.75)';
                         e.currentTarget.style.transform = 'translateY(0)';
                       }}
                     >
