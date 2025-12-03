@@ -361,3 +361,276 @@ All colors MUST be HSL.
 
 /* Hover effects disabled */
 
+/* ================================
+   PREMIUM CREATE ACCOUNT PAGE
+   ================================ */
+
+/* 1. Luxury Glassmorphism Container */
+.premium-register-container {
+  position: relative;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  background: linear-gradient(
+    to bottom right,
+    rgba(0, 0, 0, 0.15),
+    rgba(0, 0, 0, 0.05)
+  );
+  border-radius: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 0 60px rgba(255, 81, 47, 0.15),
+    0 0 100px rgba(221, 36, 118, 0.1),
+    inset 0 0 40px rgba(255, 255, 255, 0.05),
+    0 0 80px rgba(255, 44, 131, 0.2);
+}
+
+/* 2. Spotlight Glow Behind Logo */
+.premium-logo-glow {
+  position: relative;
+  animation: logo-breathe 4s ease-in-out infinite;
+}
+
+.premium-logo-glow::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(255, 214, 188, 0.2) 30%,
+    rgba(255, 44, 131, 0.15) 60%,
+    transparent 100%
+  );
+  border-radius: 50%;
+  z-index: -1;
+  filter: blur(20px);
+}
+
+@keyframes logo-breathe {
+  0%, 100% {
+    filter: drop-shadow(0 8px 32px rgba(255, 255, 255, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 8px 40px rgba(255, 255, 255, 0.4));
+  }
+}
+
+/* 3. Premium Title */
+.premium-title {
+  font-size: 42px;
+  font-weight: 900;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+  background: linear-gradient(135deg, #fff 0%, #ffd6d6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* 4. Premium Input Fields */
+.premium-input-wrapper {
+  position: relative;
+  animation: fade-in-up 0.5s ease-out backwards;
+}
+
+.premium-input-wrapper:nth-child(1) { animation-delay: 0.05s; }
+.premium-input-wrapper:nth-child(2) { animation-delay: 0.1s; }
+.premium-input-wrapper:nth-child(3) { animation-delay: 0.15s; }
+.premium-input-wrapper:nth-child(4) { animation-delay: 0.2s; }
+.premium-input-wrapper:nth-child(5) { animation-delay: 0.25s; }
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.premium-input {
+  position: relative;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: white !important;
+  box-shadow: 
+    0 0 12px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition: all 0.3s ease;
+}
+
+.premium-input::placeholder {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.premium-input:focus {
+  border-color: #FF2C83 !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 
+    0 0 20px rgba(255, 44, 131, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 0 12px rgba(0, 0, 0, 0.3);
+}
+
+/* 5. Eye Icon Enhancement */
+.premium-eye-icon {
+  color: rgba(255, 255, 255, 0.5);
+  transition: color 0.3s ease;
+  cursor: pointer;
+}
+
+.premium-eye-icon:hover {
+  color: #FF2C83;
+}
+
+/* 6. Premium CREATE ACCOUNT Button */
+.premium-create-btn {
+  background: linear-gradient(90deg, #FF6A3D 0%, #FF2C83 100%) !important;
+  border-radius: 14px;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  padding: 12px 0;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: white !important;
+  box-shadow: 0 8px 28px rgba(255, 44, 131, 0.35);
+  transition: all 0.3s ease;
+  animation: button-glow-pulse 2s ease-in-out infinite;
+  position: relative;
+  overflow: hidden;
+}
+
+.premium-create-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.premium-create-btn:hover {
+  transform: scale(1.03) translateY(-2px);
+  box-shadow: 0 12px 36px rgba(255, 44, 131, 0.5);
+  color: #ffffff !important;
+}
+
+.premium-create-btn:hover::before {
+  left: 100%;
+}
+
+@keyframes button-glow-pulse {
+  0%, 100% {
+    box-shadow: 0 8px 28px rgba(255, 44, 131, 0.35);
+  }
+  50% {
+    box-shadow: 0 8px 32px rgba(255, 44, 131, 0.45);
+  }
+}
+
+/* 7. Premium Checkbox */
+.premium-checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.premium-checkbox {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #FF2C83 !important;
+  border-radius: 4px;
+  background: rgba(255, 44, 131, 0.1);
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.premium-checkbox:checked {
+  background: #FF2C83;
+  animation: checkbox-pulse 0.3s ease;
+}
+
+@keyframes checkbox-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 44, 131, 0.7);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 8px rgba(255, 44, 131, 0);
+  }
+}
+
+/* 8. Premium Links */
+.premium-link {
+  color: #FF3A8C !important;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 58, 140, 0.3);
+}
+
+.premium-link:hover {
+  color: #FF6AB3 !important;
+  text-shadow: 0 0 8px rgba(255, 58, 140, 0.5);
+}
+
+/* 9. Login Link */
+.premium-login-link {
+  color: #FF2C83 !important;
+  font-weight: 700;
+  transition: all 0.3s ease;
+}
+
+.premium-login-link:hover {
+  color: #FF6AB3 !important;
+  text-shadow: 0 0 10px rgba(255, 44, 131, 0.6);
+}
+
+/* 10. Background Enhancements */
+.premium-register-bg {
+  position: relative;
+}
+
+.premium-register-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse at top, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom, rgba(0, 0, 0, 0.3) 0%, transparent 50%),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.4) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.premium-register-bg::after {
+  content: "";
+  position: absolute;
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.06) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 2;
+}

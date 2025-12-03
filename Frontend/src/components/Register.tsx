@@ -177,7 +177,7 @@ const Register = ({ onClose, onSwitchToLogin }: RegisterProps) => {
   };
 
   return (
-    <div className="w-full max-w-[540px] mx-auto bg-black/5 backdrop-blur-sm border border-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.3),0_0_60px_rgba(255,81,47,0.15),0_0_100px_rgba(221,36,118,0.1)] rounded-3xl p-8 relative">
+    <div className="premium-register-container w-full max-w-[540px] mx-auto p-8 relative">
       {/* Close Button */}
       {onClose && (
         <button
@@ -190,7 +190,7 @@ const Register = ({ onClose, onSwitchToLogin }: RegisterProps) => {
       )}
       
       {/* Logo/Icon */}
-      <div className="flex justify-center mb-4">
+      <div className="flex justify-center -mb-4">
         <img 
           src="/images/Automex_icon/AUTOMEX_logo.png" 
           alt="AutoMex Logo" 
@@ -202,22 +202,28 @@ const Register = ({ onClose, onSwitchToLogin }: RegisterProps) => {
       </div>
 
       {/* Title */}
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-center text-white drop-shadow-2xl">
+      <div className="mb-2">
+        <h2 
+          className="font-bold text-center text-white"
+          style={{
+            fontSize: '40px',
+            textShadow: '0 2px 8px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(255, 44, 131, 0.2)'
+          }}
+        >
           Create Account
         </h2>
       </div>
 
       <form onSubmit={handleSubmit}>
         {/* Full Name Input */}
-        <div className="mb-3">
+        <div className="premium-input-wrapper mb-4">
           <Input
             type="text"
             name="fullName"
             value={formData.fullName}
             onChange={handleChange}
             placeholder="Full Name"
-            className="w-full h-11 px-4 text-sm bg-white/60 backdrop-blur-sm border-0 rounded-xl focus:ring-2 focus:ring-white/50 text-gray-900 placeholder-gray-700 shadow-[0_4px_20px_rgba(0,0,0,0.15),0_2px_10px_rgba(255,81,47,0.1)]"
+            className="premium-input w-full h-12 px-4 text-base rounded-xl"
           />
           {errors.fullName && (
             <p className="text-xs text-red-300 mt-1">{errors.fullName}</p>
@@ -225,14 +231,14 @@ const Register = ({ onClose, onSwitchToLogin }: RegisterProps) => {
         </div>
 
         {/* Email Input */}
-        <div className="mb-3">
+        <div className="premium-input-wrapper mb-4">
           <Input
             type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
             placeholder="Email Address"
-            className="w-full h-11 px-4 text-sm bg-white/60 backdrop-blur-sm border-0 rounded-xl focus:ring-2 focus:ring-white/50 text-gray-900 placeholder-gray-700 shadow-[0_4px_20px_rgba(0,0,0,0.15),0_2px_10px_rgba(255,81,47,0.1)]"
+            className="premium-input w-full h-12 px-4 text-base rounded-xl"
           />
           {errors.email && (
             <p className="text-xs text-red-300 mt-1">{errors.email}</p>
@@ -240,14 +246,14 @@ const Register = ({ onClose, onSwitchToLogin }: RegisterProps) => {
         </div>
 
         {/* Phone Number Input */}
-        <div className="mb-3">
+        <div className="premium-input-wrapper mb-4">
           <Input
             type="tel"
             name="phoneNumber"
             value={formData.phoneNumber}
             onChange={handleChange}
             placeholder="Phone Number"
-            className="w-full h-11 px-4 text-sm bg-white/60 backdrop-blur-sm border-0 rounded-xl focus:ring-2 focus:ring-white/50 text-gray-900 placeholder-gray-700 shadow-[0_4px_20px_rgba(0,0,0,0.15),0_2px_10px_rgba(255,81,47,0.1)]"
+            className="premium-input w-full h-12 px-4 text-base rounded-xl"
           />
           {errors.phoneNumber && (
             <p className="text-xs text-red-300 mt-1">{errors.phoneNumber}</p>
@@ -255,7 +261,7 @@ const Register = ({ onClose, onSwitchToLogin }: RegisterProps) => {
         </div>
 
         {/* Password Input */}
-        <div className="mb-3">
+        <div className="premium-input-wrapper mb-4">
           <div className="relative">
             <Input
               type={showPassword ? "text" : "password"}
@@ -263,14 +269,14 @@ const Register = ({ onClose, onSwitchToLogin }: RegisterProps) => {
               value={formData.password}
               onChange={handleChange}
               placeholder="Password (min 8 characters)"
-              className="w-full h-11 px-4 pr-10 text-sm bg-white/60 backdrop-blur-sm border-0 rounded-xl focus:ring-2 focus:ring-white/50 text-gray-900 placeholder-gray-700 shadow-[0_4px_20px_rgba(0,0,0,0.15),0_2px_10px_rgba(255,81,47,0.1)]"
+              className="premium-input w-full h-12 px-4 pr-12 text-base rounded-xl"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              className="premium-eye-icon absolute right-4 top-1/2 -translate-y-1/2"
             >
-              {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
             </button>
           </div>
           {errors.password && (
@@ -279,7 +285,7 @@ const Register = ({ onClose, onSwitchToLogin }: RegisterProps) => {
         </div>
 
         {/* Confirm Password Input */}
-        <div className="mb-4">
+        <div className="premium-input-wrapper mb-5">
           <div className="relative">
             <Input
               type={showConfirmPassword ? "text" : "password"}
@@ -287,14 +293,14 @@ const Register = ({ onClose, onSwitchToLogin }: RegisterProps) => {
               value={formData.confirmPassword}
               onChange={handleChange}
               placeholder="Confirm Password"
-              className="w-full h-11 px-4 pr-10 text-sm bg-white/60 backdrop-blur-sm border-0 rounded-xl focus:ring-2 focus:ring-white/50 text-gray-900 placeholder-gray-700 shadow-[0_4px_20px_rgba(0,0,0,0.15),0_2px_10px_rgba(255,81,47,0.1)]"
+              className="premium-input w-full h-12 px-4 pr-12 text-base rounded-xl"
             />
             <button
               type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              className="premium-eye-icon absolute right-4 top-1/2 -translate-y-1/2"
             >
-              {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
             </button>
           </div>
           {errors.confirmPassword && (
@@ -303,7 +309,7 @@ const Register = ({ onClose, onSwitchToLogin }: RegisterProps) => {
         </div>
 
         {/* Terms & Conditions */}
-        <div className="flex items-start space-x-2 mb-4">
+        <div className="premium-checkbox-wrapper mb-5">
           <Checkbox
             id="terms"
             checked={acceptTerms}
@@ -311,38 +317,15 @@ const Register = ({ onClose, onSwitchToLogin }: RegisterProps) => {
               setAcceptTerms(checked as boolean);
               setErrors((prev) => ({ ...prev, terms: "" }));
             }}
-            className="border-white/50 w-4 h-4 mt-0.5"
-            style={{
-              backgroundColor: acceptTerms ? '#DD2476' : 'transparent'
-            }}
+            className="premium-checkbox"
           />
-          <label htmlFor="terms" className="text-xs text-white/90 cursor-pointer leading-relaxed">
+          <label htmlFor="terms" className="text-sm text-white/90 cursor-pointer leading-relaxed">
             I agree to the{" "}
-            <a 
-              href="#" 
-              className="font-medium transition-colors"
-              style={{ color: '#DD2476' }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = '#FF512F';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = '#DD2476';
-              }}
-            >
+            <a href="#" className="premium-link">
               Terms & Conditions
             </a>{" "}
             and{" "}
-            <a 
-              href="#" 
-              className="font-medium transition-colors"
-              style={{ color: '#DD2476' }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = '#FF512F';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = '#DD2476';
-              }}
-            >
+            <a href="#" className="premium-link">
               Privacy Policy
             </a>
           </label>
@@ -355,20 +338,7 @@ const Register = ({ onClose, onSwitchToLogin }: RegisterProps) => {
         <Button 
           type="submit"
           disabled={isLoading}
-          className="w-full h-12 text-white text-base font-semibold rounded-xl mb-4 disabled:opacity-50 disabled:cursor-not-allowed uppercase transition-all duration-500 shadow-[0_0_20px_rgba(255,81,47,0.4),0_8px_30px_rgba(221,36,118,0.3),0_4px_15px_rgba(0,0,0,0.2)]"
-          style={{
-            backgroundImage: 'linear-gradient(to right, #FF512F 0%, #DD2476 51%, #FF512F 100%)',
-            backgroundSize: '200% auto',
-            backgroundPosition: 'left center'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundPosition = 'right center';
-            e.currentTarget.style.boxShadow = '0 0 30px rgba(255,81,47,0.6), 0 12px 40px rgba(221,36,118,0.5), 0 6px 20px rgba(0,0,0,0.3)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundPosition = 'left center';
-            e.currentTarget.style.boxShadow = '0 0 20px rgba(255,81,47,0.4), 0 8px 30px rgba(221,36,118,0.3), 0 4px 15px rgba(0,0,0,0.2)';
-          }}
+          className="premium-create-btn w-full mb-5"
         >
           {isLoading ? (
             <>
@@ -386,14 +356,7 @@ const Register = ({ onClose, onSwitchToLogin }: RegisterProps) => {
         Already have an account?{" "}
         <button 
           onClick={onSwitchToLogin}
-          className="font-semibold transition-colors"
-          style={{ color: '#DD2476' }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.color = '#FF512F';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.color = '#DD2476';
-          }}
+          className="premium-login-link"
         >
           Login here
         </button>

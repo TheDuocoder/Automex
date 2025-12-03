@@ -252,7 +252,20 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
   };
 
   return (
-    <div className="w-full max-w-[540px] bg-black/5 backdrop-blur-sm border border-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.3),0_0_60px_rgba(255,81,47,0.15),0_0_100px_rgba(221,36,118,0.1)] rounded-3xl p-8 relative">
+    <div 
+      className="w-full max-w-[540px] bg-black/5 border border-white/5 rounded-3xl p-8 relative"
+      style={{
+        backdropFilter: 'blur(18px)',
+        WebkitBackdropFilter: 'blur(18px)',
+        boxShadow: `
+          0 8px 32px rgba(0, 0, 0, 0.3),
+          0 0 60px rgba(255, 81, 47, 0.15),
+          0 0 100px rgba(221, 36, 118, 0.1),
+          inset 0 0 40px rgba(255, 255, 255, 0.05),
+          0 0 80px rgba(255, 44, 131, 0.2)
+        `
+      }}
+    >
       {/* Close Button */}
       {onClose && (
         <button

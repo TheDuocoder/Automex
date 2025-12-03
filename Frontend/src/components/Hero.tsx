@@ -15,9 +15,15 @@ interface HeroProps {
 const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showRegisterForm, setShowRegisterForm] = useState(false);
+  const [localShowLoginForm, setLocalShowLoginForm] = useState(showLoginForm);
   const heroRef = useRef<HTMLElement | null>(null);
   const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
+  
+  // Sync with prop changes
+  useEffect(() => {
+    setLocalShowLoginForm(showLoginForm);
+  }, [showLoginForm]);
   
   // Array of car service background images
   const backgroundImages = [
@@ -142,7 +148,7 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
       </div>
       
       {/* Minimal Premium Scroll Indicator - Lower Right - Only visible when not authenticated and login form not open */}
-      {!isAuthenticated && !showLoginForm && (
+      {!isAuthenticated && !localShowLoginForm && (
         <div className="absolute bottom-20 md:bottom-24 right-8 md:right-16 lg:right-20 z-[5] flex flex-col items-center gap-2 cursor-pointer group">
           {/* Arrow with Glow */}
           <div className="relative animate-bounce">
@@ -422,7 +428,7 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
             ) : (
               // Login/Register Form for Non-authenticated Users - Show when login button is clicked
               <>
-                {showLoginForm && !showRegisterForm ? (
+                {localShowLoginForm && !showRegisterForm ? (
                   <Login 
                     onClose={onCloseLogin}
                     onSwitchToRegister={() => setShowRegisterForm(true)} 
@@ -431,7 +437,7 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
                   <Register 
                     onSwitchToLogin={() => {
                       setShowRegisterForm(false);
-                      onCloseLogin?.();
+                      setLocalShowLoginForm(true);
                     }}
                   />
                 ) : (
