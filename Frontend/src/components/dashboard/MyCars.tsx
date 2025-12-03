@@ -81,7 +81,7 @@ const MyCars = () => {
                 toast.error("Please select an image file");
                 return;
             }
-            
+
             // Validate file size (max 5MB)
             if (file.size > 5 * 1024 * 1024) {
                 toast.error("Image size should be less than 5MB");
@@ -89,7 +89,7 @@ const MyCars = () => {
             }
 
             setSelectedImage(file);
-            
+
             // Create preview
             const reader = new FileReader();
             reader.onloadend = () => {
@@ -139,7 +139,7 @@ const MyCars = () => {
     const handleUpdateCar = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!editingCarId) return;
-        
+
         setIsSubmitting(true);
         const response = await carService.update(editingCarId, formData);
         if (response.data) {
@@ -180,7 +180,7 @@ const MyCars = () => {
 
     return (
         <Card className="shadow-lg border-none">
-            <CardHeader 
+            <CardHeader
                 className="border-b pb-4 flex flex-row items-center justify-between relative overflow-hidden"
                 style={{
                     background: `
@@ -195,8 +195,8 @@ const MyCars = () => {
                     <CarIcon className="h-5 w-5 text-white" />
                     My Vehicles
                 </CardTitle>
-                <Dialog 
-                    open={isAddOpen} 
+                <Dialog
+                    open={isAddOpen}
                     onOpenChange={(open) => {
                         setIsAddOpen(open);
                         if (!open) {
@@ -315,8 +315,8 @@ const MyCars = () => {
                         </form>
                     </DialogContent>
                 </Dialog>
-                <Dialog 
-                    open={isEditOpen} 
+                <Dialog
+                    open={isEditOpen}
                     onOpenChange={(open) => {
                         setIsEditOpen(open);
                         if (!open) {
@@ -446,8 +446,8 @@ const MyCars = () => {
                     </div>
                 ) : (
                     cars.map((car) => (
-                        <div 
-                            key={car.id} 
+                        <div
+                            key={car.id}
                             className="bg-white rounded-[22px] p-8 shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_6px_28px_rgba(0,0,0,0.1)] transition-all duration-300 border border-gray-100"
                         >
                             {/* Top Header Section - Car Name & Action Buttons */}
@@ -457,12 +457,12 @@ const MyCars = () => {
                                     <h3 className="font-bold text-2xl text-gray-900 tracking-tight">{car.make} {car.model}</h3>
                                     <p className="text-base text-gray-500 font-medium mt-1">{car.year}</p>
                                 </div>
-                                
+
                                 {/* Number Plate Badge - Center */}
                                 <div className="bg-white border-2 border-[#CD0000] rounded-[8px] px-4 py-2 shadow-[0_3px_10px_rgba(205,0,0,0.12)]">
                                     <p className="text-base font-black text-gray-900 uppercase tracking-wider">{car.registration_number}</p>
                                 </div>
-                                
+
                                 {/* Edit & Delete Buttons - Right */}
                                 <div className="flex items-center gap-3">
                                     <button
@@ -489,7 +489,7 @@ const MyCars = () => {
                                     <div className="w-[280px] h-[200px] shadow-[0_8px_32px_rgba(0,0,0,0.12)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-[16px]">
                                         {car.image_url ? (
                                             <div className="w-full h-full rounded-[16px] overflow-hidden">
-                                                <CarImageWithFallback 
+                                                <CarImageWithFallback
                                                     src={car.image_url}
                                                     alt={`${car.make} ${car.model}`}
                                                 />

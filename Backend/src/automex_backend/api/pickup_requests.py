@@ -155,3 +155,38 @@ async def update_pickup_request(
     await session.commit()
     await session.refresh(request)
     return request
+
+
+@router.delete("/{pickup_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_pickup_request(
+    pickup_id: int,
+    session: AsyncSession = Depends(get_async_session),
+    user: User = Depends(current_active_user)
+):
+    """
+    Delete a pickup request
+    Only ADMIN and SUPER_ADMIN can delete requests
+    """
+    # Get the pickup request
+    query = select(PickUpRequest).where(PickUpRequest.id == pickup_id)
+    result = await session.execute(query)
+    request = result.scalar_one_or_none()
+    
+    if not request:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Pickup request not found")
+
+    # Get user with role
+    user_with_role = await get_current_user_with_role(user, session)
+    
+    # Check if user is admin or super admin
+    is_admin = await check_is_admin_or_super(user_with_role, session)
+    
+    if not is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to delete this pickup request"
+        )
+    
+    await session.delete(request)
+    await session.commit()
+    return None

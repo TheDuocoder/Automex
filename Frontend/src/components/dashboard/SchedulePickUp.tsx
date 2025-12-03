@@ -14,7 +14,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { Calendar, MapPin, Clock, Loader2, MessageSquare, Navigation, Car as CarIcon, Car, XCircle } from "lucide-react";
+import { Calendar, MapPin, Clock, Loader2, MessageSquare, Navigation, Car as CarIcon, Car, XCircle, Trash2 } from "lucide-react";
 import { pickupRequestService, carService, Car as CarType, PickUpRequest, PickUpRequestCreate, PickUpRequestUpdate } from "@/services/api";
 import { toast } from "sonner";
 import { useAuthStore } from "@/stores/authStore";
@@ -30,6 +30,7 @@ const SchedulePickUp = () => {
     const [selectedRequest, setSelectedRequest] = useState<PickUpRequest | null>(null);
     const [isDetailsOpen, setIsDetailsOpen] = useState(false);
     const [isUpdating, setIsUpdating] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
     const [updateData, setUpdateData] = useState<PickUpRequestUpdate>({
         status: "",
         admin_comment: "",
@@ -228,6 +229,27 @@ const SchedulePickUp = () => {
         setIsUpdating(false);
     };
 
+    const handleDeleteRequest = async () => {
+        if (!selectedRequest) return;
+
+        if (!window.confirm("Are you sure you want to delete this pickup request? This action cannot be undone.")) {
+            return;
+        }
+
+        setIsDeleting(true);
+        const response = await pickupRequestService.delete(selectedRequest.id);
+
+        if (!response.error) {
+            toast.success("Pickup request deleted successfully");
+            setIsDetailsOpen(false);
+            setSelectedRequest(null);
+            fetchData();
+        } else {
+            toast.error(response.error || "Failed to delete pickup request");
+        }
+        setIsDeleting(false);
+    };
+
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left Side: Pick Up Details & Status */}
@@ -274,10 +296,10 @@ const SchedulePickUp = () => {
                                 >
                                     <div className="flex justify-between items-start mb-4">
                                         <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold ${req.status?.toLowerCase() === 'pending' ? 'bg-yellow-50 text-yellow-700 ring-1 ring-yellow-200' :
-                                                req.status?.toLowerCase() === 'approved' ? 'bg-blue-50 text-blue-700 ring-1 ring-blue-200' :
-                                                    req.status?.toLowerCase() === 'completed' ? 'bg-green-50 text-green-700 ring-1 ring-green-200' :
-                                                        req.status?.toLowerCase() === 'cancelled' ? 'bg-[#FDE8E8] text-[#D93737] ring-1 ring-red-200' :
-                                                            'bg-gray-50 text-gray-700 ring-1 ring-gray-200'
+                                            req.status?.toLowerCase() === 'approved' ? 'bg-blue-50 text-blue-700 ring-1 ring-blue-200' :
+                                                req.status?.toLowerCase() === 'completed' ? 'bg-green-50 text-green-700 ring-1 ring-green-200' :
+                                                    req.status?.toLowerCase() === 'cancelled' ? 'bg-[#FDE8E8] text-[#D93737] ring-1 ring-red-200' :
+                                                        'bg-gray-50 text-gray-700 ring-1 ring-gray-200'
                                             }`}>
                                             {req.status?.toLowerCase() === 'cancelled' && <XCircle className="h-3.5 w-3.5" />}
                                             {req.status || 'Pending'}
@@ -491,10 +513,10 @@ const SchedulePickUp = () => {
                                     <Label className="text-gray-500 text-xs">Status</Label>
                                     <div className="mt-1">
                                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${selectedRequest.status?.toLowerCase() === 'pending' ? 'bg-yellow-100 text-yellow-700 border border-yellow-300' :
-                                                selectedRequest.status?.toLowerCase() === 'approved' ? 'bg-blue-100 text-blue-700 border border-blue-300' :
-                                                    selectedRequest.status?.toLowerCase() === 'completed' ? 'bg-green-100 text-green-700 border border-green-300' :
-                                                        selectedRequest.status?.toLowerCase() === 'cancelled' ? 'bg-red-100 text-red-700 border border-red-300' :
-                                                            'bg-gray-100 text-gray-700 border border-gray-300'
+                                            selectedRequest.status?.toLowerCase() === 'approved' ? 'bg-blue-100 text-blue-700 border border-blue-300' :
+                                                selectedRequest.status?.toLowerCase() === 'completed' ? 'bg-green-100 text-green-700 border border-green-300' :
+                                                    selectedRequest.status?.toLowerCase() === 'cancelled' ? 'bg-red-100 text-red-700 border border-red-300' :
+                                                        'bg-gray-100 text-gray-700 border border-gray-300'
                                             }`}>
                                             {selectedRequest.status || 'Pending'}
                                         </span>
@@ -628,7 +650,18 @@ const SchedulePickUp = () => {
                         </div>
                     ) : null}
 
-                    <DialogFooter>
+                    <DialogFooter className="gap-2 sm:gap-0">
+                        {isAdmin && (
+                            <Button
+                                variant="destructive"
+                                onClick={handleDeleteRequest}
+                                disabled={isDeleting || isUpdating}
+                                className="mr-auto"
+                            >
+                                {isDeleting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Trash2 className="mr-2 h-4 w-4" />}
+                                Delete
+                            </Button>
+                        )}
                         {(isAdmin || isCreator) && (
                             <Button
                                 onClick={handleUpdateRequest}

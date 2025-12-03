@@ -277,4 +277,7 @@ export const pickupRequestService = {
     method: 'PATCH',
     body: JSON.stringify(data),
   }),
+  delete: (id: number) => apiCall<void>(`/api/v1/pickup-requests/${id}`, {
+    method: 'DELETE',
+  }),
 };
