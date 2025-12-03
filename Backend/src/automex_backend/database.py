@@ -95,13 +95,78 @@ async def init_db():
                         await conn.run_sync(Base.metadata.drop_all)
                         print("[INFO] Tables dropped successfully")
                     else:
-                        print("[INFO] All required columns exist, skipping table recreation")
+                        print("[INFO] All required columns exist in bookings, skipping table recreation")
                 else:
                     print("[INFO] Bookings table doesn't exist, will be created")
+
+                # --- Pickup Request Schema Updates ---
+                # Check pickup_request table
+                pickup_table_check = text("""
+                    SELECT COUNT(*) as count 
+                    FROM information_schema.tables 
+                    WHERE table_schema = DATABASE() 
+                    AND table_name = 'pickup_request'
+                """)
+                result = await conn.execute(pickup_table_check)
+                pickup_exists = result.scalar() > 0
+
+                if pickup_exists:
+                    print("[INFO] Checking pickup_request schema...")
+                    
+                    # 1. Check/Add address column
+                    address_check = text("""
+                        SELECT COUNT(*) FROM information_schema.columns 
+                        WHERE table_schema = DATABASE() 
+                        AND table_name = 'pickup_request' 
+                        AND column_name = 'address'
+                    """)
+                    if (await conn.execute(address_check)).scalar() == 0:
+                        print("[INFO] Adding 'address' column to pickup_request...")
+                        await conn.execute(text("ALTER TABLE pickup_request ADD COLUMN address VARCHAR(500) NOT NULL DEFAULT 'Not Provided'"))
+                    
+                    # 2. Check/Add latitude column
+                    lat_check = text("""
+                        SELECT COUNT(*) FROM information_schema.columns 
+                        WHERE table_schema = DATABASE() 
+                        AND table_name = 'pickup_request' 
+                        AND column_name = 'latitude'
+                    """)
+                    if (await conn.execute(lat_check)).scalar() == 0:
+                        print("[INFO] Adding 'latitude' column to pickup_request...")
+                        await conn.execute(text("ALTER TABLE pickup_request ADD COLUMN latitude FLOAT NULL"))
+
+                    # 3. Check/Add longitude column
+                    lng_check = text("""
+                        SELECT COUNT(*) FROM information_schema.columns 
+                        WHERE table_schema = DATABASE() 
+                        AND table_name = 'pickup_request' 
+                        AND column_name = 'longitude'
+                    """)
+                    if (await conn.execute(lng_check)).scalar() == 0:
+                        print("[INFO] Adding 'longitude' column to pickup_request...")
+                        await conn.execute(text("ALTER TABLE pickup_request ADD COLUMN longitude FLOAT NULL"))
+
+                    # 4. Make location nullable
+                    loc_check = text("""
+                        SELECT IS_NULLABLE FROM information_schema.columns 
+                        WHERE table_schema = DATABASE() 
+                        AND table_name = 'pickup_request' 
+                        AND column_name = 'location'
+                    """)
+                    loc_result = await conn.execute(loc_check)
+                    loc_nullable = loc_result.scalar()
+                    
+                    if loc_nullable == 'NO':
+                        print("[INFO] Making 'location' column nullable in pickup_request...")
+                        await conn.execute(text("ALTER TABLE pickup_request MODIFY COLUMN location VARCHAR(500) NULL"))
+                    
+                    print("[INFO] pickup_request schema check completed")
+
             except Exception as e:
                 print(f"[WARNING] Could not check table schema: {e}")
-                print("[INFO] Dropping and recreating tables to ensure schema is correct...")
-                await conn.run_sync(Base.metadata.drop_all)
+                # Only drop if it's a critical failure in debug mode, but prefer not to
+                # print("[INFO] Dropping and recreating tables to ensure schema is correct...")
+                # await conn.run_sync(Base.metadata.drop_all)
         
         # Create all tables using async MySQL
         await conn.run_sync(Base.metadata.create_all)
