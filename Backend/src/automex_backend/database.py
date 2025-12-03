@@ -37,7 +37,7 @@ async def init_db():
     """Initialize database and create tables"""
     async with engine.begin() as conn:
         # Import all models here to ensure they're registered
-        from automex_backend.models import role, user, service, booking, cost
+        from automex_backend.models import role, user, service, booking, cost, car, service_history, pickup_request
         
         # In DEBUG mode, drop and recreate tables to ensure schema is up to date
         # This ensures new columns are always added
@@ -113,7 +113,7 @@ async def init_db():
                 if pickup_exists:
                     print("[INFO] Checking pickup_request schema...")
                     
-                    # 1. Check/Add address column
+                    # 1. Check/Add address column and ensure it's not NULL
                     address_check = text("""
                         SELECT COUNT(*) FROM information_schema.columns 
                         WHERE table_schema = DATABASE() 
@@ -123,6 +123,10 @@ async def init_db():
                     if (await conn.execute(address_check)).scalar() == 0:
                         print("[INFO] Adding 'address' column to pickup_request...")
                         await conn.execute(text("ALTER TABLE pickup_request ADD COLUMN address VARCHAR(500) NOT NULL DEFAULT 'Not Provided'"))
+                    else:
+                        # Update any NULL address values to default
+                        print("[INFO] Updating NULL address values in pickup_request...")
+                        await conn.execute(text("UPDATE pickup_request SET address = 'Not Provided' WHERE address IS NULL OR address = ''"))
                     
                     # 2. Check/Add latitude column
                     lat_check = text("""

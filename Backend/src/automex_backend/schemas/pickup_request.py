@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 class PickUpRequestBase(BaseModel):
     location: Optional[str] = None
-    address: str
+    address: str = "Not Provided"
     latitude: Optional[float] = None
     longitude: Optional[float] = None
     scheduled_date: datetime
