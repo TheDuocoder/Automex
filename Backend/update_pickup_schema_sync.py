@@ -52,6 +52,22 @@ try:
          print("✓ Made location column nullable")
     else:
          print("✓ location column is already nullable or not found")
+
+    # 3. Add latitude column
+    cursor.execute("SHOW COLUMNS FROM pickup_request LIKE 'latitude'")
+    if not cursor.fetchone():
+        cursor.execute("ALTER TABLE pickup_request ADD COLUMN latitude FLOAT NULL")
+        print("✓ Added latitude column")
+    else:
+        print("✓ latitude column already exists")
+
+    # 4. Add longitude column
+    cursor.execute("SHOW COLUMNS FROM pickup_request LIKE 'longitude'")
+    if not cursor.fetchone():
+        cursor.execute("ALTER TABLE pickup_request ADD COLUMN longitude FLOAT NULL")
+        print("✓ Added longitude column")
+    else:
+        print("✓ longitude column already exists")
     
     conn.commit()
     print("\n✓ Migration completed successfully!")
