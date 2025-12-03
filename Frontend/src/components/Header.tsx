@@ -54,70 +54,8 @@ const Header = ({ onLoginClick }: HeaderProps) => {
     ];
 
   useLayoutEffect(() => {
-    if (!navLinksRef.current || !isTransparent) return;
-
-    const cleanups: Array<() => void> = [];
-    const activeTweens = new Map<HTMLElement, gsap.core.Tween>();
-
-    const ctx = gsap.context(() => {
-      const links = gsap.utils.toArray<HTMLAnchorElement>(".nav-link");
-
-      links.forEach((link) => {
-        const label = link.querySelector<HTMLSpanElement>(".nav-link-label");
-        const light = link.querySelector<HTMLElement>(".nav-link-light");
-
-        if (!label || !light) return;
-
-        gsap.set(light, { "--angle": "0deg", opacity: 0 });
-
-        const handleEnter = () => {
-          gsap.to(label, { y: -6, duration: 0.35, ease: "power3.out" });
-          gsap.to(link, { boxShadow: "0 12px 32px rgba(239,68,68,0.45)", duration: 0.4, ease: "power3.out" });
-          gsap.to(light, { opacity: 1, duration: 0.28, ease: "power2.out" });
-
-          const tween = gsap.to(light, {
-            duration: 1.4,
-            "--angle": "+=360deg",
-            ease: "none",
-            repeat: -1
-          });
-
-          activeTweens.set(light, tween);
-        };
-
-        const handleLeave = () => {
-          gsap.to(label, { y: 0, duration: 0.3, ease: "power3.inOut" });
-          gsap.to(link, { boxShadow: "0 0px 0px rgba(0,0,0,0)", duration: 0.3, ease: "power3.inOut" });
-          gsap.to(light, { opacity: 0, duration: 0.22, ease: "power2.in" });
-
-          const tween = activeTweens.get(light);
-          if (tween) {
-            tween.kill();
-            activeTweens.delete(light);
-          }
-
-          gsap.set(light, { "--angle": "0deg" });
-        };
-
-        link.addEventListener("mouseenter", handleEnter);
-        link.addEventListener("mouseleave", handleLeave);
-
-        cleanups.push(() => {
-          link.removeEventListener("mouseenter", handleEnter);
-          link.removeEventListener("mouseleave", handleLeave);
-          const tween = activeTweens.get(light);
-          if (tween) tween.kill();
-          activeTweens.delete(light);
-        });
-      });
-    }, navLinksRef);
-
-    return () => {
-      cleanups.forEach((cleanup) => cleanup());
-      activeTweens.forEach((tween) => tween.kill());
-      activeTweens.clear();
-      ctx.revert();
-    };
+    // Hover effects disabled
+    return () => {};
   }, [isTransparent]);
 
   return (
@@ -167,9 +105,15 @@ const Header = ({ onLoginClick }: HeaderProps) => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
               className={cn(
-                "hidden lg:flex items-center gap-6 justify-center flex-1 ml-[40rem]",
+                "hidden lg:flex items-center gap-4 flex-shrink-0",
                 isTransparent && "-mt-2"
               )}
+              style={{
+                position: 'absolute',
+                right: '2rem',
+                top: '40%',
+                transform: 'translateY(-50%)',
+              }}
             >
               {navigationLinks.map((item) => (
                 <motion.a
@@ -180,10 +124,12 @@ const Header = ({ onLoginClick }: HeaderProps) => {
                       : `/#${item.target}`
                   }
                   initial={false}
-                  whileHover={{ scale: 1.04 }}
-                  whileTap={{ scale: 0.97 }}
-                  transition={{ type: "spring", stiffness: 260, damping: 18 }}
-                  className="nav-link relative lg:flex items-center justify-center overflow-hidden rounded-full border border-white/25 px-4 py-2 text-xs xl:text-sm font-medium tracking-[0.08em] text-white/90 backdrop-blur-sm transition-colors duration-200 hover:text-white"
+                  className="nav-button-rainbow nav-link relative lg:flex items-center justify-center overflow-hidden rounded-full px-6 py-2.5 text-sm xl:text-base font-bold tracking-wide text-white transition-all duration-300"
+                  style={{
+                    background: 'rgba(20, 20, 20, 0.65)',
+                    backdropFilter: 'blur(10px)',
+                    minWidth: '120px',
+                  }}
                   onClick={(e) => {
                     if (item.type === "route") {
                       e.preventDefault();
@@ -200,17 +146,22 @@ const Header = ({ onLoginClick }: HeaderProps) => {
                     }
                   }}
                 >
-                  <span className="nav-link-label relative z-20 select-none">{item.label}</span>
-                  <span className="pointer-events-none absolute inset-0 rounded-full bg-white/5 opacity-40 mix-blend-screen"></span>
-                  <span
-                    className="nav-link-light pointer-events-none absolute inset-0 rounded-full mix-blend-screen"
+                  <span className="nav-link-label relative z-20 select-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]">
+                    {item.label}
+                  </span>
+                  <span 
+                    className="pointer-events-none absolute inset-0 rounded-full opacity-0 transition-opacity duration-300"
                     style={{
-                      background:
-                        "conic-gradient(from var(--angle, 0deg), rgba(239,68,68,0) 0deg, rgba(239,68,68,0.9) 16deg, rgba(239,68,68,0) 32deg)",
-                      WebkitMask:
-                        "radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 1px))",
-                      mask: "radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 1px))",
-                      opacity: 0
+                      background: 'radial-gradient(circle at center, rgba(255, 255, 255, 0.15), transparent 70%)',
+                    }}
+                  ></span>
+                  <span
+                    className="nav-link-light pointer-events-none absolute inset-0 rounded-full opacity-0 transition-opacity duration-300"
+                    style={{
+                      background: 'conic-gradient(from var(--angle, 0deg), rgba(239,68,68,0) 0deg, rgba(239,68,68,0.7) 90deg, rgba(59,130,246,0.6) 180deg, rgba(168,85,247,0.6) 270deg, rgba(239,68,68,0) 360deg)',
+                      WebkitMask: 'radial-gradient(farthest-side, transparent calc(100% - 2px), black calc(100% - 1px))',
+                      mask: 'radial-gradient(farthest-side, transparent calc(100% - 2px), black calc(100% - 1px))',
+                      filter: 'blur(4px)',
                     }}
                   ></span>
                 </motion.a>
@@ -219,23 +170,30 @@ const Header = ({ onLoginClick }: HeaderProps) => {
               {!isAuthenticated && isHomePage && (
                 <motion.button
                   initial={false}
-                  whileHover={{ scale: 1.04 }}
-                  whileTap={{ scale: 0.97 }}
-                  transition={{ type: "spring", stiffness: 260, damping: 18 }}
                   onClick={() => onLoginClick?.()}
-                  className="nav-link relative lg:flex items-center justify-center overflow-hidden rounded-full border border-white/25 px-4 py-2 text-xs xl:text-sm font-medium tracking-[0.08em] text-white/90 backdrop-blur-sm transition-colors duration-200 hover:text-white"
+                  className="nav-button-rainbow nav-link relative lg:flex items-center justify-center overflow-hidden rounded-full px-6 py-2.5 text-sm xl:text-base font-bold tracking-wide text-white transition-all duration-300"
+                  style={{
+                    background: 'rgba(20, 20, 20, 0.65)',
+                    backdropFilter: 'blur(10px)',
+                    minWidth: '120px',
+                  }}
                 >
-                  <span className="nav-link-label relative z-20 select-none">Login</span>
-                  <span className="pointer-events-none absolute inset-0 rounded-full bg-white/5 opacity-40 mix-blend-screen"></span>
-                  <span
-                    className="nav-link-light pointer-events-none absolute inset-0 rounded-full mix-blend-screen"
+                  <span className="nav-link-label relative z-20 select-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]">
+                    Login
+                  </span>
+                  <span 
+                    className="pointer-events-none absolute inset-0 rounded-full opacity-0 transition-opacity duration-300"
                     style={{
-                      background:
-                        "conic-gradient(from var(--angle, 0deg), rgba(239,68,68,0) 0deg, rgba(239,68,68,0.9) 16deg, rgba(239,68,68,0) 32deg)",
-                      WebkitMask:
-                        "radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 1px))",
-                      mask: "radial-gradient(farthest-side, transparent calc(100% - 3px), black calc(100% - 1px))",
-                      opacity: 0
+                      background: 'radial-gradient(circle at center, rgba(255, 255, 255, 0.15), transparent 70%)',
+                    }}
+                  ></span>
+                  <span
+                    className="nav-link-light pointer-events-none absolute inset-0 rounded-full opacity-0 transition-opacity duration-300"
+                    style={{
+                      background: 'conic-gradient(from var(--angle, 0deg), rgba(239,68,68,0) 0deg, rgba(239,68,68,0.7) 90deg, rgba(59,130,246,0.6) 180deg, rgba(168,85,247,0.6) 270deg, rgba(239,68,68,0) 360deg)',
+                      WebkitMask: 'radial-gradient(farthest-side, transparent calc(100% - 2px), black calc(100% - 1px))',
+                      mask: 'radial-gradient(farthest-side, transparent calc(100% - 2px), black calc(100% - 1px))',
+                      filter: 'blur(4px)',
                     }}
                   ></span>
                 </motion.button>
@@ -252,13 +210,20 @@ const Header = ({ onLoginClick }: HeaderProps) => {
           >
             {/* Login Button - Show when not authenticated on services page */}
             {!isAuthenticated && location.pathname === '/services' && (
-              <Button
-                onClick={() => navigate('/')}
-                className="hidden lg:flex items-center gap-2 h-10 px-4 font-medium bg-red-500 text-white hover:bg-red-600 transition-all duration-300 rounded-full"
-              >
-                <User className="h-4 w-4" />
-                Login
-              </Button>
+              <div className="nav-rainbow p-1 rounded-full">
+                <Button
+                  onClick={() => navigate('/')}
+                  className="hidden lg:flex items-center gap-2 h-10 px-6 font-bold text-white transition-all duration-300 rounded-full"
+                  style={{
+                    background: 'rgba(20, 20, 20, 0.65)',
+                    backdropFilter: 'blur(10px)',
+                    border: 'none',
+                  }}
+                >
+                  <User className="h-4 w-4" />
+                  Login
+                </Button>
+              </div>
             )}
             {/* Help Dropdown - Show when authenticated on all pages except home */}
             {isAuthenticated && !isHomePage && (
