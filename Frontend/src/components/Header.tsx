@@ -29,6 +29,14 @@ const Header = ({ onLoginClick }: HeaderProps) => {
   const { user, isAuthenticated, logout } = useAuth();
   const navLinksRef = useRef<HTMLDivElement | null>(null);
 
+  // Helper function to capitalize name properly
+  const capitalizeName = (name: string | undefined) => {
+    if (!name) return 'User';
+    return name.split(' ').map(word => 
+      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+    ).join(' ');
+  };
+
   const handleLogout = async () => {
     await logout();
     navigate('/');
@@ -239,7 +247,7 @@ const Header = ({ onLoginClick }: HeaderProps) => {
                     <Button
                       variant="ghost"
                       className="nav-button-rainbow flex items-center gap-2 text-white hover:opacity-90 h-auto px-4 py-2.5 rounded-xl transition-all duration-300 relative overflow-hidden group"
-                      title={`Logged in as: ${user?.full_name || user?.email?.split('@')[0] || 'User'}`}
+                      title={`Logged in as: ${capitalizeName(user?.full_name) || user?.email?.split('@')[0] || 'User'}`}
                       style={{
                         background: 'transparent',
                         backdropFilter: 'blur(10px)',
@@ -264,12 +272,12 @@ const Header = ({ onLoginClick }: HeaderProps) => {
                         style={{
                           boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
                         }}
-                        title={`${user?.full_name || user?.email?.split('@')[0] || 'User'}`}
+                        title={`${capitalizeName(user?.full_name) || user?.email?.split('@')[0] || 'User'}`}
                       >
                         <User className="h-5 w-5 text-white relative z-10" />
                       </div>
                       <span className="text-sm font-medium whitespace-nowrap relative z-10">
-                        {user?.full_name || user?.email?.split('@')[0] || 'User'}
+                        {capitalizeName(user?.full_name) || user?.email?.split('@')[0] || 'User'}
                       </span>
                       <ChevronDown className="h-4 w-4 flex-shrink-0" />
                     </Button>
@@ -278,7 +286,7 @@ const Header = ({ onLoginClick }: HeaderProps) => {
                     <DropdownMenuLabel className="font-normal">
                       <div className="flex flex-col space-y-1">
                         <p className="text-sm font-medium leading-none">
-                          {user?.full_name || 'User'}
+                          {capitalizeName(user?.full_name)}
                         </p>
                         <p className="text-xs leading-none text-muted-foreground">
                           {user?.email}
@@ -323,7 +331,7 @@ const Header = ({ onLoginClick }: HeaderProps) => {
               className="md:hidden text-white"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle menu"
-              title={isAuthenticated ? `Menu - ${user?.full_name || user?.email?.split('@')[0] || 'User'}` : 'Toggle menu'}
+              title={isAuthenticated ? `Menu - ${capitalizeName(user?.full_name) || user?.email?.split('@')[0] || 'User'}` : 'Toggle menu'}
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -465,7 +473,7 @@ const Header = ({ onLoginClick }: HeaderProps) => {
                   </a>
                   <div className="border-t border-white/20 pt-2 mt-2">
                     <div className="px-2 py-1 text-xs text-white/70">
-                      {user?.full_name || user?.email}
+                      {capitalizeName(user?.full_name) || user?.email}
                     </div>
                     <button
                       onClick={async () => {

@@ -433,8 +433,8 @@ const Profile = () => {
           transition={{ duration: 0.6 }}
           className="px-6 py-5 relative overflow-hidden"
           style={{ 
-            backgroundColor: '#7C2558',
-            boxShadow: 'inset 0 0 60px rgba(0, 0, 0, 0.1)'
+            background: 'linear-gradient(90deg, #ff3d3d, #ff6a45)',
+            boxShadow: 'inset 0 0 60px rgba(0, 0, 0, 0.1), 0 4px 20px rgba(255, 61, 61, 0.3)'
           }}
         >
           {/* Help Dropdown - Top Right */}
@@ -445,7 +445,7 @@ const Profile = () => {
           <div className="flex items-center gap-4 mb-4">
             <div className="relative group">
               <div className="h-20 w-20 rounded-full bg-white/20 backdrop-blur-md border-3 border-white/30 flex items-center justify-center text-white font-bold text-xl shadow-xl transition-all group-hover:border-white/50">
-                {currentUser?.full_name?.charAt(0) || 'U'}
+                {currentUser?.full_name?.charAt(0).toUpperCase() || 'U'}
               </div>
               {/* Edit Icon Badge */}
               <button
@@ -457,7 +457,13 @@ const Profile = () => {
             </div>
 
             <div className="text-white">
-              <h2 className="text-xl font-bold mb-0.5">{currentUser?.full_name || 'User'}</h2>
+              <h2 className="text-xl font-bold mb-0.5">
+                {currentUser?.full_name 
+                  ? currentUser.full_name.split(' ').map(word => 
+                      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                    ).join(' ')
+                  : 'User'}
+              </h2>
               <p className="text-white/90 flex items-center gap-1.5 mb-0.5 text-xs">
                 <Mail className="h-3 w-3" />
                 {currentUser?.email}
