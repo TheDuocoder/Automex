@@ -267,7 +267,7 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
       </div>
       
       {/* Minimal Premium Scroll Indicator - Lower Right - Only visible when not authenticated and login form not open */}
-      {!isAuthenticated && !localShowLoginForm && (
+      {!isAuthenticated && !localShowLoginForm && !showRegisterForm && (
         <div className="absolute bottom-8 md:bottom-12 right-8 md:right-16 lg:right-20 z-[5] flex flex-col items-center gap-2 cursor-pointer group">
           {/* Arrow with Glow */}
           <div className="relative animate-bounce">
