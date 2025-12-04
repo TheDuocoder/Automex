@@ -1,12 +1,16 @@
-const Footer = () => {
+interface FooterProps {
+  compact?: boolean;
+}
+
+const Footer = ({ compact = false }: FooterProps = {}) => {
   return (
-    <footer className="bg-slate-900 text-white py-12 md:py-16">
+    <footer className={`bg-slate-900 text-white ${compact ? 'py-6 md:py-8' : 'py-12 md:py-16'}`}>
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+        <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 ${compact ? 'gap-4 lg:gap-6' : 'gap-8 lg:gap-12'}`}>
           {/* About Us Section */}
           <div className="flex flex-col">
-            <h3 className="text-base md:text-lg font-bold mb-4 md:mb-6 text-white tracking-wide">ABOUT US</h3>
-            <ul className="space-y-2.5">
+            <h3 className={`text-base md:text-lg font-bold ${compact ? 'mb-2 md:mb-3' : 'mb-4 md:mb-6'} text-white tracking-wide`}>ABOUT US</h3>
+            <ul className={compact ? 'space-y-1' : 'space-y-2.5'}>
               <li><a href="/#faq" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">FAQs</a></li>
               <li><a href="/#about-us" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Contact Us</a></li>
               <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Terms and Conditions</a></li>
@@ -22,8 +26,8 @@ const Footer = () => {
 
           {/* Our Services Section */}
           <div className="flex flex-col">
-            <h3 className="text-base md:text-lg font-bold mb-4 md:mb-6 text-white tracking-wide">OUR SERVICES</h3>
-            <ul className="space-y-2.5">
+            <h3 className={`text-base md:text-lg font-bold ${compact ? 'mb-2 md:mb-3' : 'mb-4 md:mb-6'} text-white tracking-wide`}>OUR SERVICES</h3>
+            <ul className={compact ? 'space-y-1' : 'space-y-2.5'}>
               <li><a href="/#our-services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Scheduled Services</a></li>
               <li><a href="/#our-services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">AC Services</a></li>
               <li><a href="/#our-services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Cleaning & Detailing</a></li>
@@ -40,8 +44,8 @@ const Footer = () => {
 
           {/* Luxury Brands Section */}
           <div className="flex flex-col">
-            <h3 className="text-base md:text-lg font-bold mb-4 md:mb-6 text-white tracking-wide">LUXURY BRANDS</h3>
-            <ul className="space-y-2.5">
+            <h3 className={`text-base md:text-lg font-bold ${compact ? 'mb-2 md:mb-3' : 'mb-4 md:mb-6'} text-white tracking-wide`}>LUXURY BRANDS</h3>
+            <ul className={compact ? 'space-y-1' : 'space-y-2.5'}>
               <li><a href="/services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Mercedes</a></li>
               <li><a href="/services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">BMW</a></li>
               <li><a href="/services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Audi</a></li>
@@ -57,8 +61,8 @@ const Footer = () => {
 
           {/* Popular Brands Section */}
           <div className="flex flex-col">
-            <h3 className="text-base md:text-lg font-bold mb-4 md:mb-6 text-white tracking-wide">POPULAR BRANDS</h3>
-            <ul className="space-y-2.5">
+            <h3 className={`text-base md:text-lg font-bold ${compact ? 'mb-2 md:mb-3' : 'mb-4 md:mb-6'} text-white tracking-wide`}>POPULAR BRANDS</h3>
+            <ul className={compact ? 'space-y-1' : 'space-y-2.5'}>
               <li><a href="/services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Maruti Suzuki</a></li>
               <li><a href="/services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Hyundai</a></li>
               <li><a href="/services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Honda</a></li>
@@ -76,7 +80,7 @@ const Footer = () => {
         </div>
 
         {/* Bottom Section */}
-        <div className="mt-12 pt-8 border-t border-gray-700">
+        <div className={`${compact ? 'mt-6 pt-4' : 'mt-12 pt-8'} border-t border-gray-700`}>
           <div className="relative flex items-center justify-center">
             <p className="text-gray-400 text-sm text-center">
               © {new Date().getFullYear()} AutoMex. All rights reserved.

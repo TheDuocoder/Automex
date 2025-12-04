@@ -29,6 +29,7 @@ import ServiceHistory from "@/components/dashboard/ServiceHistory";
 import SchedulePickUp from "@/components/dashboard/SchedulePickUp";
 
 import { carService, Car as CarModel, serviceHistoryService, ServiceHistory as ServiceHistoryModel } from "@/services/api";
+import Footer from "@/components/Footer";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -384,7 +385,7 @@ const Profile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Left Sidebar */}
       <motion.aside
         initial={{ x: -300, opacity: 0 }}
@@ -481,7 +482,7 @@ const Profile = () => {
       </motion.aside>
 
       {/* Main Content */}
-      <div className="flex-1 ml-64">
+      <div className="flex-1 ml-64 flex flex-col">
         {/* Profile Header with Gradient */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -822,6 +823,9 @@ const Profile = () => {
             </motion.div>
           )}
         </div>
+        
+        {/* Footer */}
+        <Footer compact={true} />
       </div>
 
       {/* Edit Profile Modal */}
