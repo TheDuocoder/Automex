@@ -225,13 +225,13 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
             </div>
           </div>
 
-          {/* Right side - Empty initially, Welcome Section when authenticated */}
-          <div className="w-full md:w-[480px]">
-            <div className="hero-auth-card w-full">
-              {isAuthenticated ? (
-                // Welcome Section for Logged-in Users
+          {/* Right side - Welcome Section when authenticated, Login/Register when not authenticated */}
+          {isAuthenticated ? (
+            <div className="w-full md:w-[480px]">
+              <div className="hero-auth-card w-full">
+                {/* Welcome Section for Logged-in Users */}
                 <div className="welcome-section w-full bg-black/60 backdrop-blur-md border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_60px_rgba(255,81,47,0.2),0_0_100px_rgba(221,36,118,0.15)] rounded-3xl p-5 relative scale-90 origin-top">
-                {/* Welcome Header */}
+                  {/* Welcome Header */}
                 <div className="text-center mb-4">
                   <div className="flex justify-center mb-3 -mt-2">
                     <div className="relative">
@@ -424,10 +424,13 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
                     </Button>
                   </div>
                 </div>
+                </div>
               </div>
-            ) : (
-              // Login/Register Form for Non-authenticated Users - Show when login button is clicked
-              <>
+            </div>
+          ) : (
+            // Login/Register Form for Non-authenticated Users - Show when login button is clicked
+            <div className="w-full md:w-[480px]">
+              <div className="hero-auth-card w-full">
                 {localShowLoginForm && !showRegisterForm ? (
                   <Login 
                     onClose={onCloseLogin}
@@ -441,14 +444,10 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
                       setLocalShowLoginForm(true);
                     }}
                   />
-                ) : (
-                  // Empty space initially
-                  <div className="w-full md:w-[540px]"></div>
-                )}
-              </>
-            )}
+                ) : null}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </section>

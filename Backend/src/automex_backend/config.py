@@ -64,7 +64,7 @@ class Settings(BaseSettings):
     AWS_SECRET_ACCESS_KEY: str = ""
     AWS_REGION: str = "ap-south-2"
     AWS_BUCKET_NAME: str = "automex-bhubaneswar"
-    AWS_S3_FOLDER: str = "Backend/my-cars/"
+    AWS_S3_FOLDER: str = "Backend/my-cars/"  # Base folder - actual structure: Backend/my-cars/{username}/
 
 
 settings = Settings()

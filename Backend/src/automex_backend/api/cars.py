@@ -50,7 +50,9 @@ async def create_car(
     image_url = None
     if image:
         from automex_backend.services.s3 import s3_service
-        image_url = await s3_service.upload_file(image)
+        # Use user's email as username for folder structure
+        username = user.email
+        image_url = await s3_service.upload_file(image, username=username)
 
     car = Car(
         make=make,
@@ -136,8 +138,9 @@ async def update_car(
         if car.image_url:
             await s3_service.delete_file(car.image_url)
         
-        # Upload new image
-        image_url = await s3_service.upload_file(image)
+        # Upload new image with user-specific folder
+        username = user.email
+        image_url = await s3_service.upload_file(image, username=username)
         car.image_url = image_url
     
     await session.commit()
@@ -160,11 +163,25 @@ async def delete_car(
     if not car:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Car not found")
     
-    # Delete image from S3 if exists
-    if car.image_url:
-        from automex_backend.services.s3 import s3_service
-        await s3_service.delete_file(car.image_url)
+    # Store image URL before deletion for S3 cleanup
+    image_url = car.image_url
     
+    # Delete image from S3 if exists
+    if image_url:
+        try:
+            from automex_backend.services.s3 import s3_service
+            deletion_success = await s3_service.delete_file(image_url)
+            if deletion_success:
+                print(f"Successfully deleted S3 image for car {car_id}: {image_url}")
+            else:
+                print(f"Warning: Failed to delete S3 image for car {car_id}: {image_url}")
+        except Exception as e:
+            # Log error but don't prevent car deletion
+            print(f"Error deleting S3 image for car {car_id}: {str(e)}")
+            print(f"Image URL: {image_url}")
+    
+    # Delete car from database
     await session.delete(car)
     await session.commit()
+    print(f"Successfully deleted car {car_id} (Registration: {car.registration_number})")
     return None
