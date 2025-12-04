@@ -23,6 +23,7 @@ export interface User {
   email: string;
   full_name?: string;
   phone_number?: string;
+  profile_picture_url?: string;
   is_active: boolean;
   is_verified: boolean;
   is_superuser: boolean;
@@ -218,4 +219,60 @@ export async function updateUserProfile(data: Partial<User>): Promise<User> {
   }
 
   throw new Error('Failed to update profile');
+}
+
+/**
+ * Upload profile picture
+ */
+export async function uploadProfilePicture(file: File): Promise<User> {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const token = localStorage.getItem('auth_token');
+  if (!token) {
+    throw new Error('Not authenticated');
+  }
+
+  const url = API_BASE_URL ? `${API_BASE_URL}/api/v1/auth/me/profile-picture` : '/api/v1/auth/me/profile-picture';
+
+  let response: Response;
+  try {
+    response = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        // Don't set Content-Type, let browser set it with boundary for FormData
+      },
+      body: formData,
+    });
+  } catch (fetchError) {
+    // Handle network errors
+    if (fetchError instanceof TypeError) {
+      throw new Error('Network error: Unable to connect to server. Please check your connection.');
+    }
+    throw new Error('Failed to upload profile picture: ' + (fetchError instanceof Error ? fetchError.message : 'Unknown error'));
+  }
+
+  if (!response.ok) {
+    let errorDetail = 'Failed to upload profile picture';
+    try {
+      const errorData = await response.json();
+      errorDetail = errorData.detail || errorData.message || errorDetail;
+    } catch {
+      // If response is not JSON, use status text
+      errorDetail = response.statusText || `Server error (${response.status})`;
+    }
+    throw new Error(errorDetail);
+  }
+
+  const data: User = await response.json();
+
+  // Update localStorage
+  localStorage.setItem('user_data', JSON.stringify(data));
+
+  // Update Zustand store
+  const store = useAuthStore.getState();
+  store.setUser(data);
+
+  return data;
 }

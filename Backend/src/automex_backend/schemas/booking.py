@@ -1,7 +1,7 @@
 """
 Booking schemas for API validation
 """
-from typing import Optional
+from typing import Optional, List, Union, Dict, Any
 from datetime import datetime
 from pydantic import BaseModel, Field
 from automex_backend.models.booking import BookingStatus
@@ -78,7 +78,24 @@ class BookingRead(BookingBase):
     car_model: Optional[str] = None
     fuel_type: Optional[str] = None
     service_name: Optional[str] = None
+    # Daily work logs (now stored in separate table)
+    daily_work_logs: Optional[List["DailyWorkLogRead"]] = Field(default_factory=list)
     
     class Config:
         from_attributes = True
+
+
+# Import here to avoid circular imports
+from automex_backend.schemas.daily_work_log import DailyWorkLogRead
+BookingRead.model_rebuild()
+
+
+class DailyWorkDescriptionUpdate(BaseModel):
+    """Schema for updating daily work description"""
+    description: str = Field(..., min_length=1)
+
+
+class DailyWorkMediaUpload(BaseModel):
+    """Schema for uploading daily work media"""
+    file_urls: List[str] = Field(..., min_items=1)
 

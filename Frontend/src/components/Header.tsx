@@ -268,7 +268,26 @@ const Header = ({ onLoginClick }: HeaderProps) => {
                         }}
                       />
 
-                      <div className="h-8 w-8 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center flex-shrink-0 relative"
+                      {user?.profile_picture_url ? (
+                        <img
+                          src={`${user.profile_picture_url}?v=${user.id || Date.now()}`}
+                          alt={user?.full_name || 'User'}
+                          className="h-8 w-8 rounded-full object-cover border-2 border-white/30 flex-shrink-0 relative z-10"
+                          style={{
+                            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
+                          }}
+                          title={`${capitalizeName(user?.full_name) || user?.email?.split('@')[0] || 'User'}`}
+                          onError={(e) => {
+                            // Fallback to icon if image fails to load
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                            const fallback = target.nextElementSibling as HTMLElement;
+                            if (fallback) fallback.style.display = 'flex';
+                          }}
+                        />
+                      ) : null}
+                      <div 
+                        className={`h-8 w-8 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center flex-shrink-0 relative ${user?.profile_picture_url ? 'hidden' : ''}`}
                         style={{
                           boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
                         }}
@@ -284,18 +303,39 @@ const Header = ({ onLoginClick }: HeaderProps) => {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56 bg-white">
                     <DropdownMenuLabel className="font-normal">
-                      <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">
-                          {capitalizeName(user?.full_name)}
-                        </p>
-                        <p className="text-xs leading-none text-muted-foreground">
-                          {user?.email}
-                        </p>
-                        {user?.role && (
-                          <p className="text-xs leading-none text-primary mt-1">
-                            Role: {user.role.name}
+                      <div className="flex items-center gap-3">
+                        {user?.profile_picture_url ? (
+                          <img
+                            src={`${user.profile_picture_url}?v=${user.id || Date.now()}`}
+                            alt={user?.full_name || 'User'}
+                            className="h-10 w-10 rounded-full object-cover border border-primary/30"
+                            onError={(e) => {
+                              // Fallback to initial if image fails to load
+                              const target = e.target as HTMLImageElement;
+                              target.style.display = 'none';
+                              const fallback = target.nextElementSibling as HTMLElement;
+                              if (fallback) fallback.style.display = 'flex';
+                            }}
+                          />
+                        ) : null}
+                        <div 
+                          className={`h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-semibold ${user?.profile_picture_url ? 'hidden' : ''}`}
+                        >
+                          {user?.full_name?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || 'U'}
+                        </div>
+                        <div className="flex flex-col space-y-1">
+                          <p className="text-sm font-medium leading-none">
+                            {capitalizeName(user?.full_name)}
                           </p>
-                        )}
+                          <p className="text-xs leading-none text-muted-foreground">
+                            {user?.email}
+                          </p>
+                          {user?.role && (
+                            <p className="text-xs leading-none text-primary mt-1">
+                              Role: {user.role.name}
+                            </p>
+                          )}
+                        </div>
                       </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />

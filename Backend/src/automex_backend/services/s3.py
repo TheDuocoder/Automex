@@ -43,7 +43,7 @@ class S3Service:
         sanitized = sanitized.strip('_')
         return sanitized
 
-    async def upload_file(self, file: UploadFile, folder: Optional[str] = None, username: Optional[str] = None) -> str:
+    async def upload_file(self, file: UploadFile, folder: Optional[str] = None, username: Optional[str] = None, booking_email: Optional[str] = None, date_folder: Optional[str] = None) -> str:
         """
         Upload a file to S3 and return the URL.
         
@@ -52,6 +52,10 @@ class S3Service:
             folder: Optional custom folder path. If not provided, uses default from settings.
             username: Optional username to create user-specific folder structure.
                      If provided, creates folder structure: Backend/my-cars/{username}/
+            booking_email: Optional email for booking folder structure.
+                          If provided, creates folder structure: Backend/bookings/{sanitized_email}/
+            date_folder: Optional date folder (YYYY-MM-DD format) for booking media.
+                        If provided with booking_email, creates: Backend/bookings/{email}/{date}/
         
         Returns:
             str: The public URL of the uploaded file
@@ -61,7 +65,19 @@ class S3Service:
         """
         try:
             # Build folder path
-            if username:
+            if booking_email:
+                # Sanitize email for filesystem safety
+                sanitized_email = self._sanitize_username(booking_email)
+                if date_folder:
+                    # Create date-based folder: Backend/bookings/{email}/{date}/
+                    # Validate date format (YYYY-MM-DD)
+                    if not re.match(r'^\d{4}-\d{2}-\d{2}$', date_folder):
+                        raise HTTPException(status_code=400, detail="Invalid date format. Use YYYY-MM-DD")
+                    upload_folder = f"Backend/bookings/{sanitized_email}/{date_folder}/"
+                else:
+                    # Create booking-specific folder: Backend/bookings/{email}/
+                    upload_folder = f"Backend/bookings/{sanitized_email}/"
+            elif username:
                 # Sanitize username for filesystem safety
                 sanitized_username = self._sanitize_username(username)
                 # Create user-specific folder: Backend/my-cars/{username}/
@@ -151,6 +167,52 @@ class S3Service:
             return key
         except Exception:
             return None
+
+    async def delete_files_by_date_folder(self, booking_email: str, date_folder: str) -> int:
+        """
+        Delete all files in a date folder for a booking.
+        
+        Args:
+            booking_email: The email of the booking owner
+            date_folder: Date folder in YYYY-MM-DD format
+        
+        Returns:
+            int: Number of files deleted
+        """
+        try:
+            # Validate date format
+            if not re.match(r'^\d{4}-\d{2}-\d{2}$', date_folder):
+                print(f"[ERROR] Invalid date format: {date_folder}")
+                return 0
+            
+            # Sanitize email
+            sanitized_email = self._sanitize_username(booking_email)
+            folder_prefix = f"Backend/bookings/{sanitized_email}/{date_folder}/"
+            
+            # List all objects with this prefix
+            paginator = self.s3_client.get_paginator('list_objects_v2')
+            deleted_count = 0
+            
+            for page in paginator.paginate(Bucket=self.bucket_name, Prefix=folder_prefix):
+                if 'Contents' not in page:
+                    continue
+                
+                # Delete all objects in this page
+                objects_to_delete = [{'Key': obj['Key']} for obj in page['Contents']]
+                if objects_to_delete:
+                    response = self.s3_client.delete_objects(
+                        Bucket=self.bucket_name,
+                        Delete={'Objects': objects_to_delete}
+                    )
+                    deleted_count += len([obj for obj in response.get('Deleted', [])])
+                    print(f"[INFO] Deleted {len(objects_to_delete)} files from {folder_prefix}")
+            
+            print(f"[INFO] Total files deleted from {folder_prefix}: {deleted_count}")
+            return deleted_count
+            
+        except Exception as e:
+            print(f"[ERROR] Error deleting files from date folder {date_folder}: {str(e)}")
+            return 0
 
 # Global instance
 s3_service = S3Service()

@@ -234,33 +234,84 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
                   {/* Welcome Header */}
                 <div className="text-center mb-4">
                   <div className="flex justify-center mb-3 -mt-2">
-                    <div className="relative">
-                      {/* White glow background */}
-                      <div className="absolute inset-0 bg-white/20 blur-3xl rounded-full scale-110"></div>
-                      
-                      {/* Logo */}
-                      <img 
-                        src="/images/Automex_icon/AUTOMEX_logo.png" 
-                        alt="AutoMex"
-                        className="relative h-40 w-auto object-contain drop-shadow-[0_8px_32px_rgba(255,255,255,0.3)]"
-                        style={{
-                          filter: 'drop-shadow(0 8px 32px rgba(255,255,255,0.3))',
-                        }}
-                        onError={(e) => {
-                          e.currentTarget.src = "/images/Landing_page_images/Red_Automex.png";
-                        }}
-                      />
-                      
-                      {/* Subtle reflection/bottom fade */}
-                      <div 
-                        className="absolute bottom-0 left-0 right-0 h-12 pointer-events-none"
-                        style={{
-                          background: 'linear-gradient(to bottom, transparent, rgba(255,255,255,0.05))',
-                          transform: 'scaleY(-1)',
-                          opacity: 0.4,
-                        }}
-                      ></div>
-                    </div>
+                    {user?.profile_picture_url ? (
+                      // Show user profile picture if available
+                      <div className="relative">
+                        {/* White glow background */}
+                        <div className="absolute inset-0 bg-white/20 blur-3xl rounded-full scale-110"></div>
+                        
+                        {/* Profile Picture */}
+                        <img 
+                          src={`${user.profile_picture_url}?v=${user.id || Date.now()}`}
+                          alt={user?.full_name || 'User'}
+                          className="relative h-32 w-32 rounded-full object-cover border-4 border-white/30 drop-shadow-[0_8px_32px_rgba(255,255,255,0.3)]"
+                          style={{
+                            filter: 'drop-shadow(0 8px 32px rgba(255,255,255,0.3))',
+                          }}
+                          onError={(e) => {
+                            // Fallback to logo if image fails
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                            const fallback = target.nextElementSibling as HTMLElement;
+                            if (fallback) fallback.style.display = 'block';
+                          }}
+                        />
+                        
+                        {/* Fallback to logo if profile picture fails */}
+                        <div className="hidden relative">
+                          <img 
+                            src="/images/Automex_icon/AUTOMEX_logo.png" 
+                            alt="AutoMex"
+                            className="relative h-40 w-auto object-contain drop-shadow-[0_8px_32px_rgba(255,255,255,0.3)]"
+                            style={{
+                              filter: 'drop-shadow(0 8px 32px rgba(255,255,255,0.3))',
+                            }}
+                            onError={(e) => {
+                              e.currentTarget.src = "/images/Landing_page_images/Red_Automex.png";
+                            }}
+                          />
+                        </div>
+                        
+                        {/* Subtle reflection/bottom fade */}
+                        <div 
+                          className="absolute bottom-0 left-0 right-0 h-12 pointer-events-none"
+                          style={{
+                            background: 'linear-gradient(to bottom, transparent, rgba(255,255,255,0.05))',
+                            transform: 'scaleY(-1)',
+                            opacity: 0.4,
+                          }}
+                        ></div>
+                      </div>
+                    ) : (
+                      // Show logo if no profile picture
+                      <div className="relative">
+                        {/* White glow background */}
+                        <div className="absolute inset-0 bg-white/20 blur-3xl rounded-full scale-110"></div>
+                        
+                        {/* Logo */}
+                        <img 
+                          src="/images/Automex_icon/AUTOMEX_logo.png" 
+                          alt="AutoMex"
+                          className="relative h-40 w-auto object-contain drop-shadow-[0_8px_32px_rgba(255,255,255,0.3)]"
+                          style={{
+                            filter: 'drop-shadow(0 8px 32px rgba(255,255,255,0.3))',
+                          }}
+                          onError={(e) => {
+                            e.currentTarget.src = "/images/Landing_page_images/Red_Automex.png";
+                          }}
+                        />
+                        
+                        {/* Subtle reflection/bottom fade */}
+                        <div 
+                          className="absolute bottom-0 left-0 right-0 h-12 pointer-events-none"
+                          style={{
+                            background: 'linear-gradient(to bottom, transparent, rgba(255,255,255,0.05))',
+                            transform: 'scaleY(-1)',
+                            opacity: 0.4,
+                          }}
+                        ></div>
+                      </div>
+                    )}
                   </div>
                   <h2 
                     className="text-3xl mb-2"
@@ -428,7 +479,7 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
               </div>
             </div>
           ) : (
-            // Login/Register Form for Non-authenticated Users - Show when login button is clicked
+            // Login Button or Login/Register Form for Non-authenticated Users
             <div className="w-full md:w-[480px]">
               <div className="hero-auth-card w-full">
                 {localShowLoginForm && !showRegisterForm ? (
@@ -444,7 +495,63 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
                       setLocalShowLoginForm(true);
                     }}
                   />
-                ) : null}
+                ) : (
+                  // Show Login Button when not authenticated and form is not shown
+                  <div className="w-full bg-black/60 backdrop-blur-md border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_60px_rgba(255,81,47,0.2),0_0_100px_rgba(221,36,118,0.15)] rounded-3xl p-8 flex flex-col items-center justify-center min-h-[400px]">
+                    <div className="text-center mb-8">
+                      <h2 
+                        className="text-2xl md:text-3xl mb-3 font-bold"
+                        style={{
+                          background: 'linear-gradient(90deg, #fff, #d9d9d9)',
+                          WebkitBackgroundClip: 'text',
+                          WebkitTextFillColor: 'transparent',
+                          backgroundClip: 'text',
+                        }}
+                      >
+                        Welcome to AutoMex
+                      </h2>
+                      <p className="text-white/80 text-sm md:text-base">
+                        Sign in to access your services and manage your bookings
+                      </p>
+                    </div>
+                    <Button
+                      onClick={() => setLocalShowLoginForm(true)}
+                      className="w-full h-16 text-white text-lg font-bold transition-all duration-300 group relative overflow-hidden"
+                      style={{
+                        backgroundImage: 'linear-gradient(135deg, #FF512F 0%, #DD2476 100%)',
+                        borderRadius: '20px',
+                        boxShadow: '0 6px 18px rgba(255, 79, 87, 0.35)',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
+                        e.currentTarget.style.boxShadow = '0 10px 30px rgba(255, 79, 87, 0.5)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                        e.currentTarget.style.boxShadow = '0 6px 18px rgba(255, 79, 87, 0.35)';
+                      }}
+                    >
+                      {/* Ripple effect on hover */}
+                      <span 
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:animate-[shimmer_1s_ease-in-out] pointer-events-none"
+                        style={{
+                          transform: 'translateX(-100%)',
+                        }}
+                      ></span>
+                      <span className="relative z-10">Login to Continue</span>
+                      <ArrowRight className="w-6 h-6 ml-3 group-hover:translate-x-2 transition-transform relative z-10" />
+                    </Button>
+                    <p className="text-white/60 text-xs mt-6 text-center">
+                      Don't have an account?{' '}
+                      <button
+                        onClick={() => setShowRegisterForm(true)}
+                        className="text-primary hover:text-primary/80 underline font-semibold transition-colors"
+                      >
+                        Sign up here
+                      </button>
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           )}

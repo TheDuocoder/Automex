@@ -51,9 +51,24 @@ export interface Booking {
   estimated_cost?: number;
   actual_cost?: number;
   technician_notes?: string;
+  daily_work_logs?: DailyWorkLog[];
   created_at: string;
   updated_at: string;
   completed_at?: string;
+}
+
+/**
+ * Daily Work Log interface
+ */
+export interface DailyWorkLog {
+  id: number;
+  booking_id: number;
+  log_date: string; // YYYY-MM-DD format
+  description?: string;
+  photos?: string[];
+  videos?: string[];
+  created_at: string;
+  updated_at: string;
 }
 
 /**
@@ -145,5 +160,135 @@ export async function updateBookingStatus(bookingId: number, newStatus: BookingS
   }
 
   return response.data;
+}
+
+/**
+ * Create a new daily work log entry (Admin/Super Admin only)
+ */
+export async function createDailyWorkLog(
+  bookingId: number,
+  logDate: string,
+  description?: string
+): Promise<DailyWorkLog> {
+  const response = await apiCall<DailyWorkLog>(`/api/v1/bookings/${bookingId}/daily-work-logs`, {
+    method: 'POST',
+    body: JSON.stringify({
+      log_date: logDate,
+      description: description || null,
+      photos: [],
+      videos: [],
+    }),
+  });
+
+  if (response.error) {
+    throw new Error(response.error);
+  }
+
+  if (!response.data) {
+    throw new Error('Failed to create daily work log');
+  }
+
+  return response.data;
+}
+
+/**
+ * Update daily work log description (Admin/Super Admin only)
+ */
+export async function updateDailyWorkLogDescription(bookingId: number, logId: number, description: string): Promise<DailyWorkLog> {
+  const response = await apiCall<DailyWorkLog>(`/api/v1/bookings/${bookingId}/daily-work-logs/${logId}/description`, {
+    method: 'PATCH',
+    body: JSON.stringify({ description }),
+  });
+
+  if (response.error) {
+    throw new Error(response.error);
+  }
+
+  if (!response.data) {
+    throw new Error('Failed to update daily work log description');
+  }
+
+  return response.data;
+}
+
+/**
+ * Upload daily work media (photos/videos) for a specific date (Admin/Super Admin only)
+ */
+export async function uploadDailyWorkMedia(bookingId: number, logDate: string, files: File[]): Promise<DailyWorkLog> {
+  const formData = new FormData();
+  files.forEach(file => {
+    formData.append('files', file);
+  });
+
+  const token = localStorage.getItem('auth_token');
+  if (!token) {
+    throw new Error('Not authenticated');
+  }
+
+  const url = import.meta.env.VITE_API_BASE_URL 
+    ? `${import.meta.env.VITE_API_BASE_URL}/api/v1/bookings/${bookingId}/daily-work-logs/${logDate}/media`
+    : `/api/v1/bookings/${bookingId}/daily-work-logs/${logDate}/media`;
+
+  let response: Response;
+  try {
+    response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+      body: formData,
+    });
+  } catch (fetchError) {
+    if (fetchError instanceof TypeError) {
+      throw new Error('Network error: Unable to connect to server. Please check your connection.');
+    }
+    throw new Error('Failed to upload media: ' + (fetchError instanceof Error ? fetchError.message : 'Unknown error'));
+  }
+
+  if (!response.ok) {
+    let errorDetail = 'Failed to upload media';
+    try {
+      const errorData = await response.json();
+      errorDetail = errorData.detail || errorData.message || errorDetail;
+    } catch {
+      errorDetail = response.statusText || `Server error (${response.status})`;
+    }
+    throw new Error(errorDetail);
+  }
+
+  const data: DailyWorkLog = await response.json();
+  return data;
+}
+
+/**
+ * Delete daily work media (Admin/Super Admin only)
+ */
+export async function deleteDailyWorkMedia(bookingId: number, logId: number, mediaUrl: string): Promise<DailyWorkLog> {
+  const response = await apiCall<DailyWorkLog>(`/api/v1/bookings/${bookingId}/daily-work-logs/${logId}/media?media_url=${encodeURIComponent(mediaUrl)}`, {
+    method: 'DELETE',
+  });
+
+  if (response.error) {
+    throw new Error(response.error);
+  }
+
+  if (!response.data) {
+    throw new Error('Failed to delete media');
+  }
+
+  return response.data;
+}
+
+/**
+ * Delete all daily work log for a specific date (Admin/Super Admin only)
+ */
+export async function deleteDailyWorkByDate(bookingId: number, logDate: string): Promise<void> {
+  const response = await apiCall(`/api/v1/bookings/${bookingId}/daily-work-logs/${logDate}`, {
+    method: 'DELETE',
+  });
+
+  if (response.error) {
+    throw new Error(response.error);
+  }
 }
 

@@ -25,6 +25,7 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     # Additional user fields with unique constraint on phone_number
     full_name: Mapped[Optional[str]] = mapped_column(String(255), nullable=True, default=None)
     phone_number: Mapped[Optional[str]] = mapped_column(String(20), nullable=True, unique=True, default=None)
+    profile_picture_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True, default=None)
     
     # Role relationship
     role_id: Mapped[int] = mapped_column(ForeignKey("role.id"), nullable=False, default=1)

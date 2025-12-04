@@ -3,7 +3,7 @@ Authentication routes using FastAPI Users
 """
 import os
 from typing import Optional
-from fastapi import APIRouter, Depends, Request, HTTPException, status
+from fastapi import APIRouter, Depends, Request, HTTPException, status, File, UploadFile
 from pydantic import BaseModel, EmailStr
 from fastapi_users import FastAPIUsers, BaseUserManager, IntegerIDMixin
 from fastapi_users.authentication import (
@@ -589,6 +589,88 @@ async def update_current_user(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to update profile: {str(e)}"
+        )
+
+
+@router.patch(
+    "/me/profile-picture",
+    response_model=UserRead,
+    summary="Upload Profile Picture",
+    description="Upload or update the current user's profile picture",
+    tags=["Authentication"],
+    responses={
+        200: {
+            "description": "Profile picture uploaded successfully",
+        },
+        401: {"description": "Not authenticated"},
+        400: {"description": "Bad Request - Invalid file"},
+    }
+)
+async def upload_profile_picture(
+    file: UploadFile = File(...),
+    user: User = Depends(current_active_user),
+    user_manager: UserManager = Depends(get_user_manager),
+    session: AsyncSession = Depends(get_async_session),
+):
+    """
+    Upload or update profile picture for the current authenticated user.
+    Stores the image in Backend/profile-pick/ folder in S3.
+    """
+    try:
+        # Validate file type
+        if not file.content_type or not file.content_type.startswith('image/'):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="File must be an image"
+            )
+        
+        # Validate file size (max 5MB)
+        file_content = await file.read()
+        file_size = len(file_content)
+        if file_size > 5 * 1024 * 1024:  # 5MB
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Image size must be less than 5MB"
+            )
+        
+        # Reset file pointer for upload
+        await file.seek(0)
+        
+        # Upload to S3 in Backend/profile-pick/ folder
+        from automex_backend.services.s3 import s3_service
+        
+        # Delete old profile picture from S3 if exists
+        if user.profile_picture_url:
+            await s3_service.delete_file(user.profile_picture_url)
+        
+        # Upload new profile picture
+        profile_picture_url = await s3_service.upload_file(file, folder="Backend/profile-pick/")
+        
+        # Update user profile picture URL
+        user_update = UserUpdate(profile_picture_url=profile_picture_url)
+        updated_user = await user_manager.update(user_update, user, safe=True)
+        
+        # Load role relationship for the response
+        from sqlalchemy import select
+        from sqlalchemy.orm import selectinload
+        
+        result = await session.execute(
+            select(User).where(User.id == updated_user.id).options(selectinload(User.role))
+        )
+        user_with_role = result.scalar_one()
+        
+        print(f"Profile picture uploaded successfully for user {user.id}: {profile_picture_url}")
+        return UserRead.model_validate(user_with_role)
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        import traceback
+        print(f"[ERROR] Profile picture upload error: {str(e)}")
+        print(f"[ERROR] Traceback:\n{traceback.format_exc()}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to upload profile picture: {str(e)}"
         )
 
 

@@ -11,6 +11,7 @@ from automex_backend.database import Base
 
 if TYPE_CHECKING:
     from automex_backend.models.cost import Cost
+    from automex_backend.models.daily_work_log import DailyWorkLog
 
 
 class BookingStatus(str, PyEnum):
@@ -70,8 +71,9 @@ class Booking(Base):
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
     completed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
     
-    # Relationship to costs
+    # Relationships
     costs: Mapped[List["Cost"]] = relationship("Cost", back_populates="booking", cascade="all, delete-orphan")
+    daily_work_logs: Mapped[List["DailyWorkLog"]] = relationship("DailyWorkLog", back_populates="booking", cascade="all, delete-orphan")
     
     @property
     def status_enum(self) -> BookingStatus:

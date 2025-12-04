@@ -15,6 +15,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
+  updateUser: (user: User) => void; // Direct update without API call
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -37,6 +38,21 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
     
     setIsLoading(false);
+  }, []);
+
+  // Sync AuthContext with Zustand store changes
+  useEffect(() => {
+    const unsubscribe = useAuthStore.subscribe(
+      (state) => state.user,
+      (newUser) => {
+        // Update AuthContext when Zustand store user changes
+        if (newUser) {
+          setUser(newUser);
+        }
+      }
+    );
+    
+    return unsubscribe;
   }, []);
 
   async function checkAuth() {
@@ -69,10 +85,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       const userData = await getCurrentUser();
       setUser(userData || null);
+      // Also update Zustand store to keep them in sync
+      if (userData) {
+        const store = useAuthStore.getState();
+        store.setUser(userData);
+      }
     } catch (error) {
       console.error('Failed to refresh user:', error);
       setUser(null);
     }
+  }
+
+  function updateUser(updatedUser: User) {
+    // Direct update without API call - for immediate UI updates
+    setUser(updatedUser);
+    // Also update Zustand store
+    const store = useAuthStore.getState();
+    store.setUser(updatedUser);
   }
 
   const value = {
@@ -82,6 +111,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     login,
     logout,
     refreshUser,
+    updateUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

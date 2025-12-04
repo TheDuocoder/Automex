@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
-import { updateUserProfile } from "@/services/authService";
+import { updateUserProfile, uploadProfilePicture } from "@/services/authService";
 import { toast } from "sonner";
 import { usePasswordResetStore } from "@/stores/passwordResetStore";
 import HelpDropdown from "@/components/HelpDropdown";
@@ -33,7 +33,10 @@ import { carService, Car as CarModel, serviceHistoryService, ServiceHistory as S
 const Profile = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user: contextUser, isAuthenticated, logout } = useAuth();
+  const { user: contextUser, isAuthenticated, logout, refreshUser, updateUser } = useAuth();
+  
+  // Get setUser function from AuthContext if available (for immediate updates)
+  // We'll update both Zustand and trigger AuthContext update
   const { user } = useAuthStore();
 
   // State for active view
@@ -73,8 +76,35 @@ const Profile = () => {
   });
   const { setResetToken, resetToken, clearResetToken } = usePasswordResetStore();
 
+  // State for Profile Picture Upload
+  const [isUploadingPicture, setIsUploadingPicture] = useState(false);
+  const [profilePictureKey, setProfilePictureKey] = useState(0); // Force re-render key
+  const [localProfilePictureUrl, setLocalProfilePictureUrl] = useState<string | undefined>(undefined);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   // Use Zustand user or context user (Zustand takes priority)
+  // Subscribe to Zustand store changes - this will re-render when store updates
   const currentUser = user || contextUser;
+  
+  // Sync local profile picture URL with user data
+  useEffect(() => {
+    if (currentUser?.profile_picture_url) {
+      setLocalProfilePictureUrl(currentUser.profile_picture_url);
+    }
+  }, [currentUser?.profile_picture_url]);
+  
+  // Use local profile picture URL if available, otherwise use currentUser's
+  const displayProfilePictureUrl = localProfilePictureUrl || currentUser?.profile_picture_url;
+
+  // Watch for profile picture URL changes and update key to force image reload
+  const prevProfileUrlRef = useRef<string | undefined>(currentUser?.profile_picture_url);
+  useEffect(() => {
+    if (currentUser?.profile_picture_url && currentUser.profile_picture_url !== prevProfileUrlRef.current) {
+      prevProfileUrlRef.current = currentUser.profile_picture_url;
+      setLocalProfilePictureUrl(currentUser.profile_picture_url);
+      setProfilePictureKey(prev => prev + 1);
+    }
+  }, [currentUser?.profile_picture_url]);
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -89,6 +119,15 @@ const Profile = () => {
       try {
         // Fetch Cars
         const carsResponse = await carService.getAll();
+        if (carsResponse.error) {
+          console.error("Error fetching cars:", carsResponse.error);
+          // Don't show error toast for empty data, only for actual errors
+          if (carsResponse.status !== 404 && carsResponse.status !== 200) {
+            toast.error(carsResponse.error || "Failed to fetch vehicles");
+          }
+          return;
+        }
+        
         if (carsResponse.data) {
           setDashboardCars(carsResponse.data);
 
@@ -96,15 +135,32 @@ const Profile = () => {
           // For dashboard, we'll just fetch history for the first car for now, 
           // or we could fetch for all and aggregate. Let's fetch for the first car if available.
           if (carsResponse.data.length > 0) {
-            const firstCarId = carsResponse.data[0].id;
-            const historyResponse = await serviceHistoryService.getAll(firstCarId);
-            if (historyResponse.data) {
-              setDashboardHistory(historyResponse.data);
+            try {
+              const firstCarId = carsResponse.data[0].id;
+              const historyResponse = await serviceHistoryService.getAll(firstCarId);
+              if (historyResponse.error) {
+                console.error("Error fetching service history:", historyResponse.error);
+                // Don't show error for empty history, it's normal
+                if (historyResponse.status !== 404) {
+                  console.warn("Service history fetch failed:", historyResponse.error);
+                }
+              } else if (historyResponse.data) {
+                setDashboardHistory(historyResponse.data);
+              }
+            } catch (historyError) {
+              console.error("Error fetching service history:", historyError);
+              // Don't show error toast for service history, it's optional
             }
           }
         }
       } catch (error) {
         console.error("Failed to fetch dashboard data:", error);
+        // Only show error if it's a network error or critical error
+        if (error instanceof TypeError && error.message.includes('fetch')) {
+          toast.error("Network error: Please check your connection");
+        } else if (error instanceof Error && !error.message.includes('404')) {
+          toast.error(error.message || "Failed to fetch dashboard data");
+        }
       }
     };
 
@@ -444,15 +500,99 @@ const Profile = () => {
 
           <div className="flex items-center gap-4 mb-4">
             <div className="relative group">
-              <div className="h-20 w-20 rounded-full bg-white/20 backdrop-blur-md border-3 border-white/30 flex items-center justify-center text-white font-bold text-xl shadow-xl transition-all group-hover:border-white/50">
-                {currentUser?.full_name?.charAt(0).toUpperCase() || 'U'}
-              </div>
+              {displayProfilePictureUrl ? (
+                <img
+                  key={`profile-img-${profilePictureKey}`}
+                  src={`${displayProfilePictureUrl}?v=${profilePictureKey}`}
+                  alt={currentUser?.full_name || 'User'}
+                  className="h-20 w-20 rounded-full object-cover border-3 border-white/30 shadow-xl transition-all group-hover:border-white/50"
+                  onError={(e) => {
+                    // Fallback to initial if image fails to load
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                  }}
+                />
+              ) : (
+                <div className="h-20 w-20 rounded-full bg-white/20 backdrop-blur-md border-3 border-white/30 flex items-center justify-center text-white font-bold text-xl shadow-xl transition-all group-hover:border-white/50">
+                  {currentUser?.full_name?.charAt(0).toUpperCase() || 'U'}
+                </div>
+              )}
+              {/* Hidden file input */}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+
+                  // Validate file type
+                  if (!file.type.startsWith('image/')) {
+                    toast.error('Please select an image file');
+                    return;
+                  }
+
+                  // Validate file size (5MB)
+                  if (file.size > 5 * 1024 * 1024) {
+                    toast.error('Image size must be less than 5MB');
+                    return;
+                  }
+
+                  setIsUploadingPicture(true);
+                  try {
+                    const updatedUser = await uploadProfilePicture(file);
+                    
+                    // IMMEDIATELY update local state to show picture right away in Profile component
+                    if (updatedUser.profile_picture_url) {
+                      setLocalProfilePictureUrl(updatedUser.profile_picture_url);
+                      setProfilePictureKey(prev => prev + 1);
+                    }
+                    
+                    // IMMEDIATELY update AuthContext (for Header, Hero components)
+                    // This updates all components that use useAuth() hook
+                    updateUser(updatedUser);
+                    
+                    // Zustand store is already updated in uploadProfilePicture function
+                    // But ensure it's synced (redundant but safe)
+                    const store = useAuthStore.getState();
+                    if (store.user?.id !== updatedUser.id) {
+                      store.setUser(updatedUser);
+                    }
+                    
+                    toast.success('Profile picture uploaded successfully!');
+                  } catch (error) {
+                    console.error('Error uploading profile picture:', error);
+                    let errorMessage = 'Failed to upload profile picture';
+                    
+                    if (error instanceof TypeError && error.message.includes('fetch')) {
+                      errorMessage = 'Network error: Please check your connection and try again';
+                    } else if (error instanceof Error) {
+                      errorMessage = error.message || errorMessage;
+                    }
+                    
+                    toast.error(errorMessage);
+                  } finally {
+                    setIsUploadingPicture(false);
+                    // Reset file input
+                    if (fileInputRef.current) {
+                      fileInputRef.current.value = '';
+                    }
+                  }
+                }}
+              />
               {/* Edit Icon Badge */}
               <button
-                className="absolute bottom-0 right-0 h-6 w-6 rounded-full bg-white shadow-md flex items-center justify-center text-primary hover:bg-gray-50 transition-all hover:scale-110 border border-gray-200"
-                onClick={() => toast.info('Profile picture upload coming soon!')}
+                className="absolute bottom-0 right-0 h-6 w-6 rounded-full bg-white shadow-md flex items-center justify-center text-primary hover:bg-gray-50 transition-all hover:scale-110 border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isUploadingPicture}
+                title="Upload profile picture"
               >
-                <Camera className="h-3 w-3" />
+                {isUploadingPicture ? (
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                ) : (
+                  <Camera className="h-3 w-3" />
+                )}
               </button>
             </div>
 

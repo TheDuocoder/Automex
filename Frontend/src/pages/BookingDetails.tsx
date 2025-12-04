@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import Header from "@/components/Header";
@@ -25,12 +25,15 @@ import {
   ChevronRight,
   ShieldCheck
 } from "lucide-react";
-import { getBooking, cancelBooking, updateBookingStatus, type Booking, BookingStatus } from "@/services/bookingService";
+import { getBooking, cancelBooking, updateBookingStatus, createDailyWorkLog, updateDailyWorkLogDescription, uploadDailyWorkMedia, deleteDailyWorkMedia, deleteDailyWorkByDate, type Booking, BookingStatus, type DailyWorkLog } from "@/services/bookingService";
 import { getBookingCosts, createCost, updateCost, deleteCost, type Cost } from "@/services/costService";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { Input } from "@/components/ui/input";
-import { Trash2, Plus, Edit2, Save, X } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Trash2, Plus, Edit2, Save, X, Image as ImageIcon, Video, Upload } from "lucide-react";
 
 // Helper function to format UTC date as IST (UTC+5:30)
 // IST is UTC+5:30, so we add 5 hours and 30 minutes
@@ -60,6 +63,15 @@ const formatIST = (utcDateString: string, formatString: string): string => {
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
+// Helper function to get current date in YYYY-MM-DD format
+const getCurrentDate = (): string => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 const BookingDetails = () => {
   const { bookingId } = useParams<{ bookingId: string }>();
   const { isAuthenticated, user } = useAuth();
@@ -75,6 +87,22 @@ const BookingDetails = () => {
   const [editingCostId, setEditingCostId] = useState<number | null>(null);
   const [newCostItem, setNewCostItem] = useState({ item_name: "", amount: "", description: "" });
   const [editingCost, setEditingCost] = useState<Partial<Cost>>({});
+  
+  // Daily work states
+  const [editingDescriptionDate, setEditingDescriptionDate] = useState<string | null>(null);
+  const [editingDescription, setEditingDescription] = useState("");
+  const [isUploadingMedia, setIsUploadingMedia] = useState(false);
+  const [uploadingDate, setUploadingDate] = useState<string | null>(null);
+  const [isDeletingMedia, setIsDeletingMedia] = useState<string | null>(null);
+  const [isDeletingDate, setIsDeletingDate] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  
+  // Create new log dialog states
+  const [showCreateLogDialog, setShowCreateLogDialog] = useState(false);
+  const [newLogDate, setNewLogDate] = useState<string>(getCurrentDate());
+  const [newLogDescription, setNewLogDescription] = useState("");
+  const [isCreatingLog, setIsCreatingLog] = useState(false);
 
   // Check if user is Admin or Super Admin
   const isAdmin = user?.role?.name === "admin" || user?.role?.name === "super" || user?.is_superuser;
@@ -108,14 +136,23 @@ const BookingDetails = () => {
     }
   }, [booking?.id]);
 
+  // Removed - daily work description is now date-wise in daily_work_logs
+
   const loadBooking = async () => {
     if (!bookingId) return;
     
     try {
       setIsLoading(true);
       const data = await getBooking(parseInt(bookingId));
-      setBooking(data);
+      // Ensure daily_work_logs is initialized as an array
+      if (data) {
+        if (!data.daily_work_logs) {
+          data.daily_work_logs = [];
+        }
+        setBooking(data);
+      }
     } catch (error) {
+      console.error("Error loading booking:", error);
       toast({
         title: "Error",
         description: error instanceof Error ? error.message : "Failed to load booking details",
@@ -237,6 +274,153 @@ const BookingDetails = () => {
   const handleCancelEdit = () => {
     setEditingCostId(null);
     setEditingCost({});
+  };
+
+  const handleCreateLog = async () => {
+    if (!booking || !newLogDate) return;
+    
+    try {
+      setIsCreatingLog(true);
+      await createDailyWorkLog(booking.id, newLogDate, newLogDescription.trim() || undefined);
+      await loadBooking(); // Reload to get updated data
+      setShowCreateLogDialog(false);
+      setNewLogDate(getCurrentDate());
+      setNewLogDescription("");
+      toast({
+        title: "Success",
+        description: "Daily work log created successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to create daily work log",
+        variant: "destructive",
+      });
+    } finally {
+      setIsCreatingLog(false);
+    }
+  };
+
+  const handleSaveDescription = async (logId: number, date: string) => {
+    if (!booking) return;
+    
+    try {
+      await updateDailyWorkLogDescription(booking.id, logId, editingDescription);
+      await loadBooking(); // Reload to get updated data
+      setEditingDescriptionDate(null);
+      setEditingDescription("");
+      toast({
+        title: "Success",
+        description: "Daily work description updated successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to update description",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleUploadMedia = async (e: React.ChangeEvent<HTMLInputElement>, date: string) => {
+    if (!booking || !e.target.files || e.target.files.length === 0) return;
+    
+    const files = Array.from(e.target.files);
+    
+    // Validate file types
+    const validFiles = files.filter(file => {
+      return file.type.startsWith('image/') || file.type.startsWith('video/');
+    });
+    
+    if (validFiles.length !== files.length) {
+      toast({
+        title: "Invalid File Type",
+        description: "Only images and videos are allowed",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    try {
+      setIsUploadingMedia(true);
+      setUploadingDate(date);
+      await uploadDailyWorkMedia(booking.id, date, validFiles);
+      await loadBooking(); // Reload to get updated data
+      toast({
+        title: "Success",
+        description: `${validFiles.length} file(s) uploaded successfully`,
+      });
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to upload media",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUploadingMedia(false);
+      setUploadingDate(null);
+    }
+  };
+
+  const handleDeleteMedia = async (logId: number, mediaUrl: string | { url: string }) => {
+    if (!booking) return;
+    
+    // Extract URL if mediaUrl is an object
+    const urlToDelete = typeof mediaUrl === 'string' ? mediaUrl : (mediaUrl.url || mediaUrl);
+    
+    if (!confirm("Are you sure you want to delete this media?")) {
+      return;
+    }
+    
+    try {
+      setIsDeletingMedia(urlToDelete);
+      await deleteDailyWorkMedia(booking.id, logId, urlToDelete);
+      await loadBooking(); // Reload to get updated data
+      toast({
+        title: "Success",
+        description: "Media deleted successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to delete media",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDeletingMedia(null);
+    }
+  };
+
+  const handleDeleteDate = async (date: string) => {
+    if (!booking) return;
+    
+    const dateObj = new Date(date);
+    const formattedDate = format(dateObj, "EEEE, MMMM d, yyyy");
+    
+    if (!confirm(`Are you sure you want to delete all content for ${formattedDate}? This action cannot be undone.`)) {
+      return;
+    }
+    
+    try {
+      setIsDeletingDate(date);
+      await deleteDailyWorkByDate(booking.id, date);
+      await loadBooking(); // Reload to get updated data
+      toast({
+        title: "Success",
+        description: `All content for ${formattedDate} deleted successfully`,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to delete content for date",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDeletingDate(null);
+    }
   };
 
   const handleCancel = async () => {
@@ -605,6 +789,334 @@ const BookingDetails = () => {
                   </Card>
                 </motion.div>
               )}
+
+              {/* Daily Work Logs Card */}
+              <motion.div variants={itemVariants}>
+                <Card className="shadow-sm">
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <FileText className="h-5 w-5 text-gray-500" />
+                        Daily Work Logs
+                      </CardTitle>
+                      {isAdmin && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            setNewLogDate(getCurrentDate());
+                            setNewLogDescription("");
+                            setShowCreateLogDialog(true);
+                          }}
+                        >
+                          <Plus className="h-4 w-4 mr-2" />
+                          Create New Log
+                        </Button>
+                      )}
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    {booking?.daily_work_logs && booking.daily_work_logs.length > 0 ? (
+                      <div className="space-y-6">
+                        {booking.daily_work_logs
+                          .sort((a, b) => new Date(b.log_date).getTime() - new Date(a.log_date).getTime())
+                          .map((log) => {
+                            const dateObj = new Date(log.log_date);
+                            const formattedDate = format(dateObj, "EEEE, MMMM d, yyyy");
+                            
+                            // Handle both old format (strings) and new format (objects with {date, url})
+                            const photos = (log.photos || []).map((photo: any) => 
+                              typeof photo === 'string' ? photo : photo.url || photo
+                            );
+                            const videos = (log.videos || []).map((video: any) => 
+                              typeof video === 'string' ? video : video.url || video
+                            );
+                            
+                            const isEditingThisDate = editingDescriptionDate === log.log_date;
+                            
+                            return (
+                              <div key={log.id} className="space-y-4 border-l-2 border-primary/20 pl-4">
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-center gap-2">
+                                    <Calendar className="h-4 w-4 text-primary" />
+                                    <h4 className="text-base font-semibold text-gray-900">
+                                      {formattedDate}
+                                    </h4>
+                                    <Badge variant="secondary" className="text-xs">
+                                      {photos.length} photo{photos.length !== 1 ? 's' : ''}, {videos.length} video{videos.length !== 1 ? 's' : ''}
+                                    </Badge>
+                                  </div>
+                                  {isAdmin && (
+                                    <Button
+                                      size="sm"
+                                      variant="destructive"
+                                      onClick={() => handleDeleteDate(log.log_date)}
+                                      disabled={isDeletingDate === log.log_date}
+                                      className="flex items-center gap-2"
+                                    >
+                                      {isDeletingDate === log.log_date ? (
+                                        <>
+                                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                          Deleting...
+                                        </>
+                                      ) : (
+                                        <>
+                                          <Trash2 className="h-3.5 w-3.5" />
+                                          Delete Date
+                                        </>
+                                      )}
+                                    </Button>
+                                  )}
+                                </div>
+                                
+                                {/* Description Section */}
+                                <div className="space-y-3">
+                                  <div className="flex items-center justify-between">
+                                    <h5 className="text-sm font-medium text-gray-700">Description</h5>
+                                    {isAdmin && (
+                                      <div className="flex gap-2">
+                                        {isEditingThisDate ? (
+                                          <>
+                                            <Button
+                                              size="sm"
+                                              onClick={() => handleSaveDescription(log.id, log.log_date)}
+                                              disabled={!editingDescription.trim()}
+                                            >
+                                              <Save className="h-3.5 w-3.5 mr-2" />
+                                              Save
+                                            </Button>
+                                            <Button
+                                              size="sm"
+                                              variant="outline"
+                                              onClick={() => {
+                                                setEditingDescriptionDate(null);
+                                                setEditingDescription("");
+                                              }}
+                                            >
+                                              <X className="h-3.5 w-3.5" />
+                                            </Button>
+                                          </>
+                                        ) : (
+                                          <Button
+                                            size="sm"
+                                            variant="outline"
+                                            onClick={() => {
+                                              setEditingDescriptionDate(log.log_date);
+                                              setEditingDescription(log.description || "");
+                                            }}
+                                          >
+                                            <Edit2 className="h-3.5 w-3.5 mr-2" />
+                                            Edit
+                                          </Button>
+                                        )}
+                                      </div>
+                                    )}
+                                  </div>
+                                  {isEditingThisDate && isAdmin ? (
+                                    <Textarea
+                                      value={editingDescription}
+                                      onChange={(e) => setEditingDescription(e.target.value)}
+                                      placeholder="Enter daily work description..."
+                                      className="min-h-[120px]"
+                                    />
+                                  ) : (
+                                    <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                                      <p className="text-sm text-gray-600 whitespace-pre-wrap">
+                                        {log.description || "No description added yet."}
+                                      </p>
+                                    </div>
+                                  )}
+                                </div>
+                                
+                                {/* Photos for this date */}
+                                {photos.length > 0 && (
+                                  <div className="space-y-2">
+                                    <h5 className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                      <ImageIcon className="h-3.5 w-3.5" />
+                                      Photos
+                                    </h5>
+                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                      {photos.map((photoUrl: string, index: number) => {
+                                        const photoUrlStr = typeof photoUrl === 'string' ? photoUrl : (photoUrl as any).url || photoUrl;
+                                        return (
+                                          <div key={index} className="relative group">
+                                            <img
+                                              src={photoUrlStr}
+                                              alt={`Daily work photo ${index + 1} - ${log.log_date}`}
+                                              className="w-full h-48 object-cover rounded-lg border border-gray-200"
+                                              onError={(e) => {
+                                                console.error(`Failed to load image: ${photoUrlStr}`);
+                                                (e.target as HTMLImageElement).style.display = 'none';
+                                              }}
+                                            />
+                                            {isAdmin && (
+                                              <Button
+                                                size="sm"
+                                                variant="destructive"
+                                                className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                onClick={() => handleDeleteMedia(log.id, photoUrlStr)}
+                                                disabled={isDeletingMedia === photoUrlStr}
+                                              >
+                                                {isDeletingMedia === photoUrlStr ? (
+                                                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                                ) : (
+                                                  <Trash2 className="h-3.5 w-3.5" />
+                                                )}
+                                              </Button>
+                                            )}
+                                          </div>
+                                        );
+                                      })}
+                                    </div>
+                                  </div>
+                                )}
+                                
+                                {/* Videos for this date */}
+                                {videos.length > 0 && (
+                                  <div className="space-y-2">
+                                    <h5 className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                                      <Video className="h-3.5 w-3.5" />
+                                      Videos
+                                    </h5>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                      {videos.map((videoUrl: string, index: number) => {
+                                        const videoUrlStr = typeof videoUrl === 'string' ? videoUrl : (videoUrl as any).url || videoUrl;
+                                        return (
+                                          <div key={index} className="relative group">
+                                            <video
+                                              src={videoUrlStr}
+                                              controls
+                                              className="w-full h-auto rounded-lg border border-gray-200"
+                                              onError={(e) => {
+                                                console.error(`Failed to load video: ${videoUrlStr}`);
+                                              }}
+                                            >
+                                              Your browser does not support the video tag.
+                                            </video>
+                                            {isAdmin && (
+                                              <Button
+                                                size="sm"
+                                                variant="destructive"
+                                                className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                onClick={() => handleDeleteMedia(log.id, videoUrlStr)}
+                                                disabled={isDeletingMedia === videoUrlStr}
+                                              >
+                                                {isDeletingMedia === videoUrlStr ? (
+                                                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                                ) : (
+                                                  <Trash2 className="h-3.5 w-3.5" />
+                                                )}
+                                              </Button>
+                                            )}
+                                          </div>
+                                        );
+                                      })}
+                                    </div>
+                                  </div>
+                                )}
+                                
+                                {/* Upload button for this date */}
+                                {isAdmin && (
+                                  <div className="flex items-center gap-2">
+                                    <input
+                                      ref={fileInputRef}
+                                      type="file"
+                                      accept="image/*,video/*"
+                                      multiple
+                                      className="hidden"
+                                      data-date={log.log_date}
+                                      onChange={(e) => {
+                                        const date = e.currentTarget.getAttribute('data-date');
+                                        if (date) handleUploadMedia(e, date);
+                                      }}
+                                    />
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      onClick={() => {
+                                        setSelectedDate(log.log_date);
+                                        if (fileInputRef.current) {
+                                          fileInputRef.current.setAttribute('data-date', log.log_date);
+                                          fileInputRef.current.click();
+                                        }
+                                      }}
+                                      disabled={isUploadingMedia && uploadingDate === log.log_date}
+                                    >
+                                      {isUploadingMedia && uploadingDate === log.log_date ? (
+                                        <>
+                                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                          Uploading...
+                                        </>
+                                      ) : (
+                                        <>
+                                          <Upload className="h-4 w-4 mr-2" />
+                                          Upload More Media
+                                        </>
+                                      )}
+                                    </Button>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                      </div>
+                    ) : (
+                      <div className="text-center py-8 bg-gray-50 rounded-lg border border-dashed border-gray-200">
+                        <FileText className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+                        <p className="text-sm text-gray-500">
+                          {isAdmin 
+                            ? "No daily work logs added yet. Upload photos/videos to create a log entry for today's date."
+                            : "No daily work logs available yet."}
+                        </p>
+                        {isAdmin && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="mt-4"
+                            onClick={() => {
+                              const today = getCurrentDate();
+                              setSelectedDate(today);
+                              setUploadingDate(today);
+                              if (fileInputRef.current) {
+                                fileInputRef.current.setAttribute('data-date', today);
+                                // Reset the input value to allow selecting the same file again
+                                fileInputRef.current.value = '';
+                                fileInputRef.current.click();
+                              }
+                            }}
+                            disabled={isUploadingMedia && uploadingDate === getCurrentDate()}
+                          >
+                            {isUploadingMedia && uploadingDate === getCurrentDate() ? (
+                              <>
+                                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                Uploading...
+                              </>
+                            ) : (
+                              <>
+                                <Upload className="h-4 w-4 mr-2" />
+                                Upload Media for Today
+                              </>
+                            )}
+                          </Button>
+                        )}
+                      </div>
+                    )}
+                    
+                    {/* Hidden file input for uploads */}
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*,video/*"
+                      multiple
+                      className="hidden"
+                      onChange={(e) => {
+                        const date = e.currentTarget.getAttribute('data-date') || getCurrentDate();
+                        handleUploadMedia(e, date);
+                      }}
+                    />
+                  </CardContent>
+                </Card>
+              </motion.div>
             </div>
 
             {/* Sidebar Column */}
@@ -868,6 +1380,70 @@ const BookingDetails = () => {
           </div>
         </motion.div>
       </main>
+
+      {/* Create New Log Dialog */}
+      <Dialog open={showCreateLogDialog} onOpenChange={setShowCreateLogDialog}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Create New Daily Work Log</DialogTitle>
+            <DialogDescription>
+              Create a new daily work log entry with description. You can add photos and videos after creating the log.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="log-date">Date</Label>
+              <Input
+                id="log-date"
+                type="date"
+                value={newLogDate}
+                onChange={(e) => setNewLogDate(e.target.value)}
+                max={getCurrentDate()}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="log-description">Description (Optional)</Label>
+              <Textarea
+                id="log-description"
+                value={newLogDescription}
+                onChange={(e) => setNewLogDescription(e.target.value)}
+                placeholder="Enter a description of the work performed on this date..."
+                className="min-h-[120px]"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowCreateLogDialog(false);
+                setNewLogDate(getCurrentDate());
+                setNewLogDescription("");
+              }}
+              disabled={isCreatingLog}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleCreateLog}
+              disabled={isCreatingLog || !newLogDate}
+            >
+              {isCreatingLog ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Creating...
+                </>
+              ) : (
+                <>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Create Log
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Footer />
     </div>
