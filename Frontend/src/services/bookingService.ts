@@ -75,9 +75,18 @@ export interface DailyWorkLog {
  * Create a service booking from Zustand store data
  */
 export async function createServiceBooking(bookingData: ServiceBookingCreate): Promise<Booking> {
+  console.log('[Booking Service] Sending booking request:', bookingData);
+  
   const response = await apiCall<Booking>('/api/v1/bookings/service-booking', {
     method: 'POST',
     body: JSON.stringify(bookingData),
+  });
+
+  console.log('[Booking Service] Response received:', {
+    hasData: !!response.data,
+    hasError: !!response.error,
+    status: response.status,
+    error: response.error,
   });
 
   if (response.error) {
@@ -89,7 +98,7 @@ export async function createServiceBooking(bookingData: ServiceBookingCreate): P
   }
 
   if (!response.data) {
-    throw new Error('Failed to create booking');
+    throw new Error('Failed to create booking: No data returned from server');
   }
 
   return response.data;

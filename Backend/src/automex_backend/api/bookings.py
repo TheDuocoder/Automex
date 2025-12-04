@@ -170,7 +170,14 @@ async def create_booking(
     
     session.add(booking)
     await session.commit()
-    await session.refresh(booking)
+    
+    # Re-fetch with eager loading to avoid lazy loading issues
+    result = await session.execute(
+        select(Booking)
+        .where(Booking.id == booking.id)
+        .options(selectinload(Booking.daily_work_logs))
+    )
+    booking = result.scalar_one()
     
     return booking
 
@@ -185,10 +192,16 @@ async def create_service_booking(
     Create a new service booking from frontend Zustand store data
     """
     try:
+        print(f"[INFO] Creating service booking for user {user.id}")
+        print(f"[INFO] Booking data received: {booking_data.model_dump()}")
+        
         # Pydantic automatically parses ISO datetime strings, so booking_data.booking_date is already a datetime
         # Get contact information from user
         contact_name = user.full_name if user.full_name else (user.email if user.email else "User")
         contact_phone = user.phone_number if user.phone_number else None
+        
+        print(f"[INFO] Contact info: name={contact_name}, phone={contact_phone}")
+        print(f"[INFO] Booking date type: {type(booking_data.booking_date)}, value: {booking_data.booking_date}")
         
         # Create booking with car selection details
         # Only include fields that exist in the database to avoid column errors
@@ -211,6 +224,7 @@ async def create_service_booking(
                 "vehicle_make": booking_data.car_brand,
                 "vehicle_model": booking_data.car_model,
             })
+            print(f"[INFO] Added car selection fields: brand={booking_data.car_brand}, model={booking_data.car_model}")
         except Exception as field_error:
             print(f"[WARNING] Could not add car selection fields: {field_error}")
             # Fallback: use vehicle_make/model only
@@ -219,11 +233,21 @@ async def create_service_booking(
                 "vehicle_model": booking_data.car_model,
             })
         
+        print(f"[INFO] Creating Booking object with data: {booking_data_dict}")
         booking = Booking(**booking_data_dict)
         
         session.add(booking)
+        print(f"[INFO] Booking added to session, committing...")
         await session.commit()
-        await session.refresh(booking)
+        
+        # Re-fetch with eager loading to avoid lazy loading issues
+        result = await session.execute(
+            select(Booking)
+            .where(Booking.id == booking.id)
+            .options(selectinload(Booking.daily_work_logs))
+        )
+        booking = result.scalar_one()
+        print(f"[INFO] Booking created successfully with ID: {booking.id}")
         
         return booking
     except Exception as e:
@@ -363,17 +387,16 @@ async def update_booking_status(
                 detail=f"Failed to save booking status update: {str(commit_error)}"
             )
         
-        print(f"[DEBUG] Refreshing booking")
-        try:
-            await session.refresh(booking)
-            print(f"[DEBUG] Booking refreshed, status is now: {booking.status}")
-        except Exception as refresh_error:
-            print(f"[WARNING] Refresh failed but commit succeeded: {refresh_error}")
-            # Re-fetch the booking to ensure we have the latest data
-            booking_result = await session.execute(
-                select(Booking).where(Booking.id == booking_id)
-            )
-            booking = booking_result.scalar_one_or_none()
+        
+        print(f"[DEBUG] Re-fetching booking with eager loading")
+        # Re-fetch with eager loading to avoid lazy loading issues
+        booking_result = await session.execute(
+            select(Booking)
+            .where(Booking.id == booking_id)
+            .options(selectinload(Booking.daily_work_logs))
+        )
+        booking = booking_result.scalar_one()
+        print(f"[DEBUG] Booking re-fetched, status is now: {booking.status}")
         
         # Return booking - FastAPI will serialize it using BookingRead schema
         return booking
@@ -440,7 +463,14 @@ async def update_booking(
         booking.completed_at = datetime.now(timezone.utc)
     
     await session.commit()
-    await session.refresh(booking)
+    
+    # Re-fetch with eager loading to avoid lazy loading issues
+    result = await session.execute(
+        select(Booking)
+        .where(Booking.id == booking_id)
+        .options(selectinload(Booking.daily_work_logs))
+    )
+    booking = result.scalar_one()
     
     return booking
 

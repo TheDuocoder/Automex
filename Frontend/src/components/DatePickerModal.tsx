@@ -48,7 +48,14 @@ const DatePickerModal = ({ isOpen, onClose, serviceName }: DatePickerModalProps)
 
   const handleDateSelect = (date: Date | undefined) => {
     if (date) {
-      setSelectedDate(date);
+      // Normalize the date to avoid timezone issues
+      // Create a new date at midnight UTC for the selected date
+      const year = date.getFullYear();
+      const month = date.getMonth();
+      const day = date.getDate();
+      // Create date at midnight UTC to preserve the selected date
+      const normalizedDate = new Date(Date.UTC(year, month, day, 12, 0, 0, 0));
+      setSelectedDate(normalizedDate);
     }
   };
 
@@ -89,13 +96,29 @@ const DatePickerModal = ({ isOpen, onClose, serviceName }: DatePickerModalProps)
       }
 
       // Create booking data
+      // The selectedDate is already normalized to UTC at noon, so we can use it directly
+      // Extract the date components to ensure we're using the correct date
+      const year = selectedDate.getUTCFullYear();
+      const month = selectedDate.getUTCMonth();
+      const day = selectedDate.getUTCDate();
+      
+      // Create date at noon UTC to avoid timezone shifts
+      const bookingDate = new Date(Date.UTC(year, month, day, 12, 0, 0, 0));
+      
       const bookingData = {
-        booking_date: selectedDate.toISOString(),
+        booking_date: bookingDate.toISOString(),
         car_brand: brand.name,
         car_model: model.name,
         fuel_type: selectedFuelType,
         service_name: selectedPart,
       };
+
+      // Log for debugging - show what date will be sent
+      const displayDate = new Date(Date.UTC(year, month, day));
+      console.log('[Booking] Selected date (UI):', format(displayDate, "EEEE, MMMM d, yyyy"));
+      console.log('[Booking] Booking date (payload):', bookingData.booking_date);
+      console.log('[Booking] Date components - Year:', year, 'Month:', month + 1, 'Day:', day);
+      console.log('[Booking] Creating booking with data:', bookingData);
 
       // Call API to create booking
       await createServiceBooking(bookingData);
@@ -201,7 +224,14 @@ const DatePickerModal = ({ isOpen, onClose, serviceName }: DatePickerModalProps)
               <div className="mt-4 p-3 bg-gray-50 rounded-lg">
                 <p className="text-sm text-gray-600 mb-1">Selected Date:</p>
                 <p className="text-lg font-semibold text-gray-900">
-                  {format(selectedDate, "EEEE, MMMM d, yyyy")}
+                  {(() => {
+                    // Display using UTC methods to match what will be sent in payload
+                    const year = selectedDate.getUTCFullYear();
+                    const month = selectedDate.getUTCMonth();
+                    const day = selectedDate.getUTCDate();
+                    const displayDate = new Date(Date.UTC(year, month, day));
+                    return format(displayDate, "EEEE, MMMM d, yyyy");
+                  })()}
                 </p>
               </div>
             )}

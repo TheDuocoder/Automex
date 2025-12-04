@@ -58,12 +58,34 @@ export async function apiCall<T>(
       authPrefix: headers.Authorization ? headers.Authorization.substring(0, 25) + '...' : 'none',
     });
 
-    const response = await fetch(url, {
-      ...options,
-      headers,
-    });
+    let response: Response;
+    try {
+      response = await fetch(url, {
+        ...options,
+        headers,
+      });
+    } catch (fetchError) {
+      // Handle network errors (CORS, connection refused, etc.)
+      console.error('[API] Fetch error:', fetchError);
+      if (fetchError instanceof TypeError) {
+        return {
+          error: 'Failed to fetch: Unable to connect to server. Please check your internet connection and ensure the backend server is running.',
+          status: 0,
+        };
+      }
+      throw fetchError;
+    }
 
-    const data = await response.json().catch(() => null);
+    let data: any = null;
+    try {
+      const text = await response.text();
+      if (text) {
+        data = JSON.parse(text);
+      }
+    } catch (parseError) {
+      console.warn('[API] Failed to parse response as JSON:', parseError);
+      // data remains null
+    }
 
     if (!response.ok) {
       // If unauthorized, log detailed error info
@@ -89,8 +111,17 @@ export async function apiCall<T>(
         }
       }
 
+      const errorMessage = data?.detail || data?.message || `Request failed with status ${response.status}`;
+      console.error('[API] Request failed:', {
+        endpoint,
+        url,
+        status: response.status,
+        error: errorMessage,
+        responseData: data,
+      });
+
       return {
-        error: data?.detail || `Request failed with status ${response.status}`,
+        error: errorMessage,
         status: response.status,
       };
     }
