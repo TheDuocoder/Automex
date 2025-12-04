@@ -30,7 +30,7 @@ const AboutUs = () => {
         {/* Header */}
         <div className="text-center mb-8 md:mb-12">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4 text-gray-900">
-            About <span className="text-primary">AutoMex</span>
+            About <span style={{ color: '#D62828', fontWeight: 900, textShadow: '0 2px 6px rgba(0,0,0,0.25)' }}>AUTO</span><span style={{ color: '#C0C5CD', fontWeight: 900, textShadow: '0 2px 6px rgba(0,0,0,0.25)' }}>MEX</span>
           </h2>
           <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto px-4">
             Your trusted partner for comprehensive car care and maintenance services in Bhubaneswar
