@@ -2,6 +2,7 @@
 Authentication routes using FastAPI Users
 """
 import os
+import traceback
 from typing import Optional
 from fastapi import APIRouter, Depends, Request, HTTPException, status, File, UploadFile
 from pydantic import BaseModel, EmailStr
@@ -803,7 +804,9 @@ async def login(
         # Re-raise HTTP exceptions (validation errors)
         raise
     except Exception as e:
-        # Handle any unexpected errors
+        # Handle any unexpected errors with full traceback
+        print(f"[ERROR] Login error: {str(e)}")
+        print(f"[ERROR] Traceback: {traceback.format_exc()}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"An error occurred during login: {str(e)}"

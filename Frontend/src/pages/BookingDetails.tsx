@@ -808,6 +808,7 @@ const BookingDetails = () => {
                             setNewLogDescription("");
                             setShowCreateLogDialog(true);
                           }}
+                          className="hover:bg-green-500 hover:text-white hover:border-green-500 transition-colors"
                         >
                           <Plus className="h-4 w-4 mr-2" />
                           Create New Log
@@ -847,25 +848,63 @@ const BookingDetails = () => {
                                     </Badge>
                                   </div>
                                   {isAdmin && (
-                                    <Button
-                                      size="sm"
-                                      variant="destructive"
-                                      onClick={() => handleDeleteDate(log.log_date)}
-                                      disabled={isDeletingDate === log.log_date}
-                                      className="flex items-center gap-2"
-                                    >
-                                      {isDeletingDate === log.log_date ? (
+                                    <div className="flex items-center gap-2">
+                                      {isEditingThisDate ? (
                                         <>
-                                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                                          Deleting...
+                                          <Button
+                                            size="sm"
+                                            onClick={() => handleSaveDescription(log.id, log.log_date)}
+                                            disabled={!editingDescription.trim()}
+                                            className="bg-blue-500 text-white hover:bg-green-600 transition-colors"
+                                          >
+                                            <Save className="h-3.5 w-3.5 mr-2" />
+                                            Save
+                                          </Button>
+                                          <Button
+                                            size="sm"
+                                            variant="outline"
+                                            onClick={() => {
+                                              setEditingDescriptionDate(null);
+                                              setEditingDescription("");
+                                            }}
+                                          >
+                                            <X className="h-3.5 w-3.5" />
+                                          </Button>
                                         </>
                                       ) : (
-                                        <>
-                                          <Trash2 className="h-3.5 w-3.5" />
-                                          Delete Date
-                                        </>
+                                        <Button
+                                          size="sm"
+                                          variant="outline"
+                                          onClick={() => {
+                                            setEditingDescriptionDate(log.log_date);
+                                            setEditingDescription(log.description || "");
+                                          }}
+                                          className="hover:bg-blue-500 hover:text-white hover:border-blue-500 transition-colors"
+                                        >
+                                          <Edit2 className="h-3.5 w-3.5 mr-2" />
+                                          Edit
+                                        </Button>
                                       )}
-                                    </Button>
+                                      <Button
+                                        size="sm"
+                                        variant="destructive"
+                                        onClick={() => handleDeleteDate(log.log_date)}
+                                        disabled={isDeletingDate === log.log_date}
+                                        className="flex items-center gap-2"
+                                      >
+                                        {isDeletingDate === log.log_date ? (
+                                          <>
+                                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                            Deleting...
+                                          </>
+                                        ) : (
+                                          <>
+                                            <Trash2 className="h-3.5 w-3.5" />
+                                            Delete
+                                          </>
+                                        )}
+                                      </Button>
+                                    </div>
                                   )}
                                 </div>
                                 
@@ -873,44 +912,6 @@ const BookingDetails = () => {
                                 <div className="space-y-3">
                                   <div className="flex items-center justify-between">
                                     <h5 className="text-sm font-medium text-gray-700">Description</h5>
-                                    {isAdmin && (
-                                      <div className="flex gap-2">
-                                        {isEditingThisDate ? (
-                                          <>
-                                            <Button
-                                              size="sm"
-                                              onClick={() => handleSaveDescription(log.id, log.log_date)}
-                                              disabled={!editingDescription.trim()}
-                                            >
-                                              <Save className="h-3.5 w-3.5 mr-2" />
-                                              Save
-                                            </Button>
-                                            <Button
-                                              size="sm"
-                                              variant="outline"
-                                              onClick={() => {
-                                                setEditingDescriptionDate(null);
-                                                setEditingDescription("");
-                                              }}
-                                            >
-                                              <X className="h-3.5 w-3.5" />
-                                            </Button>
-                                          </>
-                                        ) : (
-                                          <Button
-                                            size="sm"
-                                            variant="outline"
-                                            onClick={() => {
-                                              setEditingDescriptionDate(log.log_date);
-                                              setEditingDescription(log.description || "");
-                                            }}
-                                          >
-                                            <Edit2 className="h-3.5 w-3.5 mr-2" />
-                                            Edit
-                                          </Button>
-                                        )}
-                                      </div>
-                                    )}
                                   </div>
                                   {isEditingThisDate && isAdmin ? (
                                     <Textarea
@@ -1094,7 +1095,7 @@ const BookingDetails = () => {
                             ) : (
                               <>
                                 <Upload className="h-4 w-4 mr-2" />
-                                Upload Media for Today
+                                Upload Media
                               </>
                             )}
                           </Button>
