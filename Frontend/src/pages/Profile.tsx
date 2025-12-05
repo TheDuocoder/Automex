@@ -393,7 +393,7 @@ const Profile = () => {
         transition={{ duration: 0.5 }}
         className="w-64 min-h-screen fixed left-0 top-0 shadow-2xl z-50"
         style={{
-          background: 'linear-gradient(180deg, #1a1f2e 0%, #141923 100%)',
+          background: 'linear-gradient(180deg, #06080D, #0B0F1A)',
           boxShadow: '0 0 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
         }}
       >
@@ -406,7 +406,7 @@ const Profile = () => {
             <img
               src="/images/Automex_icon/AUTOMEX_logo.png"
               alt="Automex"
-              className="h-20 w-auto transform hover:scale-105 transition-transform duration-300 cursor-pointer"
+              className="h-36 w-auto transform hover:scale-105 transition-transform duration-300 cursor-pointer"
             />
           </button>
         </div>
@@ -417,7 +417,7 @@ const Profile = () => {
             onClick={() => setActiveView('dashboard')}
             className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${activeView === 'dashboard'
               ? 'bg-primary/90 text-white shadow-lg shadow-primary/20'
-              : 'text-gray-400 hover:bg-white/5 hover:text-white'
+              : 'text-white hover:bg-white/5'
               }`}
           >
             <LayoutDashboard className="h-4 w-4" />
@@ -428,7 +428,7 @@ const Profile = () => {
             onClick={() => setActiveView('profile')}
             className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${activeView === 'profile'
               ? 'bg-primary/90 text-white shadow-lg shadow-primary/20'
-              : 'text-gray-400 hover:bg-white/5 hover:text-white'
+              : 'text-white hover:bg-white/5'
               }`}
           >
             <User className="h-4 w-4" />
@@ -439,7 +439,7 @@ const Profile = () => {
             onClick={() => setActiveView('my-cars')}
             className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${activeView === 'my-cars'
               ? 'bg-primary/90 text-white shadow-lg shadow-primary/20'
-              : 'text-gray-400 hover:bg-white/5 hover:text-white'
+              : 'text-white hover:bg-white/5'
               }`}
           >
             <Car className="h-4 w-4" />
@@ -450,7 +450,7 @@ const Profile = () => {
             onClick={() => setActiveView('service-history')}
             className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${activeView === 'service-history'
               ? 'bg-primary/90 text-white shadow-lg shadow-primary/20'
-              : 'text-gray-400 hover:bg-white/5 hover:text-white'
+              : 'text-white hover:bg-white/5'
               }`}
           >
             <History className="h-4 w-4" />
@@ -461,7 +461,7 @@ const Profile = () => {
             onClick={() => setActiveView('schedule-pickup')}
             className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${activeView === 'schedule-pickup'
               ? 'bg-primary/90 text-white shadow-lg shadow-primary/20'
-              : 'text-gray-400 hover:bg-white/5 hover:text-white'
+              : 'text-white hover:bg-white/5'
               }`}
           >
             <Calendar className="h-4 w-4" />
@@ -473,7 +473,7 @@ const Profile = () => {
         <div className="absolute bottom-8 left-4 right-4">
           <button
             onClick={logout}
-            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:text-red-300 text-sm font-medium transition-all border border-red-500/20"
+            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg bg-red-500/10 text-white hover:bg-red-500/20 text-sm font-medium transition-all border border-red-500/20"
           >
             <LogOut className="h-4 w-4" />
             Logout
@@ -490,8 +490,8 @@ const Profile = () => {
           transition={{ duration: 0.6 }}
           className="px-6 py-5 relative overflow-hidden"
           style={{ 
-            background: 'linear-gradient(90deg, #ff3d3d, #ff6a45)',
-            boxShadow: 'inset 0 0 60px rgba(0, 0, 0, 0.1), 0 4px 20px rgba(255, 61, 61, 0.3)'
+            background: '#191970',
+            boxShadow: 'inset 0 0 60px rgba(0, 0, 0, 0.1), 0 4px 20px rgba(0, 0, 0, 0.3)'
           }}
         >
           {/* Help Dropdown - Top Right */}
