@@ -58,7 +58,7 @@ const Header = ({ onLoginClick }: HeaderProps) => {
   > = [
       ...(location.pathname !== '/services' && location.pathname !== '/my-services' && location.pathname !== '/profile' && !location.pathname.startsWith('/booking') ? [{ label: "About Us", type: "section", target: "about-us" } as const] : []),
       ...(location.pathname !== '/services' && location.pathname !== '/my-services' && location.pathname !== '/profile' && !location.pathname.startsWith('/booking') ? [{ label: "Services", type: "route", href: "/services" } as const] : []),
-      ...(location.pathname !== '/services' && location.pathname !== '/my-services' && location.pathname !== '/profile' && !location.pathname.startsWith('/booking') ? [{ label: "Contact Us", type: "route", href: "/contact-us" } as const] : []),
+      ...(location.pathname !== '/services' && location.pathname !== '/my-services' && location.pathname !== '/profile' && !location.pathname.startsWith('/booking') && location.pathname !== '/contact-us' ? [{ label: "Contact Us", type: "route", href: "/contact-us" } as const] : []),
     ];
 
   useLayoutEffect(() => {
@@ -105,8 +105,8 @@ const Header = ({ onLoginClick }: HeaderProps) => {
             />
           </div>
 
-          {/* Navigation Links - Center (hidden when authenticated on mobile, and hidden on contact-us and my-services pages) */}
-          {location.pathname !== '/contact-us' && location.pathname !== '/my-services' && (
+          {/* Navigation Links - Center (hidden when authenticated on mobile, and hidden on my-services page) */}
+          {location.pathname !== '/my-services' && (
             <motion.div
               ref={navLinksRef}
               initial={{ opacity: 0, x: 40 }}
@@ -174,11 +174,17 @@ const Header = ({ onLoginClick }: HeaderProps) => {
                   ></span>
                 </motion.a>
               ))}
-              {/* Login Button - Show when not authenticated on landing page */}
-              {!isAuthenticated && isHomePage && (
+              {/* Login Button - Show when not authenticated on landing page and contact-us page */}
+              {!isAuthenticated && (isHomePage || location.pathname === '/contact-us') && (
                 <motion.button
                   initial={false}
-                  onClick={() => onLoginClick?.()}
+                  onClick={() => {
+                    if (location.pathname === '/contact-us') {
+                      navigate('/', { state: { showAuth: true } });
+                    } else {
+                      onLoginClick?.();
+                    }
+                  }}
                   className="nav-button-rainbow nav-link relative lg:flex items-center justify-center overflow-hidden rounded-full px-6 py-2.5 text-sm xl:text-base font-bold tracking-wide text-white transition-all duration-300"
                   style={{
                     background: 'rgba(20, 20, 20, 0.65)',
@@ -400,17 +406,35 @@ const Header = ({ onLoginClick }: HeaderProps) => {
                   >
                     About Us
                   </a>
-                  <a
-                    href="/contact-us"
-                    className="text-sm text-white hover-automex py-2 cursor-pointer"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      navigate('/contact-us');
-                      setMobileMenuOpen(false);
-                    }}
-                  >
-                    Contact Us
-                  </a>
+                  {location.pathname !== '/contact-us' && (
+                    <a
+                      href="/contact-us"
+                      className="text-sm text-white hover-automex py-2 cursor-pointer"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        navigate('/contact-us');
+                        setMobileMenuOpen(false);
+                      }}
+                    >
+                      Contact Us
+                    </a>
+                  )}
+                  {/* Login Button - Show when not authenticated */}
+                  {!isAuthenticated && (
+                    <button
+                      onClick={() => {
+                        if (location.pathname === '/contact-us') {
+                          navigate('/', { state: { showAuth: true } });
+                        } else {
+                          onLoginClick?.();
+                        }
+                        setMobileMenuOpen(false);
+                      }}
+                      className="text-sm text-white hover-automex py-2 text-left"
+                    >
+                      Login
+                    </button>
+                  )}
                 </>
               )}
               <a
