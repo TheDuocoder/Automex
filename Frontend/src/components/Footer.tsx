@@ -96,7 +96,7 @@ const Footer = ({ compact = false }: FooterProps = {}) => {
         <div className={`${compact ? 'mt-6 pt-4' : 'mt-12 pt-8'} border-t border-gray-700`}>
           <div className="flex flex-col items-center justify-center">
             {/* Social Media Icons - Above Copyright */}
-            <div className="flex items-center gap-6 mb-4">
+            <div className="flex items-center gap-5 mb-4">
               <a
                 href="https://www.instagram.com/automex__/"
                 target="_blank"
@@ -105,7 +105,7 @@ const Footer = ({ compact = false }: FooterProps = {}) => {
                 aria-label="Instagram"
               >
                 <svg
-                  className="w-7 h-7"
+                  className="w-5 h-5"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
@@ -122,7 +122,7 @@ const Footer = ({ compact = false }: FooterProps = {}) => {
                 aria-label="Facebook"
               >
                 <svg
-                  className="w-7 h-7"
+                  className="w-5 h-5"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
@@ -139,7 +139,7 @@ const Footer = ({ compact = false }: FooterProps = {}) => {
                 aria-label="X (Twitter)"
               >
                 <svg
-                  className="w-7 h-7"
+                  className="w-5 h-5"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"

@@ -1,0 +1,291 @@
+interface FooterProps {
+  compact?: boolean;
+}
+
+const Footer = ({ compact = false }: FooterProps = {}) => {
+  return (
+    <footer className={`relative overflow-hidden ${compact ? 'py-6 md:py-8' : 'py-12 md:py-16'}`} style={{ backgroundColor: '#0D1221' }}>
+      {/* Animated Wave Background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Wave Layer 1 - Deep Blue */}
+        <div 
+          className="absolute bottom-0 left-0 right-0 h-64 opacity-30"
+          style={{
+            background: 'linear-gradient(180deg, transparent 0%, rgba(30, 64, 175, 0.4) 100%)',
+            animation: 'wave1 15s ease-in-out infinite',
+            clipPath: 'ellipse(150% 100% at 50% 100%)'
+          }}
+        />
+        
+        {/* Wave Layer 2 - Cyan Glow */}
+        <div 
+          className="absolute bottom-0 left-0 right-0 h-56 opacity-25"
+          style={{
+            background: 'linear-gradient(180deg, transparent 0%, rgba(6, 182, 212, 0.5) 100%)',
+            animation: 'wave2 18s ease-in-out infinite',
+            clipPath: 'ellipse(140% 90% at 50% 100%)',
+            filter: 'blur(20px)'
+          }}
+        />
+        
+        {/* Wave Layer 3 - Purple Accent */}
+        <div 
+          className="absolute bottom-0 left-0 right-0 h-48 opacity-20"
+          style={{
+            background: 'linear-gradient(180deg, transparent 0%, rgba(139, 92, 246, 0.4) 100%)',
+            animation: 'wave3 20s ease-in-out infinite',
+            clipPath: 'ellipse(160% 85% at 50% 100%)',
+            filter: 'blur(30px)'
+          }}
+        />
+        
+        {/* Horizontal Glowing Light Effect */}
+        <div 
+          className="absolute bottom-20 left-0 right-0 h-1"
+          style={{
+            background: 'linear-gradient(90deg, transparent 0%, rgba(6, 182, 212, 0.8) 30%, rgba(139, 92, 246, 0.8) 70%, transparent 100%)',
+            animation: 'glowMove 8s ease-in-out infinite',
+            boxShadow: '0 0 40px rgba(6, 182, 212, 0.6), 0 0 80px rgba(139, 92, 246, 0.4)',
+            filter: 'blur(4px)'
+          }}
+        />
+      </div>
+
+      {/* Content Container with Glass Effect */}
+      <div className="container mx-auto px-4 md:px-6 lg:px-8 relative z-10">
+        <div 
+          className="backdrop-blur-sm bg-white/5 rounded-2xl p-8 md:p-10"
+          style={{
+            boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37), 0 0 60px rgba(6, 182, 212, 0.1)',
+            border: '1px solid rgba(255, 255, 255, 0.08)'
+          }}
+        >
+        <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 ${compact ? 'gap-4 lg:gap-6' : 'gap-8 lg:gap-12'}`}>
+          {/* About Us Section */}
+          <div className="flex flex-col">
+            <h3 className={`text-base md:text-lg font-bold ${compact ? 'mb-2 md:mb-3' : 'mb-4 md:mb-6'} tracking-wide`}
+              style={{ 
+                color: '#fff',
+                textShadow: '0 0 20px rgba(6, 182, 212, 0.5)'
+              }}
+            >
+              ABOUT US
+            </h3>
+            <ul className={compact ? 'space-y-1' : 'space-y-2.5'}>
+              <li><a href="/#faq" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">FAQs</a></li>
+              <li><a href="/#about-us" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Contact Us</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Terms and Conditions</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Privacy Policy</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Customer Grievance Policy</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">AutoMex Partners</a></li>
+              <li><a href="#" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Workshop Locator</a></li>
+              <li><a href="/#summer-services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Offers</a></li>
+              <li><a href="/#reviews" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Reviews</a></li>
+              <li><a href="/#" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Directory</a></li>
+            </ul>
+          </div>
+
+          {/* Our Services Section */}
+          <div className="flex flex-col">
+            <h3 className={`text-base md:text-lg font-bold ${compact ? 'mb-2 md:mb-3' : 'mb-4 md:mb-6'} tracking-wide`}
+              style={{ 
+                color: '#fff',
+                textShadow: '0 0 20px rgba(6, 182, 212, 0.5)'
+              }}
+            >
+              OUR SERVICES
+            </h3>
+            <ul className={compact ? 'space-y-1' : 'space-y-2.5'}>
+              <li><a href="/#our-services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Scheduled Services</a></li>
+              <li><a href="/#our-services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">AC Services</a></li>
+              <li><a href="/#our-services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Cleaning & Detailing</a></li>
+              <li><a href="/#our-services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Lights & Fitments</a></li>
+              <li><a href="/#our-services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Denting Painting</a></li>
+              <li><a href="/#our-services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Insurance Services</a></li>
+              <li><a href="/#our-services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Custom Repair</a></li>
+              <li><a href="/#our-services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Batteries</a></li>
+              <li><a href="/#our-services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Tyres</a></li>
+              <li><a href="/#our-services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Detailing Services</a></li>
+              <li><a href="/#our-services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Windshields & Glass</a></li>
+            </ul>
+          </div>
+
+          {/* Luxury Brands Section */}
+          <div className="flex flex-col">
+            <h3 className={`text-base md:text-lg font-bold ${compact ? 'mb-2 md:mb-3' : 'mb-4 md:mb-6'} tracking-wide`}
+              style={{ 
+                color: '#fff',
+                textShadow: '0 0 20px rgba(6, 182, 212, 0.5)'
+              }}
+            >
+              LUXURY BRANDS
+            </h3>
+            <ul className={compact ? 'space-y-1' : 'space-y-2.5'}>
+              <li><a href="/services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Mercedes</a></li>
+              <li><a href="/services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">BMW</a></li>
+              <li><a href="/services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Audi</a></li>
+              <li><a href="/services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Volvo</a></li>
+              <li><a href="/services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Mitsubishi</a></li>
+              <li><a href="/services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Jaguar</a></li>
+              <li><a href="/services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Porsche</a></li>
+              <li><a href="/services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Rolls Royce</a></li>
+              <li><a href="/services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Ferrari</a></li>
+              <li><a href="/services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Land Rover</a></li>
+            </ul>
+          </div>
+
+          {/* Popular Brands Section */}
+          <div className="flex flex-col">
+            <h3 className={`text-base md:text-lg font-bold ${compact ? 'mb-2 md:mb-3' : 'mb-4 md:mb-6'} tracking-wide`}
+              style={{ 
+                color: '#fff',
+                textShadow: '0 0 20px rgba(6, 182, 212, 0.5)'
+              }}
+            >
+              POPULAR BRANDS
+            </h3>
+            <ul className={compact ? 'space-y-1' : 'space-y-2.5'}>
+              <li><a href="/services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Maruti Suzuki</a></li>
+              <li><a href="/services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Hyundai</a></li>
+              <li><a href="/services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Honda</a></li>
+              <li><a href="/services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Toyota</a></li>
+              <li><a href="/services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Tata</a></li>
+              <li><a href="/services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Mahindra</a></li>
+              <li><a href="/services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Chevrolet</a></li>
+              <li><a href="/services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Fiat</a></li>
+              <li><a href="/services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Renault</a></li>
+              <li><a href="/services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Kia</a></li>
+              <li><a href="/services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Skoda</a></li>
+              <li><a href="/services" className="text-gray-300 hover:text-cyan-400 text-sm transition-all duration-300 block hover:translate-x-1">Volkswagen</a></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Bottom Section with Social Icons and Copyright */}
+        <div className={`${compact ? 'mt-6 pt-4' : 'mt-12 pt-8'}`}
+          style={{
+            borderTop: '1px solid rgba(6, 182, 212, 0.2)',
+            boxShadow: '0 -1px 20px rgba(6, 182, 212, 0.1)'
+          }}
+        >
+          <div className="flex flex-col items-center justify-center">
+            {/* Social Media Icons - Above Copyright */}
+            <div className="flex items-center gap-6 mb-5">
+              <a
+                href="https://www.instagram.com/automex__/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-300 hover:text-cyan-400 transition-all duration-300 hover:scale-125 transform"
+                aria-label="Instagram"
+                style={{
+                  filter: 'drop-shadow(0 0 10px rgba(6, 182, 212, 0.3))'
+                }}
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                </svg>
+              </a>
+
+              <a
+                href="https://www.facebook.com/profile.php?id=61584491903750"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-300 hover:text-cyan-400 transition-all duration-300 hover:scale-125 transform"
+                aria-label="Facebook"
+                style={{
+                  filter: 'drop-shadow(0 0 10px rgba(6, 182, 212, 0.3))'
+                }}
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                </svg>
+              </a>
+
+              <a
+                href="https://x.com/Automex__"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-300 hover:text-cyan-400 transition-all duration-300 hover:scale-125 transform"
+                aria-label="X (Twitter)"
+                style={{
+                  filter: 'drop-shadow(0 0 10px rgba(6, 182, 212, 0.3))'
+                }}
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                </svg>
+              </a>
+            </div>
+
+            <p className="text-gray-400 text-sm text-center"
+              style={{
+                textShadow: '0 0 10px rgba(6, 182, 212, 0.2)'
+            >
+              © {new Date().getFullYear()} AutoMex. All rights reserved.
+            </p>
+          </div>
+        </div>
+        </div>
+      </div>
+
+      {/* CSS Animations */}
+      <style>{`
+        @keyframes wave1 {
+          0%, 100% {
+            transform: translateX(0) translateY(0) scaleY(1);
+          }
+          50% {
+            transform: translateX(-25%) translateY(-10%) scaleY(1.1);
+          }
+        }
+
+        @keyframes wave2 {
+          0%, 100% {
+            transform: translateX(0) translateY(0) scaleY(1);
+          }
+          50% {
+            transform: translateX(25%) translateY(-15%) scaleY(1.15);
+          }
+        }
+
+        @keyframes wave3 {
+          0%, 100% {
+            transform: translateX(0) translateY(0) scaleY(1);
+          }
+          50% {
+            transform: translateX(-15%) translateY(-20%) scaleY(1.2);
+          }
+        }
+
+        @keyframes glowMove {
+          0%, 100% {
+            transform: translateX(-100%);
+            opacity: 0;
+          }
+          50% {
+            transform: translateX(100%);
+            opacity: 1;
+          }
+        }
+      `}</style>
+    </footer>
+  );
+};
+
+export default Footer;
+

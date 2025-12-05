@@ -291,20 +291,24 @@ const SchedulePickUp = () => {
                             requests.map((req) => (
                                 <div
                                     key={req.id}
-                                    className="bg-white border border-gray-100 rounded-[18px] p-6 shadow-sm cursor-pointer hover:shadow-md transition-all duration-200"
+                                    className="border border-gray-100 rounded-[18px] p-6 shadow-sm cursor-pointer hover:shadow-md transition-all duration-200"
+                                    style={{ 
+                                        backgroundColor: req.status?.toLowerCase() === 'approved' ? '#F0FF00' : req.status?.toLowerCase() === 'cancelled' ? 'red' : req.status?.toLowerCase() === 'completed' ? '#7ED957' : '#EFDFBB',
+                                        color: 'black'
+                                    }}
                                     onClick={() => handleCardClick(req.id)}
                                 >
                                     <div className="flex justify-between items-start mb-4">
                                         <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold ${req.status?.toLowerCase() === 'pending' ? 'bg-yellow-50 text-yellow-700 ring-1 ring-yellow-200' :
-                                            req.status?.toLowerCase() === 'approved' ? 'bg-blue-50 text-blue-700 ring-1 ring-blue-200' :
+                                            req.status?.toLowerCase() === 'approved' ? 'bg-green-50 text-green-700 ring-1 ring-green-200' :
                                                 req.status?.toLowerCase() === 'completed' ? 'bg-green-50 text-green-700 ring-1 ring-green-200' :
-                                                    req.status?.toLowerCase() === 'cancelled' ? 'bg-[#FDE8E8] text-[#D93737] ring-1 ring-red-200' :
+                                                    req.status?.toLowerCase() === 'cancelled' ? 'bg-red-50 text-red-700 ring-1 ring-red-200' :
                                                         'bg-gray-50 text-gray-700 ring-1 ring-gray-200'
                                             }`}>
                                             {req.status?.toLowerCase() === 'cancelled' && <XCircle className="h-3.5 w-3.5" />}
                                             {req.status || 'Pending'}
                                         </span>
-                                        <span className="text-xs text-gray-500 font-medium">
+                                        <span className="text-xs font-medium" style={{ color: 'black' }}>
                                             {new Date(req.scheduled_date).toLocaleDateString('en-US', {
                                                 month: 'short',
                                                 day: 'numeric',
@@ -312,19 +316,20 @@ const SchedulePickUp = () => {
                                             })}
                                         </span>
                                     </div>
-                                    <h4 className="font-bold text-gray-900 mb-3 text-lg">{getCarName(req.car_id)}</h4>
-                                    <div className="text-sm text-gray-600 space-y-2">
+                                    <h4 className="font-bold mb-3 text-lg" style={{ color: 'black' }}>{getCarName(req.car_id)}</h4>
+                                    <div className="text-sm space-y-2" style={{ color: 'black' }}>
                                         {req.address && (
                                             <div className="flex items-start gap-2">
-                                                <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0 text-gray-400" />
+                                                <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" style={{ color: 'black' }} />
                                                 <span className="flex-1 leading-relaxed line-clamp-2">{req.address}</span>
                                             </div>
                                         )}
                                         {req.latitude && req.longitude && (
                                             <div className="flex items-start gap-2">
-                                                <Navigation className="h-3.5 w-3.5 mt-0.5 flex-shrink-0 text-[#0056FF]" />
+                                                <Navigation className="h-3.5 w-3.5 mt-0.5 flex-shrink-0" style={{ color: 'black' }} />
                                                 <button
-                                                    className="text-xs text-[#0056FF] hover:underline font-medium transition-all"
+                                                    className="text-xs hover:underline font-medium transition-all"
+                                                    style={{ color: 'black' }}
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         openInGoogleMaps(req.latitude!, req.longitude!);
@@ -339,10 +344,10 @@ const SchedulePickUp = () => {
                                     {req.admin_comment && (
                                         <div className="bg-gray-50/80 p-3 rounded-xl border border-gray-200 mt-4">
                                             <div className="flex items-center gap-2 mb-1.5">
-                                                <MessageSquare className="h-3.5 w-3.5 text-primary" />
-                                                <span className="text-xs font-semibold text-gray-700">Admin Comment</span>
+                                                <MessageSquare className="h-3.5 w-3.5" style={{ color: 'black' }} />
+                                                <span className="text-xs font-semibold" style={{ color: 'black' }}>Admin Comment</span>
                                             </div>
-                                            <p className="text-xs text-gray-600 italic leading-relaxed">"{req.admin_comment}"</p>
+                                            <p className="text-xs italic leading-relaxed" style={{ color: 'black' }}>"{req.admin_comment}"</p>
                                         </div>
                                     )}
                                 </div>
