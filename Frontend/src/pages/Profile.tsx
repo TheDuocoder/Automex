@@ -416,9 +416,10 @@ const Profile = () => {
           <button
             onClick={() => setActiveView('dashboard')}
             className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${activeView === 'dashboard'
-              ? 'bg-primary/90 text-white shadow-lg shadow-primary/20'
+              ? 'text-white shadow-lg'
               : 'text-white hover:bg-white/5'
               }`}
+            style={activeView === 'dashboard' ? { backgroundColor: '#191970' } : {}}
           >
             <LayoutDashboard className="h-4 w-4" />
             Dashboard
@@ -427,9 +428,10 @@ const Profile = () => {
           <button
             onClick={() => setActiveView('profile')}
             className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${activeView === 'profile'
-              ? 'bg-primary/90 text-white shadow-lg shadow-primary/20'
+              ? 'text-white shadow-lg'
               : 'text-white hover:bg-white/5'
               }`}
+            style={activeView === 'profile' ? { backgroundColor: '#191970' } : {}}
           >
             <User className="h-4 w-4" />
             Profile
@@ -438,9 +440,10 @@ const Profile = () => {
           <button
             onClick={() => setActiveView('my-cars')}
             className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${activeView === 'my-cars'
-              ? 'bg-primary/90 text-white shadow-lg shadow-primary/20'
+              ? 'text-white shadow-lg'
               : 'text-white hover:bg-white/5'
               }`}
+            style={activeView === 'my-cars' ? { backgroundColor: '#191970' } : {}}
           >
             <Car className="h-4 w-4" />
             My Cars
@@ -449,9 +452,10 @@ const Profile = () => {
           <button
             onClick={() => setActiveView('service-history')}
             className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${activeView === 'service-history'
-              ? 'bg-primary/90 text-white shadow-lg shadow-primary/20'
+              ? 'text-white shadow-lg'
               : 'text-white hover:bg-white/5'
               }`}
+            style={activeView === 'service-history' ? { backgroundColor: '#191970' } : {}}
           >
             <History className="h-4 w-4" />
             Service History
@@ -460,9 +464,10 @@ const Profile = () => {
           <button
             onClick={() => setActiveView('schedule-pickup')}
             className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${activeView === 'schedule-pickup'
-              ? 'bg-primary/90 text-white shadow-lg shadow-primary/20'
+              ? 'text-white shadow-lg'
               : 'text-white hover:bg-white/5'
               }`}
+            style={activeView === 'schedule-pickup' ? { backgroundColor: '#191970' } : {}}
           >
             <Calendar className="h-4 w-4" />
             Schedule Pick Up
