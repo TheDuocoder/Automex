@@ -176,11 +176,11 @@ const MyServices = () => {
 
   const getStatusColor = (status: BookingStatus): string => {
     const colors: Record<BookingStatus, string> = {
-      [BookingStatus.PENDING]: "bg-yellow-100 text-yellow-800 border-yellow-200",
-      [BookingStatus.ANALYSE]: "bg-blue-100 text-blue-800 border-blue-200",
-      [BookingStatus.IN_PROGRESS]: "bg-purple-100 text-purple-800 border-purple-200",
-      [BookingStatus.COMPLETED]: "bg-green-100 text-green-800 border-green-200",
-      [BookingStatus.CANCELLED]: "bg-red-100 text-red-800 border-red-200",
+      [BookingStatus.PENDING]: "bg-white text-yellow-800 border-yellow-200",
+      [BookingStatus.ANALYSE]: "bg-white text-blue-800 border-blue-200",
+      [BookingStatus.IN_PROGRESS]: "bg-white text-purple-800 border-purple-200",
+      [BookingStatus.COMPLETED]: "bg-white text-green-800 border-green-200",
+      [BookingStatus.CANCELLED]: "bg-white text-red-800 border-red-200",
     };
     return colors[status] || colors[BookingStatus.PENDING];
   };
@@ -298,22 +298,28 @@ const MyServices = () => {
               booking.status === BookingStatus.CANCELLED ? '#ef4444' :
                 booking.status === BookingStatus.IN_PROGRESS ? '#a855f7' :
                   booking.status === BookingStatus.ANALYSE ? '#3b82f6' :
-                    '#eab308'
+                    '#eab308',
+          backgroundColor:
+            booking.status === BookingStatus.PENDING ? '#EFDFBB' :
+            booking.status === BookingStatus.IN_PROGRESS ? '#F0FF00' :
+            booking.status === BookingStatus.ANALYSE ? '#FFB5E1' :
+            booking.status === BookingStatus.CANCELLED ? '#FF4D4D' :
+            booking.status === BookingStatus.COMPLETED ? '#B6F37A' : undefined
         }}
         onClick={() => navigate(`/booking/${booking.id}`)}
       >
-        <CardHeader className="pb-3 bg-gray-50/50 border-b border-gray-100">
+        <CardHeader className="pb-3 border-b border-gray-100">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <CardTitle className="text-lg font-bold text-gray-900 line-clamp-1 group-hover:text-primary transition-colors">
+              <CardTitle className="text-lg font-bold line-clamp-1 group-hover:text-primary transition-colors" style={{ color: '#000000' }}>
                 {booking.service_name || "Service Booking"}
               </CardTitle>
               <div className="flex items-center gap-2 mt-1.5">
-                <Badge variant="outline" className={cn("font-medium flex items-center gap-1.5", getStatusColor(booking.status))}>
+                <Badge variant="outline" className={cn("font-bold flex items-center gap-1.5", getStatusColor(booking.status))}>
                   {getStatusIcon(booking.status)}
                   {getStatusLabel(booking.status)}
                 </Badge>
-                <span className="text-xs text-gray-400 font-mono">#{booking.id}</span>
+                <span className="text-xs font-mono" style={{ color: '#000000' }}>#{booking.id}</span>
               </div>
             </div>
           </div>
@@ -326,12 +332,12 @@ const MyServices = () => {
               <Car className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-xs text-gray-500 font-medium uppercase tracking-wider">Vehicle</p>
-              <p className="text-sm font-semibold text-gray-900">
+              <p className="text-xs font-medium uppercase tracking-wider" style={{ color: '#000000' }}>Vehicle</p>
+              <p className="text-sm font-semibold" style={{ color: '#000000' }}>
                 {booking.car_brand || booking.vehicle_make} {booking.car_model || booking.vehicle_model}
               </p>
               {booking.fuel_type && (
-                <p className="text-xs text-gray-500">{booking.fuel_type}</p>
+                <p className="text-xs" style={{ color: '#000000' }}>{booking.fuel_type}</p>
               )}
             </div>
           </div>
@@ -342,8 +348,8 @@ const MyServices = () => {
               <Calendar className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-xs text-gray-500 font-medium uppercase tracking-wider">Scheduled For</p>
-              <p className="text-sm font-semibold text-gray-900">
+              <p className="text-xs font-medium uppercase tracking-wider" style={{ color: '#000000' }}>Scheduled For</p>
+              <p className="text-sm font-semibold" style={{ color: '#000000' }}>
                 {format(new Date(booking.booking_date), "EEE, MMM d, yyyy")}
               </p>
             </div>
@@ -356,10 +362,10 @@ const MyServices = () => {
                 <span className="h-5 w-5 flex items-center justify-center font-bold text-sm">₹</span>
               </div>
               <div>
-                <p className="text-xs text-gray-500 font-medium uppercase tracking-wider">
+                <p className="text-xs font-medium uppercase tracking-wider" style={{ color: '#000000' }}>
                   {bookingCosts[booking.id] > 0 ? "Total Cost" : "Est. Cost"}
                 </p>
-                <p className="text-sm font-semibold text-gray-900">
+                <p className="text-sm font-semibold" style={{ color: '#000000' }}>
                   ₹{(bookingCosts[booking.id] > 0 ? bookingCosts[booking.id] : booking.estimated_cost || 0).toLocaleString()}
                 </p>
               </div>
@@ -367,7 +373,7 @@ const MyServices = () => {
           )}
         </CardContent>
 
-        <CardFooter className="pt-2 pb-4 px-6 border-t border-gray-100 mt-2 bg-gray-50/30 group-hover:bg-gray-50/80 transition-colors">
+        <CardFooter className="pt-2 pb-4 px-6 border-t border-gray-100 mt-2">
           <div className="w-full flex gap-2" onClick={(e) => e.stopPropagation()}>
             {isAdmin && (() => {
               const nextStatus = getNextStatus(booking.status);
@@ -377,7 +383,8 @@ const MyServices = () => {
                     size="sm"
                     onClick={() => handleStatusChange(booking.id, nextStatus)}
                     disabled={updatingStatusId === booking.id}
-                    className="flex-1 bg-black text-white hover:bg-gray-800"
+                    className="flex-1 text-white hover:bg-purple-700"
+                    style={{ backgroundColor: '#a855f7' }}
                   >
                     {updatingStatusId === booking.id ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
@@ -412,7 +419,8 @@ const MyServices = () => {
                 variant="ghost"
                 size="sm"
                 onClick={() => navigate(`/booking/${booking.id}`)}
-                className="w-full text-gray-500 hover:text-gray-900 hover:bg-white/50"
+                className="w-full hover:bg-white/50"
+                style={{ backgroundColor: '#FFFFFF', color: '#000000' }}
               >
                 View Details
               </Button>
@@ -495,19 +503,49 @@ const MyServices = () => {
                 <TabsTrigger value="all" className="rounded-lg px-4 py-2 data-[state=active]:bg-black data-[state=active]:text-white">
                   All <Badge variant="secondary" className="ml-2 bg-gray-100 text-gray-600">{bookings.length}</Badge>
                 </TabsTrigger>
-                <TabsTrigger value={BookingStatus.PENDING} className="rounded-lg px-4 py-2 data-[state=active]:bg-yellow-500 data-[state=active]:text-white">
+                <TabsTrigger 
+                  value={BookingStatus.PENDING} 
+                  className="rounded-lg px-4 py-2 data-[state=active]:text-black"
+                  style={{
+                    backgroundColor: activeTab === BookingStatus.PENDING ? '#EFDFBB' : undefined
+                  }}
+                >
                   Pending <Badge variant="secondary" className="ml-2 bg-gray-100 text-gray-600">{bookings.filter(b => b.status === BookingStatus.PENDING).length}</Badge>
                 </TabsTrigger>
-                <TabsTrigger value={BookingStatus.ANALYSE} className="rounded-lg px-4 py-2 data-[state=active]:bg-blue-500 data-[state=active]:text-white">
+                <TabsTrigger 
+                  value={BookingStatus.ANALYSE} 
+                  className="rounded-lg px-4 py-2 data-[state=active]:text-black"
+                  style={{
+                    backgroundColor: activeTab === BookingStatus.ANALYSE ? '#FFB5E1' : undefined
+                  }}
+                >
                   Analyse <Badge variant="secondary" className="ml-2 bg-gray-100 text-gray-600">{bookings.filter(b => b.status === BookingStatus.ANALYSE).length}</Badge>
                 </TabsTrigger>
-                <TabsTrigger value={BookingStatus.IN_PROGRESS} className="rounded-lg px-4 py-2 data-[state=active]:bg-purple-500 data-[state=active]:text-white">
+                <TabsTrigger 
+                  value={BookingStatus.IN_PROGRESS} 
+                  className="rounded-lg px-4 py-2 data-[state=active]:text-black"
+                  style={{
+                    backgroundColor: activeTab === BookingStatus.IN_PROGRESS ? '#F0FF00' : undefined
+                  }}
+                >
                   In Progress <Badge variant="secondary" className="ml-2 bg-gray-100 text-gray-600">{bookings.filter(b => b.status === BookingStatus.IN_PROGRESS).length}</Badge>
                 </TabsTrigger>
-                <TabsTrigger value={BookingStatus.COMPLETED} className="rounded-lg px-4 py-2 data-[state=active]:bg-green-500 data-[state=active]:text-white">
+                <TabsTrigger 
+                  value={BookingStatus.COMPLETED} 
+                  className="rounded-lg px-4 py-2 data-[state=active]:text-black"
+                  style={{
+                    backgroundColor: activeTab === BookingStatus.COMPLETED ? '#B6F37A' : undefined
+                  }}
+                >
                   Done <Badge variant="secondary" className="ml-2 bg-gray-100 text-gray-600">{bookings.filter(b => b.status === BookingStatus.COMPLETED).length}</Badge>
                 </TabsTrigger>
-                <TabsTrigger value={BookingStatus.CANCELLED} className="rounded-lg px-4 py-2 data-[state=active]:bg-red-500 data-[state=active]:text-white">
+                <TabsTrigger 
+                  value={BookingStatus.CANCELLED} 
+                  className="rounded-lg px-4 py-2 data-[state=active]:text-black"
+                  style={{
+                    backgroundColor: activeTab === BookingStatus.CANCELLED ? '#FF4D4D' : undefined
+                  }}
+                >
                   Cancelled <Badge variant="secondary" className="ml-2 bg-gray-100 text-gray-600">{bookings.filter(b => b.status === BookingStatus.CANCELLED).length}</Badge>
                 </TabsTrigger>
               </TabsList>
