@@ -56,8 +56,8 @@ const Header = ({ onLoginClick }: HeaderProps) => {
     | { label: string; type: "route"; href: string }
     | { label: string; type: "section"; target: string }
   > = [
-      ...(location.pathname !== '/services' && location.pathname !== '/my-services' && location.pathname !== '/profile' && !location.pathname.startsWith('/booking') ? [{ label: "About Us", type: "section", target: "about-us" } as const] : []),
-      ...(location.pathname !== '/services' && location.pathname !== '/my-services' && location.pathname !== '/profile' && !location.pathname.startsWith('/booking') ? [{ label: "Services", type: "route", href: "/services" } as const] : []),
+      ...(location.pathname !== '/services' && location.pathname !== '/my-services' && location.pathname !== '/profile' && !location.pathname.startsWith('/booking') && !(location.pathname === '/contact-us' && isAuthenticated) ? [{ label: "About Us", type: "section", target: "about-us" } as const] : []),
+      ...(location.pathname !== '/services' && location.pathname !== '/my-services' && location.pathname !== '/profile' && !location.pathname.startsWith('/booking') && !(location.pathname === '/contact-us' && isAuthenticated) ? [{ label: "Services", type: "route", href: "/services" } as const] : []),
       ...(location.pathname !== '/services' && location.pathname !== '/my-services' && location.pathname !== '/profile' && !location.pathname.startsWith('/booking') && location.pathname !== '/contact-us' ? [{ label: "Contact Us", type: "route", href: "/contact-us" } as const] : []),
     ];
 
@@ -132,24 +132,39 @@ const Header = ({ onLoginClick }: HeaderProps) => {
                       : `/#${item.target}`
                   }
                   initial={false}
-                  className="nav-button-rainbow nav-link relative lg:flex items-center justify-center overflow-hidden rounded-full px-6 py-2.5 text-sm xl:text-base font-bold tracking-wide text-white transition-all duration-300"
+                  className={cn(
+                    "nav-link nav-button-rainbow relative lg:flex items-center justify-center overflow-hidden rounded-full px-6 py-2.5 text-sm xl:text-base font-bold tracking-wide text-white transition-all duration-300"
+                  )}
                   style={{
                     background: 'rgba(20, 20, 20, 0.65)',
                     backdropFilter: 'blur(10px)',
                     minWidth: '120px',
                   }}
                   onClick={(e) => {
+                    e.preventDefault();
+                    
                     if (item.type === "route") {
-                      e.preventDefault();
                       navigate(item.href);
                       return;
                     }
 
-                    if (location.pathname === '/') {
-                      e.preventDefault();
-                      const element = document.getElementById(item.target);
-                      if (element) {
-                        element.scrollIntoView({ behavior: "smooth", block: "start" });
+                    // For section links (like About Us)
+                    if (item.type === "section") {
+                      if (location.pathname === '/') {
+                        // Already on landing page, just scroll
+                        const element = document.getElementById(item.target);
+                        if (element) {
+                          element.scrollIntoView({ behavior: "smooth", block: "start" });
+                        }
+                      } else {
+                        // Navigate to landing page first, then scroll
+                        navigate('/');
+                        setTimeout(() => {
+                          const element = document.getElementById(item.target);
+                          if (element) {
+                            element.scrollIntoView({ behavior: "smooth", block: "start" });
+                          }
+                        }, 100);
                       }
                     }
                   }}
@@ -220,7 +235,7 @@ const Header = ({ onLoginClick }: HeaderProps) => {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className={cn("flex items-center gap-3 md:gap-4 lg:gap-6 flex-shrink-0", isTransparent && "-mt-2 md:-mt-4 lg:-mt-6")}
+            className={cn("flex items-center gap-3 md:gap-4 lg:gap-6 flex-shrink-0", isTransparent && "mt-2 md:mt-0 lg:mt-2")}
           >
             {/* Login Button - Show when not authenticated on services page */}
             {!isAuthenticated && location.pathname === '/services' && (
