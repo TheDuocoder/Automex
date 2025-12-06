@@ -28,9 +28,6 @@ const Footer = ({ compact = false }: FooterProps = {}) => {
               <li><a href="/#about-us" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Contact Us</a></li>
               <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Terms and Conditions</a></li>
               <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Privacy Policy</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Customer Grievance Policy</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">AutoMex Partners</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Workshop Locator</a></li>
               <li><a href="/#summer-services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Offers</a></li>
               <li><a href="/#reviews" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Reviews</a></li>
               <li><a href="/#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Directory</a></li>
@@ -47,7 +44,6 @@ const Footer = ({ compact = false }: FooterProps = {}) => {
               <li><a href="/#our-services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Lights & Fitments</a></li>
               <li><a href="/#our-services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Denting Painting</a></li>
               <li><a href="/#our-services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Insurance Services</a></li>
-              <li><a href="/#our-services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Custom Repair</a></li>
               <li><a href="/#our-services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Batteries</a></li>
               <li><a href="/#our-services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Tyres</a></li>
               <li><a href="/#our-services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Detailing Services</a></li>
@@ -63,11 +59,7 @@ const Footer = ({ compact = false }: FooterProps = {}) => {
               <li><a href="/services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">BMW</a></li>
               <li><a href="/services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Audi</a></li>
               <li><a href="/services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Volvo</a></li>
-              <li><a href="/services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Mitsubishi</a></li>
               <li><a href="/services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Jaguar</a></li>
-              <li><a href="/services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Porsche</a></li>
-              <li><a href="/services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Rolls Royce</a></li>
-              <li><a href="/services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Ferrari</a></li>
               <li><a href="/services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Land Rover</a></li>
             </ul>
           </div>
@@ -80,11 +72,7 @@ const Footer = ({ compact = false }: FooterProps = {}) => {
               <li><a href="/services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Hyundai</a></li>
               <li><a href="/services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Honda</a></li>
               <li><a href="/services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Toyota</a></li>
-              <li><a href="/services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Tata</a></li>
               <li><a href="/services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Mahindra</a></li>
-              <li><a href="/services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Chevrolet</a></li>
-              <li><a href="/services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Fiat</a></li>
-              <li><a href="/services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Renault</a></li>
               <li><a href="/services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Kia</a></li>
               <li><a href="/services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Skoda</a></li>
               <li><a href="/services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Volkswagen</a></li>

@@ -478,7 +478,7 @@ const Profile = () => {
         <div className="absolute bottom-8 left-4 right-4">
           <button
             onClick={logout}
-            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg bg-red-500/10 text-white hover:bg-red-500/20 text-sm font-medium transition-all border border-red-500/20"
+            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg bg-blue-500/10 text-white hover:bg-blue-500/20 text-sm font-medium transition-all border border-blue-500/20"
           >
             <LogOut className="h-4 w-4" />
             Logout
@@ -486,7 +486,7 @@ const Profile = () => {
         </div>
       </motion.aside>
 
-      {/* Main Content */}
+      {/* Main Content - Flex container */}
       <div className="flex-1 ml-64 flex flex-col">
         {/* Profile Header with Gradient */}
         <motion.div
