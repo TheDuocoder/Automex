@@ -3769,8 +3769,8 @@ const Services = () => {
 
       {/* Main Content */}
       <div className="pt-0 pb-8 relative z-10">
-        <div className="max-w-[1400px] mx-auto pl-2 pr-6">
-          <div className="flex gap-8">
+        <div className="max-w-[1400px] mx-auto px-4 md:pl-2 md:pr-6">
+          <div className="flex flex-col xl:flex-row gap-6 xl:gap-8">
             {/* Left Content Area */}
             <div className="flex-1 max-w-[1280px]">
               {/* Category Navigation */}
@@ -3784,7 +3784,7 @@ const Services = () => {
 
               {/* Service Packages Section */}
               <div className="mb-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-8">
+                <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-6 md:mb-8">
                   {selectedCategory === "ac-service" ? "Service Packages" :
                     selectedCategory === "batteries" ? "Batteries" :
                       selectedCategory === "tyres" ? "Premium Tyres" :
@@ -3839,26 +3839,26 @@ const Services = () => {
               </div>
 
               {/* Statistics Section */}
-              <div className="bg-gray-100 rounded-2xl mt-16 py-12 px-8">
-                <div ref={statsRef} className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+              <div className="bg-gray-100 rounded-2xl mt-8 md:mt-16 py-8 md:py-12 px-4 md:px-8">
+                <div ref={statsRef} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 text-center">
                   <div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">150+ Services</h3>
-                    <p className="text-gray-600">Comprehensive car care solutions</p>
+                    <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">150+ Services</h3>
+                    <p className="text-sm md:text-base text-gray-600">Comprehensive car care solutions</p>
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Free Pickup</h3>
-                    <p className="text-gray-600">Doorstep service at your convenience</p>
+                    <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">Free Pickup</h3>
+                    <p className="text-sm md:text-base text-gray-600">Doorstep service at your convenience</p>
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">40% Off</h3>
-                    <p className="text-gray-600">Best prices guaranteed</p>
+                    <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">40% Off</h3>
+                    <p className="text-sm md:text-base text-gray-600">Best prices guaranteed</p>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Right Sidebar - Select Manufacturer */}
-            <div ref={sidebarRef} className="w-full xl:w-[400px] flex-shrink-0 mt-10 xl:mt-0 xl:ml-16 relative">
+            <div ref={sidebarRef} className="hidden xl:block w-full xl:w-[400px] flex-shrink-0 mt-10 xl:mt-0 xl:ml-16 relative">
               <div
                 ref={sidebarContentRef}
                 className="xl:sticky xl:top-24 xl:z-30 xl:w-[400px]"
@@ -3868,6 +3868,73 @@ const Services = () => {
                   selectedBrand={selectedBrand}
                   onBrandSelect={setSelectedBrand}
                   className="h-auto max-h-[calc(100vh-120px)] overflow-y-auto overflow-x-hidden rounded-2xl shadow-[0px_6px_30px_rgba(0,0,0,0.25)] bg-white"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile Floating Button for Brand Selector */}
+          <button
+            onClick={() => {
+              const modal = document.getElementById('mobile-brand-modal');
+              if (modal) {
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+              }
+            }}
+            className="xl:hidden fixed bottom-6 right-6 z-40 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-full px-5 py-3 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 flex items-center gap-2 animate-bounce"
+            style={{ animationDuration: '2s' }}
+            aria-label="Select Manufacturer"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+            </svg>
+            <span className="font-bold text-sm whitespace-nowrap">Select Car</span>
+          </button>
+
+          {/* Mobile Brand Selector Modal */}
+          <div
+            id="mobile-brand-modal"
+            className="xl:hidden hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) {
+                e.currentTarget.classList.add('hidden');
+                document.body.style.overflow = '';
+              }
+            }}
+          >
+            <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl max-h-[85vh] overflow-hidden animate-slide-up">
+              <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between z-10">
+                <h2 className="text-xl font-bold text-gray-900">Select Manufacturer</h2>
+                <button
+                  onClick={() => {
+                    const modal = document.getElementById('mobile-brand-modal');
+                    if (modal) {
+                      modal.classList.add('hidden');
+                      document.body.style.overflow = '';
+                    }
+                  }}
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  aria-label="Close"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <div className="overflow-y-auto max-h-[calc(85vh-80px)] px-4 py-4">
+                <BrandSelectorModal
+                  variant="sidebar"
+                  selectedBrand={selectedBrand}
+                  onBrandSelect={(brand) => {
+                    setSelectedBrand(brand);
+                    const modal = document.getElementById('mobile-brand-modal');
+                    if (modal) {
+                      modal.classList.add('hidden');
+                      document.body.style.overflow = '';
+                    }
+                  }}
+                  className="h-auto overflow-visible rounded-2xl bg-white"
                 />
               </div>
             </div>

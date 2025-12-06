@@ -81,7 +81,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         description: "Please login to book a service. You will be redirected to the login page.",
         duration: 3000,
       });
-      
+
       // Redirect to landing page after a short delay to show the message
       setTimeout(() => {
         navigate('/');
@@ -97,19 +97,19 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         variant: "destructive",
         duration: 4000,
       });
-      
+
       // Trigger highlight animation
       triggerHighlight();
-      
+
       // Clear highlight after animation
       setTimeout(() => {
         const { clearHighlight } = useCarSelectionStore.getState();
         clearHighlight();
       }, 2000);
-      
+
       return;
     }
-    
+
     // If validation passes, store the part and show date picker
     selectPart(name);
     setIsDatePickerOpen(true);
@@ -124,13 +124,12 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 
   const displayImage = (
     <div
-      className={`${
-        variant === "gom"
+      className={`${variant === "gom"
           ? "w-[150px] h-[150px] rounded-[6px]"
           : variant === "reference"
-          ? "w-[180px] h-[120px] rounded-lg"
-          : "h-48 w-full rounded-xl"
-      } overflow-hidden bg-white flex items-center justify-center`}
+            ? "w-[180px] h-[120px] rounded-lg"
+            : "h-48 w-full rounded-xl"
+        } overflow-hidden bg-white flex items-center justify-center`}
       style={{ backgroundColor: '#ffffff' }}
     >
       {thumbnail ? (
@@ -139,13 +138,12 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         <img
           src="/images/service_icons/car_service.png"
           alt="Service"
-          className={`${
-            variant === "gom" 
-              ? "h-[60px] w-[60px]" 
+          className={`${variant === "gom"
+              ? "h-[60px] w-[60px]"
               : variant === "reference"
-              ? "h-16 w-16"
-              : "h-24 w-24"
-          } object-contain opacity-90 bg-white`}
+                ? "h-16 w-16"
+                : "h-24 w-24"
+            } object-contain opacity-90 bg-white`}
           style={{ backgroundColor: '#ffffff' }}
         />
       )}
@@ -160,170 +158,168 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         serviceName={name}
       />
       <div className="space-y-4">
-      <Card className={`relative overflow-hidden border border-gray-200 bg-white ${
-        variant === "gom" 
-          ? "rounded-[6px] shadow-sm" 
-          : variant === "reference"
-          ? "rounded-xl shadow-sm"
-          : "rounded-xl"
-      }`}>
-        {variant === "reference" ? (
-          <div className="absolute top-4 right-4 flex items-center gap-1 text-sm text-gray-600">
-            <Clock className="h-4 w-4" />
-            <span>Takes {duration}</span>
-          </div>
-        ) : (
-          <div className="absolute top-4 right-6 text-xs text-gray-700 bg-gray-100 px-3 py-1 rounded-full flex items-center gap-1">
-            <Clock className="h-3.5 w-3.5" />
-            <span className="tracking-wide">{duration}</span>
-          </div>
-        )}
-
-        <CardContent className={`${
-          variant === "gom" 
-            ? "p-4" 
+        <Card className={`relative overflow-hidden border border-gray-200 bg-white ${variant === "gom"
+            ? "rounded-[6px] shadow-sm"
             : variant === "reference"
-            ? "p-6"
-            : "p-4 md:p-5"
-        }`}>
+              ? "rounded-xl shadow-sm"
+              : "rounded-xl"
+          }`}>
           {variant === "reference" ? (
-            // Reference layout matching the first image exactly
-            <div className="flex gap-6">
-              <div className="flex-shrink-0">
-                {displayImage}
-              </div>
-              
-              <div className="flex-1 space-y-4">
-                <h3 className="text-xl font-semibold text-[#212121] leading-tight">{name}</h3>
-
-                <div className="flex items-center gap-6 text-sm text-[#757575]">
-                  <span>• {warranty}</span>
-                  <span>• {recommended}</span>
-                </div>
-
-                <div className="grid grid-cols-2 gap-y-2 gap-x-4 text-sm text-[#212121]">
-                  {visibleFeatures.map((feature, index) => (
-                    <div key={index} className="flex items-center gap-2">
-                      <div className="w-4 h-4 bg-[#4CAF50] rounded-full flex items-center justify-center text-white text-xs font-bold">
-                        ✓
-                      </div>
-                      <span>{feature.name}</span>
-                    </div>
-                  ))}
-                </div>
-
-                {shouldShowButton && (
-                  <button
-                    className="text-[#4CAF50] text-sm font-medium flex items-center gap-1 hover:text-[#45A049] transition-colors"
-                    onClick={() => setShowMore((prev) => !prev)}
-                  >
-                    {!showMore && <Plus className="h-4 w-4" />}
-                    {showMore
-                      ? "Show Less"
-                      : remainingCount > 0
-                        ? `+ ${remainingCount} more View All`
-                        : "View More"}
-                  </button>
-                )}
-
-                {showMore && descriptions.length > 0 && (
-                  <div className="space-y-2 text-sm text-gray-700 border border-gray-200 rounded-lg p-3 bg-gray-50/70">
-                    {descriptions.map((text, idx) => (
-                      <p key={idx} className="leading-relaxed">
-                        {text}
-                      </p>
-                    ))}
-                  </div>
-                )}
-
-                <div className="flex items-end justify-end pt-2">
-                  <Button
-                    className="bg-white border-[3px] border-[#E53935] text-[#E53935] hover:bg-[#E53935] hover:text-white px-8 h-[48px] rounded-[12px] font-bold uppercase text-sm tracking-wider transition-all duration-300 min-w-[140px] hover:scale-105 hover:shadow-lg ml-auto"
-                    onClick={handleBookClick}
-                  >
-                    Book
-                  </Button>
-                </div>
-              </div>
+            <div className="absolute top-4 right-4 flex items-center gap-1 text-sm text-gray-600">
+              <Clock className="h-4 w-4" />
+              <span>Takes {duration}</span>
             </div>
           ) : (
-            // Original layout for other variants
-            <div className="flex flex-col md:flex-row gap-4 md:gap-6">
-              <div className={`w-full ${variant === "gom" ? "md:w-[170px]" : "md:w-[220px]"} flex-shrink-0 h-full`}>
-                <div className={`${variant === "gom" ? "h-auto" : "h-48"}`}>{displayImage}</div>
-              </div>
-
-              <div className="flex-1 space-y-3">
-                <h3 className={`${variant === "gom" ? "text-[17px]" : "text-[20px]"} font-bold text-gray-900 leading-tight`}>{name}</h3>
-
-                <div className={`flex flex-wrap items-center gap-4 ${variant === "gom" ? "text-[13px]" : "text-[14px]"} text-gray-700`}>
-                  <span className="whitespace-nowrap">• {warranty}</span>
-                  <span className="whitespace-nowrap">• {recommended}</span>
-                </div>
-
-                <div className={`grid grid-cols-1 md:grid-cols-2 gap-1 ${variant === "gom" ? "text-[13px]" : "text-[14px]"} text-gray-700`}>
-                  {visibleFeatures.map((feature, index) => (
-                    <div key={index} className="flex items-center gap-1.5 whitespace-nowrap">
-                      <div className="w-4 h-4 bg-[#4CAF50] rounded-full flex items-center justify-center text-white text-xs font-bold">
-                        ✓
-                      </div>
-                      {feature.name}
-                    </div>
-                  ))}
-                </div>
-
-                {shouldShowButton && (
-                  <button
-                    className="text-green-600 text-sm font-semibold flex items-center gap-1 underline underline-offset-2 hover:text-green-700 transition-colors"
-                    onClick={() => setShowMore((prev) => !prev)}
-                  >
-                    {!showMore && <Plus className="h-4 w-4" />}
-                    {showMore
-                      ? "Show Less"
-                      : remainingCount > 0
-                        ? `+ ${remainingCount} more View All`
-                        : "View More"}
-                  </button>
-                )}
-
-                {showMore && descriptions.length > 0 && (
-                  <div className="space-y-2 text-sm text-gray-700 border border-gray-200 rounded-lg p-3 bg-gray-50/70">
-                    {descriptions.map((text, idx) => (
-                      <p key={idx} className="leading-relaxed">
-                        {text}
-                      </p>
-                    ))}
-                  </div>
-                )}
-
-                <div className="flex flex-col md:flex-row md:items-end md:justify-end gap-3 pt-1">
-                  <Button
-                    className="uppercase tracking-wider text-sm font-bold border-[3px] border-red-500 text-red-500 bg-white hover:bg-red-500 hover:text-white px-8 h-[48px] rounded-[12px] min-w-[140px] transition-all duration-300 hover:scale-105 hover:shadow-lg ml-auto"
-                    onClick={handleBookClick}
-                  >
-                    Book
-                  </Button>
-                </div>
-              </div>
+            <div className="absolute top-4 right-6 text-xs text-gray-700 bg-gray-100 px-3 py-1 rounded-full flex items-center gap-1">
+              <Clock className="h-3.5 w-3.5" />
+              <span className="tracking-wide">{duration}</span>
             </div>
           )}
-        </CardContent>
-      </Card>
 
-      {offer && (
-        <div className="bg-white border border-gray-200 rounded-xl px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4 text-sm font-semibold text-gray-800">
-            <div className="flex items-center justify-center w-14 h-10 bg-gradient-to-r from-orange-400 to-red-500 text-white rounded-md text-[10px] leading-tight text-center shadow-sm uppercase tracking-wide">
-              Summer<br />Sale
+          <CardContent className={`${variant === "gom"
+              ? "p-4"
+              : variant === "reference"
+                ? "p-6"
+                : "p-4 md:p-5"
+            }`}>
+            {variant === "reference" ? (
+              // Reference layout matching the first image exactly
+              <div className="flex flex-col md:flex-row gap-4 md:gap-6">
+                <div className="flex-shrink-0 w-full md:w-auto flex justify-center md:block">
+                  {displayImage}
+                </div>
+
+                <div className="flex-1 space-y-3 md:space-y-4">
+                  <h3 className="text-lg md:text-xl font-semibold text-[#212121] leading-tight">{name}</h3>
+
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 text-xs md:text-sm text-[#757575]">
+                    <span>• {warranty}</span>
+                    <span>• {recommended}</span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4 text-xs md:text-sm text-[#212121]">
+                    {visibleFeatures.map((feature, index) => (
+                      <div key={index} className="flex items-center gap-2">
+                        <div className="w-4 h-4 bg-[#4CAF50] rounded-full flex items-center justify-center text-white text-xs font-bold">
+                          ✓
+                        </div>
+                        <span>{feature.name}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {shouldShowButton && (
+                    <button
+                      className="text-[#4CAF50] text-sm font-medium flex items-center gap-1 hover:text-[#45A049] transition-colors"
+                      onClick={() => setShowMore((prev) => !prev)}
+                    >
+                      {!showMore && <Plus className="h-4 w-4" />}
+                      {showMore
+                        ? "Show Less"
+                        : remainingCount > 0
+                          ? `+ ${remainingCount} more View All`
+                          : "View More"}
+                    </button>
+                  )}
+
+                  {showMore && descriptions.length > 0 && (
+                    <div className="space-y-2 text-sm text-gray-700 border border-gray-200 rounded-lg p-3 bg-gray-50/70">
+                      {descriptions.map((text, idx) => (
+                        <p key={idx} className="leading-relaxed">
+                          {text}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="flex items-end justify-end pt-2">
+                    <Button
+                      className="w-full sm:w-auto bg-white border-[3px] border-[#E53935] text-[#E53935] hover:bg-[#E53935] hover:text-white px-6 md:px-8 h-[44px] md:h-[48px] rounded-[12px] font-bold uppercase text-sm tracking-wider transition-all duration-300 min-w-[140px] hover:scale-105 hover:shadow-lg ml-auto"
+                      onClick={handleBookClick}
+                    >
+                      Book
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              // Original layout for other variants
+              <div className="flex flex-col md:flex-row gap-4 md:gap-6">
+                <div className={`w-full ${variant === "gom" ? "md:w-[170px]" : "md:w-[220px]"} flex-shrink-0 h-full`}>
+                  <div className={`${variant === "gom" ? "h-auto" : "h-48"}`}>{displayImage}</div>
+                </div>
+
+                <div className="flex-1 space-y-3">
+                  <h3 className={`${variant === "gom" ? "text-[17px]" : "text-[20px]"} font-bold text-gray-900 leading-tight`}>{name}</h3>
+
+                  <div className={`flex flex-wrap items-center gap-4 ${variant === "gom" ? "text-[13px]" : "text-[14px]"} text-gray-700`}>
+                    <span className="whitespace-nowrap">• {warranty}</span>
+                    <span className="whitespace-nowrap">• {recommended}</span>
+                  </div>
+
+                  <div className={`grid grid-cols-1 md:grid-cols-2 gap-1 ${variant === "gom" ? "text-[13px]" : "text-[14px]"} text-gray-700`}>
+                    {visibleFeatures.map((feature, index) => (
+                      <div key={index} className="flex items-center gap-1.5 whitespace-nowrap">
+                        <div className="w-4 h-4 bg-[#4CAF50] rounded-full flex items-center justify-center text-white text-xs font-bold">
+                          ✓
+                        </div>
+                        {feature.name}
+                      </div>
+                    ))}
+                  </div>
+
+                  {shouldShowButton && (
+                    <button
+                      className="text-green-600 text-sm font-semibold flex items-center gap-1 underline underline-offset-2 hover:text-green-700 transition-colors"
+                      onClick={() => setShowMore((prev) => !prev)}
+                    >
+                      {!showMore && <Plus className="h-4 w-4" />}
+                      {showMore
+                        ? "Show Less"
+                        : remainingCount > 0
+                          ? `+ ${remainingCount} more View All`
+                          : "View More"}
+                    </button>
+                  )}
+
+                  {showMore && descriptions.length > 0 && (
+                    <div className="space-y-2 text-sm text-gray-700 border border-gray-200 rounded-lg p-3 bg-gray-50/70">
+                      {descriptions.map((text, idx) => (
+                        <p key={idx} className="leading-relaxed">
+                          {text}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="flex flex-col md:flex-row md:items-end md:justify-end gap-3 pt-1">
+                    <Button
+                      className="uppercase tracking-wider text-sm font-bold border-[3px] border-red-500 text-red-500 bg-white hover:bg-red-500 hover:text-white px-8 h-[48px] rounded-[12px] min-w-[140px] transition-all duration-300 hover:scale-105 hover:shadow-lg ml-auto"
+                      onClick={handleBookClick}
+                    >
+                      Book
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {offer && (
+          <div className="bg-white border border-gray-200 rounded-xl px-6 py-4 flex items-center justify-between">
+            <div className="flex items-center gap-4 text-sm font-semibold text-gray-800">
+              <div className="flex items-center justify-center w-14 h-10 bg-gradient-to-r from-orange-400 to-red-500 text-white rounded-md text-[10px] leading-tight text-center shadow-sm uppercase tracking-wide">
+                Summer<br />Sale
+              </div>
+              <span>Get at ₹{offer.price.toLocaleString()}</span>
             </div>
-            <span>Get at ₹{offer.price.toLocaleString()}</span>
+            <Badge className="bg-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
+              {offer.discount}
+            </Badge>
           </div>
-          <Badge className="bg-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
-            {offer.discount}
-          </Badge>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
     </>
   );
 };
