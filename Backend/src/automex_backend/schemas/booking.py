@@ -99,3 +99,8 @@ class DailyWorkMediaUpload(BaseModel):
     """Schema for uploading daily work media"""
     file_urls: List[str] = Field(..., min_items=1)
 
+
+class BookingStatusUpdateResponse(BookingRead):
+    """Schema for booking status update response with email notification info"""
+    user_email: Optional[str] = None
+    email_sent: bool = False

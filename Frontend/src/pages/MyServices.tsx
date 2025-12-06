@@ -7,10 +7,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/componen
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, Car, Clock, CheckCircle2, XCircle, Loader2, AlertCircle, MapPin, Wrench, Search } from "lucide-react";
+import { Calendar, Car, Clock, CheckCircle2, XCircle, Loader2, AlertCircle, MapPin, Wrench, Search, Mail } from "lucide-react";
 import { getUserBookings, cancelBooking, updateBookingStatus, type Booking, BookingStatus } from "@/services/bookingService";
 import { getBookingCosts } from "@/services/costService";
 import { useToast } from "@/hooks/use-toast";
+import { toast as sonnerToast } from "sonner";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -144,11 +145,24 @@ const MyServices = () => {
     try {
       setUpdatingStatusId(bookingId);
       const updatedBooking = await updateBookingStatus(bookingId, newStatus);
-      toast({
-        title: "Status Updated Successfully",
-        description: `Booking #${bookingId} moved to ${getStatusLabel(newStatus)}`,
-        duration: 3000,
-      });
+
+      // Show success notification
+      if (updatedBooking.user_email && updatedBooking.email_sent) {
+        sonnerToast.success("Status Updated Successfully", {
+          description: `Notification sent to ${updatedBooking.user_email}`,
+          duration: 5000,
+          icon: <Mail className="h-4 w-4" />,
+          position: "top-right",
+          className: "bg-green-50 border-green-200",
+        });
+      } else {
+        toast({
+          title: "Status Updated Successfully",
+          description: `Booking #${bookingId} moved to ${getStatusLabel(newStatus)}`,
+          duration: 3000,
+        });
+      }
+
       await loadBookings();
     } catch (error) {
       console.error("Failed to update booking status:", error);

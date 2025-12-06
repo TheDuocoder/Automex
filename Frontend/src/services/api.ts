@@ -402,3 +402,21 @@ export const pickupRequestService = {
     method: 'DELETE',
   }),
 };
+
+// --- Users API ---
+export interface User {
+  id: number;
+  email: string;
+  full_name?: string;
+  phone_number?: string;
+  role?: {
+    id: number;
+    name: string;
+    description?: string;
+  };
+  profile_picture_url?: string;
+}
+
+export const userService = {
+  getAll: () => apiCall<User[]>('/api/v1/auth/users'),
+};

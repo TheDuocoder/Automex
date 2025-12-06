@@ -3,7 +3,7 @@ Authentication routes using FastAPI Users
 """
 import os
 import traceback
-from typing import Optional
+from typing import Optional, List
 from fastapi import APIRouter, Depends, Request, HTTPException, status, File, UploadFile
 from pydantic import BaseModel, EmailStr
 from fastapi_users import FastAPIUsers, BaseUserManager, IntegerIDMixin
@@ -449,6 +449,41 @@ async def get_current_user_custom(
     """
     # The dependency already returns UserRead, so just return it directly
     return user
+
+
+
+@users_router.get(
+    "/",
+    response_model=List[UserRead],
+    summary="Get All Users (Admin Only)",
+    description="Get a list of all users. Restricted to Admins and Superusers.",
+    tags=["Authentication"],
+)
+async def get_all_users(
+    current_user: User = Depends(get_current_user_with_role),
+    session: AsyncSession = Depends(get_async_session),
+):
+    """
+    Get all users. Only accessible by Admins/Superusers.
+    """
+    # Check permissions
+    is_admin = current_user.is_superuser
+    if current_user.role and current_user.role.name in ["admin", "super"]:
+        is_admin = True
+    
+    if not is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You do not have permission to view all users"
+        )
+    
+    # Fetch all users with roles
+    stmt = select(User).options(selectinload(User.role)).order_by(User.id)
+    result = await session.execute(stmt)
+    users = result.scalars().all()
+    
+    # Convert to UserRead (Pydantic will handle this if we return ORM objects with relation loaded)
+    return users
 
 # Add other user management endpoints if needed
 # For now, we only override the /me endpoint
