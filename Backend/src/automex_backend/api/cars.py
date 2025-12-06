@@ -14,15 +14,47 @@ from automex_backend.api.auth import current_active_user
 
 router = APIRouter()
 
+from sqlalchemy.orm import selectinload
+
+async def is_admin_or_super_admin(user: User, session: AsyncSession) -> bool:
+    """
+    Check if user has Admin or Super Admin role
+    Returns True if user is superuser OR has role 'admin' or 'super'
+    """
+    # Check if user is superuser
+    if user.is_superuser:
+        return True
+    
+    # Check role name
+    if hasattr(user, 'role_id') and user.role_id:
+        from automex_backend.models.role import Role
+        role_stmt = select(Role).where(Role.id == user.role_id)
+        role_result = await session.execute(role_stmt)
+        role = role_result.scalar_one_or_none()
+        if role and role.name in ["admin", "super"]:
+            return True
+    
+    return False
+
 @router.get("/", response_model=List[CarRead])
 async def get_cars(
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(current_active_user)
 ):
     """
-    Get list of user's cars
+    Get list of cars.
+    Admins can see all cars; users see only their own.
     """
-    query = select(Car).where(Car.user_id == user.id)
+    is_admin = await is_admin_or_super_admin(user, session)
+    
+    query = select(Car)
+    
+    if not is_admin:
+        query = query.where(Car.user_id == user.id)
+        
+    # Always load user relationship as it is required by schema
+    query = query.options(selectinload(Car.user).selectinload(User.role))
+    
     result = await session.execute(query)
     return result.scalars().all()
 
@@ -64,7 +96,10 @@ async def create_car(
     )
     session.add(car)
     await session.commit()
-    await session.refresh(car)
+    await session.refresh(car, ['user'])
+    # Also load the nested role for the user, just in case
+    if car.user:
+        await session.refresh(car.user, ['role'])
     return car
 
 @router.get("/{car_id}", response_model=CarRead)
@@ -76,7 +111,15 @@ async def get_car(
     """
     Get a specific car
     """
-    query = select(Car).where(Car.id == car_id, Car.user_id == user.id)
+    is_admin = await is_admin_or_super_admin(user, session)
+    
+    query = select(Car).where(Car.id == car_id)
+    if not is_admin:
+        query = query.where(Car.user_id == user.id)
+    else:
+        # Admin view, load user relation
+        query = query.options(selectinload(Car.user).selectinload(User.role))
+        
     result = await session.execute(query)
     car = result.scalar_one_or_none()
     
@@ -99,7 +142,12 @@ async def update_car(
     """
     Update a car
     """
-    query = select(Car).where(Car.id == car_id, Car.user_id == user.id)
+    is_admin = await is_admin_or_super_admin(user, session)
+    
+    query = select(Car).where(Car.id == car_id)
+    if not is_admin:
+        query = query.where(Car.user_id == user.id)
+        
     result = await session.execute(query)
     car = result.scalar_one_or_none()
     
@@ -108,6 +156,8 @@ async def update_car(
     
     # Check if registration number is being updated and if it already exists
     if registration_number and registration_number != car.registration_number:
+        # Check globally for registration number uniqueness
+        # We don't exclude other users' cars here because reg number must be unique globally
         existing_car = await session.execute(
             select(Car).where(
                 Car.registration_number == registration_number,
@@ -138,13 +188,23 @@ async def update_car(
         if car.image_url:
             await s3_service.delete_file(car.image_url)
         
-        # Upload new image with user-specific folder
-        username = user.email
+        # Upload new image with user-specific folder (use car owner's email)
+        # Determine username for folder
+        if is_admin:
+            # If admin, fetch car owner to get email
+            # We need to load user
+            await session.refresh(car, ['user'])
+            username = car.user.email
+        else:
+            username = user.email
+            
         image_url = await s3_service.upload_file(image, username=username)
         car.image_url = image_url
     
     await session.commit()
-    await session.refresh(car)
+    await session.refresh(car, ['user'])
+    if car.user:
+        await session.refresh(car.user, ['role'])
     return car
 
 @router.delete("/{car_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -156,7 +216,12 @@ async def delete_car(
     """
     Delete a car and its associated S3 image
     """
-    query = select(Car).where(Car.id == car_id, Car.user_id == user.id)
+    is_admin = await is_admin_or_super_admin(user, session)
+    
+    query = select(Car).where(Car.id == car_id)
+    if not is_admin:
+        query = query.where(Car.user_id == user.id)
+        
     result = await session.execute(query)
     car = result.scalar_one_or_none()
     

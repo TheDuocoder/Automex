@@ -204,6 +204,7 @@ export interface Car {
   year: number;
   registration_number: string;
   image_url?: string;
+  user?: any; // For Admin view
 }
 
 export interface CarCreate {
@@ -321,6 +322,7 @@ export interface ServiceHistory {
   service_date: string;
   description?: string;
   status: string;
+  car?: Car; // For Admin view
 }
 
 export interface ServiceHistoryCreate {
@@ -332,7 +334,10 @@ export interface ServiceHistoryCreate {
 }
 
 export const serviceHistoryService = {
-  getAll: (carId: number) => apiCall<ServiceHistory[]>(`/api/v1/service-history/?car_id=${carId}`),
+  getAll: (carId?: number) => {
+    const query = carId ? `?car_id=${carId}` : '';
+    return apiCall<ServiceHistory[]>(`/api/v1/service-history/${query}`);
+  },
   create: (data: ServiceHistoryCreate) => apiCall<ServiceHistory>('/api/v1/service-history/', {
     method: 'POST',
     body: JSON.stringify(data),
@@ -358,6 +363,8 @@ export interface PickUpRequest {
   scheduled_date: string;
   status: string;
   admin_comment?: string;
+  car?: Car; // For Admin view
+  user?: any; // For Admin view
 }
 
 export interface PickUpRequestCreate {

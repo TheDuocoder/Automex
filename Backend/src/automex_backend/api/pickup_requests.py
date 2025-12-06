@@ -37,15 +37,32 @@ async def check_is_admin_or_super(user: User, session: AsyncSession) -> bool:
     return False
 
 
+from sqlalchemy.orm import selectinload
+
 @router.get("/", response_model=List[PickUpRequestRead])
 async def get_pickup_requests(
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(current_active_user)
 ):
     """
-    Get list of user's pickup requests
+    Get list of pickup requests.
+    - Admins: View all requests with user and car details
+    - Users: View only their own requests
     """
-    query = select(PickUpRequest).where(PickUpRequest.user_id == user.id).order_by(PickUpRequest.scheduled_date.desc())
+    is_admin = await check_is_admin_or_super(user, session)
+    
+    query = select(PickUpRequest)
+    
+    if not is_admin:
+        query = query.where(PickUpRequest.user_id == user.id)
+
+    # Always load relations required by schema
+    query = query.options(
+        selectinload(PickUpRequest.car).selectinload(Car.user).selectinload(User.role),
+        selectinload(PickUpRequest.user).selectinload(User.role)
+    )
+        
+    query = query.order_by(PickUpRequest.scheduled_date.desc())
     result = await session.execute(query)
     return result.scalars().all()
 
@@ -60,7 +77,10 @@ async def get_pickup_request(
     Get a single pickup request by ID
     Users can only view their own requests, admins can view all
     """
-    query = select(PickUpRequest).where(PickUpRequest.id == pickup_id)
+    query = select(PickUpRequest).where(PickUpRequest.id == pickup_id).options(
+        selectinload(PickUpRequest.car).selectinload(Car.user).selectinload(User.role),
+        selectinload(PickUpRequest.user).selectinload(User.role)
+    )
     result = await session.execute(query)
     request = result.scalar_one_or_none()
     
@@ -95,7 +115,14 @@ async def create_pickup_request(
     request = PickUpRequest(**request_data.model_dump(), user_id=user.id)
     session.add(request)
     await session.commit()
-    await session.refresh(request)
+    await session.refresh(request, ['car', 'user'])
+    
+    # Load nested relationships
+    await session.refresh(request.car, ['user'])
+    if request.car.user:
+        await session.refresh(request.car.user, ['role'])
+    await session.refresh(request.user, ['role'])
+    
     return request
 
 
@@ -136,12 +163,11 @@ async def update_pickup_request(
     allowed_updates = {}
     
     if is_admin:
-        # Admin can update status and comment
-        if 'status' in update_data: allowed_updates['status'] = update_data['status']
-        if 'admin_comment' in update_data: allowed_updates['admin_comment'] = update_data['admin_comment']
+        # Admin can update ALL fields (status, comment, and details)
+        allowed_updates.update(update_data)
         
-    if is_owner:
-        # Owner can update details but NOT status/comment
+    elif is_owner:
+        # Owner can update details but NOT status/admin_comment
         # Fields: address, location, latitude, longitude, scheduled_date, car_id
         owner_fields = ['address', 'location', 'latitude', 'longitude', 'scheduled_date', 'car_id']
         for field in owner_fields:
@@ -153,7 +179,14 @@ async def update_pickup_request(
         setattr(request, field, value)
     
     await session.commit()
-    await session.refresh(request)
+    await session.refresh(request, ['car', 'user'])
+    
+    # Load nested relationships
+    await session.refresh(request.car, ['user'])
+    if request.car.user:
+        await session.refresh(request.car.user, ['role'])
+    await session.refresh(request.user, ['role'])
+    
     return request
 
 

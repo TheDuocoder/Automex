@@ -16,6 +16,7 @@ import {
 import { Car as CarIcon, Plus, Trash2, Loader2, Upload, X, Pencil, Calendar, Wrench, FileText } from "lucide-react";
 import { carService, Car, CarCreate } from "@/services/api";
 import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
 
 // Component to handle image loading with fallback
 const CarImageWithFallback = ({ src, alt }: { src: string; alt: string }) => {
@@ -42,6 +43,9 @@ const CarImageWithFallback = ({ src, alt }: { src: string; alt: string }) => {
 
 const MyCars = () => {
     const navigate = useNavigate();
+    const { user } = useAuth();
+    const isAdmin = user?.role?.name === 'admin' || user?.role?.name === 'super' || user?.is_superuser;
+
     const [cars, setCars] = useState<Car[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isAddOpen, setIsAddOpen] = useState(false);
@@ -456,6 +460,12 @@ const MyCars = () => {
                                 <div>
                                     <h3 className="font-bold text-2xl text-gray-900 tracking-tight">{car.make} {car.model}</h3>
                                     <p className="text-base text-gray-500 font-medium mt-1">{car.year}</p>
+                                    {isAdmin && car.user && (
+                                        <div className="flex items-center gap-2 mt-1.5 p-1 px-2 bg-blue-50 rounded-md border border-blue-100 inline-block">
+                                            <span className="text-xs text-blue-500 font-bold uppercase tracking-wider">Owner</span>
+                                            <span className="text-sm text-blue-700 font-medium">{car.user.full_name || car.user.email}</span>
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* Number Plate Badge - Center */}

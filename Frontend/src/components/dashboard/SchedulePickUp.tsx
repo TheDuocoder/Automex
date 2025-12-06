@@ -292,7 +292,7 @@ const SchedulePickUp = () => {
                                 <div
                                     key={req.id}
                                     className="border border-gray-100 rounded-[18px] p-6 shadow-sm cursor-pointer hover:shadow-md transition-all duration-200"
-                                    style={{ 
+                                    style={{
                                         backgroundColor: req.status?.toLowerCase() === 'approved' ? '#F0FF00' : req.status?.toLowerCase() === 'cancelled' ? 'red' : req.status?.toLowerCase() === 'completed' ? '#7ED957' : '#EFDFBB',
                                         color: 'black'
                                     }}
@@ -316,7 +316,18 @@ const SchedulePickUp = () => {
                                             })}
                                         </span>
                                     </div>
-                                    <h4 className="font-bold mb-3 text-lg" style={{ color: 'black' }}>{getCarName(req.car_id)}</h4>
+
+                                    {isAdmin && req.user && (
+                                        <div className="mb-3">
+                                            <span className="inline-flex items-center gap-1 text-xs font-medium text-blue-700 bg-blue-50 px-2.5 py-1 rounded-md border border-blue-100">
+                                                <span className="font-bold">Owner:</span> {req.user.full_name || req.user.email}
+                                            </span>
+                                        </div>
+                                    )}
+
+                                    <h4 className="font-bold mb-3 text-lg" style={{ color: 'black' }}>
+                                        {req.car ? `${req.car.make} ${req.car.model}` : getCarName(req.car_id)}
+                                    </h4>
                                     <div className="text-sm space-y-2" style={{ color: 'black' }}>
                                         {req.address && (
                                             <div className="flex items-start gap-2">

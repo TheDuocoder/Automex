@@ -15,7 +15,7 @@ class UserRead(schemas.BaseUser[int]):
     phone_number: Optional[str] = None
     profile_picture_url: Optional[str] = None
     role_id: int
-    role: RoleRead
+    role: Optional[RoleRead] = None
     
     model_config = ConfigDict(from_attributes=True)
 

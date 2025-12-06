@@ -18,9 +18,13 @@ class CarUpdate(BaseModel):
     registration_number: Optional[str] = None
     image_url: Optional[str] = None
 
+from automex_backend.schemas.user import UserRead
+
 class CarRead(CarBase):
     id: int
     user_id: int
+    user: Optional[UserRead] = None
 
     class Config:
         from_attributes = True
+
