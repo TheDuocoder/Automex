@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import WhatsAppFloat from "@/components/WhatsAppFloat";
 import Index from "./pages/Index";
 import ContactUs from "./pages/ContactUs";
 import Services from "./pages/Services";
@@ -25,6 +26,7 @@ const App = () => {
         <TooltipProvider>
           <Toaster />
           <Sonner />
+          <WhatsAppFloat />
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />

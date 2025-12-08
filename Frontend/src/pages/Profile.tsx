@@ -132,22 +132,29 @@ const Profile = () => {
         if (carsResponse.data) {
           setDashboardCars(carsResponse.data);
 
-          // Fetch Service History for all cars
-          // For dashboard, we'll just fetch history for the first car for now, 
-          // or we could fetch for all and aggregate. Let's fetch for the first car if available.
+          // Fetch Service History for ALL cars and combine them
           if (carsResponse.data.length > 0) {
             try {
-              const firstCarId = carsResponse.data[0].id;
-              const historyResponse = await serviceHistoryService.getAll(firstCarId);
-              if (historyResponse.error) {
-                console.error("Error fetching service history:", historyResponse.error);
-                // Don't show error for empty history, it's normal
-                if (historyResponse.status !== 404) {
-                  console.warn("Service history fetch failed:", historyResponse.error);
+              const allHistoryPromises = carsResponse.data.map(car => 
+                serviceHistoryService.getAll(car.id)
+              );
+              
+              const allHistoryResponses = await Promise.all(allHistoryPromises);
+              
+              // Combine all service histories from all cars
+              const combinedHistory: ServiceHistoryModel[] = [];
+              allHistoryResponses.forEach(historyResponse => {
+                if (!historyResponse.error && historyResponse.data) {
+                  combinedHistory.push(...historyResponse.data);
                 }
-              } else if (historyResponse.data) {
-                setDashboardHistory(historyResponse.data);
-              }
+              });
+              
+              // Sort by service date (most recent first)
+              combinedHistory.sort((a, b) => 
+                new Date(b.service_date).getTime() - new Date(a.service_date).getTime()
+              );
+              
+              setDashboardHistory(combinedHistory);
             } catch (historyError) {
               console.error("Error fetching service history:", historyError);
               // Don't show error toast for service history, it's optional

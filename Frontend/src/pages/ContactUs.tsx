@@ -20,9 +20,37 @@ const ContactUs = () => {
     message: "",
   });
   const [focusedField, setFocusedField] = useState<string | null>(null);
+  const [phoneError, setPhoneError] = useState<string>("");
+
+  // Indian phone number validation regex
+  const phoneRegex = /^(6[0-9]{3}|7[0-9]{3}|8[0-9]{3}|9[0-9]{3})[0-9]{6}$/;
+
+  const validatePhone = (phone: string): boolean => {
+    if (!phone) {
+      setPhoneError("Phone number is required");
+      return false;
+    }
+    if (!phoneRegex.test(phone)) {
+      setPhoneError("Please enter a valid 10-digit Indian mobile number");
+      return false;
+    }
+    setPhoneError("");
+    return true;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate phone number before submission
+    if (!validatePhone(formData.phone)) {
+      toast({
+        title: "Invalid Phone Number",
+        description: "Please enter a valid 10-digit Indian mobile number starting with 6, 7, 8, or 9.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     // Handle form submission here
     toast({
       title: "Message Sent!",
@@ -36,15 +64,70 @@ const ContactUs = () => {
       subject: "",
       message: "",
     });
+    setPhoneError("");
   };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    
+    // For phone field, only allow numbers and limit to 10 digits
+    if (name === "phone") {
+      const numericValue = value.replace(/\D/g, "").slice(0, 10);
+      
+      // If there's a first digit, it must be 6, 7, 8, or 9
+      if (numericValue.length > 0 && !['6', '7', '8', '9'].includes(numericValue[0])) {
+        // Don't update the field if first digit is invalid
+        if (phoneError !== "Phone number must start with 6, 7, 8, or 9") {
+          setPhoneError("Phone number must start with 6, 7, 8, or 9");
+        }
+        return;
+      }
+      
+      setFormData({
+        ...formData,
+        [name]: numericValue,
+      });
+      // Clear error when user starts typing valid numbers
+      if (phoneError && numericValue.length < 10) {
+        setPhoneError("");
+      }
+      // Validate if 10 digits are entered
+      if (numericValue.length === 10) {
+        validatePhone(numericValue);
+      }
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
+  };
+
+  const handlePhoneInput = (e: React.FormEvent<HTMLInputElement>) => {
+    const input = e.currentTarget;
+    const value = input.value.replace(/\D/g, "");
+    
+    // Prevent entering anything that doesn't start with 6, 7, 8, or 9
+    if (value.length > 0 && !['6', '7', '8', '9'].includes(value[0])) {
+      e.preventDefault();
+      input.value = formData.phone;
+      return;
+    }
+    
+    // Limit to 10 digits
+    if (value.length > 10) {
+      e.preventDefault();
+      input.value = value.slice(0, 10);
+    }
+  };
+
+  const handlePhoneBlur = () => {
+    if (formData.phone) {
+      validatePhone(formData.phone);
+    }
+    setFocusedField(null);
   };
 
   return (
@@ -1434,55 +1517,66 @@ const ContactUs = () => {
       </section>
 
       {/* Contact Section */}
-      <section className="py-16 sm:py-20 md:py-24 bg-white">
+      <section className="py-16 sm:py-20 md:py-24 bg-gradient-to-b from-gray-50 to-white">
         <div className="container mx-auto px-4 sm:px-6 md:px-8 max-w-[1400px]">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-6 sm:mb-8 md:mb-10 lg:mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-12">
             {/* Contact Information Cards */}
             {/* Phone Card */}
             <Card 
-              className="sm:col-span-2 lg:col-span-1 transition-all duration-300 cursor-pointer group border-0 bg-white"
+              className="transition-all duration-500 cursor-pointer group border-0 bg-white hover:bg-gray-50/50"
               style={{
-                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
-                borderRadius: '14px'
+                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04)',
+                borderRadius: '20px',
+                transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.boxShadow = '0 6px 16px rgba(0, 0, 0, 0.08)';
+                e.currentTarget.style.transform = 'translateY(-8px)';
+                e.currentTarget.style.boxShadow = '0 12px 40px rgba(238, 90, 111, 0.15), 0 4px 16px rgba(0, 0, 0, 0.08)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.04)';
+                e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04)';
               }}
             >
-              <CardContent className="p-10">
+              <CardContent className="p-8">
                 <div className="flex flex-col items-start">
                   <div 
-                    className="w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-105"
+                    className="w-16 h-16 rounded-full flex items-center justify-center transition-all duration-500 group-hover:scale-110 relative"
                     style={{
-                      background: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 50%, #c44569 100%)',
-                      boxShadow: '0 2px 12px rgba(238, 90, 111, 0.2)'
+                      background: 'linear-gradient(135deg, #E53935 0%, #D81B60 50%, #8E24AA 100%)',
+                      boxShadow: '0 8px 24px rgba(229, 57, 53, 0.25), 0 0 0 0px rgba(229, 57, 53, 0.1)',
                     }}
                   >
-                    <Phone className="w-6 h-6 text-white" strokeWidth={1.5} />
+                    {/* Glow effect */}
+                    <div 
+                      className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                      style={{
+                        background: 'linear-gradient(135deg, #E53935 0%, #D81B60 50%, #8E24AA 100%)',
+                        filter: 'blur(12px)',
+                        transform: 'scale(1.2)',
+                        zIndex: -1
+                      }}
+                    />
+                    <Phone className="w-7 h-7 text-white relative z-10" strokeWidth={1.75} />
                   </div>
-                  <h3 className="font-bold mt-6 text-gray-900" style={{ fontSize: '18px', letterSpacing: '-0.01em' }}>
+                  <h3 className="font-bold mt-6 text-gray-900" style={{ fontSize: '20px', letterSpacing: '-0.02em', fontWeight: 700 }}>
                     Phone
                   </h3>
-                  <p className="mt-2 text-gray-500" style={{ fontSize: '14px', lineHeight: '1.6' }}>
+                  <p className="mt-2 text-gray-500" style={{ fontSize: '14px', lineHeight: '1.6', fontWeight: 400 }}>
                     Call us for immediate assistance
                   </p>
-                  <div className="space-y-2 mt-6">
+                  <div className="space-y-2.5 mt-6">
                     <a 
                       href="tel:+918249614004" 
-                      className="font-semibold block break-all transition-colors hover:underline text-gray-700 hover:text-red-600" 
-                      style={{ fontSize: '15px' }}
+                      className="font-semibold block transition-all duration-300 hover:translate-x-1 text-gray-900 hover:text-[#E53935]" 
+                      style={{ fontSize: '16px', fontWeight: 600, letterSpacing: '-0.01em' }}
                     >
                       +91 8249614004
                     </a>
                     <a 
                       href="tel:+919776433334" 
-                      className="font-semibold block break-all transition-colors hover:underline text-gray-700 hover:text-red-600" 
-                      style={{ fontSize: '15px' }}
+                      className="font-semibold block transition-all duration-300 hover:translate-x-1 text-gray-900 hover:text-[#E53935]" 
+                      style={{ fontSize: '16px', fontWeight: 600, letterSpacing: '-0.01em' }}
                     >
                       +91 9776433334
                     </a>
@@ -1493,41 +1587,52 @@ const ContactUs = () => {
 
             {/* Email Card */}
             <Card 
-              className="transition-all duration-300 cursor-pointer group border-0 bg-white"
+              className="transition-all duration-500 cursor-pointer group border-0 bg-white hover:bg-gray-50/50"
               style={{
-                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
-                borderRadius: '14px'
+                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04)',
+                borderRadius: '20px',
+                transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.boxShadow = '0 6px 16px rgba(0, 0, 0, 0.08)';
+                e.currentTarget.style.transform = 'translateY(-8px)';
+                e.currentTarget.style.boxShadow = '0 12px 40px rgba(238, 90, 111, 0.15), 0 4px 16px rgba(0, 0, 0, 0.08)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.04)';
+                e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04)';
               }}
             >
-              <CardContent className="p-10">
+              <CardContent className="p-8">
                 <div className="flex flex-col items-start">
                   <div 
-                    className="w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-105"
+                    className="w-16 h-16 rounded-full flex items-center justify-center transition-all duration-500 group-hover:scale-110 relative"
                     style={{
-                      background: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 50%, #c44569 100%)',
-                      boxShadow: '0 2px 12px rgba(238, 90, 111, 0.2)'
+                      background: 'linear-gradient(135deg, #E53935 0%, #D81B60 50%, #8E24AA 100%)',
+                      boxShadow: '0 8px 24px rgba(229, 57, 53, 0.25), 0 0 0 0px rgba(229, 57, 53, 0.1)',
                     }}
                   >
-                    <Mail className="w-6 h-6 text-white" strokeWidth={1.5} />
+                    {/* Glow effect */}
+                    <div 
+                      className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                      style={{
+                        background: 'linear-gradient(135deg, #E53935 0%, #D81B60 50%, #8E24AA 100%)',
+                        filter: 'blur(12px)',
+                        transform: 'scale(1.2)',
+                        zIndex: -1
+                      }}
+                    />
+                    <Mail className="w-7 h-7 text-white relative z-10" strokeWidth={1.75} />
                   </div>
-                  <h3 className="font-bold mt-6 text-gray-900" style={{ fontSize: '18px', letterSpacing: '-0.01em' }}>
+                  <h3 className="font-bold mt-6 text-gray-900" style={{ fontSize: '20px', letterSpacing: '-0.02em', fontWeight: 700 }}>
                     Email
                   </h3>
-                  <p className="mt-2 text-gray-500" style={{ fontSize: '14px', lineHeight: '1.6' }}>
+                  <p className="mt-2 text-gray-500" style={{ fontSize: '14px', lineHeight: '1.6', fontWeight: 400 }}>
                     Send us an email anytime
                   </p>
                   <a 
                     href="mailto:sales@automex.in" 
-                    className="font-semibold break-all transition-colors hover:underline mt-6 text-gray-700 hover:text-red-600" 
-                    style={{ fontSize: '15px' }}
+                    className="font-semibold transition-all duration-300 hover:translate-x-1 mt-6 text-gray-900 hover:text-[#E53935] break-all" 
+                    style={{ fontSize: '16px', fontWeight: 600, letterSpacing: '-0.01em' }}
                   >
                     sales@automex.in
                   </a>
@@ -1537,44 +1642,55 @@ const ContactUs = () => {
 
             {/* Location Card */}
             <Card 
-              className="transition-all duration-300 cursor-pointer group border-0 bg-white"
+              className="transition-all duration-500 cursor-pointer group border-0 bg-white hover:bg-gray-50/50"
               style={{
-                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
-                borderRadius: '14px'
+                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04)',
+                borderRadius: '20px',
+                transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.boxShadow = '0 6px 16px rgba(0, 0, 0, 0.08)';
+                e.currentTarget.style.transform = 'translateY(-8px)';
+                e.currentTarget.style.boxShadow = '0 12px 40px rgba(238, 90, 111, 0.15), 0 4px 16px rgba(0, 0, 0, 0.08)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.04)';
+                e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04)';
               }}
             >
-              <CardContent className="p-10">
+              <CardContent className="p-8">
                 <div className="flex flex-col items-start">
                   <div 
-                    className="w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-105"
+                    className="w-16 h-16 rounded-full flex items-center justify-center transition-all duration-500 group-hover:scale-110 relative"
                     style={{
-                      background: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 50%, #c44569 100%)',
-                      boxShadow: '0 2px 12px rgba(238, 90, 111, 0.2)'
+                      background: 'linear-gradient(135deg, #E53935 0%, #D81B60 50%, #8E24AA 100%)',
+                      boxShadow: '0 8px 24px rgba(229, 57, 53, 0.25), 0 0 0 0px rgba(229, 57, 53, 0.1)',
                     }}
                   >
-                    <MapPin className="w-6 h-6 text-white" strokeWidth={1.5} />
+                    {/* Glow effect */}
+                    <div 
+                      className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                      style={{
+                        background: 'linear-gradient(135deg, #E53935 0%, #D81B60 50%, #8E24AA 100%)',
+                        filter: 'blur(12px)',
+                        transform: 'scale(1.2)',
+                        zIndex: -1
+                      }}
+                    />
+                    <MapPin className="w-7 h-7 text-white relative z-10" strokeWidth={1.75} />
                   </div>
-                  <h3 className="font-bold mt-6 text-gray-900" style={{ fontSize: '18px', letterSpacing: '-0.01em' }}>
+                  <h3 className="font-bold mt-6 text-gray-900" style={{ fontSize: '20px', letterSpacing: '-0.02em', fontWeight: 700 }}>
                     Location
                   </h3>
-                  <p className="mt-2 text-gray-500" style={{ fontSize: '14px', lineHeight: '1.6' }}>
+                  <p className="mt-2 text-gray-500" style={{ fontSize: '14px', lineHeight: '1.6', fontWeight: 400 }}>
                     Visit our main office
                   </p>
                   <div className="mt-6">
-                    <p className="font-semibold leading-relaxed text-gray-700" style={{ fontSize: '15px' }}>
+                    <p className="font-semibold leading-relaxed text-gray-900" style={{ fontSize: '16px', fontWeight: 600, letterSpacing: '-0.01em', lineHeight: '1.7' }}>
                       AUTOMEX,<br />
-                      Hanspal , Balianta market road<br />
+                      Hanspal, Balianta market road<br />
                       Bhubaneswar, Odisha - 752101
                     </p>
-                    <p className="mt-3 text-gray-500" style={{ fontSize: '14px' }}>
+                    <p className="mt-3 text-gray-500" style={{ fontSize: '14px', fontWeight: 400 }}>
                       Contact: Tapas Parida
                     </p>
                   </div>
@@ -1584,176 +1700,182 @@ const ContactUs = () => {
           </div>
 
           {/* Contact Form and Additional Info */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 md:gap-8 lg:gap-10 xl:gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12">
             {/* Contact Form */}
-            <div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-8 text-gray-900" style={{ fontSize: '2rem', letterSpacing: '-0.02em' }}>
+            <div 
+              className="p-10 rounded-3xl"
+              style={{
+                background: 'linear-gradient(to bottom, #ffffff, #fafafa)',
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04)',
+                borderRadius: '24px'
+              }}
+            >
+              <h2 className="text-3xl sm:text-4xl font-bold mb-3 text-gray-900" style={{ fontSize: '2.25rem', letterSpacing: '-0.03em', fontWeight: 700 }}>
                 Send Us a Message
               </h2>
-              <form onSubmit={handleSubmit} className="space-y-5">
+              <p className="text-gray-500 mb-10" style={{ fontSize: '15px', fontWeight: 500 }}>
+                We'll get back to you within 24 hours
+              </p>
+              <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="relative">
-                  <label 
-                    className={`absolute left-3 transition-all duration-300 pointer-events-none ${
-                      focusedField === 'name' || formData.name 
-                        ? 'top-1 text-xs text-gray-600' 
-                        : 'top-1/2 -translate-y-1/2 text-sm text-gray-400'
-                    }`}
-                    htmlFor="name"
-                  >
-                    Full Name *
-                  </label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <div className="relative group">
+                    <User 
+                      className="absolute left-5 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-300" 
+                      style={{ color: focusedField === 'name' ? '#E53935' : '#9CA3AF' }}
+                    />
                     <Input
                       id="name"
                       name="name"
                       type="text"
-                      placeholder=""
+                      placeholder="Full Name *"
                       value={formData.name}
                       onChange={handleChange}
                       onFocus={() => setFocusedField('name')}
                       onBlur={() => setFocusedField(null)}
                       required
-                      className="w-full pl-10 pr-4 py-3.5 text-base bg-white transition-all duration-300 border"
+                      className="w-full pl-14 pr-5 py-4 text-base bg-white transition-all duration-300 border placeholder:text-gray-400 placeholder:font-medium"
                       style={{
-                        borderWidth: '1px',
-                        borderColor: focusedField === 'name' ? '#e5e5e5' : '#e8e8e8',
-                        borderRadius: '10px',
-                        boxShadow: focusedField === 'name' ? '0 0 0 3px rgba(0, 0, 0, 0.02)' : 'none'
+                        borderWidth: '1.5px',
+                        borderColor: focusedField === 'name' ? '#E53935' : '#E5E7EB',
+                        borderRadius: '16px',
+                        boxShadow: focusedField === 'name' 
+                          ? '0 0 0 4px rgba(229, 57, 53, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05)' 
+                          : '0 2px 8px rgba(0, 0, 0, 0.04)',
+                        fontSize: '15px',
+                        fontWeight: 500
                       }}
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div className="relative">
-                    <label 
-                      className={`absolute left-3 transition-all duration-300 pointer-events-none ${
-                        focusedField === 'email' || formData.email 
-                          ? 'top-1 text-xs text-gray-600' 
-                          : 'top-1/2 -translate-y-1/2 text-sm text-gray-400'
-                      }`}
-                      htmlFor="email"
-                    >
-                      Email Address *
-                    </label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <div className="relative group">
+                      <Mail 
+                        className="absolute left-5 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-300" 
+                        style={{ color: focusedField === 'email' ? '#E53935' : '#9CA3AF' }}
+                      />
                       <Input
                         id="email"
                         name="email"
                         type="email"
-                        placeholder=""
+                        placeholder="Email Address *"
                         value={formData.email}
                         onChange={handleChange}
                         onFocus={() => setFocusedField('email')}
                         onBlur={() => setFocusedField(null)}
                         required
-                        className="w-full pl-10 pr-4 py-3.5 text-base bg-white transition-all duration-300 border"
+                        className="w-full pl-14 pr-5 py-4 text-base bg-white transition-all duration-300 border placeholder:text-gray-400 placeholder:font-medium"
                         style={{
-                          borderWidth: '1px',
-                          borderColor: focusedField === 'email' ? '#e5e5e5' : '#e8e8e8',
-                          borderRadius: '10px',
-                          boxShadow: focusedField === 'email' ? '0 0 0 3px rgba(0, 0, 0, 0.02)' : 'none'
+                          borderWidth: '1.5px',
+                          borderColor: focusedField === 'email' ? '#E53935' : '#E5E7EB',
+                          borderRadius: '16px',
+                          boxShadow: focusedField === 'email' 
+                            ? '0 0 0 4px rgba(229, 57, 53, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05)' 
+                            : '0 2px 8px rgba(0, 0, 0, 0.04)',
+                          fontSize: '15px',
+                          fontWeight: 500
                         }}
                       />
                     </div>
                   </div>
                   <div className="relative">
-                    <label 
-                      className={`absolute left-3 transition-all duration-300 pointer-events-none ${
-                        focusedField === 'phone' || formData.phone 
-                          ? 'top-1 text-xs text-gray-600' 
-                          : 'top-1/2 -translate-y-1/2 text-sm text-gray-400'
-                      }`}
-                      htmlFor="phone"
-                    >
-                      Phone Number *
-                    </label>
-                    <div className="relative">
-                      <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <div className="relative group">
+                      <Phone 
+                        className="absolute left-5 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-300" 
+                        style={{ color: phoneError ? '#EF4444' : focusedField === 'phone' ? '#E53935' : '#9CA3AF' }}
+                      />
                       <Input
                         id="phone"
                         name="phone"
                         type="tel"
-                        placeholder=""
+                        inputMode="numeric"
+                        placeholder="Phone Number *"
                         value={formData.phone}
                         onChange={handleChange}
+                        onInput={handlePhoneInput}
                         onFocus={() => setFocusedField('phone')}
-                        onBlur={() => setFocusedField(null)}
+                        onBlur={handlePhoneBlur}
                         required
-                        className="w-full pl-10 pr-4 py-3.5 text-base bg-white transition-all duration-300 border"
+                        maxLength={10}
+                        minLength={10}
+                        pattern="[6-9][0-9]{9}"
+                        title="Please enter a valid 10-digit Indian mobile number starting with 6, 7, 8, or 9"
+                        className="w-full pl-14 pr-5 py-4 text-base bg-white transition-all duration-300 border placeholder:text-gray-400 placeholder:font-medium"
                         style={{
-                          borderWidth: '1px',
-                          borderColor: focusedField === 'phone' ? '#e5e5e5' : '#e8e8e8',
-                          borderRadius: '10px',
-                          boxShadow: focusedField === 'phone' ? '0 0 0 3px rgba(0, 0, 0, 0.02)' : 'none'
+                          borderWidth: '1.5px',
+                          borderColor: phoneError ? '#EF4444' : focusedField === 'phone' ? '#E53935' : '#E5E7EB',
+                          borderRadius: '16px',
+                          boxShadow: phoneError
+                            ? '0 0 0 4px rgba(239, 68, 68, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05)'
+                            : focusedField === 'phone' 
+                              ? '0 0 0 4px rgba(229, 57, 53, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05)' 
+                              : '0 2px 8px rgba(0, 0, 0, 0.04)',
+                          fontSize: '15px',
+                          fontWeight: 500
                         }}
                       />
                     </div>
+                    {phoneError && (
+                      <p className="mt-2 text-sm font-medium" style={{ color: '#EF4444' }}>
+                        {phoneError}
+                      </p>
+                    )}
                   </div>
                 </div>
 
                 <div className="relative">
-                  <label 
-                    className={`absolute left-3 transition-all duration-300 pointer-events-none ${
-                      focusedField === 'subject' || formData.subject 
-                        ? 'top-1 text-xs text-gray-600' 
-                        : 'top-1/2 -translate-y-1/2 text-sm text-gray-400'
-                    }`}
-                    htmlFor="subject"
-                  >
-                    Subject *
-                  </label>
-                  <div className="relative">
-                    <MessageSquare className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <div className="relative group">
+                    <MessageSquare 
+                      className="absolute left-5 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-300" 
+                      style={{ color: focusedField === 'subject' ? '#E53935' : '#9CA3AF' }}
+                    />
                     <Input
                       id="subject"
                       name="subject"
                       type="text"
-                      placeholder=""
+                      placeholder="Subject *"
                       value={formData.subject}
                       onChange={handleChange}
                       onFocus={() => setFocusedField('subject')}
                       onBlur={() => setFocusedField(null)}
                       required
-                      className="w-full pl-10 pr-4 py-3.5 text-base bg-white transition-all duration-300 border"
+                      className="w-full pl-14 pr-5 py-4 text-base bg-white transition-all duration-300 border placeholder:text-gray-400 placeholder:font-medium"
                       style={{
-                        borderWidth: '1px',
-                        borderColor: focusedField === 'subject' ? '#e5e5e5' : '#e8e8e8',
-                        borderRadius: '10px',
-                        boxShadow: focusedField === 'subject' ? '0 0 0 3px rgba(0, 0, 0, 0.02)' : 'none'
+                        borderWidth: '1.5px',
+                        borderColor: focusedField === 'subject' ? '#E53935' : '#E5E7EB',
+                        borderRadius: '16px',
+                        boxShadow: focusedField === 'subject' 
+                          ? '0 0 0 4px rgba(229, 57, 53, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05)' 
+                          : '0 2px 8px rgba(0, 0, 0, 0.04)',
+                        fontSize: '15px',
+                        fontWeight: 500
                       }}
                     />
                   </div>
                 </div>
 
                 <div className="relative">
-                  <label 
-                    className={`absolute left-3 top-2 transition-all duration-300 pointer-events-none ${
-                      focusedField === 'message' || formData.message 
-                        ? 'text-xs text-gray-600' 
-                        : 'text-sm text-gray-400'
-                    }`}
-                    htmlFor="message"
-                  >
-                    Message *
-                  </label>
                   <Textarea
                     id="message"
                     name="message"
-                    placeholder=""
+                    placeholder="Message *"
                     value={formData.message}
                     onChange={handleChange}
                     onFocus={() => setFocusedField('message')}
                     onBlur={() => setFocusedField(null)}
                     required
-                    className="w-full min-h-[150px] text-base bg-white transition-all duration-300 resize-none pt-6 border"
+                    className="w-full min-h-[180px] text-base bg-white transition-all duration-300 resize-none p-5 border placeholder:text-gray-400 placeholder:font-medium"
                     style={{
-                      borderWidth: '1px',
-                      borderColor: focusedField === 'message' ? '#e5e5e5' : '#e8e8e8',
-                      borderRadius: '10px',
-                      boxShadow: focusedField === 'message' ? '0 0 0 3px rgba(0, 0, 0, 0.02)' : 'none'
+                      borderWidth: '1.5px',
+                      borderColor: focusedField === 'message' ? '#E53935' : '#E5E7EB',
+                      borderRadius: '16px',
+                      boxShadow: focusedField === 'message' 
+                        ? '0 0 0 4px rgba(229, 57, 53, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05)' 
+                        : '0 2px 8px rgba(0, 0, 0, 0.04)',
+                      fontSize: '15px',
+                      fontWeight: 500,
+                      lineHeight: '1.6'
                     }}
                   />
                 </div>
@@ -1761,102 +1883,152 @@ const ContactUs = () => {
                 <Button 
                   type="submit" 
                   size="lg" 
-                  className="w-full sm:w-auto text-base px-8 py-6 font-semibold transition-all duration-300 text-white border-0"
+                  className="w-full text-base px-8 py-6 font-bold transition-all duration-300 text-white border-0 group relative overflow-hidden"
                   style={{
-                    background: 'linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)',
-                    borderRadius: '10px',
-                    boxShadow: '0 2px 8px rgba(220, 38, 38, 0.2)',
-                    letterSpacing: '-0.01em'
+                    background: 'linear-gradient(135deg, #E84C3D 0%, #CD0000 100%)',
+                    borderRadius: '16px',
+                    boxShadow: '0 8px 24px rgba(232, 76, 61, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.1) inset',
+                    letterSpacing: '-0.01em',
+                    fontSize: '16px',
+                    fontWeight: 700
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = 'translateY(-2px)';
-                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(220, 38, 38, 0.3)';
+                    e.currentTarget.style.boxShadow = '0 12px 32px rgba(232, 76, 61, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.1) inset';
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(220, 38, 38, 0.2)';
+                    e.currentTarget.style.boxShadow = '0 8px 24px rgba(232, 76, 61, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.1) inset';
                   }}
                 >
-                  <Send className="w-4 h-4 mr-2" />
-                  Send Message
+                  <div className="relative z-10 flex items-center justify-center gap-3">
+                    <Send className="w-5 h-5" />
+                    <span>Send Message</span>
+                  </div>
+                  {/* Shine effect on hover */}
+                  <div 
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    style={{
+                      background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent)',
+                      transform: 'translateX(-100%)',
+                      animation: 'shine 1.5s infinite'
+                    }}
+                  />
                 </Button>
               </form>
             </div>
 
             {/* Additional Information */}
             <div 
-              className="p-8 sm:p-10 rounded-2xl"
+              className="p-10 sm:p-12 rounded-3xl"
               style={{
-                backgroundColor: '#2a2a2a',
-                borderRadius: '12px'
+                backgroundColor: '#1a1a1a',
+                borderRadius: '24px',
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)'
               }}
             >
-              <h2 className="text-2xl sm:text-3xl font-bold mb-10 text-white" style={{ fontSize: '2rem', letterSpacing: '-0.02em' }}>
+              <h2 className="text-3xl sm:text-4xl font-bold mb-12 text-white" style={{ fontSize: '2.25rem', letterSpacing: '-0.03em', fontWeight: 700 }}>
                 Why Choose AutoMex?
               </h2>
               
               {/* Three Column Layout */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-10">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
                 {/* Business Hours */}
-                <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
+                <div className="flex flex-col items-start">
                   <div 
-                    className="w-14 h-14 rounded-full flex items-center justify-center mb-5 transition-all duration-300 hover:scale-105"
+                    className="w-16 h-16 rounded-full flex items-center justify-center mb-6 transition-all duration-500 hover:scale-110 relative group"
                     style={{
-                      background: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 50%, #c44569 100%)',
-                      boxShadow: '0 2px 12px rgba(238, 90, 111, 0.25)'
+                      background: 'linear-gradient(135deg, #E53935 0%, #D81B60 50%, #8E24AA 100%)',
+                      boxShadow: '0 8px 24px rgba(229, 57, 53, 0.3)'
                     }}
                   >
-                    <Clock className="w-6 h-6 text-white" strokeWidth={1.5} />
+                    {/* Glow effect */}
+                    <div 
+                      className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                      style={{
+                        background: 'linear-gradient(135deg, #E53935 0%, #D81B60 50%, #8E24AA 100%)',
+                        filter: 'blur(12px)',
+                        transform: 'scale(1.2)',
+                        zIndex: -1
+                      }}
+                    />
+                    <Clock className="w-7 h-7 text-white relative z-10" strokeWidth={1.75} />
                   </div>
-                  <h3 className="text-base font-bold mb-3 text-white" style={{ letterSpacing: '-0.01em' }}>
+                  <h3 className="text-xl font-bold mb-3 text-white" style={{ letterSpacing: '-0.02em', fontWeight: 700 }}>
                     Business Hours
                   </h3>
-                  <p className="text-sm leading-relaxed text-gray-400">
+                  <p className="text-base leading-relaxed text-gray-300 font-medium">
                     Monday - Saturday:<br />
-                    8:00 AM - 8:00 PM<br />
-                    <span className="text-xs text-gray-500">Sunday: 9:00 AM - 6:00 PM</span>
+                    8:00 AM - 8:00 PM
+                  </p>
+                  <p className="text-sm text-gray-400 mt-2">
+                    Sunday: 9:00 AM - 6:00 PM
                   </p>
                 </div>
 
                 {/* Expertise */}
-                <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
+                <div className="flex flex-col items-start">
                   <div 
-                    className="w-14 h-14 rounded-full flex items-center justify-center mb-5 transition-all duration-300 hover:scale-105"
+                    className="w-16 h-16 rounded-full flex items-center justify-center mb-6 transition-all duration-500 hover:scale-110 relative group"
                     style={{
-                      background: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 50%, #c44569 100%)',
-                      boxShadow: '0 2px 12px rgba(238, 90, 111, 0.25)'
+                      background: 'linear-gradient(135deg, #E53935 0%, #D81B60 50%, #8E24AA 100%)',
+                      boxShadow: '0 8px 24px rgba(229, 57, 53, 0.3)'
                     }}
                   >
-                    <Wrench className="w-6 h-6 text-white" strokeWidth={1.5} />
+                    {/* Glow effect */}
+                    <div 
+                      className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                      style={{
+                        background: 'linear-gradient(135deg, #E53935 0%, #D81B60 50%, #8E24AA 100%)',
+                        filter: 'blur(12px)',
+                        transform: 'scale(1.2)',
+                        zIndex: -1
+                      }}
+                    />
+                    <Wrench className="w-7 h-7 text-white relative z-10" strokeWidth={1.75} />
                   </div>
-                  <h3 className="text-base font-bold mb-3 text-white" style={{ letterSpacing: '-0.01em' }}>
+                  <h3 className="text-xl font-bold mb-3 text-white" style={{ letterSpacing: '-0.02em', fontWeight: 700 }}>
                     Expertise
                   </h3>
-                  <p className="text-sm leading-relaxed text-gray-400">
+                  <p className="text-base leading-relaxed text-gray-300 font-medium">
                     10+ Years Experience<br />
-                    Certified Technicians<br />
-                    <span className="text-xs text-gray-500">Premium Tools & Parts</span>
+                    Certified Technicians
+                  </p>
+                  <p className="text-sm text-gray-400 mt-2">
+                    Premium Tools & Parts
                   </p>
                 </div>
 
                 {/* Service Guarantee */}
-                <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
+                <div className="flex flex-col items-start">
                   <div 
-                    className="w-14 h-14 rounded-full flex items-center justify-center mb-5 transition-all duration-300 hover:scale-105"
+                    className="w-16 h-16 rounded-full flex items-center justify-center mb-6 transition-all duration-500 hover:scale-110 relative group"
                     style={{
-                      background: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 50%, #c44569 100%)',
-                      boxShadow: '0 2px 12px rgba(238, 90, 111, 0.25)'
+                      background: 'linear-gradient(135deg, #E53935 0%, #D81B60 50%, #8E24AA 100%)',
+                      boxShadow: '0 8px 24px rgba(229, 57, 53, 0.3)'
                     }}
                   >
-                    <ShieldCheck className="w-6 h-6 text-white" strokeWidth={1.5} />
+                    {/* Glow effect */}
+                    <div 
+                      className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                      style={{
+                        background: 'linear-gradient(135deg, #E53935 0%, #D81B60 50%, #8E24AA 100%)',
+                        filter: 'blur(12px)',
+                        transform: 'scale(1.2)',
+                        zIndex: -1
+                      }}
+                    />
+                    <ShieldCheck className="w-7 h-7 text-white relative z-10" strokeWidth={1.75} />
                   </div>
-                  <h3 className="text-base font-bold mb-3 text-white" style={{ letterSpacing: '-0.01em' }}>
+                  <h3 className="text-xl font-bold mb-3 text-white" style={{ letterSpacing: '-0.02em', fontWeight: 700 }}>
                     Service Guarantee
                   </h3>
-                  <p className="text-sm leading-relaxed text-gray-400">
+                  <p className="text-base leading-relaxed text-gray-300 font-medium">
                     100% Genuine Parts<br />
-                    Transparent Pricing<br />
-                    <span className="text-xs text-gray-500">Quality Assured</span>
+                    Transparent Pricing
+                  </p>
+                  <p className="text-sm text-gray-400 mt-2">
+                    Quality Assured
                   </p>
                 </div>
               </div>
@@ -1865,42 +2037,42 @@ const ContactUs = () => {
               <Card 
                 className="bg-white border-0"
                 style={{
-                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
-                  borderRadius: '12px'
+                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+                  borderRadius: '20px'
                 }}
               >
                 <CardContent className="p-8">
-                  <h3 className="text-lg font-bold mb-6 text-gray-900" style={{ letterSpacing: '-0.01em' }}>
+                  <h3 className="text-xl font-bold mb-6 text-gray-900" style={{ letterSpacing: '-0.02em', fontWeight: 700 }}>
                     Our Services
                   </h3>
-                  <ul className="space-y-3 text-sm text-gray-700">
+                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3.5 text-sm text-gray-700">
                     <li className="flex items-center gap-3">
-                      <span className="text-red-600 text-base font-bold">✓</span>
-                      <span>Premium Car Services</span>
+                      <span className="text-[#E53935] text-lg font-bold">✓</span>
+                      <span className="font-medium">Premium Car Services</span>
                     </li>
                     <li className="flex items-center gap-3">
-                      <span className="text-red-600 text-base font-bold">✓</span>
-                      <span>AC Service & Repair</span>
+                      <span className="text-[#E53935] text-lg font-bold">✓</span>
+                      <span className="font-medium">AC Service & Repair</span>
                     </li>
                     <li className="flex items-center gap-3">
-                      <span className="text-red-600 text-base font-bold">✓</span>
-                      <span>Battery Replacement</span>
+                      <span className="text-[#E53935] text-lg font-bold">✓</span>
+                      <span className="font-medium">Battery Replacement</span>
                     </li>
                     <li className="flex items-center gap-3">
-                      <span className="text-red-600 text-base font-bold">✓</span>
-                      <span>Tyres & Wheel Care</span>
+                      <span className="text-[#E53935] text-lg font-bold">✓</span>
+                      <span className="font-medium">Tyres & Wheel Care</span>
                     </li>
                     <li className="flex items-center gap-3">
-                      <span className="text-red-600 text-base font-bold">✓</span>
-                      <span>Denting & Painting</span>
+                      <span className="text-[#E53935] text-lg font-bold">✓</span>
+                      <span className="font-medium">Denting & Painting</span>
                     </li>
                     <li className="flex items-center gap-3">
-                      <span className="text-red-600 text-base font-bold">✓</span>
-                      <span>Car Detailing & Spa</span>
+                      <span className="text-[#E53935] text-lg font-bold">✓</span>
+                      <span className="font-medium">Car Detailing & Spa</span>
                     </li>
                     <li className="flex items-center gap-3">
-                      <span className="text-red-600 text-base font-bold">✓</span>
-                      <span>Car Inspections</span>
+                      <span className="text-[#E53935] text-lg font-bold">✓</span>
+                      <span className="font-medium">Car Inspections</span>
                     </li>
                   </ul>
                 </CardContent>
