@@ -102,12 +102,15 @@ export async function apiCall<T>(
         // Automatic redirect to login on 401
         // Avoid redirect loop if already on login or register page
         const currentPath = window.location.pathname;
-        if (!currentPath.includes('/login') && !currentPath.includes('/register')) {
+        if (!currentPath.includes('/login') && !currentPath.includes('/register') && !currentPath.includes('/profile')) {
           console.log('[API] Redirecting to login due to 401 Unauthorized');
           removeAuthToken();
           localStorage.removeItem('user_data');
           // Clear Zustand store if possible, but here we just do hard redirect
           window.location.href = '/login';
+        } else if (currentPath.includes('/profile')) {
+          // On profile page, just log the error and return it
+          console.warn('[API] 401 on profile page - not redirecting');
         }
       }
 

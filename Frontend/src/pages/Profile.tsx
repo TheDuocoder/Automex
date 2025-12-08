@@ -127,8 +127,17 @@ const Profile = () => {
         const carsResponse = await carService.getAll();
         if (carsResponse.error) {
           console.error("Error fetching cars:", carsResponse.error);
+          // Don't show error toast for 404 or if user has no cars yet
           if (carsResponse.status !== 404 && carsResponse.status !== 200) {
-            toast.error(carsResponse.error || "Failed to fetch vehicles");
+            // Only show toast for real errors, not 401 (handled by api.ts)
+            if (carsResponse.status !== 401) {
+              toast.error(carsResponse.error || "Failed to fetch vehicles");
+            }
+          }
+          // If 401, just return early without showing error
+          if (carsResponse.status === 401) {
+            console.warn("Authentication error when fetching cars - token may be invalid");
+            return;
           }
         }
 
