@@ -15,7 +15,7 @@ from automex_backend.models.service import Service
 from automex_backend.models.user import User
 from automex_backend.models.daily_work_log import DailyWorkLog
 from automex_backend.schemas.booking import (
-    BookingRead, BookingCreate, BookingUpdate, ServiceBookingCreate, BookingStatusUpdate
+    BookingRead, BookingCreate, BookingUpdate, ServiceBookingCreate, BookingStatusUpdate, BookingStatusUpdateResponse
 )
 from automex_backend.schemas.daily_work_log import (
     DailyWorkLogRead, DailyWorkLogCreate, DailyWorkLogUpdate, DailyWorkLogDescriptionUpdate
@@ -41,6 +41,27 @@ async def is_admin_or_super_admin(user: User, session: AsyncSession) -> bool:
         role_result = await session.execute(role_stmt)
         role = role_result.scalar_one_or_none()
         if role and role.name in ["admin", "super"]:
+            return True
+    
+    return False
+
+
+async def is_super_admin_only(user: User, session: AsyncSession) -> bool:
+    """
+    Check if user is Super Admin only (not regular admin)
+    Returns True if user is superuser OR has role 'super'
+    """
+    # Check if user is superuser
+    if user.is_superuser:
+        return True
+    
+    # Check role name - must be 'super', not 'admin'
+    if hasattr(user, 'role_id') and user.role_id:
+        from automex_backend.models.role import Role
+        role_stmt = select(Role).where(Role.id == user.role_id)
+        role_result = await session.execute(role_stmt)
+        role = role_result.scalar_one_or_none()
+        if role and role.name == "super":
             return True
     
     return False
@@ -179,6 +200,37 @@ async def create_booking(
     )
     booking = result.scalar_one()
     
+    # Send email notification to sales team
+    try:
+        from automex_backend.services.email_service import send_booking_email
+        
+        # Get service name if available
+        service_name = service.name if service else (booking_data.service_name if hasattr(booking_data, 'service_name') else "Custom Service")
+        car_brand = booking_data.vehicle_make or booking_data.car_brand or "Not specified"
+        car_model = booking_data.vehicle_model or booking_data.car_model or "Not specified"
+        fuel_type = booking_data.fuel_type or "Not specified"
+        
+        await send_booking_email(
+            user_name=user.full_name or user.email,
+            user_email=user.email,
+            user_phone=user.phone_number,
+            booking_id=booking.id,
+            service_name=service_name,
+            car_brand=car_brand,
+            car_model=car_model,
+            fuel_type=fuel_type,
+            booking_date=booking_data.booking_date,
+            booking_status=booking.status.value if hasattr(booking.status, 'value') else str(booking.status),
+            pickup_address=booking_data.pickup_address,
+            special_instructions=booking_data.special_instructions,
+            estimated_cost=estimated_cost
+        )
+    except Exception as email_error:
+        # Don't fail the booking creation if email fails
+        print(f"[WARNING] Failed to send booking email notification: {str(email_error)}")
+        import traceback
+        print(f"[WARNING] Email error traceback: {traceback.format_exc()}")
+    
     return booking
 
 
@@ -249,6 +301,31 @@ async def create_service_booking(
         booking = result.scalar_one()
         print(f"[INFO] Booking created successfully with ID: {booking.id}")
         
+        # Send email notification to sales team
+        try:
+            from automex_backend.services.email_service import send_booking_email
+            
+            await send_booking_email(
+                user_name=contact_name,
+                user_email=user.email,
+                user_phone=contact_phone,
+                booking_id=booking.id,
+                service_name=booking_data.service_name,
+                car_brand=booking_data.car_brand,
+                car_model=booking_data.car_model,
+                fuel_type=booking_data.fuel_type,
+                booking_date=booking_data.booking_date,
+                booking_status=booking.status.value if hasattr(booking.status, 'value') else str(booking.status),
+                pickup_address=booking.pickup_address,
+                special_instructions=booking.special_instructions,
+                estimated_cost=booking.estimated_cost
+            )
+        except Exception as email_error:
+            # Don't fail the booking creation if email fails
+            print(f"[WARNING] Failed to send booking email notification: {str(email_error)}")
+            import traceback
+            print(f"[WARNING] Email error traceback: {traceback.format_exc()}")
+        
         return booking
     except Exception as e:
         import traceback
@@ -276,7 +353,7 @@ async def create_service_booking(
         )
 
 
-@router.patch("/{booking_id}/status", response_model=BookingRead)
+@router.patch("/{booking_id}/status", response_model=BookingStatusUpdateResponse)
 async def update_booking_status(
     booking_id: int,
     status_update: BookingStatusUpdate,
@@ -339,6 +416,9 @@ async def update_booking_status(
                 detail="Booking not found"
             )
         
+        # Store old status before updating (for email notification)
+        old_status = booking.status
+        
         print(f"[DEBUG] Booking found, current status: {booking.status}, updating to: {new_status}")
         print(f"[DEBUG] New status value: {new_status.value}, type: {type(new_status)}")
         
@@ -398,8 +478,64 @@ async def update_booking_status(
         booking = booking_result.scalar_one()
         print(f"[DEBUG] Booking re-fetched, status is now: {booking.status}")
         
-        # Return booking - FastAPI will serialize it using BookingRead schema
-        return booking
+        # Get user information for email notification
+        user_result = await session.execute(
+            select(User).where(User.id == booking.user_id)
+        )
+        booking_user = user_result.scalar_one_or_none()
+        user_email = booking_user.email if booking_user else None
+        
+        # Send email notification to user about status change
+        email_sent = False
+        if booking_user and user_email:
+            try:
+                print(f"[DEBUG] Preparing to send status update email to {user_email}...")
+                from automex_backend.services.email_service import send_status_update_email
+                
+                # Get service name
+                service_name = booking.service_name or "Service"
+                if booking.service_id:
+                    service_result = await session.execute(
+                        select(Service).where(Service.id == booking.service_id)
+                    )
+                    service = service_result.scalar_one_or_none()
+                    if service:
+                        service_name = service.name
+                
+                # Get vehicle details
+                car_brand = booking.car_brand or booking.vehicle_make or "Not specified"
+                car_model = booking.car_model or booking.vehicle_model or "Not specified"
+                
+                print(f"[DEBUG] Calling send_status_update_email for booking #{booking.id}...")
+                email_sent = await send_status_update_email(
+                    user_name=booking_user.full_name or booking_user.email,
+                    user_email=user_email,
+                    booking_id=booking.id,
+                    service_name=service_name,
+                    car_brand=car_brand,
+                    car_model=car_model,
+                    old_status=old_status,
+                    new_status=status_value,
+                    booking_date=booking.booking_date,
+                    sender_email="sales@automex.in"
+                )
+                print(f"[DEBUG] Email send result: {email_sent}")
+            except Exception as email_error:
+                # Don't fail the status update if email fails
+                print(f"[ERROR] Failed to send status update email notification: {str(email_error)}")
+                import traceback
+                print(f"[ERROR] Email error traceback: {traceback.format_exc()}")
+                email_sent = False
+        
+        # Create response with user email info
+        from automex_backend.schemas.booking import BookingStatusUpdateResponse
+        
+        # Convert booking to response model with email info
+        response = BookingStatusUpdateResponse.model_validate(booking)
+        response.user_email = user_email
+        response.email_sent = email_sent
+        
+        return response
     except HTTPException as http_ex:
         print(f"[DEBUG] HTTPException raised: {http_ex.status_code} - {http_ex.detail}")
         raise
@@ -476,6 +612,118 @@ async def update_booking(
 
 
 @router.delete("/{booking_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_booking(
+    booking_id: int,
+    session: AsyncSession = Depends(get_async_session),
+    user: User = Depends(current_active_user)
+):
+    """
+    Permanently delete a booking and all related data (Super Admin only)
+    This will:
+    - Delete all daily work logs
+    - Delete all photos and videos from S3
+    - Delete the booking record
+    """
+    # Check if user is Super Admin only
+    is_super = await is_super_admin_only(user, session)
+    if not is_super:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only Super Admin can permanently delete bookings"
+        )
+    
+    # Get booking with all related data
+    booking_result = await session.execute(
+        select(Booking)
+        .where(Booking.id == booking_id)
+        .options(selectinload(Booking.daily_work_logs))
+    )
+    booking = booking_result.scalar_one_or_none()
+    
+    if not booking:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Booking not found"
+        )
+    
+    # Get booking owner's email for S3 deletion
+    owner_result = await session.execute(
+        select(User).where(User.id == booking.user_id)
+    )
+    owner = owner_result.scalar_one_or_none()
+    owner_email = owner.email if owner else None
+    
+    # Collect all media URLs from daily work logs
+    def extract_urls(items):
+        """Extract URLs from photos/videos (handle both string and object formats)"""
+        urls = []
+        for item in items or []:
+            if isinstance(item, str):
+                urls.append(item)
+            elif isinstance(item, dict) and "url" in item:
+                urls.append(item["url"])
+        return urls
+    
+    all_media_urls = []
+    date_folders_to_delete = set()
+    
+    # Process all daily work logs
+    if booking.daily_work_logs:
+        for daily_log in booking.daily_work_logs:
+            # Extract photo URLs
+            if daily_log.photos:
+                all_media_urls.extend(extract_urls(daily_log.photos))
+            
+            # Extract video URLs
+            if daily_log.videos:
+                all_media_urls.extend(extract_urls(daily_log.videos))
+            
+            # Collect date folders for bulk deletion
+            if daily_log.log_date and owner_email:
+                date_str = daily_log.log_date.strftime("%Y-%m-%d") if hasattr(daily_log.log_date, 'strftime') else str(daily_log.log_date)
+                date_folders_to_delete.add(date_str)
+    
+    # Delete all media files from S3
+    from automex_backend.services.s3 import s3_service
+    
+    deleted_count = 0
+    
+    # Delete files by date folder (more efficient)
+    if owner_email:
+        for date_folder in date_folders_to_delete:
+            try:
+                count = await s3_service.delete_files_by_date_folder(owner_email, date_folder)
+                deleted_count += count
+                print(f"[INFO] Deleted {count} files from date folder {date_folder} for booking #{booking_id}")
+            except Exception as e:
+                print(f"[WARNING] Failed to delete date folder {date_folder}: {str(e)}")
+    
+    # Delete individual files by URL (in case some weren't in date folders)
+    for url in all_media_urls:
+        try:
+            if await s3_service.delete_file(url):
+                deleted_count += 1
+        except Exception as e:
+            print(f"[WARNING] Failed to delete file {url}: {str(e)}")
+    
+    print(f"[INFO] Deleted {deleted_count} media files from S3 for booking #{booking_id}")
+    
+    # Delete all daily work logs from database
+    if booking.daily_work_logs:
+        for daily_log in booking.daily_work_logs:
+            await session.delete(daily_log)
+        print(f"[INFO] Deleted {len(booking.daily_work_logs)} daily work log(s) for booking #{booking_id}")
+    
+    # Delete the booking itself
+    await session.delete(booking)
+    await session.commit()
+    
+    print(f"[INFO] Successfully deleted booking #{booking_id} and all related data")
+    
+    return None
+
+
+@router.patch("/{booking_id}/cancel", response_model=BookingRead)
 async def cancel_booking(
     booking_id: int,
     session: AsyncSession = Depends(get_async_session),
@@ -509,7 +757,15 @@ async def cancel_booking(
     booking.status = BookingStatus.CANCELLED
     await session.commit()
     
-    return None
+    # Re-fetch with eager loading
+    result = await session.execute(
+        select(Booking)
+        .where(Booking.id == booking_id)
+        .options(selectinload(Booking.daily_work_logs))
+    )
+    booking = result.scalar_one()
+    
+    return booking
 
 
 # Daily Work Log endpoints using new DailyWorkLog table
@@ -569,6 +825,57 @@ async def create_daily_work_log(
     session.add(daily_log)
     await session.commit()
     await session.refresh(daily_log)
+    
+    # Send email notification to user about work log addition
+    try:
+        from automex_backend.services.email_service import send_work_log_email
+        
+        # Get user information
+        user_result = await session.execute(
+            select(User).where(User.id == booking.user_id)
+        )
+        booking_user = user_result.scalar_one_or_none()
+        
+        if booking_user and booking_user.email:
+            # Get service name
+            service_name = booking.service_name or "Service"
+            if booking.service_id:
+                service_result = await session.execute(
+                    select(Service).where(Service.id == booking.service_id)
+                )
+                service = service_result.scalar_one_or_none()
+                if service:
+                    service_name = service.name
+            
+            # Get vehicle details
+            car_brand = booking.car_brand or booking.vehicle_make or "Not specified"
+            car_model = booking.car_model or booking.vehicle_model or "Not specified"
+            
+            # Count photos and videos
+            photos_count = len(daily_log.photos) if daily_log.photos else 0
+            videos_count = len(daily_log.videos) if daily_log.videos else 0
+            
+            # Format log date
+            log_date_str = daily_log.log_date.strftime("%B %d, %Y") if hasattr(daily_log.log_date, 'strftime') else str(daily_log.log_date)
+            
+            await send_work_log_email(
+                user_name=booking_user.full_name or booking_user.email,
+                user_email=booking_user.email,
+                booking_id=booking.id,
+                service_name=service_name,
+                car_brand=car_brand,
+                car_model=car_model,
+                log_date=log_date_str,
+                description=daily_log.description,
+                photos_count=photos_count,
+                videos_count=videos_count,
+                sender_email="sales@automex.in"
+            )
+    except Exception as email_error:
+        # Don't fail the work log creation if email fails
+        print(f"[WARNING] Failed to send work log email notification: {str(email_error)}")
+        import traceback
+        print(f"[WARNING] Email error traceback: {traceback.format_exc()}")
     
     return daily_log
 
@@ -771,6 +1078,51 @@ async def upload_daily_work_media(
     
     await session.commit()
     await session.refresh(daily_log)
+    
+    # Send email notification to user about media upload
+    try:
+        from automex_backend.services.email_service import send_work_log_email
+        
+        if owner and owner.email:
+            # Get service name
+            service_name = booking.service_name or "Service"
+            if booking.service_id:
+                service_result = await session.execute(
+                    select(Service).where(Service.id == booking.service_id)
+                )
+                service = service_result.scalar_one_or_none()
+                if service:
+                    service_name = service.name
+            
+            # Get vehicle details
+            car_brand = booking.car_brand or booking.vehicle_make or "Not specified"
+            car_model = booking.car_model or booking.vehicle_model or "Not specified"
+            
+            # Count photos and videos
+            photos_count = len(daily_log.photos) if daily_log.photos else 0
+            videos_count = len(daily_log.videos) if daily_log.videos else 0
+            
+            # Format log date
+            log_date_str = daily_log.log_date.strftime("%B %d, %Y") if hasattr(daily_log.log_date, 'strftime') else str(daily_log.log_date)
+            
+            await send_work_log_email(
+                user_name=owner.full_name or owner.email,
+                user_email=owner.email,
+                booking_id=booking.id,
+                service_name=service_name,
+                car_brand=car_brand,
+                car_model=car_model,
+                log_date=log_date_str,
+                description=daily_log.description,
+                photos_count=photos_count,
+                videos_count=videos_count,
+                sender_email="sales@automex.in"
+            )
+    except Exception as email_error:
+        # Don't fail the media upload if email fails
+        print(f"[WARNING] Failed to send work log email notification: {str(email_error)}")
+        import traceback
+        print(f"[WARNING] Email error traceback: {traceback.format_exc()}")
     
     return daily_log
 

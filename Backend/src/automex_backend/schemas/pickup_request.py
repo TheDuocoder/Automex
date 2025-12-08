@@ -22,12 +22,17 @@ class PickUpRequestUpdate(BaseModel):
     longitude: Optional[float] = None
     scheduled_date: Optional[datetime] = None
 
+from automex_backend.schemas.car import CarRead
+from automex_backend.schemas.user import UserRead
+
 class PickUpRequestRead(PickUpRequestBase):
     id: int
     user_id: int
     car_id: int
     status: str
     admin_comment: Optional[str] = None
+    car: Optional[CarRead] = None
+    user: Optional[UserRead] = None
 
     class Config:
         from_attributes = True

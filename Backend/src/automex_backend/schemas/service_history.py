@@ -14,9 +14,12 @@ class ServiceHistoryCreate(ServiceHistoryBase):
 class ServiceHistoryUpdate(ServiceHistoryBase):
     pass
 
+from automex_backend.schemas.car import CarRead
+
 class ServiceHistoryRead(ServiceHistoryBase):
     id: int
     car_id: int
+    car: Optional[CarRead] = None
 
     class Config:
         from_attributes = True

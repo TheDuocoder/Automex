@@ -55,6 +55,8 @@ export interface Booking {
   created_at: string;
   updated_at: string;
   completed_at?: string;
+  user_email?: string; // User email (for admin notifications)
+  email_sent?: boolean; // Whether email was sent
 }
 
 /**

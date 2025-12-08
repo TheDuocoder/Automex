@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,6 +26,9 @@ interface ServiceHistoryWithCar extends ServiceHistoryType {
 
 const ServiceHistory = () => {
     const navigate = useNavigate();
+    const { user } = useAuth();
+    const isAdmin = user?.role?.name === 'admin' || user?.role?.name === 'super' || user?.is_superuser;
+
     const [cars, setCars] = useState<Car[]>([]);
     const [selectedCarId, setSelectedCarId] = useState<string>("");
     const [allHistory, setAllHistory] = useState<ServiceHistoryWithCar[]>([]);
@@ -48,37 +52,24 @@ const ServiceHistory = () => {
     const fetchAllData = async () => {
         setIsLoading(true);
         try {
-            // Fetch all cars
+            // Fetch all cars (for dropdown)
             const carsResponse = await carService.getAll();
             if (carsResponse.data) {
                 setCars(carsResponse.data);
+            }
 
-                if (carsResponse.data.length > 0) {
-                    // Fetch service history for all cars
-                    const historyPromises = carsResponse.data.map(async (car) => {
-                        const historyResponse = await serviceHistoryService.getAll(car.id);
-                        if (historyResponse.data) {
-                            return historyResponse.data.map(record => ({
-                                ...record,
-                                car: car
-                            }));
-                        }
-                        return [];
-                    });
+            // Fetch service history (Admin sees all, User sees theirs)
+            const historyResponse = await serviceHistoryService.getAll();
 
-                    const allHistoryArrays = await Promise.all(historyPromises);
-                    const combinedHistory = allHistoryArrays.flat();
-
-                    // Sort by date (most recent first)
-                    combinedHistory.sort((a, b) =>
-                        new Date(b.service_date).getTime() - new Date(a.service_date).getTime()
-                    );
-
-                    setAllHistory(combinedHistory);
-                } else {
-                    // No cars, clear history
-                    setAllHistory([]);
-                }
+            if (historyResponse.data) {
+                const combinedHistory = historyResponse.data;
+                // Sort by date (most recent first)
+                combinedHistory.sort((a, b) =>
+                    new Date(b.service_date).getTime() - new Date(a.service_date).getTime()
+                );
+                setAllHistory(combinedHistory);
+            } else {
+                setAllHistory([]);
             }
         } catch (error) {
             console.error("Failed to fetch data:", error);
@@ -293,6 +284,14 @@ const ServiceHistory = () => {
                                         <span className="text-gray-600 font-medium uppercase tracking-wide text-xs">
                                             {record.car?.registration_number}
                                         </span>
+                                        {isAdmin && record.car?.user && (
+                                            <>
+                                                <span className="text-gray-400">•</span>
+                                                <span className="text-blue-600 font-medium text-xs bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
+                                                    Owner: {record.car.user.full_name || record.car.user.email}
+                                                </span>
+                                            </>
+                                        )}
                                     </div>
 
                                     {/* Date */}

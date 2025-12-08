@@ -16,7 +16,7 @@ import {
 import {
   User, Mail, Phone, Shield, CheckCircle, XCircle, Edit, Key, Package,
   Loader2, Eye, EyeOff, LayoutDashboard, Car, Award, History, Settings,
-  LogOut, Bell, Calendar, Hash, Trophy, ChevronRight, Camera
+  LogOut, Bell, Calendar, Hash, Trophy, ChevronRight, Camera, Menu, X
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
@@ -27,6 +27,7 @@ import HelpDropdown from "@/components/HelpDropdown";
 import MyCars from "@/components/dashboard/MyCars";
 import ServiceHistory from "@/components/dashboard/ServiceHistory";
 import SchedulePickUp from "@/components/dashboard/SchedulePickUp";
+import { AdminUserSelector } from "@/components/dashboard/AdminUserSelector";
 
 import { carService, Car as CarModel, serviceHistoryService, ServiceHistory as ServiceHistoryModel } from "@/services/api";
 import Footer from "@/components/Footer";
@@ -35,13 +36,16 @@ const Profile = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user: contextUser, isAuthenticated, logout, refreshUser, updateUser } = useAuth();
-  
+
   // Get setUser function from AuthContext if available (for immediate updates)
   // We'll update both Zustand and trigger AuthContext update
   const { user } = useAuthStore();
 
   // State for active view
   const [activeView, setActiveView] = useState("dashboard");
+
+  // State for mobile sidebar
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     if (location.state && (location.state as any).view) {
@@ -52,6 +56,7 @@ const Profile = () => {
   // Dashboard Data State
   const [dashboardCars, setDashboardCars] = useState<CarModel[]>([]);
   const [dashboardHistory, setDashboardHistory] = useState<ServiceHistoryModel[]>([]);
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
 
   // State for Edit Profile Modal
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -86,14 +91,14 @@ const Profile = () => {
   // Use Zustand user or context user (Zustand takes priority)
   // Subscribe to Zustand store changes - this will re-render when store updates
   const currentUser = user || contextUser;
-  
+
   // Sync local profile picture URL with user data
   useEffect(() => {
     if (currentUser?.profile_picture_url) {
       setLocalProfilePictureUrl(currentUser.profile_picture_url);
     }
   }, [currentUser?.profile_picture_url]);
-  
+
   // Use local profile picture URL if available, otherwise use currentUser's
   const displayProfilePictureUrl = localProfilePictureUrl || currentUser?.profile_picture_url;
 
@@ -122,20 +127,23 @@ const Profile = () => {
         const carsResponse = await carService.getAll();
         if (carsResponse.error) {
           console.error("Error fetching cars:", carsResponse.error);
-          // Don't show error toast for empty data, only for actual errors
           if (carsResponse.status !== 404 && carsResponse.status !== 200) {
             toast.error(carsResponse.error || "Failed to fetch vehicles");
           }
-          return;
         }
-        
+
         if (carsResponse.data) {
-          setDashboardCars(carsResponse.data);
+          let cars = carsResponse.data;
+          // Filter if admin selected a specific user
+          if (selectedUserId) {
+            cars = cars.filter(c => c.user_id === selectedUserId);
+          }
+          setDashboardCars(cars);
 
           // Fetch Service History for ALL cars and combine them
-          if (carsResponse.data.length > 0) {
+          if (cars.length > 0) {
             try {
-              const allHistoryPromises = carsResponse.data.map(car => 
+              const allHistoryPromises = cars.map(car => 
                 serviceHistoryService.getAll(car.id)
               );
               
@@ -163,19 +171,13 @@ const Profile = () => {
         }
       } catch (error) {
         console.error("Failed to fetch dashboard data:", error);
-        // Only show error if it's a network error or critical error
-        if (error instanceof TypeError && error.message.includes('fetch')) {
-          toast.error("Network error: Please check your connection");
-        } else if (error instanceof Error && !error.message.includes('404')) {
-          toast.error(error.message || "Failed to fetch dashboard data");
-        }
       }
     };
 
     if (currentUser) {
       fetchDashboardData();
     }
-  }, [currentUser]);
+  }, [currentUser, selectedUserId]);
 
   // Initialize form data when modal opens
   useEffect(() => {
@@ -393,17 +395,30 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
+      {/* Mobile Overlay */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/60 z-40 md:hidden backdrop-blur-sm transition-opacity"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
       {/* Left Sidebar */}
-      <motion.aside
-        initial={{ x: -300, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        transition={{ duration: 0.5 }}
-        className="w-64 min-h-screen fixed left-0 top-0 shadow-2xl z-50"
+      <aside
+        className={`fixed left-0 top-0 h-full w-64 z-50 transform transition-transform duration-300 ease-in-out md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
         style={{
           background: 'linear-gradient(180deg, #06080D, #0B0F1A)',
           boxShadow: '0 0 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
         }}
       >
+        {/* Mobile Close Button */}
+        <button
+          onClick={() => setIsSidebarOpen(false)}
+          className="absolute top-4 right-4 text-white/50 hover:text-white md:hidden"
+        >
+          <X className="h-6 w-6" />
+        </button>
         {/* Logo */}
         <div className="px-6 py-5 border-b border-white/10 flex items-center justify-center">
           <button
@@ -491,25 +506,33 @@ const Profile = () => {
             Logout
           </button>
         </div>
-      </motion.aside>
+      </aside>
 
       {/* Main Content - Flex container */}
-      <div className="flex-1 ml-64 flex flex-col">
+      <div className="flex-1 md:ml-64 flex flex-col transition-all duration-300">
         {/* Profile Header with Gradient */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="px-6 py-5 relative overflow-hidden"
-          style={{ 
+          style={{
             background: '#191970',
             boxShadow: 'inset 0 0 60px rgba(0, 0, 0, 0.1), 0 4px 20px rgba(0, 0, 0, 0.3)'
           }}
         >
           {/* Help Dropdown - Top Right */}
-          <div className="absolute top-4 right-6">
+          <div className="absolute top-4 right-6 flex items-center gap-4">
             <HelpDropdown variant="dark" />
           </div>
+
+          {/* Mobile Menu Button - Top Left */}
+          <button
+            onClick={() => setIsSidebarOpen(true)}
+            className="absolute top-4 left-4 p-2 text-white hover:bg-white/10 rounded-lg md:hidden z-30"
+          >
+            <Menu className="h-6 w-6" />
+          </button>
 
           <div className="flex items-center gap-4 mb-4">
             <div className="relative group">
@@ -555,35 +578,35 @@ const Profile = () => {
                   setIsUploadingPicture(true);
                   try {
                     const updatedUser = await uploadProfilePicture(file);
-                    
+
                     // IMMEDIATELY update local state to show picture right away in Profile component
                     if (updatedUser.profile_picture_url) {
                       setLocalProfilePictureUrl(updatedUser.profile_picture_url);
                       setProfilePictureKey(prev => prev + 1);
                     }
-                    
+
                     // IMMEDIATELY update AuthContext (for Header, Hero components)
                     // This updates all components that use useAuth() hook
                     updateUser(updatedUser);
-                    
+
                     // Zustand store is already updated in uploadProfilePicture function
                     // But ensure it's synced (redundant but safe)
                     const store = useAuthStore.getState();
                     if (store.user?.id !== updatedUser.id) {
                       store.setUser(updatedUser);
                     }
-                    
+
                     toast.success('Profile picture uploaded successfully!');
                   } catch (error) {
                     console.error('Error uploading profile picture:', error);
                     let errorMessage = 'Failed to upload profile picture';
-                    
+
                     if (error instanceof TypeError && error.message.includes('fetch')) {
                       errorMessage = 'Network error: Please check your connection and try again';
                     } else if (error instanceof Error) {
                       errorMessage = error.message || errorMessage;
                     }
-                    
+
                     toast.error(errorMessage);
                   } finally {
                     setIsUploadingPicture(false);
@@ -611,10 +634,10 @@ const Profile = () => {
 
             <div className="text-white">
               <h2 className="text-xl font-bold mb-0.5">
-                {currentUser?.full_name 
-                  ? currentUser.full_name.split(' ').map(word => 
-                      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-                    ).join(' ')
+                {currentUser?.full_name
+                  ? currentUser.full_name.split(' ').map(word =>
+                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                  ).join(' ')
                   : 'User'}
               </h2>
               <p className="text-white/90 flex items-center gap-1.5 mb-0.5 text-xs">
@@ -635,7 +658,7 @@ const Profile = () => {
           </div>
 
           {/* Info Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div className="bg-white/10 backdrop-blur-md rounded-xl p-2.5 border border-white/20 hover:bg-white/15 transition-all shadow-lg">
               <div className="flex items-center gap-2.5">
                 <div className="h-8 w-8 rounded-lg bg-white/20 flex items-center justify-center">
@@ -666,6 +689,7 @@ const Profile = () => {
               </div>
             </div>
 
+            {/* Rewards Points Card */}
             <div className="bg-white/10 backdrop-blur-md rounded-xl p-2.5 border border-white/20 hover:bg-white/15 transition-all shadow-lg">
               <div className="flex items-center gap-2.5">
                 <div className="h-8 w-8 rounded-lg bg-white/20 flex items-center justify-center">
@@ -683,8 +707,8 @@ const Profile = () => {
         {/* Dynamic Content Area */}
         <div className="px-6 py-4">
           {activeView === 'dashboard' && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              {/* Dashboard View - Summary */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              {/* Service History - Left */}
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -725,9 +749,10 @@ const Profile = () => {
                 </Card>
               </motion.div>
 
+              {/* My Vehicles - Center */}
               <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
               >
                 <Card className="shadow-lg border-none h-full">
@@ -761,6 +786,66 @@ const Profile = () => {
                   </CardContent>
                 </Card>
               </motion.div>
+
+              {/* User Filter - Right (Only visible for Admins) */}
+              {(currentUser?.role?.name === 'admin' || currentUser?.role?.name === 'super' || currentUser?.is_superuser) ? (
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                  className="relative"
+                >
+                  <Card className="shadow-lg border-none h-full overflow-visible"
+                    style={{
+                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                      boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)'
+                    }}
+                  >
+                    {/* Animated background gradient */}
+                    <motion.div
+                      className="absolute inset-0 opacity-20 rounded-lg"
+                      animate={{
+                        background: [
+                          'radial-gradient(circle at 20% 50%, rgba(255,255,255,0.3) 0%, transparent 50%)',
+                          'radial-gradient(circle at 80% 50%, rgba(255,255,255,0.3) 0%, transparent 50%)',
+                          'radial-gradient(circle at 20% 50%, rgba(255,255,255,0.3) 0%, transparent 50%)',
+                        ],
+                      }}
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                    />
+                    <CardHeader className="border-b border-white/20 pb-2 pt-3 relative z-10">
+                      <CardTitle className="flex items-center gap-2 text-base">
+                        <motion.div
+                          animate={{ rotate: [0, 10, -10, 0] }}
+                          transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+                        >
+                          <Shield className="h-4 w-4 text-white" />
+                        </motion.div>
+                        <span className="text-white font-semibold">User Filter</span>
+                        <motion.span
+                          className="ml-auto px-2 py-0.5 rounded-full text-xs font-semibold bg-white/20 backdrop-blur-sm text-white border border-white/30"
+                          animate={{ opacity: [0.7, 1, 0.7] }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                        >
+                          Admin
+                        </motion.span>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-4 relative z-10">
+                      <AdminUserSelector
+                        onSelectUser={setSelectedUserId}
+                        selectedUserId={selectedUserId}
+                      />
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ) : (
+                <div className="hidden lg:block"></div>
+              )}
             </div>
           )}
 
@@ -835,13 +920,13 @@ const Profile = () => {
             </motion.div>
           )}
         </div>
-        
+
         {/* Footer */}
         <Footer compact={true} />
-      </div>
+      </div >
 
       {/* Edit Profile Modal */}
-      <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+      < Dialog open={isEditOpen} onOpenChange={setIsEditOpen} >
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Edit Profile</DialogTitle>
@@ -894,10 +979,10 @@ const Profile = () => {
             </DialogFooter>
           </form>
         </DialogContent>
-      </Dialog>
+      </Dialog >
 
       {/* Change Password Modal */}
-      <Dialog open={isChangePasswordOpen} onOpenChange={setIsChangePasswordOpen}>
+      < Dialog open={isChangePasswordOpen} onOpenChange={setIsChangePasswordOpen} >
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Change Password</DialogTitle>
@@ -994,8 +1079,8 @@ const Profile = () => {
             </DialogFooter>
           </form>
         </DialogContent>
-      </Dialog>
-    </div>
+      </Dialog >
+    </div >
   );
 };
 
