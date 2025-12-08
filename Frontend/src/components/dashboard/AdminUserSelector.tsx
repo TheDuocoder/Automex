@@ -43,12 +43,23 @@ export function AdminUserSelector({ onSelectUser, selectedUserId }: AdminUserSel
             setLoading(true);
             setError(null);
             try {
+                console.log('[AdminUserSelector] Fetching users...');
                 const response = await userService.getAll();
+                console.log('[AdminUserSelector] Response:', response);
+                
                 if (isMounted) {
                     if (response.error) {
-                        console.error("Error fetching users:", response.error);
-                        setError(response.error);
+                        console.error("Error fetching users:", response.error, "Status:", response.status);
+                        // Show more specific error message
+                        if (response.status === 403) {
+                            setError("Access Denied: You don't have admin privileges");
+                        } else if (response.status === 401) {
+                            setError("Unauthorized: Please log in again");
+                        } else {
+                            setError(response.error || "Failed to load users");
+                        }
                     } else if (response.data) {
+                        console.log('[AdminUserSelector] Successfully loaded users:', response.data.length);
                         setUsers(response.data);
                     } else {
                         setError("No data received");
