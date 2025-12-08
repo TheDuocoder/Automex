@@ -74,6 +74,12 @@ const Register = ({ onClose, onSwitchToLogin }: RegisterProps) => {
     if (!formData.phoneNumber.trim()) {
       newErrors.phoneNumber = "Phone number is required";
       isValid = false;
+    } else {
+      const phoneRegex = /^[6-9]\d{9}$/;
+      if (!phoneRegex.test(formData.phoneNumber.trim())) {
+        newErrors.phoneNumber = "Invalid phone number. Must be 10 digits and start with 6-9.";
+        isValid = false;
+      }
     }
 
     if (!formData.password) {
@@ -137,10 +143,10 @@ const Register = ({ onClose, onSwitchToLogin }: RegisterProps) => {
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "An error occurred during registration";
-      
+
       // Parse error message to determine if it's email or phone number duplicate
       const errorLower = errorMessage.toLowerCase();
-      
+
       if (errorLower.includes("email") && (errorLower.includes("already exists") || errorLower.includes("already registered"))) {
         // Set email error
         setErrors((prev) => ({
@@ -188,12 +194,12 @@ const Register = ({ onClose, onSwitchToLogin }: RegisterProps) => {
           <X className="w-5 h-5" />
         </button>
       )}
-      
+
       {/* Logo/Icon */}
       <div className="flex justify-center -mb-4">
-        <img 
-          src="/images/Automex_icon/AUTOMEX_logo.png" 
-          alt="AutoMex Logo" 
+        <img
+          src="/images/Automex_icon/AUTOMEX_logo.png"
+          alt="AutoMex Logo"
           className="h-32 w-auto object-contain drop-shadow-2xl"
           onError={(e) => {
             e.currentTarget.src = "/images/Landing_page_images/Red_Automex.png";
@@ -203,7 +209,7 @@ const Register = ({ onClose, onSwitchToLogin }: RegisterProps) => {
 
       {/* Title */}
       <div className="mb-2">
-        <h2 
+        <h2
           className="font-bold text-center text-white"
           style={{
             fontSize: '40px',
@@ -335,7 +341,7 @@ const Register = ({ onClose, onSwitchToLogin }: RegisterProps) => {
         )}
 
         {/* Register Button */}
-        <Button 
+        <Button
           type="submit"
           disabled={isLoading}
           className="premium-create-btn w-full mb-5"
@@ -354,7 +360,7 @@ const Register = ({ onClose, onSwitchToLogin }: RegisterProps) => {
       {/* Login Link */}
       <p className="text-center text-sm text-white/90">
         Already have an account?{" "}
-        <button 
+        <button
           onClick={onSwitchToLogin}
           className="premium-login-link"
         >
