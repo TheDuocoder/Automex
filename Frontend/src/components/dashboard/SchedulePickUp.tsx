@@ -682,12 +682,18 @@ const SchedulePickUp = () => {
                             <Button
                                 onClick={handleUpdateRequest}
                                 disabled={isUpdating}
+                                className="bg-green-600 hover:bg-green-700 text-white"
                             >
                                 {isUpdating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                 Update Request
                             </Button>
                         )}
-                        <Button variant="outline" onClick={() => setIsDetailsOpen(false)}>
+                        <Button 
+                            variant="outline" 
+                            onClick={() => setIsDetailsOpen(false)}
+                            className="text-gray-700 border-gray-300 hover:bg-[#E5D5AF] hover:text-black"
+                            style={{ backgroundColor: '#EFDFBB' }}
+                        >
                             Close
                         </Button>
                     </DialogFooter>

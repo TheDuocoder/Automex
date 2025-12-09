@@ -16,7 +16,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { History, Plus, CheckCircle, ChevronRight, Loader2, Car as CarIcon, Check, Pencil, Trash2 } from "lucide-react";
+import { History, Plus, CheckCircle, ChevronRight, Loader2, Car as CarIcon, Check, Pencil, Trash2, Calendar } from "lucide-react";
 import { serviceHistoryService, carService, Car, ServiceHistory as ServiceHistoryType, ServiceHistoryCreate } from "@/services/api";
 import { toast } from "sonner";
 
@@ -267,94 +267,155 @@ const ServiceHistory = () => {
                     allHistory.map((record) => (
                         <div
                             key={record.id}
-                            className="bg-white rounded-2xl p-7 shadow-[0_2px_12px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)] transition-all duration-300 border border-gray-100 relative group"
+                            className="bg-white rounded-[28px] p-8 transition-all duration-300 border border-gray-100/80 relative group hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)]"
+                            style={{
+                                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04), 0 12px 24px rgba(0, 0, 0, 0.06)',
+                            }}
                         >
-                            <div className="flex items-start justify-between mb-5">
-                                <div className="flex-1 space-y-3">
-                                    {/* Service Title */}
-                                    <h3 className="font-bold text-xl text-gray-900">{record.service_name}</h3>
-
-                                    {/* Car Details Row */}
-                                    <div className="flex items-center gap-2.5 text-sm">
-                                        <CarIcon className="h-4 w-4 text-gray-400" strokeWidth={1.5} />
-                                        <span className="font-semibold text-gray-700">
-                                            {record.car?.make} {record.car?.model}
-                                        </span>
-                                        <span className="text-gray-400">•</span>
-                                        <span className="text-gray-600 font-medium uppercase tracking-wide text-xs">
-                                            {record.car?.registration_number}
-                                        </span>
-                                        {isAdmin && record.car?.user && (
-                                            <>
-                                                <span className="text-gray-400">•</span>
-                                                <span className="text-blue-600 font-medium text-xs bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
-                                                    Owner: {record.car.user.full_name || record.car.user.email}
-                                                </span>
-                                            </>
-                                        )}
+                            {/* Title Section with Service Type Tag */}
+                            <div className="flex items-start justify-between mb-6">
+                                <div className="flex-1 space-y-2">
+                                    <h3 
+                                        className="text-[19px] text-gray-900 leading-snug"
+                                        style={{ 
+                                            fontWeight: 700, 
+                                            letterSpacing: '-0.02em' 
+                                        }}
+                                    >
+                                        {record.service_name}
+                                    </h3>
+                                    <div className="flex items-center gap-2 text-xs">
+                                        <span className="text-gray-500 font-medium">Service Type</span>
+                                        <span className="text-gray-300">·</span>
+                                        <span className="text-gray-700 font-semibold">Standard</span>
                                     </div>
-
-                                    {/* Date */}
-                                    <p className="text-sm text-gray-500">
-                                        {new Date(record.service_date).toLocaleDateString('en-US', {
-                                            year: 'numeric',
-                                            month: 'short',
-                                            day: 'numeric'
-                                        })}
-                                    </p>
                                 </div>
 
-                                <div className="flex items-start gap-3">
-                                    <div className="flex gap-1">
-                                        <button
-                                            onClick={() => handleEdit(record)}
-                                            className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
-                                            title="Edit"
-                                        >
-                                            <Pencil className="h-4 w-4" />
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(record.id)}
-                                            className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors"
-                                            title="Delete"
-                                        >
-                                            <Trash2 className="h-4 w-4" />
-                                        </button>
-                                    </div>
-
-                                    {/* Status Check Circle */}
-                                    <div className="h-10 w-10 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0 ring-1 ring-green-200">
-                                        <Check className="h-5 w-5 text-green-600" strokeWidth={2.5} />
-                                    </div>
+                                {/* Action Buttons - Top Right */}
+                                <div className="flex items-center gap-1.5">
+                                    <button
+                                        onClick={() => handleEdit(record)}
+                                        className="p-2.5 text-gray-300 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-all duration-200"
+                                        title="Edit"
+                                    >
+                                        <Pencil className="h-4 w-4" strokeWidth={2} />
+                                    </button>
+                                    <button
+                                        onClick={() => handleDelete(record.id)}
+                                        className="p-2.5 text-gray-300 hover:text-red-600 hover:bg-red-50 rounded-full transition-all duration-200"
+                                        title="Delete"
+                                    >
+                                        <Trash2 className="h-4 w-4" strokeWidth={2} />
+                                    </button>
                                 </div>
                             </div>
 
-                            {/* Description (if exists) */}
+                            {/* Vehicle Info Row - Enhanced */}
+                            <div className="flex items-center gap-3.5 mb-4">
+                                <div className="flex items-center gap-2.5">
+                                    <CarIcon className="h-5 w-5 text-gray-500" strokeWidth={2} />
+                                    <span className="text-[15px] font-semibold text-gray-800">
+                                        {record.car?.make} {record.car?.model}
+                                    </span>
+                                </div>
+                                <span className="text-gray-300 font-light">|</span>
+                                <div 
+                                    className="px-3 py-1.5 rounded-lg font-bold text-[13px] tracking-wider uppercase"
+                                    style={{
+                                        background: 'linear-gradient(135deg, #F3F4F6 0%, #E5E7EB 100%)',
+                                        border: '1.5px solid #D1D5DB',
+                                        color: '#374151',
+                                        letterSpacing: '0.05em',
+                                    }}
+                                >
+                                    {record.car?.registration_number}
+                                </div>
+                                {isAdmin && record.car?.user && (
+                                    <>
+                                        <span className="text-gray-300 font-light">|</span>
+                                        <span className="text-blue-600 font-medium text-xs bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-100">
+                                            {record.car.user.full_name || record.car.user.email}
+                                        </span>
+                                    </>
+                                )}
+                            </div>
+
+                            {/* Date with Calendar Icon */}
+                            <div className="flex items-center gap-2 mb-5">
+                                <Calendar className="h-3.5 w-3.5 text-gray-400" strokeWidth={2} />
+                                <p className="text-[13px] font-medium" style={{ color: '#6B7280' }}>
+                                    {new Date(record.service_date).toLocaleDateString('en-US', {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric'
+                                    })}
+                                </p>
+                            </div>
+
+                            {/* Service Details Box - Enhanced */}
                             {record.description && (
-                                <div className="mb-5">
-                                    <p className="text-sm text-gray-600 bg-gray-50/80 p-4 rounded-xl leading-relaxed">
+                                <div 
+                                    className="relative rounded-[16px] p-5 mb-5"
+                                    style={{
+                                        backgroundColor: '#F7F7F8',
+                                        border: '1px solid #EFEFEF',
+                                    }}
+                                >
+                                    {/* Left Red Indicator Bar */}
+                                    <div 
+                                        className="absolute left-0 top-4 bottom-4 w-1 rounded-r-full"
+                                        style={{
+                                            background: 'linear-gradient(180deg, #EF4444 0%, #DC2626 100%)',
+                                        }}
+                                    />
+                                    <p 
+                                        className="text-[14px] leading-relaxed pl-4"
+                                        style={{ 
+                                            color: '#4B5563',
+                                            fontWeight: 500,
+                                        }}
+                                    >
                                         {record.description}
                                     </p>
                                 </div>
                             )}
 
-                            {/* Divider */}
-                            <div className="border-t border-gray-200 my-4"></div>
-
-                            {/* Bottom Row */}
-                            <div className="flex items-center justify-between">
-                                {/* Status Badge */}
-                                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-green-100 text-green-700 ring-1 ring-green-200">
-                                    <CheckCircle className="h-3.5 w-3.5" />
+                            {/* Bottom Row - Status & Action */}
+                            <div className="flex items-center justify-between pt-4">
+                                {/* Enhanced Status Badge with Gradient & Shadow */}
+                                <div 
+                                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-[13px] font-semibold border"
+                                    style={{
+                                        background: 'linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%)',
+                                        color: '#065F46',
+                                        borderColor: '#6EE7B7',
+                                        boxShadow: '0 2px 8px rgba(16, 185, 129, 0.15), 0 0 0 3px rgba(16, 185, 129, 0.05)',
+                                    }}
+                                >
+                                    <div className="relative flex items-center justify-center">
+                                        <div className="absolute inset-0 bg-green-500/30 rounded-full blur-sm" />
+                                        <CheckCircle className="relative h-4 w-4" strokeWidth={2.5} />
+                                    </div>
                                     {record.status}
-                                </span>
+                                </div>
 
-                                {/* Floating Arrow Button */}
+                                {/* Enhanced Arrow Button with Gradient & Shadow */}
                                 <button
-                                    className="h-9 w-9 rounded-full bg-[#CD0000] hover:bg-[#A30000] flex items-center justify-center text-white shadow-sm hover:shadow-md transition-all duration-200 hover:scale-110 group-hover:translate-x-1"
+                                    className="relative h-11 w-11 rounded-full flex items-center justify-center text-white transition-all duration-300 hover:scale-110 group-hover:translate-x-1"
+                                    style={{
+                                        background: 'linear-gradient(135deg, #EF4444 0%, #DC2626 50%, #B91C1C 100%)',
+                                        boxShadow: '0 4px 12px rgba(220, 38, 38, 0.35), 0 2px 4px rgba(0, 0, 0, 0.1)',
+                                    }}
                                     aria-label="View details"
                                 >
-                                    <ChevronRight className="h-4 w-4" strokeWidth={2.5} />
+                                    <ChevronRight className="h-5 w-5" strokeWidth={3} />
+                                    {/* Shine effect on hover */}
+                                    <div 
+                                        className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-30 transition-opacity duration-300"
+                                        style={{
+                                            background: 'linear-gradient(135deg, rgba(255,255,255,0.4) 0%, transparent 60%)',
+                                        }}
+                                    />
                                 </button>
                             </div>
                         </div>
