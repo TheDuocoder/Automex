@@ -1,7 +1,7 @@
 """
 Cars API routes
 """
-from typing import List
+from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, status, Form, File, UploadFile
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -64,6 +64,7 @@ async def create_car(
     model: str = Form(...),
     year: int = Form(...),
     registration_number: str = Form(...),
+    vin_number: Optional[str] = Form(None),
     image: UploadFile = File(None),
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(current_active_user)
@@ -91,6 +92,7 @@ async def create_car(
         model=model,
         year=year,
         registration_number=registration_number,
+        vin_number=vin_number,
         image_url=image_url,
         user_id=user.id
     )
@@ -135,6 +137,7 @@ async def update_car(
     model: str = Form(None),
     year: int = Form(None),
     registration_number: str = Form(None),
+    vin_number: str = Form(None),
     image: UploadFile = File(None),
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(current_active_user)
@@ -179,6 +182,8 @@ async def update_car(
         car.year = year
     if registration_number:
         car.registration_number = registration_number
+    if vin_number is not None:
+        car.vin_number = vin_number
     
     # Handle image upload
     if image:

@@ -59,6 +59,7 @@ const MyCars = () => {
         model: "",
         year: new Date().getFullYear(),
         registration_number: "",
+        vin_number: "",
         image_url: "",
     });
 
@@ -133,6 +134,7 @@ const MyCars = () => {
             model: car.model,
             year: car.year,
             registration_number: car.registration_number,
+            vin_number: car.vin_number || "",
             image_url: car.image_url || "",
         });
         setImagePreview(car.image_url || null);
@@ -256,7 +258,7 @@ const MyCars = () => {
                                     />
                                 </div>
                                 <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label htmlFor="reg" className="text-right">Vehicle No.</Label>
+                                    <Label htmlFor="reg" className="text-right">Reg No.</Label>
                                     <Input
                                         id="reg"
                                         value={formData.registration_number}
@@ -264,6 +266,16 @@ const MyCars = () => {
                                         className="col-span-3"
                                         placeholder="e.g. XYZ 123"
                                         required
+                                    />
+                                </div>
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                    <Label htmlFor="vin" className="text-right">VIN No.</Label>
+                                    <Input
+                                        id="vin"
+                                        value={formData.vin_number || ""}
+                                        onChange={(e) => setFormData({ ...formData, vin_number: e.target.value })}
+                                        className="col-span-3"
+                                        placeholder="e.g. 1HGBH41JXMN109186"
                                     />
                                 </div>
                                 <div className="grid grid-cols-4 items-start gap-4">
@@ -311,7 +323,7 @@ const MyCars = () => {
                                 </div>
                             </div>
                             <DialogFooter>
-                                <Button type="submit" disabled={isSubmitting}>
+                                <Button type="submit" disabled={isSubmitting} className="bg-green-600 hover:bg-green-700 text-white">
                                     {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                     Add Vehicle
                                 </Button>
@@ -372,7 +384,7 @@ const MyCars = () => {
                                     />
                                 </div>
                                 <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label htmlFor="edit-reg" className="text-right">Vehicle No.</Label>
+                                    <Label htmlFor="edit-reg" className="text-right">Reg No.</Label>
                                     <Input
                                         id="edit-reg"
                                         value={formData.registration_number}
@@ -380,6 +392,16 @@ const MyCars = () => {
                                         className="col-span-3"
                                         placeholder="e.g. XYZ 123"
                                         required
+                                    />
+                                </div>
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                    <Label htmlFor="edit-vin" className="text-right">VIN No.</Label>
+                                    <Input
+                                        id="edit-vin"
+                                        value={formData.vin_number || ""}
+                                        onChange={(e) => setFormData({ ...formData, vin_number: e.target.value })}
+                                        className="col-span-3"
+                                        placeholder="e.g. 1HGBH41JXMN109186"
                                     />
                                 </div>
                                 <div className="grid grid-cols-4 items-start gap-4">
@@ -427,10 +449,7 @@ const MyCars = () => {
                                 </div>
                             </div>
                             <DialogFooter>
-                                <Button type="button" variant="outline" onClick={() => setIsEditOpen(false)}>
-                                    Cancel
-                                </Button>
-                                <Button type="submit" disabled={isSubmitting}>
+                                <Button type="submit" disabled={isSubmitting} className="bg-green-600 hover:bg-green-700 text-white">
                                     {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                     Update Vehicle
                                 </Button>
@@ -452,60 +471,40 @@ const MyCars = () => {
                     cars.map((car) => (
                         <div
                             key={car.id}
-                            className="bg-white rounded-[22px] p-8 shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_6px_28px_rgba(0,0,0,0.1)] transition-all duration-300 border border-gray-100"
+                            className="bg-gradient-to-br from-gray-50 to-white rounded-[24px] p-6 shadow-[0_8px_30px_rgba(0,0,0,0.08)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)] transition-all duration-300 border border-gray-200 relative"
                         >
-                            {/* Top Header Section - Car Name & Action Buttons */}
-                            <div className="flex items-center justify-between mb-6">
-                                {/* Car Name and Year - Left */}
-                                <div>
-                                    <h3 className="font-bold text-2xl text-gray-900 tracking-tight">{car.make} {car.model}</h3>
-                                    <p className="text-base text-gray-500 font-medium mt-1">{car.year}</p>
-                                    {isAdmin && car.user && (
-                                        <div className="flex items-center gap-2 mt-1.5 p-1 px-2 bg-blue-50 rounded-md border border-blue-100 inline-block">
-                                            <span className="text-xs text-blue-500 font-bold uppercase tracking-wider">Owner</span>
-                                            <span className="text-sm text-blue-700 font-medium">{car.user.full_name || car.user.email}</span>
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* Number Plate Badge - Center */}
-                                <div className="bg-white border-2 border-[#CD0000] rounded-[8px] px-4 py-2 shadow-[0_3px_10px_rgba(205,0,0,0.12)]">
-                                    <p className="text-base font-black text-gray-900 uppercase tracking-wider">{car.registration_number}</p>
-                                </div>
-
-                                {/* Edit & Delete Buttons - Right */}
-                                <div className="flex items-center gap-3">
-                                    <button
-                                        onClick={() => handleEditCar(car)}
-                                        className="p-3 bg-[#0066FF] hover:bg-[#0052CC] text-white rounded-[14px] transition-all duration-300 shadow-sm hover:shadow-md hover:scale-105"
-                                        title="Edit vehicle"
-                                    >
-                                        <Pencil className="h-4 w-4" strokeWidth={2.5} />
-                                    </button>
-                                    <button
-                                        onClick={() => handleDeleteCar(car.id)}
-                                        className="p-3 bg-[#CD0000] hover:bg-[#A30000] text-white rounded-[14px] transition-all duration-300 shadow-sm hover:shadow-md hover:scale-105"
-                                        title="Delete vehicle"
-                                    >
-                                        <Trash2 className="h-4 w-4" strokeWidth={2.5} />
-                                    </button>
-                                </div>
+                            {/* Edit & Delete Buttons - Top Right Corner - Circular */}
+                            <div className="absolute top-4 right-4 flex items-center gap-2">
+                                <button
+                                    onClick={() => handleEditCar(car)}
+                                    className="p-3.5 bg-[#0066FF] hover:bg-[#0052CC] text-white rounded-full transition-all duration-300 shadow-[0_4px_12px_rgba(0,102,255,0.3)] hover:shadow-[0_6px_20px_rgba(0,102,255,0.4)] hover:scale-110"
+                                    title="Edit vehicle"
+                                >
+                                    <Pencil className="h-5 w-5" strokeWidth={2.5} />
+                                </button>
+                                <button
+                                    onClick={() => handleDeleteCar(car.id)}
+                                    className="p-3.5 bg-[#CD0000] hover:bg-[#A30000] text-white rounded-full transition-all duration-300 shadow-[0_4px_12px_rgba(205,0,0,0.3)] hover:shadow-[0_6px_20px_rgba(205,0,0,0.4)] hover:scale-110"
+                                    title="Delete vehicle"
+                                >
+                                    <Trash2 className="h-5 w-5" strokeWidth={2.5} />
+                                </button>
                             </div>
 
-                            {/* Main Content Section - Image & Details */}
-                            <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6">
-                                {/* LEFT SIDE - Car Image */}
-                                <div className="flex items-start justify-center">
-                                    <div className="w-[280px] h-[200px] shadow-[0_8px_32px_rgba(0,0,0,0.12)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.18)] transition-all duration-500 rounded-[16px]">
+                            {/* Main Content Section - Image on Left, Info on Right */}
+                            <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-8 items-center">
+                                {/* LEFT SIDE - Car Image in Soft Container */}
+                                <div className="flex items-center justify-center">
+                                    <div className="w-full h-[300px] bg-white rounded-[20px] shadow-[0_10px_40px_rgba(0,0,0,0.1)] hover:shadow-[0_15px_50px_rgba(0,0,0,0.15)] transition-all duration-500 p-4">
                                         {car.image_url ? (
-                                            <div className="w-full h-full rounded-[16px] overflow-hidden">
+                                            <div className="w-full h-full rounded-[16px] overflow-hidden flex items-center justify-center">
                                                 <CarImageWithFallback
                                                     src={car.image_url}
                                                     alt={`${car.make} ${car.model}`}
                                                 />
                                             </div>
                                         ) : (
-                                            <div className="w-full h-full flex flex-col items-center justify-center bg-[#fafafa] rounded-[16px] border-2 border-dashed border-[#d3d3d3] p-4">
+                                            <div className="w-full h-full flex flex-col items-center justify-center bg-[#fafafa] rounded-[16px] border-2 border-dashed border-[#d3d3d3]">
                                                 <CarIcon className="h-[60px] w-[60px] text-gray-400 opacity-60 mb-2" strokeWidth={1.5} />
                                                 <p className="text-xs text-gray-500 font-semibold">No image added</p>
                                                 <p className="text-xs text-gray-400 mt-0.5">Please add your car image.</p>
@@ -514,72 +513,103 @@ const MyCars = () => {
                                     </div>
                                 </div>
 
-                                {/* RIGHT SIDE - Buttons */}
-                                <div className="flex flex-col justify-center">
-                                    {/* Action Buttons - Single Row */}
-                                    <div className="flex gap-2.5">
+                                {/* RIGHT SIDE - Vehicle Info & Action Buttons */}
+                                <div className="flex flex-col justify-center space-y-5 pr-24">
+                                    {/* Vehicle Name and Manufacturing Year */}
+                                    <div>
+                                        <h3 className="font-bold text-4xl text-gray-900 tracking-tight mb-2">{car.make} {car.model}</h3>
+                                        <p className="text-lg text-gray-500 font-medium">Manufacturing Year: {car.year}</p>
+                                    </div>
+
+                                    {/* Info Pills - Reg No. and VIN No. */}
+                                    <div className="flex flex-col gap-3">
+                                        {/* Registration Number Pill */}
+                                        <div className="bg-white border-3 border-[#CD0000] rounded-full px-6 py-3 shadow-[0_4px_15px_rgba(205,0,0,0.15)] hover:shadow-[0_6px_20px_rgba(205,0,0,0.25)] transition-all duration-300 inline-flex items-center gap-2 w-fit">
+                                            <span className="text-base font-bold text-gray-700">Reg No:</span>
+                                            <span className="text-base font-black text-gray-900 uppercase tracking-wider">{car.registration_number}</span>
+                                        </div>
+                                        
+                                        {/* VIN Number Pill */}
+                                        {car.vin_number && (
+                                            <div className="bg-white border-3 border-[#7C2558] rounded-full px-6 py-3 shadow-[0_4px_15px_rgba(124,37,88,0.15)] hover:shadow-[0_6px_20px_rgba(124,37,88,0.25)] transition-all duration-300 inline-flex items-center gap-2 w-fit">
+                                                <span className="text-base font-bold text-gray-700">VIN No:</span>
+                                                <span className="text-base font-bold text-gray-900 tracking-wide">{car.vin_number}</span>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Admin Owner Badge */}
+                                    {isAdmin && car.user && (
+                                        <div className="flex items-center gap-2 p-2 px-3 bg-blue-50 rounded-full border border-blue-200 inline-block w-fit shadow-sm">
+                                            <span className="text-xs text-blue-600 font-bold uppercase tracking-wider">Owner</span>
+                                            <span className="text-sm text-blue-800 font-medium">{car.user.full_name || car.user.email}</span>
+                                        </div>
+                                    )}
+
+                                    {/* Action Buttons - Horizontal Row with Equal Width */}
+                                    <div className="grid grid-cols-3 gap-3 pt-2">
                                         <button
-                                            className="group flex items-center justify-center gap-2 h-10 bg-transparent border-2 font-bold rounded-[12px] shadow-sm transition-all duration-300 hover:scale-[1.02] flex-1 hover:text-white"
+                                            className="group flex items-center justify-center gap-2 h-14 bg-white border-2 font-bold rounded-[14px] shadow-[0_4px_15px_rgba(95,75,139,0.12)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_6px_25px_rgba(95,75,139,0.3)]"
                                             style={{
-                                                borderColor: '#7C2558',
-                                                color: '#7C2558',
+                                                borderColor: '#5F4B8B',
+                                                color: '#5F4B8B',
                                             }}
                                             onMouseEnter={(e) => {
-                                                e.currentTarget.style.backgroundColor = '#7C2558';
+                                                e.currentTarget.style.backgroundColor = '#5F4B8B';
+                                                e.currentTarget.style.borderColor = '#5F4B8B';
                                                 e.currentTarget.style.color = 'white';
-                                                e.currentTarget.style.boxShadow = '0 4px 16px rgba(124, 37, 88, 0.3)';
                                             }}
                                             onMouseLeave={(e) => {
-                                                e.currentTarget.style.backgroundColor = 'transparent';
-                                                e.currentTarget.style.color = '#7C2558';
-                                                e.currentTarget.style.boxShadow = '';
+                                                e.currentTarget.style.backgroundColor = 'white';
+                                                e.currentTarget.style.borderColor = '#5F4B8B';
+                                                e.currentTarget.style.color = '#5F4B8B';
                                             }}
                                             onClick={() => navigate('/profile', { state: { view: 'schedule-pickup' } })}
                                         >
-                                            <Calendar className="h-4 w-4" strokeWidth={2.5} />
-                                            <span className="text-sm">Schedule Pick Up</span>
+                                            <Calendar className="h-5 w-5" strokeWidth={2.5} />
+                                            <span className="text-sm font-bold">Schedule Pick Up</span>
                                         </button>
                                         <button
-                                            className="group flex items-center justify-center gap-2 h-10 bg-transparent border-2 font-bold rounded-[12px] shadow-sm transition-all duration-300 hover:scale-[1.02] flex-1 hover:text-white"
+                                            className="group flex items-center justify-center gap-2 h-14 bg-white border-2 font-bold rounded-[14px] shadow-[0_4px_15px_rgba(188,38,73,0.12)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_6px_25px_rgba(188,38,73,0.3)]"
                                             style={{
-                                                borderColor: '#F96161',
-                                                color: '#F96161',
+                                                borderColor: '#BC2649',
+                                                color: '#BC2649',
                                             }}
                                             onMouseEnter={(e) => {
-                                                e.currentTarget.style.backgroundColor = '#F96161';
+                                                e.currentTarget.style.backgroundColor = '#BC2649';
+                                                e.currentTarget.style.borderColor = '#BC2649';
                                                 e.currentTarget.style.color = 'white';
-                                                e.currentTarget.style.boxShadow = '0 4px 16px rgba(249, 97, 97, 0.3)';
                                             }}
                                             onMouseLeave={(e) => {
-                                                e.currentTarget.style.backgroundColor = 'transparent';
-                                                e.currentTarget.style.color = '#F96161';
-                                                e.currentTarget.style.boxShadow = '';
+                                                e.currentTarget.style.backgroundColor = 'white';
+                                                e.currentTarget.style.borderColor = '#BC2649';
+                                                e.currentTarget.style.color = '#BC2649';
                                             }}
                                             onClick={() => navigate('/services')}
                                         >
-                                            <Wrench className="h-4 w-4" strokeWidth={2.5} />
-                                            <span className="text-sm">Book Service</span>
+                                            <Wrench className="h-5 w-5" strokeWidth={2.5} />
+                                            <span className="text-sm font-bold">Book Service</span>
                                         </button>
                                         <button
-                                            className="group flex items-center justify-center gap-2 h-10 bg-transparent border-2 font-bold rounded-[12px] shadow-sm transition-all duration-300 hover:scale-[1.02] flex-1 hover:text-white"
+                                            className="group flex items-center justify-center gap-2 h-14 bg-white border-2 font-bold rounded-[14px] shadow-[0_4px_15px_rgba(255,123,4,0.12)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_6px_25px_rgba(255,123,4,0.3)]"
                                             style={{
-                                                borderColor: '#FA887E',
-                                                color: '#FA887E',
+                                                borderColor: '#FF7B04',
+                                                color: '#FF7B04',
                                             }}
                                             onMouseEnter={(e) => {
-                                                e.currentTarget.style.backgroundColor = '#FA887E';
+                                                e.currentTarget.style.backgroundColor = '#FF7B04';
+                                                e.currentTarget.style.borderColor = '#FF7B04';
                                                 e.currentTarget.style.color = 'white';
-                                                e.currentTarget.style.boxShadow = '0 4px 16px rgba(250, 136, 126, 0.3)';
                                             }}
                                             onMouseLeave={(e) => {
-                                                e.currentTarget.style.backgroundColor = 'transparent';
-                                                e.currentTarget.style.color = '#FA887E';
-                                                e.currentTarget.style.boxShadow = '';
+                                                e.currentTarget.style.backgroundColor = 'white';
+                                                e.currentTarget.style.borderColor = '#FF7B04';
+                                                e.currentTarget.style.color = '#FF7B04';
                                             }}
                                             onClick={() => navigate(`/vehicle/${car.id}`)}
                                         >
-                                            <FileText className="h-4 w-4" strokeWidth={2.5} />
-                                            <span className="text-sm">Vehicle Details</span>
+                                            <FileText className="h-5 w-5" strokeWidth={2.5} />
+                                            <span className="text-sm font-bold">Vehicle Details</span>
                                         </button>
                                     </div>
                                 </div>

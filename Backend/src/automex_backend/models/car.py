@@ -25,6 +25,7 @@ class Car(Base):
     model: Mapped[str] = mapped_column(String(100), nullable=False)
     year: Mapped[int] = mapped_column(Integer, nullable=False)
     registration_number: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
+    vin_number: Mapped[Optional[str]] = mapped_column(String(17), nullable=True)
     image_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
     
     # Relationships

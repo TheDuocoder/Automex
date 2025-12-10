@@ -206,6 +206,7 @@ export interface Car {
   model: string;
   year: number;
   registration_number: string;
+  vin_number?: string;
   image_url?: string;
   user?: any; // For Admin view
 }
@@ -215,6 +216,7 @@ export interface CarCreate {
   model: string;
   year: number;
   registration_number: string;
+  vin_number?: string;
   image_url?: string;
 }
 
@@ -227,6 +229,10 @@ export const carService = {
     formData.append('model', data.model);
     formData.append('year', data.year.toString());
     formData.append('registration_number', data.registration_number);
+    
+    if (data.vin_number) {
+      formData.append('vin_number', data.vin_number);
+    }
 
     if (imageFile) {
       formData.append('image', imageFile);
@@ -273,6 +279,7 @@ export const carService = {
     if (data.model) formData.append('model', data.model);
     if (data.year) formData.append('year', data.year.toString());
     if (data.registration_number) formData.append('registration_number', data.registration_number);
+    if (data.vin_number) formData.append('vin_number', data.vin_number);
 
     if (imageFile) {
       formData.append('image', imageFile);

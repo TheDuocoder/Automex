@@ -6,6 +6,7 @@ class CarBase(BaseModel):
     model: str
     year: int
     registration_number: str
+    vin_number: Optional[str] = None
     image_url: Optional[str] = None
 
 class CarCreate(CarBase):
@@ -16,6 +17,7 @@ class CarUpdate(BaseModel):
     model: Optional[str] = None
     year: Optional[int] = None
     registration_number: Optional[str] = None
+    vin_number: Optional[str] = None
     image_url: Optional[str] = None
 
 from automex_backend.schemas.user import UserRead
