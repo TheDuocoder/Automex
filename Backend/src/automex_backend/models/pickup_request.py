@@ -5,6 +5,7 @@ from datetime import datetime
 from typing import Optional, TYPE_CHECKING
 from sqlalchemy import String, Integer, ForeignKey, DateTime, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.sql import func
 
 from automex_backend.database import Base
 
@@ -27,8 +28,13 @@ class PickUpRequest(Base):
     latitude: Mapped[Optional[float]] = mapped_column(nullable=True)
     longitude: Mapped[Optional[float]] = mapped_column(nullable=True)
     scheduled_date: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    pickup_time: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)  # Actual pickup time set by admin
+    drop_time: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)  # Actual drop time set by admin
     status: Mapped[str] = mapped_column(String(50), default="Pending") # Pending, Approved, Completed, Cancelled
     admin_comment: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    
+    # Timestamps
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     
     # Relationships
     user: Mapped["User"] = relationship("User", backref="pickup_requests")

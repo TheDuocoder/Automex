@@ -20,6 +20,7 @@ from automex_backend.schemas.booking import (
 from automex_backend.schemas.daily_work_log import (
     DailyWorkLogRead, DailyWorkLogCreate, DailyWorkLogUpdate, DailyWorkLogDescriptionUpdate
 )
+from automex_backend.schemas.booking_employee_assignment import BookingEmployeeAssignmentCreate
 from automex_backend.api.auth import current_active_user, get_current_user_with_role
 
 router = APIRouter()
@@ -97,7 +98,40 @@ async def get_bookings(
     result = await session.execute(query)
     bookings = result.scalars().all()
     
-    return bookings
+    # Load user emails
+    user_ids = {booking.user_id for booking in bookings}
+    users = {}
+    if user_ids:
+        users_stmt = select(User).where(User.id.in_(user_ids))
+        users_result = await session.execute(users_stmt)
+        users = {user.id: user.email for user in users_result.scalars().all()}
+    
+    # Load assigned employee names
+    from automex_backend.models.employee import Employee
+    employee_ids = {booking.assigned_employee_id for booking in bookings if booking.assigned_employee_id}
+    employees = {}
+    if employee_ids:
+        emp_stmt = select(Employee).where(Employee.id.in_(employee_ids))
+        emp_result = await session.execute(emp_stmt)
+        employees = {emp.id: emp.full_name for emp in emp_result.scalars().all()}
+    
+    # Convert bookings to response models with user emails and employee names
+    booking_list = []
+    for booking in bookings:
+        assigned_employee_name = None
+        if booking.assigned_employee_id:
+            assigned_employee_name = employees.get(booking.assigned_employee_id)
+        
+        booking_dict = {
+            **{k: getattr(booking, k) for k in BookingRead.model_fields.keys() if hasattr(booking, k)},
+            "user_email": users.get(booking.user_id),
+            "assigned_employee_id": booking.assigned_employee_id,
+            "assigned_employee_name": assigned_employee_name,
+            "daily_work_logs": booking.daily_work_logs or []
+        }
+        booking_list.append(BookingRead(**booking_dict))
+    
+    return booking_list if user_ids or employee_ids else bookings
 
 
 @router.get("/{booking_id}", response_model=BookingRead)
@@ -137,7 +171,64 @@ async def get_booking(
         if booking.daily_work_logs is None:
             booking.daily_work_logs = []
         
-        return booking
+        # Load user email for admin view
+        user_stmt = select(User).where(User.id == booking.user_id)
+        user_result = await session.execute(user_stmt)
+        booking_user = user_result.scalar_one_or_none()
+        
+        # Load assigned employee info
+        assigned_employee_name = None
+        if booking.assigned_employee_id:
+            from automex_backend.models.employee import Employee
+            emp_stmt = select(Employee).where(Employee.id == booking.assigned_employee_id)
+            emp_result = await session.execute(emp_stmt)
+            employee = emp_result.scalar_one_or_none()
+            assigned_employee_name = employee.full_name if employee else None
+        
+        # Load employee assignment history
+        from automex_backend.models.booking_employee_assignment import BookingEmployeeAssignment
+        assignment_stmt = select(BookingEmployeeAssignment).where(
+            BookingEmployeeAssignment.booking_id == booking.id
+        ).order_by(BookingEmployeeAssignment.created_at.desc())
+        assignment_result = await session.execute(assignment_stmt)
+        assignments = assignment_result.scalars().all()
+        
+        # Build assignment history
+        assignment_history = []
+        for assignment in assignments:
+            emp_name = None
+            if assignment.employee_id:
+                emp_stmt = select(Employee).where(Employee.id == assignment.employee_id)
+                emp_result = await session.execute(emp_stmt)
+                emp = emp_result.scalar_one_or_none()
+                emp_name = emp.full_name if emp else None
+            
+            assigned_by_stmt = select(User).where(User.id == assignment.assigned_by_user_id)
+            assigned_by_result = await session.execute(assigned_by_stmt)
+            assigned_by_user = assigned_by_result.scalar_one_or_none()
+            assigned_by_name = assigned_by_user.full_name if assigned_by_user else (assigned_by_user.email if assigned_by_user else None)
+            
+            assignment_history.append({
+                "id": assignment.id,
+                "employee_id": assignment.employee_id,
+                "employee_name": emp_name,
+                "assigned_by_user_id": assignment.assigned_by_user_id,
+                "assigned_by_name": assigned_by_name,
+                "notes": assignment.notes,
+                "created_at": assignment.created_at
+            })
+        
+        # Convert to response model and add user email, employee info, and history
+        booking_dict = {
+            **{k: getattr(booking, k) for k in BookingRead.model_fields.keys() if hasattr(booking, k)},
+            "user_email": booking_user.email if booking_user else None,
+            "assigned_employee_id": booking.assigned_employee_id,
+            "assigned_employee_name": assigned_employee_name,
+            "employee_assignment_history": assignment_history,
+            "daily_work_logs": booking.daily_work_logs or []
+        }
+        
+        return BookingRead(**booking_dict)
     except HTTPException:
         raise
     except Exception as e:
@@ -1300,4 +1391,138 @@ async def delete_daily_work_by_date(
     print(f"[INFO] Deleted daily work log for date {log_date} ({len(urls_to_delete)} media items, S3 deleted: {s3_deleted_count} files)")
     
     return None
+
+
+@router.patch("/{booking_id}/assign-employee", response_model=BookingRead)
+async def assign_employee_to_booking(
+    booking_id: int,
+    assignment: BookingEmployeeAssignmentCreate,
+    session: AsyncSession = Depends(get_async_session),
+    user: User = Depends(current_active_user)
+):
+    """
+    Assign or change employee assignment for a booking (Super Admin only)
+    """
+    # Check if user is super admin
+    is_super = await is_super_admin_only(user, session)
+    if not is_super:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only super admin can assign employees to bookings"
+        )
+    
+    # Get booking
+    result = await session.execute(
+        select(Booking).where(Booking.id == booking_id)
+    )
+    booking = result.scalar_one_or_none()
+    
+    if not booking:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Booking not found"
+        )
+    
+    # Validate employee if provided
+    if assignment.employee_id is not None:
+        from automex_backend.models.employee import Employee
+        emp_result = await session.execute(
+            select(Employee).where(Employee.id == assignment.employee_id)
+        )
+        employee = emp_result.scalar_one_or_none()
+        
+        if not employee:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Employee not found"
+            )
+        
+        if not employee.is_active:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Cannot assign inactive employee"
+            )
+    
+    # Update booking assignment
+    old_employee_id = booking.assigned_employee_id
+    booking.assigned_employee_id = assignment.employee_id
+    await session.commit()
+    await session.refresh(booking)
+    
+    # Create assignment history record
+    from automex_backend.models.booking_employee_assignment import BookingEmployeeAssignment
+    assignment_history = BookingEmployeeAssignment(
+        booking_id=booking.id,
+        employee_id=assignment.employee_id,
+        assigned_by_user_id=user.id,
+        notes=assignment.notes
+    )
+    session.add(assignment_history)
+    await session.commit()
+    
+    # Reload booking with relationships
+    result = await session.execute(
+        select(Booking)
+        .where(Booking.id == booking_id)
+        .options(selectinload(Booking.daily_work_logs))
+    )
+    booking = result.scalar_one_or_none()
+    
+    # Load user email
+    user_stmt = select(User).where(User.id == booking.user_id)
+    user_result = await session.execute(user_stmt)
+    booking_user = user_result.scalar_one_or_none()
+    
+    # Load assigned employee info
+    assigned_employee_name = None
+    if booking.assigned_employee_id:
+        from automex_backend.models.employee import Employee
+        emp_stmt = select(Employee).where(Employee.id == booking.assigned_employee_id)
+        emp_result = await session.execute(emp_stmt)
+        employee = emp_result.scalar_one_or_none()
+        assigned_employee_name = employee.full_name if employee else None
+    
+    # Load employee assignment history
+    assignment_stmt = select(BookingEmployeeAssignment).where(
+        BookingEmployeeAssignment.booking_id == booking.id
+    ).order_by(BookingEmployeeAssignment.created_at.desc())
+    assignment_result = await session.execute(assignment_stmt)
+    assignments = assignment_result.scalars().all()
+    
+    # Build assignment history
+    assignment_history_list = []
+    for assgn in assignments:
+        emp_name = None
+        if assgn.employee_id:
+            emp_stmt = select(Employee).where(Employee.id == assgn.employee_id)
+            emp_result = await session.execute(emp_stmt)
+            emp = emp_result.scalar_one_or_none()
+            emp_name = emp.full_name if emp else None
+        
+        assigned_by_stmt = select(User).where(User.id == assgn.assigned_by_user_id)
+        assigned_by_result = await session.execute(assigned_by_stmt)
+        assigned_by_user = assigned_by_result.scalar_one_or_none()
+        assigned_by_name = assigned_by_user.full_name if assigned_by_user else (assigned_by_user.email if assigned_by_user else None)
+        
+        assignment_history_list.append({
+            "id": assgn.id,
+            "employee_id": assgn.employee_id,
+            "employee_name": emp_name,
+            "assigned_by_user_id": assgn.assigned_by_user_id,
+            "assigned_by_name": assigned_by_name,
+            "notes": assgn.notes,
+            "created_at": assgn.created_at
+        })
+    
+    # Convert to response model
+    booking_dict = {
+        **{k: getattr(booking, k) for k in BookingRead.model_fields.keys() if hasattr(booking, k)},
+        "user_email": booking_user.email if booking_user else None,
+        "assigned_employee_id": booking.assigned_employee_id,
+        "assigned_employee_name": assigned_employee_name,
+        "employee_assignment_history": assignment_history_list,
+        "daily_work_logs": booking.daily_work_logs or []
+    }
+    
+    return BookingRead(**booking_dict)
 

@@ -37,6 +37,8 @@ const SchedulePickUp = () => {
         admin_comment: "",
         address: "",
         scheduled_date: "",
+        pickup_time: "",
+        drop_time: "",
         car_id: 0,
         location: "",
         latitude: undefined,
@@ -143,13 +145,30 @@ const SchedulePickUp = () => {
         setIsAnimating(true);
         
         setIsSubmitting(true);
-        // Ensure date is in ISO format for backend
-        const dateObj = new Date(formData.scheduled_date);
-        const isoDate = dateObj.toISOString();
+        // Convert datetime-local value to ISO format
+        // datetime-local gives us "YYYY-MM-DDTHH:mm" in local time
+        // We need to send it as UTC ISO string, preserving the exact time selected
+        let dateToSend = formData.scheduled_date;
+        if (formData.scheduled_date) {
+            // Parse the datetime-local value (format: "YYYY-MM-DDTHH:mm")
+            // This value is already in the user's local timezone
+            const [datePart, timePart] = formData.scheduled_date.split('T');
+            const [year, month, day] = datePart.split('-').map(Number);
+            const [hours, minutes] = timePart.split(':').map(Number);
+            
+            // Create a date object treating the input as local time
+            // new Date(year, month, day, hours, minutes) creates a date in local timezone
+            const localDate = new Date(year, month - 1, day, hours, minutes);
+            
+            // Convert to ISO string (UTC)
+            // This correctly converts local time to UTC
+            // When displayed later, JavaScript will convert back to local time
+            dateToSend = localDate.toISOString();
+        }
 
         const response = await pickupRequestService.create({
             ...formData,
-            scheduled_date: isoDate,
+            scheduled_date: dateToSend,
         });
 
         if (response.data) {
@@ -194,6 +213,8 @@ const SchedulePickUp = () => {
                 admin_comment: response.data.admin_comment || "",
                 address: response.data.address,
                 scheduled_date: response.data.scheduled_date,
+                pickup_time: response.data.pickup_time || "",
+                drop_time: response.data.drop_time || "",
                 car_id: response.data.car_id,
                 location: response.data.location,
                 latitude: response.data.latitude,
@@ -214,14 +235,84 @@ const SchedulePickUp = () => {
         const dataToSend = { ...updateData };
 
         // Ensure date is in ISO format if it was changed by creator
+        // Handle datetime-local input which is in local time
         if (dataToSend.scheduled_date && isCreator) {
             try {
-                const dateObj = new Date(dataToSend.scheduled_date);
-                if (!isNaN(dateObj.getTime())) {
-                    dataToSend.scheduled_date = dateObj.toISOString();
+                // If it's a datetime-local format (YYYY-MM-DDTHH:mm), treat as local time
+                if (typeof dataToSend.scheduled_date === 'string' && dataToSend.scheduled_date.length === 16) {
+                    // Parse the datetime-local value
+                    const [datePart, timePart] = dataToSend.scheduled_date.split('T');
+                    const [year, month, day] = datePart.split('-').map(Number);
+                    const [hours, minutes] = timePart.split(':').map(Number);
+                    
+                    // Create a date object in local timezone
+                    const localDate = new Date(year, month - 1, day, hours, minutes);
+                    dataToSend.scheduled_date = localDate.toISOString();
+                } else {
+                    // Already in ISO format or other format
+                    const dateObj = new Date(dataToSend.scheduled_date);
+                    if (!isNaN(dateObj.getTime())) {
+                        dataToSend.scheduled_date = dateObj.toISOString();
+                    }
                 }
             } catch (e) {
                 console.error("Date parsing error", e);
+            }
+        }
+
+        // Handle pickup_time conversion for admin/super admin
+        if (dataToSend.pickup_time && isAdmin) {
+            try {
+                // If it's a datetime-local format (YYYY-MM-DDTHH:mm), treat as local time
+                if (typeof dataToSend.pickup_time === 'string' && dataToSend.pickup_time.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/)) {
+                    // Parse the datetime-local value
+                    const [datePart, timePart] = dataToSend.pickup_time.split('T');
+                    const [year, month, day] = datePart.split('-').map(Number);
+                    const [hours, minutes] = timePart.split(':').map(Number);
+                    
+                    // Create a date object in local timezone
+                    const localDate = new Date(year, month - 1, day, hours, minutes);
+                    dataToSend.pickup_time = localDate.toISOString();
+                } else if (dataToSend.pickup_time === '') {
+                    // Empty string means clear the pickup_time
+                    dataToSend.pickup_time = null;
+                } else {
+                    // Already in ISO format or other format
+                    const dateObj = new Date(dataToSend.pickup_time);
+                    if (!isNaN(dateObj.getTime())) {
+                        dataToSend.pickup_time = dateObj.toISOString();
+                    }
+                }
+            } catch (e) {
+                console.error("Pickup time parsing error", e);
+            }
+        }
+
+        // Handle drop_time conversion for admin/super admin
+        if (dataToSend.drop_time && isAdmin) {
+            try {
+                // If it's a datetime-local format (YYYY-MM-DDTHH:mm), treat as local time
+                if (typeof dataToSend.drop_time === 'string' && dataToSend.drop_time.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/)) {
+                    // Parse the datetime-local value
+                    const [datePart, timePart] = dataToSend.drop_time.split('T');
+                    const [year, month, day] = datePart.split('-').map(Number);
+                    const [hours, minutes] = timePart.split(':').map(Number);
+                    
+                    // Create a date object in local timezone
+                    const localDate = new Date(year, month - 1, day, hours, minutes);
+                    dataToSend.drop_time = localDate.toISOString();
+                } else if (dataToSend.drop_time === '') {
+                    // Empty string means clear the drop_time
+                    dataToSend.drop_time = null;
+                } else {
+                    // Already in ISO format or other format
+                    const dateObj = new Date(dataToSend.drop_time);
+                    if (!isNaN(dateObj.getTime())) {
+                        dataToSend.drop_time = dateObj.toISOString();
+                    }
+                }
+            } catch (e) {
+                console.error("Drop time parsing error", e);
             }
         }
 
@@ -307,7 +398,8 @@ const SchedulePickUp = () => {
                                     }}
                                     onClick={() => handleCardClick(req.id)}
                                 >
-                                    <div className="flex justify-between items-start mb-4">
+                                    {/* Top Row: Status and Created Date */}
+                                    <div className="flex justify-between items-start mb-3">
                                         <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold ${req.status?.toLowerCase() === 'pending' ? 'bg-yellow-50 text-yellow-700 ring-1 ring-yellow-200' :
                                             req.status?.toLowerCase() === 'approved' ? 'bg-green-50 text-green-700 ring-1 ring-green-200' :
                                                 req.status?.toLowerCase() === 'completed' ? 'bg-green-50 text-green-700 ring-1 ring-green-200' :
@@ -317,24 +409,42 @@ const SchedulePickUp = () => {
                                             {req.status?.toLowerCase() === 'cancelled' && <XCircle className="h-3.5 w-3.5" />}
                                             {req.status || 'Pending'}
                                         </span>
-                                        <div className="text-right">
-                                            <div className="text-xs font-medium" style={{ color: 'black' }}>
-                                                {new Date(req.scheduled_date).toLocaleDateString('en-US', {
-                                                    month: 'short',
-                                                    day: 'numeric',
-                                                    year: 'numeric'
-                                                })}
+                                        {req.created_at && (
+                                            <div className="text-right">
+                                                <div className="text-xs font-medium" style={{ color: 'black' }}>Created:</div>
+                                                <div className="text-xs mt-0.5" style={{ color: 'black' }}>
+                                                    {(() => {
+                                                        let dateStr = req.created_at;
+                                                        if (typeof dateStr === 'string' && !dateStr.endsWith('Z') && !dateStr.includes('+')) {
+                                                            dateStr = dateStr + 'Z';
+                                                        }
+                                                        const date = new Date(dateStr);
+                                                        return date.toLocaleDateString('en-US', {
+                                                            month: 'short',
+                                                            day: 'numeric',
+                                                            year: 'numeric'
+                                                        });
+                                                    })()}
+                                                </div>
+                                                <div className="text-xs font-bold mt-0.5" style={{ color: 'black' }}>
+                                                    {(() => {
+                                                        let dateStr = req.created_at;
+                                                        if (typeof dateStr === 'string' && !dateStr.endsWith('Z') && !dateStr.includes('+')) {
+                                                            dateStr = dateStr + 'Z';
+                                                        }
+                                                        const date = new Date(dateStr);
+                                                        const hours = date.getHours();
+                                                        const minutes = String(date.getMinutes()).padStart(2, '0');
+                                                        const ampm = hours >= 12 ? 'PM' : 'AM';
+                                                        const displayHours = hours % 12 || 12;
+                                                        return `${String(displayHours).padStart(2, '0')}:${minutes} ${ampm}`;
+                                                    })()}
+                                                </div>
                                             </div>
-                                            <div className="text-xs font-bold mt-0.5" style={{ color: 'black' }}>
-                                                {new Date(req.scheduled_date).toLocaleTimeString('en-US', {
-                                                    hour: 'numeric',
-                                                    minute: '2-digit',
-                                                    hour12: true
-                                                })}
-                                            </div>
-                                        </div>
+                                        )}
                                     </div>
 
+                                    {/* Owner Badge */}
                                     {isAdmin && req.user && (
                                         <div className="mb-3">
                                             <span className="inline-flex items-center gap-1 text-xs font-medium text-blue-700 bg-blue-50 px-2.5 py-1 rounded-md border border-blue-100">
@@ -343,9 +453,44 @@ const SchedulePickUp = () => {
                                         </div>
                                     )}
 
-                                    <h4 className="font-bold mb-3 text-lg" style={{ color: 'black' }}>
-                                        {req.car ? `${req.car.make} ${req.car.model}` : getCarName(req.car_id)}
-                                    </h4>
+                                    {/* Vehicle Name and Scheduled Date */}
+                                    <div className="flex justify-between items-center mb-3">
+                                        <h4 className="font-bold text-lg" style={{ color: 'black' }}>
+                                            {req.car ? `${req.car.make} ${req.car.model}` : getCarName(req.car_id)}
+                                        </h4>
+                                        <div className="text-right">
+                                            <div className="text-xs font-medium" style={{ color: 'black' }}>Pick Up:</div>
+                                            <div className="text-xs mt-0.5" style={{ color: 'black' }}>
+                                                {(() => {
+                                                    let dateStr = req.scheduled_date;
+                                                    if (typeof dateStr === 'string' && !dateStr.endsWith('Z') && !dateStr.includes('+')) {
+                                                        dateStr = dateStr + 'Z';
+                                                    }
+                                                    const date = new Date(dateStr);
+                                                    return date.toLocaleDateString('en-US', {
+                                                        month: 'short',
+                                                        day: 'numeric',
+                                                        year: 'numeric'
+                                                    });
+                                                })()}
+                                            </div>
+                                            <div className="text-xs font-bold mt-0.5" style={{ color: 'black' }}>
+                                                {(() => {
+                                                    // Ensure UTC timezone - backend returns UTC datetime
+                                                    let dateStr = req.scheduled_date;
+                                                    if (typeof dateStr === 'string' && !dateStr.endsWith('Z') && !dateStr.includes('+')) {
+                                                        dateStr = dateStr + 'Z';
+                                                    }
+                                                    const date = new Date(dateStr);
+                                                    const hours = date.getHours();
+                                                    const minutes = String(date.getMinutes()).padStart(2, '0');
+                                                    const ampm = hours >= 12 ? 'PM' : 'AM';
+                                                    const displayHours = hours % 12 || 12;
+                                                    return `${String(displayHours).padStart(2, '0')}:${minutes} ${ampm}`;
+                                                })()}
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div className="text-sm space-y-2" style={{ color: 'black' }}>
                                         {req.address && (
                                             <div className="flex items-start gap-2">
@@ -595,13 +740,46 @@ const SchedulePickUp = () => {
                                         <Input
                                             type="datetime-local"
                                             className="mt-1 h-9 text-sm"
-                                            value={updateData.scheduled_date ? new Date(updateData.scheduled_date).toISOString().slice(0, 16) : ''}
+                                            value={updateData.scheduled_date ? (() => {
+                                                // Convert UTC date from backend to local datetime-local format
+                                                let dateStr = updateData.scheduled_date;
+                                                // Ensure UTC timezone indicator
+                                                if (typeof dateStr === 'string' && !dateStr.endsWith('Z') && !dateStr.includes('+')) {
+                                                    dateStr = dateStr + 'Z';
+                                                }
+                                                const date = new Date(dateStr);
+                                                // Format as YYYY-MM-DDTHH:mm for datetime-local input
+                                                // getFullYear, getMonth, etc. automatically convert UTC to local time
+                                                const year = date.getFullYear();
+                                                const month = String(date.getMonth() + 1).padStart(2, '0');
+                                                const day = String(date.getDate()).padStart(2, '0');
+                                                const hours = String(date.getHours()).padStart(2, '0');
+                                                const minutes = String(date.getMinutes()).padStart(2, '0');
+                                                return `${year}-${month}-${day}T${hours}:${minutes}`;
+                                            })() : ''}
                                             onChange={(e) => setUpdateData({ ...updateData, scheduled_date: e.target.value })}
                                             min={new Date().toISOString().slice(0, 16)}
                                         />
                                     ) : (
                                         <p className="text-sm font-medium mt-1">
-                                            {new Date(selectedRequest.scheduled_date).toLocaleString()}
+                                            {(() => {
+                                                // Ensure the date string is treated as UTC
+                                                let dateStr = selectedRequest.scheduled_date;
+                                                // If the string doesn't end with 'Z', append it to indicate UTC
+                                                if (typeof dateStr === 'string' && !dateStr.endsWith('Z') && !dateStr.includes('+')) {
+                                                    dateStr = dateStr + 'Z';
+                                                }
+                                                const date = new Date(dateStr);
+                                                // Format: DD-MM-YYYY HH:MM AM/PM
+                                                const day = String(date.getDate()).padStart(2, '0');
+                                                const month = String(date.getMonth() + 1).padStart(2, '0');
+                                                const year = date.getFullYear();
+                                                const hours = date.getHours();
+                                                const minutes = String(date.getMinutes()).padStart(2, '0');
+                                                const ampm = hours >= 12 ? 'PM' : 'AM';
+                                                const displayHours = hours % 12 || 12;
+                                                return `${day}-${month}-${year} ${String(displayHours).padStart(2, '0')}:${minutes} ${ampm}`;
+                                            })()}
                                         </p>
                                     )}
                                 </div>

@@ -414,81 +414,7 @@ router.include_router(
     fastapi_users.get_reset_password_router(),
 )
 
-# Don't use FastAPI Users' users router - it has the problematic /me endpoint
-# Instead, create our own users router with properly handled endpoints
-users_router = APIRouter()
 
-# Custom /me endpoint that returns UserRead directly
-# This bypasses FastAPI Users' model_validate which causes the greenlet error
-@users_router.get(
-    "/me",
-    response_model=UserRead,
-    name="users:me",
-    summary="Get Current User (Users Router)",
-    description="Get the currently authenticated user's information via users router",
-    tags=["Authentication"],
-    responses={
-        200: {
-            "description": "User information retrieved successfully",
-        },
-        401: {"description": "Not authenticated"},
-    }
-)
-async def get_current_user_custom(
-    user: UserRead = Depends(get_current_user_with_role_read)
-):
-    """
-    Get current authenticated user with role information (custom implementation).
-    
-    This endpoint returns the user as a UserRead Pydantic model that's already
-    constructed from plain Python types, avoiding any SQLAlchemy lazy loading issues.
-    
-    **Path**: `/api/v1/auth/users/me`
-    
-    **Authentication**: Required (JWT Bearer token)
-    """
-    # The dependency already returns UserRead, so just return it directly
-    return user
-
-
-
-@users_router.get(
-    "/",
-    response_model=List[UserRead],
-    summary="Get All Users (Admin Only)",
-    description="Get a list of all users. Restricted to Admins and Superusers.",
-    tags=["Authentication"],
-)
-async def get_all_users(
-    current_user: User = Depends(get_current_user_with_role),
-    session: AsyncSession = Depends(get_async_session),
-):
-    """
-    Get all users. Only accessible by Admins/Superusers.
-    """
-    # Check permissions
-    is_admin = current_user.is_superuser
-    if current_user.role and current_user.role.name in ["admin", "super"]:
-        is_admin = True
-    
-    if not is_admin:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="You do not have permission to view all users"
-        )
-    
-    # Fetch all users with roles
-    stmt = select(User).options(selectinload(User.role)).order_by(User.id)
-    result = await session.execute(stmt)
-    users = result.scalars().all()
-    
-    # Convert to UserRead (Pydantic will handle this if we return ORM objects with relation loaded)
-    return users
-
-# Add other user management endpoints if needed
-# For now, we only override the /me endpoint
-
-router.include_router(users_router, prefix="/users")
 
 
 @router.get(
@@ -675,12 +601,26 @@ async def upload_profile_picture(
         # Upload to S3 in Backend/profile-pick/ folder
         from automex_backend.services.s3 import s3_service
         
-        # Delete old profile picture from S3 if exists
+        # Delete old profile picture from S3/local storage if exists
         if user.profile_picture_url:
-            await s3_service.delete_file(user.profile_picture_url)
+            try:
+                await s3_service.delete_file(user.profile_picture_url)
+            except Exception as delete_error:
+                # Log but don't fail if deletion fails
+                print(f"[WARNING] Failed to delete old profile picture: {str(delete_error)}")
         
-        # Upload new profile picture
-        profile_picture_url = await s3_service.upload_file(file, folder="Backend/profile-pick/")
+        # Upload new profile picture (will fallback to local storage if S3 fails)
+        try:
+            profile_picture_url = await s3_service.upload_file(file, folder="Backend/profile-pick/")
+        except HTTPException as upload_error:
+            # Re-raise HTTP exceptions with better error messages
+            error_detail = upload_error.detail
+            if "AWS" in error_detail or "S3" in error_detail or "credentials" in error_detail.lower():
+                raise HTTPException(
+                    status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                    detail="File upload service is not properly configured. Please contact administrator or configure AWS S3 credentials in the .env file."
+                )
+            raise
         
         # Update user profile picture URL
         user_update = UserUpdate(profile_picture_url=profile_picture_url)
@@ -758,6 +698,55 @@ class LoginResponse(BaseModel):
     token_type: str = "bearer"
     user: UserRead
     role: RoleRead
+
+
+@router.get(
+    "/users",
+    response_model=List[UserRead],
+    summary="Get All Users (Admin/Super Admin Only)",
+    description="Get a list of all users in the system. Only accessible to admins and super admins.",
+    tags=["Authentication", "Admin"],
+    responses={
+        200: {"description": "List of all users retrieved successfully"},
+        401: {"description": "Not authenticated"},
+        403: {"description": "Not authorized - Admin or Super Admin role required"},
+    }
+)
+async def get_all_users(
+    user: User = Depends(get_current_user_with_role),
+    session: AsyncSession = Depends(get_async_session),
+):
+    """
+    Get all users in the system.
+    
+    This endpoint is restricted to admins and super admins only.
+    Returns a list of all users with their role information.
+    """
+    # Check if user is admin or super admin
+    if not user.is_superuser and (not user.role or user.role.name not in ['admin', 'super']):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Access denied. Admin or Super Admin role required."
+        )
+    
+    try:
+        # Query all users with their roles
+        result = await session.execute(
+            select(User).options(selectinload(User.role)).order_by(User.id)
+        )
+        users = result.scalars().unique().all()
+        
+        # Convert to UserRead models
+        users_read = [UserRead.model_validate(u) for u in users]
+        
+        return users_read
+    except Exception as e:
+        print(f"[ERROR] Error fetching all users: {str(e)}")
+        print(f"[ERROR] Traceback:\n{traceback.format_exc()}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to retrieve users: {str(e)}"
+        )
 
 
 @router.post("/login", response_model=LoginResponse, status_code=status.HTTP_200_OK)

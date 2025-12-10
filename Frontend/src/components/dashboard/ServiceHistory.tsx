@@ -165,9 +165,9 @@ const ServiceHistory = () => {
                 </CardTitle>
                 <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
                     <DialogTrigger asChild>
-                        <button 
+                        <button
                             className="add-record-animated"
-                            disabled={cars.length === 0} 
+                            disabled={cars.length === 0}
                             onClick={openAddModal}
                         >
                             <ArrowRight className="arr-2" />
@@ -234,8 +234,8 @@ const ServiceHistory = () => {
                                 </div>
                             </div>
                             <DialogFooter>
-                                <button 
-                                    type="submit" 
+                                <button
+                                    type="submit"
                                     disabled={isSubmitting || !selectedCarId}
                                     className="add-record-submit"
                                 >
@@ -288,11 +288,11 @@ const ServiceHistory = () => {
                             {/* Title Section with Service Type Tag */}
                             <div className="flex items-start justify-between mb-6">
                                 <div className="flex-1 space-y-2">
-                                    <h3 
+                                    <h3
                                         className="text-[19px] text-gray-900 leading-snug"
-                                        style={{ 
-                                            fontWeight: 700, 
-                                            letterSpacing: '-0.02em' 
+                                        style={{
+                                            fontWeight: 700,
+                                            letterSpacing: '-0.02em'
                                         }}
                                     >
                                         {record.service_name}
@@ -332,7 +332,7 @@ const ServiceHistory = () => {
                                     </span>
                                 </div>
                                 <span className="text-gray-300 font-light">|</span>
-                                <div 
+                                <div
                                     className="px-3 py-1.5 rounded-lg font-bold text-[13px] tracking-wider uppercase"
                                     style={{
                                         background: 'linear-gradient(135deg, #F3F4F6 0%, #E5E7EB 100%)',
@@ -367,7 +367,7 @@ const ServiceHistory = () => {
 
                             {/* Service Details Box - Enhanced */}
                             {record.description && (
-                                <div 
+                                <div
                                     className="relative rounded-[16px] p-5 mb-5"
                                     style={{
                                         backgroundColor: '#F7F7F8',
@@ -375,15 +375,15 @@ const ServiceHistory = () => {
                                     }}
                                 >
                                     {/* Left Red Indicator Bar */}
-                                    <div 
+                                    <div
                                         className="absolute left-0 top-4 bottom-4 w-1 rounded-r-full"
                                         style={{
                                             background: 'linear-gradient(180deg, #EF4444 0%, #DC2626 100%)',
                                         }}
                                     />
-                                    <p 
+                                    <p
                                         className="text-[14px] leading-relaxed pl-4"
-                                        style={{ 
+                                        style={{
                                             color: '#4B5563',
                                             fontWeight: 500,
                                         }}
@@ -396,7 +396,7 @@ const ServiceHistory = () => {
                             {/* Bottom Row - Status & Action */}
                             <div className="flex items-center justify-between pt-4">
                                 {/* Enhanced Status Badge with Gradient & Shadow */}
-                                <div 
+                                <div
                                     className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-[13px] font-semibold border"
                                     style={{
                                         background: 'linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%)',
@@ -423,7 +423,7 @@ const ServiceHistory = () => {
                                 >
                                     <ChevronRight className="h-5 w-5" strokeWidth={3} />
                                     {/* Shine effect on hover */}
-                                    <div 
+                                    <div
                                         className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-30 transition-opacity duration-300"
                                         style={{
                                             background: 'linear-gradient(135deg, rgba(255,255,255,0.4) 0%, transparent 60%)',

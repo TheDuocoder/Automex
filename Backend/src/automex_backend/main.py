@@ -3,6 +3,7 @@ Main FastAPI application entry point for AutoMex Backend
 """
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import Response
 from contextlib import asynccontextmanager
@@ -199,6 +200,15 @@ app.add_middleware(CORSHeaderMiddleware)
 
 # Include API routes
 app.include_router(api_router, prefix="/api/v1")
+
+# Mount static files for local uploads (fallback when S3 is not configured)
+uploads_dir = Path("uploads")
+uploads_dir.mkdir(exist_ok=True)
+try:
+    app.mount("/static", StaticFiles(directory="uploads"), name="static")
+    print("[INFO] Static file serving enabled for local uploads")
+except Exception as e:
+    print(f"[WARNING] Could not mount static files: {str(e)}")
 
 # Debug: Print all registered routes
 print("\n[INFO] Registered API Routes:")

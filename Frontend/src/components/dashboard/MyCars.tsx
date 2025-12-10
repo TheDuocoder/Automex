@@ -326,9 +326,9 @@ const MyCars = () => {
                                 </div>
                             </div>
                             <DialogFooter>
-                                <button 
-                                    type="submit" 
-                                    disabled={isSubmitting} 
+                                <button
+                                    type="submit"
+                                    disabled={isSubmitting}
                                     className="add-car-animated"
                                 >
                                     <span className="button__text">
@@ -543,7 +543,7 @@ const MyCars = () => {
                                             <span className="text-base font-bold text-gray-700">Reg No:</span>
                                             <span className="text-base font-black text-gray-900 uppercase tracking-wider">{car.registration_number}</span>
                                         </div>
-                                        
+
                                         {/* VIN Number Pill */}
                                         {car.vin_number && (
                                             <div className="bg-white border-3 border-[#7C2558] rounded-full px-6 py-3 shadow-[0_4px_15px_rgba(124,37,88,0.15)] hover:shadow-[0_6px_20px_rgba(124,37,88,0.25)] transition-all duration-300 inline-flex items-center gap-2 w-fit">

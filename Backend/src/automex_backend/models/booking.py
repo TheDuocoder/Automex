@@ -12,6 +12,8 @@ from automex_backend.database import Base
 if TYPE_CHECKING:
     from automex_backend.models.cost import Cost
     from automex_backend.models.daily_work_log import DailyWorkLog
+    from automex_backend.models.employee import Employee
+    from automex_backend.models.booking_employee_assignment import BookingEmployeeAssignment
 
 
 class BookingStatus(str, PyEnum):
@@ -66,6 +68,9 @@ class Booking(Base):
     # Technician notes (for internal use)
     technician_notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     
+    # Employee assignment (super admin only)
+    assigned_employee_id: Mapped[Optional[int]] = mapped_column(ForeignKey("employee.id"), nullable=True)
+    
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
@@ -74,6 +79,8 @@ class Booking(Base):
     # Relationships
     costs: Mapped[List["Cost"]] = relationship("Cost", back_populates="booking", cascade="all, delete-orphan")
     daily_work_logs: Mapped[List["DailyWorkLog"]] = relationship("DailyWorkLog", back_populates="booking", cascade="all, delete-orphan")
+    assigned_employee: Mapped[Optional["Employee"]] = relationship("Employee", foreign_keys=[assigned_employee_id])
+    employee_assignments: Mapped[List["BookingEmployeeAssignment"]] = relationship("BookingEmployeeAssignment", back_populates="booking", cascade="all, delete-orphan")
     
     @property
     def status_enum(self) -> BookingStatus:

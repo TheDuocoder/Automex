@@ -62,6 +62,20 @@ class BookingUpdate(BaseModel):
     technician_notes: Optional[str] = None
 
 
+class EmployeeAssignmentHistoryRead(BaseModel):
+    """Schema for reading employee assignment history"""
+    id: int
+    employee_id: Optional[int] = None
+    employee_name: Optional[str] = None
+    assigned_by_user_id: int
+    assigned_by_name: Optional[str] = None
+    notes: Optional[str] = None
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True
+
+
 class BookingRead(BookingBase):
     """Schema for reading booking data"""
     id: int
@@ -78,6 +92,13 @@ class BookingRead(BookingBase):
     car_model: Optional[str] = None
     fuel_type: Optional[str] = None
     service_name: Optional[str] = None
+    # User email (for admin view)
+    user_email: Optional[str] = None
+    # Employee assignment
+    assigned_employee_id: Optional[int] = None
+    assigned_employee_name: Optional[str] = None
+    # Employee assignment history
+    employee_assignment_history: Optional[List[EmployeeAssignmentHistoryRead]] = Field(default_factory=list)
     # Daily work logs (now stored in separate table)
     daily_work_logs: Optional[List["DailyWorkLogRead"]] = Field(default_factory=list)
     

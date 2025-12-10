@@ -276,3 +276,18 @@ export async function uploadProfilePicture(file: File): Promise<User> {
 
   return data;
 }
+
+/**
+ * Get all users (Admin/Super Admin only)
+ */
+export async function getAllUsers(): Promise<User[]> {
+  const response = await apiCall<User[]>('/api/v1/auth/users', {
+    method: 'GET',
+  });
+
+  if (response.error) {
+    throw new Error(response.error);
+  }
+
+  return response.data || [];
+}

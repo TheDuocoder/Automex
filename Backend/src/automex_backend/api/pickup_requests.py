@@ -163,16 +163,21 @@ async def update_pickup_request(
     allowed_updates = {}
     
     if is_admin:
-        # Admin can update ALL fields (status, comment, and details)
+        # Admin can update ALL fields (status, comment, pickup_time, and details)
         allowed_updates.update(update_data)
         
     elif is_owner:
-        # Owner can update details but NOT status/admin_comment
+        # Owner can update details but NOT status/admin_comment/pickup_time/drop_time
         # Fields: address, location, latitude, longitude, scheduled_date, car_id
         owner_fields = ['address', 'location', 'latitude', 'longitude', 'scheduled_date', 'car_id']
         for field in owner_fields:
             if field in update_data:
                 allowed_updates[field] = update_data[field]
+        # Explicitly exclude pickup_time and drop_time from owner updates
+        if 'pickup_time' in update_data:
+            del update_data['pickup_time']
+        if 'drop_time' in update_data:
+            del update_data['drop_time']
 
     # Apply updates
     for field, value in allowed_updates.items():
