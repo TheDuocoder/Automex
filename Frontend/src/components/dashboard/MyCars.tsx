@@ -211,9 +211,12 @@ const MyCars = () => {
                     }}
                 >
                     <DialogTrigger asChild>
-                        <Button size="sm" className="gap-1 bg-white hover:bg-gray-50 border border-white shadow-lg hover:shadow-xl transition-all duration-300 font-semibold" style={{ color: '#7C2558' }}>
-                            <Plus className="h-4 w-4" /> Add Car
-                        </Button>
+                        <button className="add-car-animated">
+                            <span className="button__text">Add Car</span>
+                            <span className="button__icon">
+                                <Plus className="svg" />
+                            </span>
+                        </button>
                     </DialogTrigger>
                     <DialogContent>
                         <DialogHeader>
@@ -323,10 +326,22 @@ const MyCars = () => {
                                 </div>
                             </div>
                             <DialogFooter>
-                                <Button type="submit" disabled={isSubmitting} className="bg-green-600 hover:bg-green-700 text-white">
-                                    {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                    Add Vehicle
-                                </Button>
+                                <button 
+                                    type="submit" 
+                                    disabled={isSubmitting} 
+                                    className="add-car-animated"
+                                >
+                                    <span className="button__text">
+                                        {isSubmitting ? 'Adding...' : 'Add Car'}
+                                    </span>
+                                    <span className="button__icon">
+                                        {isSubmitting ? (
+                                            <Loader2 className="svg animate-spin" />
+                                        ) : (
+                                            <Plus className="svg" />
+                                        )}
+                                    </span>
+                                </button>
                             </DialogFooter>
                         </form>
                     </DialogContent>

@@ -14,7 +14,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { Calendar, MapPin, Clock, Loader2, MessageSquare, Navigation, Car as CarIcon, Car, XCircle, Trash2, Home } from "lucide-react";
+import { Calendar, MapPin, Clock, Loader2, MessageSquare, Navigation, Car as CarIcon, Car, XCircle, Trash2, Home, CheckCircle } from "lucide-react";
 import { pickupRequestService, carService, Car as CarType, PickUpRequest, PickUpRequestCreate, PickUpRequestUpdate } from "@/services/api";
 import { toast } from "sonner";
 import { useAuthStore } from "@/stores/authStore";
@@ -26,6 +26,7 @@ const SchedulePickUp = () => {
     const [requests, setRequests] = useState<PickUpRequest[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isAnimating, setIsAnimating] = useState(false);
     const [isGettingLocation, setIsGettingLocation] = useState(false);
     const [selectedRequest, setSelectedRequest] = useState<PickUpRequest | null>(null);
     const [isDetailsOpen, setIsDetailsOpen] = useState(false);
@@ -138,6 +139,9 @@ const SchedulePickUp = () => {
             return;
         }
 
+        // Trigger bubble animation
+        setIsAnimating(true);
+        
         setIsSubmitting(true);
         // Ensure date is in ISO format for backend
         const dateObj = new Date(formData.scheduled_date);
@@ -163,6 +167,11 @@ const SchedulePickUp = () => {
             toast.error(response.error || "Failed to schedule pick up");
         }
         setIsSubmitting(false);
+        
+        // Remove animation class after animation completes
+        setTimeout(() => {
+            setIsAnimating(false);
+        }, 600);
     };
 
     const getCarName = (carId: number) => {
@@ -523,23 +532,25 @@ const SchedulePickUp = () => {
 
                                 {/* Premium Submit Button with Green Gradient & Glow */}
                                 <div className="pt-4">
-                                    <Button
-                                        type="submit"
-                                        className="w-full h-14 bg-gradient-to-r from-green-600 via-green-500 to-green-600 hover:from-green-700 hover:via-green-600 hover:to-green-700 text-white font-bold text-lg rounded-[16px] shadow-[0_6px_24px_rgba(34,197,94,0.25)] hover:shadow-[0_8px_32px_rgba(34,197,94,0.35)] transition-all duration-300 hover:scale-[1.02]"
-                                        disabled={isSubmitting}
-                                    >
-                                        {isSubmitting ? (
-                                            <>
-                                                <Loader2 className="mr-2 h-6 w-6 animate-spin" />
-                                                Scheduling...
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Calendar className="mr-2 h-5 w-5" />
-                                                Schedule Pick Up
-                                            </>
-                                        )}
-                                    </Button>
+                                    <div className={`schedule-button-bubble ${isAnimating ? 'animating' : ''}`}>
+                                        <Button
+                                            type="submit"
+                                            className="w-full h-14 bg-gradient-to-r from-green-600 via-green-500 to-green-600 hover:from-green-700 hover:via-green-600 hover:to-green-700 text-white font-bold text-lg rounded-[16px] shadow-[0_6px_24px_rgba(34,197,94,0.25)] hover:shadow-[0_8px_32px_rgba(34,197,94,0.35)] transition-all duration-300 relative z-[1]"
+                                            disabled={isSubmitting}
+                                        >
+                                            {isSubmitting ? (
+                                                <>
+                                                    <Loader2 className="mr-2 h-6 w-6 animate-spin" />
+                                                    Scheduling...
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Calendar className="mr-2 h-5 w-5" />
+                                                    Schedule Pick Up
+                                                </>
+                                            )}
+                                        </Button>
+                                    </div>
                                 </div>
                             </form>
                         )}
@@ -707,35 +718,42 @@ const SchedulePickUp = () => {
                     ) : null}
 
                     <DialogFooter className="gap-2 sm:gap-0">
-                        {isAdmin && (
-                            <Button
-                                variant="destructive"
-                                onClick={handleDeleteRequest}
-                                disabled={isDeleting || isUpdating}
-                                className="mr-auto"
+                        {(isAdmin || isCreator) && (
+                            <button
+                                onClick={handleUpdateRequest}
+                                disabled={isUpdating || isDeleting}
+                                className="update-button-animated"
                             >
-                                {isDeleting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Trash2 className="mr-2 h-4 w-4" />}
-                                Delete
-                            </Button>
+                                <span className="text">
+                                    {isUpdating ? 'Updating...' : 'Update'}
+                                </span>
+                                <span className="icon">
+                                    {isUpdating ? (
+                                        <Loader2 className="h-4 w-4 animate-spin" style={{ fill: '#eee', width: '15px' }} />
+                                    ) : (
+                                        <CheckCircle style={{ fill: '#eee', width: '15px' }} />
+                                    )}
+                                </span>
+                            </button>
                         )}
                         {(isAdmin || isCreator) && (
-                            <Button
-                                onClick={handleUpdateRequest}
-                                disabled={isUpdating}
-                                className="bg-green-600 hover:bg-green-700 text-white"
+                            <button
+                                onClick={handleDeleteRequest}
+                                disabled={isDeleting || isUpdating}
+                                className="delete-button-animated"
                             >
-                                {isUpdating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                Update Request
-                            </Button>
+                                <span className="text">
+                                    {isDeleting ? 'Deleting...' : 'Delete'}
+                                </span>
+                                <span className="icon">
+                                    {isDeleting ? (
+                                        <Loader2 className="h-4 w-4 animate-spin" style={{ fill: '#eee', width: '15px' }} />
+                                    ) : (
+                                        <Trash2 style={{ fill: '#eee', width: '15px' }} />
+                                    )}
+                                </span>
+                            </button>
                         )}
-                        <Button 
-                            variant="outline" 
-                            onClick={() => setIsDetailsOpen(false)}
-                            className="text-gray-700 border-gray-300 hover:bg-[#E5D5AF] hover:text-black"
-                            style={{ backgroundColor: '#EFDFBB' }}
-                        >
-                            Close
-                        </Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>

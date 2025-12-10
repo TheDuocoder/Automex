@@ -16,7 +16,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { History, Plus, CheckCircle, ChevronRight, Loader2, Car as CarIcon, Check, Pencil, Trash2, Calendar } from "lucide-react";
+import { History, Plus, CheckCircle, ChevronRight, Loader2, Car as CarIcon, Check, Pencil, Trash2, Calendar, ArrowRight } from "lucide-react";
 import { serviceHistoryService, carService, Car, ServiceHistory as ServiceHistoryType, ServiceHistoryCreate } from "@/services/api";
 import { toast } from "sonner";
 
@@ -165,14 +165,16 @@ const ServiceHistory = () => {
                 </CardTitle>
                 <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
                     <DialogTrigger asChild>
-                        <Button 
-                            size="sm" 
-                            className="gap-1 bg-green-600 hover:bg-green-700 text-white" 
+                        <button 
+                            className="add-record-animated"
                             disabled={cars.length === 0} 
                             onClick={openAddModal}
                         >
-                            <Plus className="h-4 w-4" /> Add Record
-                        </Button>
+                            <ArrowRight className="arr-2" />
+                            <span className="text">Add Record</span>
+                            <span className="circle"></span>
+                            <ArrowRight className="arr-1" />
+                        </button>
                     </DialogTrigger>
                     <DialogContent>
                         <DialogHeader>
@@ -232,14 +234,16 @@ const ServiceHistory = () => {
                                 </div>
                             </div>
                             <DialogFooter>
-                                <Button 
+                                <button 
                                     type="submit" 
                                     disabled={isSubmitting || !selectedCarId}
-                                    className="bg-green-600 hover:bg-green-700 text-white"
+                                    className="add-record-submit"
                                 >
-                                    {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                    {editingId ? "Update Record" : "Add Record"}
-                                </Button>
+                                    <span className="button-content">
+                                        {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
+                                        {editingId ? "Update Record" : "Add Record"}
+                                    </span>
+                                </button>
                             </DialogFooter>
                         </form>
                     </DialogContent>
