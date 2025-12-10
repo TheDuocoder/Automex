@@ -8,6 +8,8 @@ class PickUpRequestBase(BaseModel):
     latitude: Optional[float] = None
     longitude: Optional[float] = None
     scheduled_date: datetime
+    pickup_time: Optional[datetime] = None
+    drop_time: Optional[datetime] = None
 
 class PickUpRequestCreate(PickUpRequestBase):
     car_id: int
@@ -21,6 +23,8 @@ class PickUpRequestUpdate(BaseModel):
     latitude: Optional[float] = None
     longitude: Optional[float] = None
     scheduled_date: Optional[datetime] = None
+    pickup_time: Optional[datetime] = None
+    drop_time: Optional[datetime] = None
 
 from automex_backend.schemas.car import CarRead
 from automex_backend.schemas.user import UserRead
@@ -31,6 +35,7 @@ class PickUpRequestRead(PickUpRequestBase):
     car_id: int
     status: str
     admin_comment: Optional[str] = None
+    created_at: datetime
     car: Optional[CarRead] = None
     user: Optional[UserRead] = None
 

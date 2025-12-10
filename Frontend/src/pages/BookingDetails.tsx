@@ -23,9 +23,11 @@ import {
   MessageSquare,
   AlertCircle,
   ChevronRight,
-  ShieldCheck
+  ShieldCheck,
+  Mail
 } from "lucide-react";
-import { getBooking, cancelBooking, updateBookingStatus, createDailyWorkLog, updateDailyWorkLogDescription, uploadDailyWorkMedia, deleteDailyWorkMedia, deleteDailyWorkByDate, type Booking, BookingStatus, type DailyWorkLog } from "@/services/bookingService";
+import { getBooking, cancelBooking, updateBookingStatus, createDailyWorkLog, updateDailyWorkLogDescription, uploadDailyWorkMedia, deleteDailyWorkMedia, deleteDailyWorkByDate, assignEmployeeToBooking, type Booking, BookingStatus, type DailyWorkLog, type EmployeeAssignmentHistory } from "@/services/bookingService";
+import { employeeService, type Employee } from "@/services/api";
 import { getBookingCosts, createCost, updateCost, deleteCost, type Cost } from "@/services/costService";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
@@ -106,9 +108,17 @@ const BookingDetails = () => {
 
   // Check if user is Admin or Super Admin
   const isAdmin = user?.role?.name === "admin" || user?.role?.name === "super" || user?.is_superuser;
+  // Check if user is Super Admin only
+  const isSuperAdmin = user?.role?.name === "super" || user?.is_superuser;
   
   // Check if booking is completed or cancelled (cost editing should be disabled)
   const isBookingLocked = booking?.status === BookingStatus.COMPLETED || booking?.status === BookingStatus.CANCELLED;
+  
+  // Employee assignment states
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState<number | undefined>(booking?.assigned_employee_id);
+  const [isAssigningEmployee, setIsAssigningEmployee] = useState(false);
+  const [assignmentNotes, setAssignmentNotes] = useState("");
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -135,6 +145,59 @@ const BookingDetails = () => {
       loadCosts();
     }
   }, [booking?.id]);
+  
+  useEffect(() => {
+    // Update selected employee when booking changes
+    if (booking) {
+      setSelectedEmployeeId(booking.assigned_employee_id);
+    }
+  }, [booking]);
+  
+  useEffect(() => {
+    // Load employees if super admin
+    if (isSuperAdmin && isAuthenticated) {
+      loadEmployees();
+    }
+  }, [isSuperAdmin, isAuthenticated]);
+  
+  const loadEmployees = async () => {
+    try {
+      const response = await employeeService.getAll();
+      if (response.data) {
+        // Filter only active employees
+        const activeEmployees = response.data.filter(emp => emp.is_active);
+        setEmployees(activeEmployees);
+      }
+    } catch (error) {
+      console.error("Failed to load employees:", error);
+    }
+  };
+  
+  const handleAssignEmployee = async () => {
+    if (!booking) return;
+    
+    try {
+      setIsAssigningEmployee(true);
+      const updatedBooking = await assignEmployeeToBooking(booking.id, {
+        employee_id: selectedEmployeeId,
+        notes: assignmentNotes || undefined,
+      });
+      setBooking(updatedBooking);
+      setAssignmentNotes("");
+      toast({
+        title: "Success",
+        description: selectedEmployeeId ? "Employee assigned successfully" : "Employee unassigned successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to assign employee",
+        variant: "destructive",
+      });
+    } finally {
+      setIsAssigningEmployee(false);
+    }
+  };
 
   // Removed - daily work description is now date-wise in daily_work_logs
 
@@ -669,6 +732,22 @@ const BookingDetails = () => {
                           <p className="text-gray-500 text-sm mt-1">
                             Scheduled for {format(new Date(booking.booking_date), "EEEE, MMMM d, yyyy")}
                           </p>
+                          {booking.created_at && (
+                            <p className="text-gray-500 text-xs mt-1">
+                              Created: {(() => {
+                                let dateStr = booking.created_at;
+                                if (typeof dateStr === 'string' && !dateStr.endsWith('Z') && !dateStr.includes('+')) {
+                                  dateStr = dateStr + 'Z';
+                                }
+                                const date = new Date(dateStr);
+                                const hours = date.getHours();
+                                const minutes = String(date.getMinutes()).padStart(2, '0');
+                                const ampm = hours >= 12 ? 'PM' : 'AM';
+                                const displayHours = hours % 12 || 12;
+                                return `${format(date, "MMM d, yyyy")} at ${String(displayHours).padStart(2, '0')}:${minutes} ${ampm}`;
+                              })()}
+                            </p>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -707,7 +786,7 @@ const BookingDetails = () => {
                         </div>
                       </div>
 
-                      {(booking.contact_name || booking.contact_phone) && (
+                      {(booking.contact_name || booking.contact_phone || booking.user_email) && (
                         <div className="space-y-4">
                           <h4 className="text-sm font-medium text-gray-500 uppercase tracking-wider">Contact Person</h4>
                           <div className="flex gap-3 items-start">
@@ -724,7 +803,142 @@ const BookingDetails = () => {
                                   {booking.contact_phone}
                                 </p>
                               )}
+                              {booking.user_email && (
+                                <p className="text-sm text-gray-500 mt-1 flex items-center gap-1.5">
+                                  <Mail className="h-3 w-3" />
+                                  {booking.user_email}
+                                </p>
+                              )}
                             </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {booking.created_at && (
+                        <div className="space-y-4">
+                          <h4 className="text-sm font-medium text-gray-500 uppercase tracking-wider">Booking Information</h4>
+                          <div className="flex gap-3 items-start">
+                            <div className="p-2 bg-gray-100 rounded-lg">
+                              <Clock className="h-5 w-5 text-gray-600" />
+                            </div>
+                            <div>
+                              <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">Created</p>
+                              <p className="text-sm font-semibold text-gray-900 mt-1">
+                                {(() => {
+                                  let dateStr = booking.created_at;
+                                  if (typeof dateStr === 'string' && !dateStr.endsWith('Z') && !dateStr.includes('+')) {
+                                    dateStr = dateStr + 'Z';
+                                  }
+                                  const date = new Date(dateStr);
+                                  return format(date, "EEE, MMM d, yyyy");
+                                })()}
+                              </p>
+                              <p className="text-xs text-gray-500 mt-0.5">
+                                {(() => {
+                                  let dateStr = booking.created_at;
+                                  if (typeof dateStr === 'string' && !dateStr.endsWith('Z') && !dateStr.includes('+')) {
+                                    dateStr = dateStr + 'Z';
+                                  }
+                                  const date = new Date(dateStr);
+                                  const hours = date.getHours();
+                                  const minutes = String(date.getMinutes()).padStart(2, '0');
+                                  const ampm = hours >= 12 ? 'PM' : 'AM';
+                                  const displayHours = hours % 12 || 12;
+                                  return `${String(displayHours).padStart(2, '0')}:${minutes} ${ampm}`;
+                                })()}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {isSuperAdmin && (
+                        <div className="space-y-4">
+                          <h4 className="text-sm font-medium text-gray-500 uppercase tracking-wider">Assign Employee</h4>
+                          <div className="space-y-3">
+                            <div>
+                              <Label htmlFor="employee-select" className="text-xs text-gray-500 mb-2 block">Select Employee</Label>
+                              <select
+                                id="employee-select"
+                                value={selectedEmployeeId || ""}
+                                onChange={(e) => setSelectedEmployeeId(e.target.value ? parseInt(e.target.value) : undefined)}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                              >
+                                <option value="">-- Unassigned --</option>
+                                {employees.map((emp) => (
+                                  <option key={emp.id} value={emp.id}>
+                                    {emp.full_name} {emp.position ? `(${emp.position})` : ''}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                            <div>
+                              <Label htmlFor="assignment-notes" className="text-xs text-gray-500 mb-2 block">Notes (Optional)</Label>
+                              <Textarea
+                                id="assignment-notes"
+                                value={assignmentNotes}
+                                onChange={(e) => setAssignmentNotes(e.target.value)}
+                                placeholder="Add notes about this assignment..."
+                                className="min-h-[80px] text-sm"
+                              />
+                            </div>
+                            <Button
+                              onClick={handleAssignEmployee}
+                              disabled={isAssigningEmployee || selectedEmployeeId === booking?.assigned_employee_id}
+                              className="w-full"
+                              size="sm"
+                            >
+                              {isAssigningEmployee ? (
+                                <>
+                                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                                  Assigning...
+                                </>
+                              ) : (
+                                selectedEmployeeId ? "Update Assignment" : "Unassign Employee"
+                              )}
+                            </Button>
+                            {booking.assigned_employee_name && (
+                              <p className="text-xs text-gray-600 mt-2">
+                                Currently assigned to: <span className="font-semibold">{booking.assigned_employee_name}</span>
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                      
+                      {booking.employee_assignment_history && booking.employee_assignment_history.length > 0 && (
+                        <div className="space-y-4">
+                          <h4 className="text-sm font-medium text-gray-500 uppercase tracking-wider">Assignment History</h4>
+                          <div className="space-y-2 max-h-48 overflow-y-auto">
+                            {booking.employee_assignment_history.map((history) => (
+                              <div key={history.id} className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+                                <div className="flex items-start justify-between">
+                                  <div className="flex-1">
+                                    <p className="text-sm font-medium text-gray-900">
+                                      {history.employee_name || "Unassigned"}
+                                    </p>
+                                    {history.assigned_by_name && (
+                                      <p className="text-xs text-gray-500 mt-0.5">
+                                        Assigned by {history.assigned_by_name}
+                                      </p>
+                                    )}
+                                    {history.notes && (
+                                      <p className="text-xs text-gray-600 mt-1 italic">{history.notes}</p>
+                                    )}
+                                    <p className="text-xs text-gray-400 mt-1">
+                                      {(() => {
+                                        let dateStr = history.created_at;
+                                        if (typeof dateStr === 'string' && !dateStr.endsWith('Z') && !dateStr.includes('+')) {
+                                          dateStr = dateStr + 'Z';
+                                        }
+                                        const date = new Date(dateStr);
+                                        return format(date, "MMM d, yyyy 'at' h:mm a");
+                                      })()}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
                           </div>
                         </div>
                       )}
@@ -1311,24 +1525,42 @@ const BookingDetails = () => {
                       <CardDescription>Manage booking status</CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <Button
-                        className="w-full"
-                        size="lg"
-                        onClick={() => handleStatusChange(nextStatus)}
-                        disabled={updatingStatusId === booking.id}
-                      >
-                        {updatingStatusId === booking.id ? (
-                          <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Updating...
-                          </>
-                        ) : (
-                          <span className="flex items-center gap-2">
-                            Move to {getStatusLabel(nextStatus)}
-                            <ChevronRight className="h-4 w-4" />
-                          </span>
-                        )}
-                      </Button>
+                      {booking.assigned_employee_id ? (
+                        <Button
+                          className="w-full"
+                          size="lg"
+                          onClick={() => handleStatusChange(nextStatus)}
+                          disabled={updatingStatusId === booking.id}
+                        >
+                          {updatingStatusId === booking.id ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              Updating...
+                            </>
+                          ) : (
+                            <span className="flex items-center gap-2">
+                              Move to {getStatusLabel(nextStatus)}
+                              <ChevronRight className="h-4 w-4" />
+                            </span>
+                          )}
+                        </Button>
+                      ) : (
+                        <Button
+                          className="w-full"
+                          size="lg"
+                          disabled={true}
+                          onClick={() => {
+                            toast({
+                              title: "Employee Assignment Required",
+                              description: "Please assign an employee to this booking before changing status.",
+                              variant: "destructive",
+                            });
+                          }}
+                          style={{ backgroundColor: '#9ca3af', cursor: 'not-allowed' }}
+                        >
+                          Assign Employee First
+                        </Button>
+                      )}
                     </CardContent>
                   </Card>
                 </motion.div>

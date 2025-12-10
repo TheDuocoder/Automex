@@ -7,3 +7,6 @@ from .car import Car
 from .service_history import ServiceHistory
 from .pickup_request import PickUpRequest
 from .daily_work_log import DailyWorkLog
+from .employee import Employee
+from .booking_employee_assignment import BookingEmployeeAssignment
+from .extra_service import ExtraService

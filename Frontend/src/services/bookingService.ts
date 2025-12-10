@@ -55,8 +55,32 @@ export interface Booking {
   created_at: string;
   updated_at: string;
   completed_at?: string;
-  user_email?: string; // User email (for admin notifications)
+  user_email?: string; // User email (for admin view and notifications)
   email_sent?: boolean; // Whether email was sent
+  assigned_employee_id?: number; // Assigned employee ID
+  assigned_employee_name?: string; // Assigned employee name
+  employee_assignment_history?: EmployeeAssignmentHistory[]; // Assignment history
+}
+
+/**
+ * Employee Assignment History interface
+ */
+export interface EmployeeAssignmentHistory {
+  id: number;
+  employee_id?: number;
+  employee_name?: string;
+  assigned_by_user_id: number;
+  assigned_by_name?: string;
+  notes?: string;
+  created_at: string;
+}
+
+/**
+ * Assign Employee to Booking request
+ */
+export interface AssignEmployeeRequest {
+  employee_id?: number; // Set to null/undefined to unassign
+  notes?: string;
 }
 
 /**
@@ -301,5 +325,28 @@ export async function deleteDailyWorkByDate(bookingId: number, logDate: string):
   if (response.error) {
     throw new Error(response.error);
   }
+}
+
+/**
+ * Assign employee to booking (Super Admin only)
+ */
+export async function assignEmployeeToBooking(
+  bookingId: number,
+  request: AssignEmployeeRequest
+): Promise<Booking> {
+  const response = await apiCall<Booking>(`/api/v1/bookings/${bookingId}/assign-employee`, {
+    method: 'PATCH',
+    body: JSON.stringify(request),
+  });
+  
+  if (response.error) {
+    throw new Error(response.error);
+  }
+  
+  if (!response.data) {
+    throw new Error('No data returned from server');
+  }
+  
+  return response.data;
 }
 

@@ -360,13 +360,15 @@ const Header = ({ onLoginClick }: HeaderProps) => {
                       </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      onClick={() => navigate('/my-services')}
-                      className="cursor-pointer"
-                    >
-                      <ShoppingBag className="mr-2 h-4 w-4" />
-                      <span>My Services</span>
-                    </DropdownMenuItem>
+                    {(user?.role?.name === 'admin' || user?.role?.name === 'super' || user?.is_superuser) && (
+                      <DropdownMenuItem
+                        onClick={() => navigate('/extra-services')}
+                        className="cursor-pointer"
+                      >
+                        <ShoppingBag className="mr-2 h-4 w-4" />
+                        <span>Extra Services</span>
+                      </DropdownMenuItem>
+                    )}
                     <DropdownMenuItem
                       onClick={() => navigate('/profile')}
                       className="cursor-pointer"

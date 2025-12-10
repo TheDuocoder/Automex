@@ -14,6 +14,7 @@ import MyServices from "./pages/MyServices";
 import BookingDetails from "./pages/BookingDetails";
 import ServicesDemo from "./pages/ServicesDemo";
 import VehicleDetails from "./pages/VehicleDetails";
+import ExtraServices from "./pages/ExtraServices";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -30,14 +31,15 @@ const App = () => {
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
-              <Route path="/contact-us" element={<ContactUs />} />
-              <Route path="/services" element={<Services />} />
-              <Route path="/services-demo" element={<ServicesDemo />} />
+              <Route path="/contact-us" element={<ProtectedRoute><ContactUs /></ProtectedRoute>} />
+              <Route path="/services" element={<ProtectedRoute><Services /></ProtectedRoute>} />
+              <Route path="/services-demo" element={<ProtectedRoute><ServicesDemo /></ProtectedRoute>} />
               {/* Redirect /login to landing page */}
-              <Route path="/login" element={<Navigate to="/" replace />} />
+              <Route path="/login" element={<Navigate to="/" replace state={{ showAuth: true }} />} />
               {/* Protected routes - require authentication */}
               <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
               <Route path="/my-services" element={<ProtectedRoute><MyServices /></ProtectedRoute>} />
+              <Route path="/extra-services" element={<ProtectedRoute><ExtraServices /></ProtectedRoute>} />
               <Route path="/booking/:bookingId" element={<ProtectedRoute><BookingDetails /></ProtectedRoute>} />
               <Route path="/vehicle/:id" element={<ProtectedRoute><VehicleDetails /></ProtectedRoute>} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

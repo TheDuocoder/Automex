@@ -7,6 +7,9 @@
 // When accessed via Docker/network IP, relative paths ensure requests go through Nginx proxy
 export const API_BASE_URL = import.meta.env.VITE_API_URL || '';
 
+// Import auth store for clearing auth state on 401
+import { useAuthStore } from '@/stores/authStore';
+
 /**
  * API Response wrapper
  */
@@ -88,7 +91,7 @@ export async function apiCall<T>(
     }
 
     if (!response.ok) {
-      // If unauthorized, log detailed error info
+      // If unauthorized, clear auth and redirect to landing page
       if (response.status === 401) {
         console.error('[API] 401 Unauthorized Error:', {
           endpoint,
@@ -99,18 +102,34 @@ export async function apiCall<T>(
           responseData: data,
         });
 
-        // Automatic redirect to login on 401
-        // Avoid redirect loop if already on login or register page
+        // Clear all authentication data
+        removeAuthToken();
+        localStorage.removeItem('user_data');
+        
+        // Clear Zustand auth store
+        try {
+          useAuthStore.getState().clearAuth();
+        } catch (e) {
+          console.warn('[API] Failed to clear Zustand store:', e);
+        }
+        
+        // Clear Zustand persisted storage (double-check)
+        try {
+          localStorage.removeItem('auth-storage');
+        } catch (e) {
+          console.warn('[API] Failed to clear auth-storage:', e);
+        }
+
+        // Redirect to landing page (/) to login again
+        // Avoid redirect loop if already on landing page
         const currentPath = window.location.pathname;
-        if (!currentPath.includes('/login') && !currentPath.includes('/register') && !currentPath.includes('/profile')) {
-          console.log('[API] Redirecting to login due to 401 Unauthorized');
-          removeAuthToken();
-          localStorage.removeItem('user_data');
-          // Clear Zustand store if possible, but here we just do hard redirect
-          window.location.href = '/login';
-        } else if (currentPath.includes('/profile')) {
-          // On profile page, just log the error and return it
-          console.warn('[API] 401 on profile page - not redirecting');
+        if (currentPath !== '/' && !currentPath.includes('/login') && !currentPath.includes('/register')) {
+          console.log('[API] Redirecting to landing page due to 401 Unauthorized');
+          // Use replace to avoid adding to history
+          window.location.replace('/');
+        } else if (currentPath === '/') {
+          // Already on landing page, just clear state (login form will show)
+          console.log('[API] Already on landing page, auth state cleared');
         }
       }
 
@@ -229,7 +248,7 @@ export const carService = {
     formData.append('model', data.model);
     formData.append('year', data.year.toString());
     formData.append('registration_number', data.registration_number);
-    
+
     if (data.vin_number) {
       formData.append('vin_number', data.vin_number);
     }
@@ -371,8 +390,11 @@ export interface PickUpRequest {
   latitude?: number;
   longitude?: number;
   scheduled_date: string;
+  pickup_time?: string;
+  drop_time?: string;
   status: string;
   admin_comment?: string;
+  created_at: string;
   car?: Car; // For Admin view
   user?: any; // For Admin view
 }
@@ -395,6 +417,8 @@ export interface PickUpRequestUpdate {
   latitude?: number;
   longitude?: number;
   scheduled_date?: string;
+  pickup_time?: string;
+  drop_time?: string;
 }
 
 export const pickupRequestService = {
@@ -413,20 +437,122 @@ export const pickupRequestService = {
   }),
 };
 
-// --- Users API ---
-export interface User {
+// --- Employees API ---
+export interface Employee {
   id: number;
+  full_name: string;
   email: string;
-  full_name?: string;
   phone_number?: string;
-  role?: {
-    id: number;
-    name: string;
-    description?: string;
-  };
-  profile_picture_url?: string;
+  position?: string;
+  department?: string;
+  address?: string;
+  salary?: number;
+  hire_date?: string;
+  last_working_day?: string;
+  employee_id?: string;
+  notes?: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+  created_by_user_id: number;
 }
 
-export const userService = {
-  getAll: () => apiCall<User[]>('/api/v1/auth/users'),
+export interface EmployeeCreate {
+  full_name: string;
+  email: string;
+  phone_number?: string;
+  position?: string;
+  department?: string;
+  address?: string;
+  salary?: number;
+  hire_date?: string;
+  last_working_day?: string;
+  employee_id?: string;
+  notes?: string;
+  is_active?: boolean;
+}
+
+export interface EmployeeUpdate {
+  full_name?: string;
+  email?: string;
+  phone_number?: string;
+  position?: string;
+  department?: string;
+  address?: string;
+  salary?: number;
+  hire_date?: string;
+  last_working_day?: string;
+  employee_id?: string;
+  notes?: string;
+  is_active?: boolean;
+}
+
+export const employeeService = {
+  getAll: () => apiCall<Employee[]>('/api/v1/employees/'),
+  get: (id: number) => apiCall<Employee>(`/api/v1/employees/${id}`),
+  create: (data: EmployeeCreate) => apiCall<Employee>('/api/v1/employees/', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  }),
+  update: (id: number, data: EmployeeUpdate) => apiCall<Employee>(`/api/v1/employees/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  }),
+  delete: (id: number) => apiCall<void>(`/api/v1/employees/${id}`, {
+    method: 'DELETE',
+  }),
 };
+
+// --- Extra Services API ---
+
+export interface ExtraService {
+  id: number;
+  service_name: string;
+  vehicle_name?: string;
+  assigned_employee_id?: number;
+  assigned_employee_name?: string;
+  price: number;
+  owner_details?: string;
+  service_description?: string;
+  created_by_user_id: number;
+  created_by_name?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ExtraServiceCreate {
+  service_name: string;
+  vehicle_name?: string;
+  assigned_employee_id?: number;
+  price: number;
+  owner_details?: string;
+  service_description?: string;
+}
+
+export interface ExtraServiceUpdate {
+  service_name?: string;
+  vehicle_name?: string;
+  assigned_employee_id?: number;
+  price?: number;
+  owner_details?: string;
+  service_description?: string;
+}
+
+export const extraServiceService = {
+  getAll: () => apiCall<ExtraService[]>('/api/v1/extra-services/'),
+  get: (id: number) => apiCall<ExtraService>(`/api/v1/extra-services/${id}`),
+  create: (data: ExtraServiceCreate) => apiCall<ExtraService>('/api/v1/extra-services/', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  }),
+  update: (id: number, data: ExtraServiceUpdate) => apiCall<ExtraService>(`/api/v1/extra-services/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  }),
+  delete: (id: number) => apiCall<void>(`/api/v1/extra-services/${id}`, {
+    method: 'DELETE',
+  }),
+};
+
+// --- Users API ---
+

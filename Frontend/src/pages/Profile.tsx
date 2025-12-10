@@ -16,7 +16,7 @@ import {
 import {
   User, Mail, Phone, Shield, CheckCircle, XCircle, Edit, Key, Package,
   Loader2, Eye, EyeOff, LayoutDashboard, Car, Award, History, Settings,
-  LogOut, Bell, Calendar, Hash, Trophy, ChevronRight, Camera, Menu, X
+  LogOut, Bell, Calendar, Hash, Trophy, ChevronRight, Camera, Menu, X, Users
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
@@ -27,7 +27,9 @@ import HelpDropdown from "@/components/HelpDropdown";
 import MyCars from "@/components/dashboard/MyCars";
 import ServiceHistory from "@/components/dashboard/ServiceHistory";
 import SchedulePickUp from "@/components/dashboard/SchedulePickUp";
-import { AdminUserSelector } from "@/components/dashboard/AdminUserSelector";
+import AllUsers from "@/components/dashboard/AllUsers";
+import Employees from "@/components/dashboard/Employees";
+
 
 import { carService, Car as CarModel, serviceHistoryService, ServiceHistory as ServiceHistoryModel } from "@/services/api";
 import Footer from "@/components/Footer";
@@ -57,7 +59,7 @@ const Profile = () => {
   // Dashboard Data State
   const [dashboardCars, setDashboardCars] = useState<CarModel[]>([]);
   const [dashboardHistory, setDashboardHistory] = useState<ServiceHistoryModel[]>([]);
-  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+
 
   // State for Edit Profile Modal
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -88,7 +90,7 @@ const Profile = () => {
   const [profilePictureKey, setProfilePictureKey] = useState(0); // Force re-render key
   const [localProfilePictureUrl, setLocalProfilePictureUrl] = useState<string | undefined>(undefined);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
+
   // State for Image Cropper
   const [isCropperOpen, setIsCropperOpen] = useState(false);
   const [imageToCrop, setImageToCrop] = useState<string | null>(null);
@@ -148,41 +150,62 @@ const Profile = () => {
 
         if (carsResponse.data) {
           let cars = carsResponse.data;
-          // Filter if admin selected a specific user
-          if (selectedUserId) {
-            cars = cars.filter(c => c.user_id === selectedUserId);
-          }
+
           setDashboardCars(cars);
 
-          // Fetch Service History for ALL cars and combine them
-          if (cars.length > 0) {
-            try {
-              const allHistoryPromises = cars.map(car => 
-                serviceHistoryService.getAll(car.id)
-              );
-              
-              const allHistoryResponses = await Promise.all(allHistoryPromises);
-              
-              // Combine all service histories from all cars
-              const combinedHistory: ServiceHistoryModel[] = [];
-              allHistoryResponses.forEach(historyResponse => {
-                if (!historyResponse.error && historyResponse.data) {
-                  combinedHistory.push(...historyResponse.data);
-                }
-              });
-              
+          // Fetch Service History
+          // For admin/super admin: fetch ALL service history
+          // For regular users: fetch history for their cars only
+          const isAdmin = currentUser?.role?.name === 'admin' || currentUser?.role?.name === 'super' || currentUser?.is_superuser;
+          
+          try {
+            let historyResponse;
+            if (isAdmin) {
+              // Admin: fetch all service history (no car_id filter)
+              historyResponse = await serviceHistoryService.getAll();
+            } else {
+              // Regular user: fetch history for their cars
+              if (cars.length > 0) {
+                const allHistoryPromises = cars.map(car =>
+                  serviceHistoryService.getAll(car.id)
+                );
+                const allHistoryResponses = await Promise.all(allHistoryPromises);
+                
+                // Combine all service histories from all cars
+                const combinedHistory: ServiceHistoryModel[] = [];
+                allHistoryResponses.forEach(response => {
+                  if (!response.error && response.data) {
+                    combinedHistory.push(...response.data);
+                  }
+                });
+                
+                // Sort by service date (most recent first)
+                combinedHistory.sort((a, b) =>
+                  new Date(b.service_date).getTime() - new Date(a.service_date).getTime()
+                );
+                
+                setDashboardHistory(combinedHistory);
+                return; // Exit early for regular users
+              }
+            }
+            
+            // For admin: process the response
+            if (historyResponse && !historyResponse.error && historyResponse.data) {
+              const allHistory = historyResponse.data;
               // Sort by service date (most recent first)
-              combinedHistory.sort((a, b) => 
+              allHistory.sort((a, b) =>
                 new Date(b.service_date).getTime() - new Date(a.service_date).getTime()
               );
-              
-              setDashboardHistory(combinedHistory);
-            } catch (historyError) {
-              console.error("Error fetching service history:", historyError);
-              // Don't show error toast for service history, it's optional
+              setDashboardHistory(allHistory);
+            } else if (historyResponse && historyResponse.error) {
+              console.error("Error fetching service history:", historyResponse.error);
             }
+          } catch (historyError) {
+            console.error("Error fetching service history:", historyError);
+            // Don't show error toast for service history, it's optional
           }
         }
+
       } catch (error) {
         console.error("Failed to fetch dashboard data:", error);
       }
@@ -191,7 +214,7 @@ const Profile = () => {
     if (currentUser) {
       fetchDashboardData();
     }
-  }, [currentUser, selectedUserId]);
+  }, [currentUser]);
 
   // Initialize form data when modal opens
   useEffect(() => {
@@ -553,6 +576,38 @@ const Profile = () => {
             <Calendar className="h-4 w-4" />
             Schedule Pick Up
           </button>
+
+          {/* Super Admin Only Section */}
+          {(currentUser?.role?.name === 'super' || currentUser?.is_superuser) && (
+            <>
+              <div className="border-t border-white/10 my-3" />
+              <div className="px-4 py-2 text-xs text-white/50 uppercase tracking-wide font-semibold">
+                Admin Panel
+              </div>
+              <button
+                onClick={() => setActiveView('all-users')}
+                className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${activeView === 'all-users'
+                  ? 'text-white shadow-lg'
+                  : 'text-white hover:bg-white/5'
+                  }`}
+                style={activeView === 'all-users' ? { backgroundColor: '#191970' } : {}}
+              >
+                <User className="h-4 w-4" />
+                All Users
+              </button>
+              <button
+                onClick={() => setActiveView('employees')}
+                className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${activeView === 'employees'
+                  ? 'text-white shadow-lg'
+                  : 'text-white hover:bg-white/5'
+                  }`}
+                style={activeView === 'employees' ? { backgroundColor: '#191970' } : {}}
+              >
+                <Users className="h-4 w-4" />
+                Employees
+              </button>
+            </>
+          )}
         </nav>
 
         {/* Logout Button at Bottom */}
@@ -756,22 +811,34 @@ const Profile = () => {
                     {dashboardHistory.length > 0 ? (
                       <div className="space-y-2.5">
                         {dashboardHistory.slice(0, 3).map((history) => (
-                          <div key={history.id} className="flex items-center justify-between border-b pb-1.5 last:border-0">
-                            <div>
-                              <p className="font-medium text-xs">{history.service_name}</p>
-                              <p className="text-xs text-gray-500">{new Date(history.service_date).toLocaleDateString()}</p>
+                          <div key={history.id} className="border-b pb-1.5 last:border-0">
+                            <div className="flex items-center justify-between">
+                              <div className="flex-1">
+                                <p className="font-medium text-xs">{history.service_name}</p>
+                                <p className="text-xs text-gray-500">{new Date(history.service_date).toLocaleDateString()}</p>
+                                {/* Admin: Show Owner */}
+                                {(currentUser?.role?.name === 'admin' || currentUser?.role?.name === 'super' || currentUser?.is_superuser) && history.car?.user && (
+                                  <p className="text-[10px] text-blue-600 mt-0.5 font-medium flex items-center gap-1">
+                                    <span className="opacity-70">Owner:</span> {history.car.user.full_name || history.car.user.email}
+                                  </p>
+                                )}
+                              </div>
+                              <span className={`px-1.5 py-0.5 rounded-full text-xs font-medium ml-2 ${history.status === 'Completed' ? 'bg-green-100 text-green-700' :
+                                history.status === 'In Progress' ? 'bg-blue-100 text-blue-700' :
+                                  'bg-gray-100 text-gray-700'
+                                }`}>
+                                {history.status}
+                              </span>
                             </div>
-                            <span className={`px-1.5 py-0.5 rounded-full text-xs font-medium ${history.status === 'Completed' ? 'bg-green-100 text-green-700' :
-                              history.status === 'In Progress' ? 'bg-blue-100 text-blue-700' :
-                                'bg-gray-100 text-gray-700'
-                              }`}>
-                              {history.status}
-                            </span>
                           </div>
                         ))}
                       </div>
                     ) : (
-                      <p className="text-gray-500 text-xs">No recent activity found.</p>
+                      <p className="text-gray-500 text-xs">
+                        {(currentUser?.role?.name === 'admin' || currentUser?.role?.name === 'super' || currentUser?.is_superuser)
+                          ? 'No service history found in system.'
+                          : 'No recent activity found.'}
+                      </p>
                     )}
                     <Button variant="outline" onClick={() => setActiveView('service-history')} className="w-full mt-2 text-xs h-8">
                       View Full History
@@ -790,7 +857,9 @@ const Profile = () => {
                   <CardHeader className="border-b bg-gray-50/50 pb-2 pt-3">
                     <CardTitle className="flex items-center gap-2 text-base">
                       <Car className="h-4 w-4 text-primary" />
-                      My Vehicles
+                      {(currentUser?.role?.name === 'admin' || currentUser?.role?.name === 'super' || currentUser?.is_superuser) 
+                        ? 'All Vehicles' 
+                        : 'My Vehicles'}
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="p-4 space-y-2.5">
@@ -804,79 +873,31 @@ const Profile = () => {
                             <div>
                               <p className="font-medium text-xs">{car.make} {car.model}</p>
                               <p className="text-xs text-gray-500">{car.registration_number}</p>
+                              {/* Admin: Show Owner */}
+                              {(currentUser?.role?.name === 'admin' || currentUser?.role?.name === 'super' || currentUser?.is_superuser) && car.user && (
+                                <p className="text-[10px] text-blue-600 mt-0.5 font-medium flex items-center gap-1">
+                                  <span className="opacity-70 text-blue-400">Owner:</span> {car.user.full_name || car.user.email}
+                                </p>
+                              )}
                             </div>
                           </div>
                         ))}
                       </div>
                     ) : (
-                      <p className="text-gray-500 text-xs">No vehicles added yet.</p>
+                      <p className="text-gray-500 text-xs">
+                        {(currentUser?.role?.name === 'admin' || currentUser?.role?.name === 'super' || currentUser?.is_superuser)
+                          ? 'No vehicles in system yet.'
+                          : 'No vehicles added yet.'}
+                      </p>
                     )}
                     <Button variant="outline" onClick={() => setActiveView('my-cars')} className="w-full text-xs h-8 mt-2">
-                      Manage Vehicles
+                      {(currentUser?.role?.name === 'admin' || currentUser?.role?.name === 'super' || currentUser?.is_superuser)
+                        ? 'View All Vehicles'
+                        : 'Manage Vehicles'}
                     </Button>
                   </CardContent>
                 </Card>
               </motion.div>
-
-              {/* User Filter - Right (Only visible for Admins) */}
-              {(currentUser?.role?.name === 'admin' || currentUser?.role?.name === 'super' || currentUser?.is_superuser) ? (
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                  className="relative"
-                >
-                  <Card className="shadow-lg border-none h-full overflow-visible"
-                    style={{
-                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                      boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)'
-                    }}
-                  >
-                    {/* Animated background gradient */}
-                    <motion.div
-                      className="absolute inset-0 opacity-20 rounded-lg"
-                      animate={{
-                        background: [
-                          'radial-gradient(circle at 20% 50%, rgba(255,255,255,0.3) 0%, transparent 50%)',
-                          'radial-gradient(circle at 80% 50%, rgba(255,255,255,0.3) 0%, transparent 50%)',
-                          'radial-gradient(circle at 20% 50%, rgba(255,255,255,0.3) 0%, transparent 50%)',
-                        ],
-                      }}
-                      transition={{
-                        duration: 3,
-                        repeat: Infinity,
-                        ease: "easeInOut"
-                      }}
-                    />
-                    <CardHeader className="border-b border-white/20 pb-2 pt-3 relative z-10">
-                      <CardTitle className="flex items-center gap-2 text-base">
-                        <motion.div
-                          animate={{ rotate: [0, 10, -10, 0] }}
-                          transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-                        >
-                          <Shield className="h-4 w-4 text-white" />
-                        </motion.div>
-                        <span className="text-white font-semibold">User Filter</span>
-                        <motion.span
-                          className="ml-auto px-2 py-0.5 rounded-full text-xs font-semibold bg-white/20 backdrop-blur-sm text-white border border-white/30"
-                          animate={{ opacity: [0.7, 1, 0.7] }}
-                          transition={{ duration: 2, repeat: Infinity }}
-                        >
-                          Admin
-                        </motion.span>
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-4 relative z-10">
-                      <AdminUserSelector
-                        onSelectUser={setSelectedUserId}
-                        selectedUserId={selectedUserId}
-                      />
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ) : (
-                <div className="hidden lg:block"></div>
-              )}
             </div>
           )}
 
@@ -934,19 +955,19 @@ const Profile = () => {
                   {/* Modern Action Buttons */}
                   <div className="pt-6 border-t border-gray-100">
                     <div className="flex flex-wrap gap-4">
-                      <Button 
+                      <Button
                         onClick={() => setIsEditOpen(true)}
                         className="flex-1 min-w-[200px] h-12 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-[14px] shadow-[0_4px_14px_rgba(59,130,246,0.25)] hover:shadow-[0_6px_20px_rgba(59,130,246,0.35)] transition-all duration-300 hover:scale-[1.02]"
                       >
-                        <Edit className="mr-2 h-5 w-5" /> 
+                        <Edit className="mr-2 h-5 w-5" />
                         Edit Profile
                       </Button>
-                      <Button 
-                        variant="outline" 
+                      <Button
+                        variant="outline"
                         onClick={() => setIsChangePasswordOpen(true)}
                         className="flex-1 min-w-[200px] h-12 border-2 border-gray-300 bg-white hover:bg-gray-50 text-gray-700 hover:text-gray-900 font-semibold rounded-[14px] shadow-sm hover:shadow-md transition-all duration-300 hover:scale-[1.02] hover:border-gray-400"
                       >
-                        <Key className="mr-2 h-5 w-5" /> 
+                        <Key className="mr-2 h-5 w-5" />
                         Change Password
                       </Button>
                     </div>
@@ -983,6 +1004,26 @@ const Profile = () => {
               transition={{ duration: 0.5 }}
             >
               <SchedulePickUp />
+            </motion.div>
+          )}
+
+          {activeView === 'all-users' && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <AllUsers />
+            </motion.div>
+          )}
+
+          {activeView === 'employees' && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Employees />
             </motion.div>
           )}
         </div>
@@ -1038,8 +1079,8 @@ const Profile = () => {
               </div>
             </div>
             <DialogFooter>
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 disabled={isLoading}
                 className="bg-green-600 hover:bg-green-700 text-white"
               >
@@ -1152,17 +1193,19 @@ const Profile = () => {
       </Dialog >
 
       {/* Profile Picture Cropper Modal */}
-      {imageToCrop && (
-        <ProfilePictureCropper
-          isOpen={isCropperOpen}
-          onClose={() => {
-            setIsCropperOpen(false);
-            setImageToCrop(null);
-          }}
-          imageSrc={imageToCrop}
-          onCropComplete={handleCropComplete}
-        />
-      )}
+      {
+        imageToCrop && (
+          <ProfilePictureCropper
+            isOpen={isCropperOpen}
+            onClose={() => {
+              setIsCropperOpen(false);
+              setImageToCrop(null);
+            }}
+            imageSrc={imageToCrop}
+            onCropComplete={handleCropComplete}
+          />
+        )
+      }
     </div >
   );
 };

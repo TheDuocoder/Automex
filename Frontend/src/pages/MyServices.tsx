@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/componen
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, Car, Clock, CheckCircle2, XCircle, Loader2, AlertCircle, MapPin, Wrench, Search, Mail } from "lucide-react";
+import { Calendar, Car, Clock, CheckCircle2, XCircle, Loader2, AlertCircle, MapPin, Wrench, Search, Mail, User } from "lucide-react";
 import { getUserBookings, cancelBooking, updateBookingStatus, type Booking, BookingStatus } from "@/services/bookingService";
 import { getBookingCosts } from "@/services/costService";
 import { useToast } from "@/hooks/use-toast";
@@ -49,6 +49,8 @@ const MyServices = () => {
       const data = await getUserBookings();
       // Sort bookings by date (newest first)
       const sortedData = data.sort((a, b) => new Date(b.booking_date).getTime() - new Date(a.booking_date).getTime());
+      // Debug: Log assigned employee data
+      console.log('[MyServices] Bookings with assigned employees:', sortedData.filter(b => b.assigned_employee_name));
       setBookings(sortedData);
 
       // Load costs for all bookings
@@ -336,6 +338,35 @@ const MyServices = () => {
                 <span className="text-xs font-mono" style={{ color: '#000000' }}>#{booking.id}</span>
               </div>
             </div>
+            {booking.created_at && (
+              <div className="text-right flex-shrink-0">
+                <div className="text-xs font-medium" style={{ color: '#000000' }}>Created:</div>
+                <div className="text-xs mt-0.5" style={{ color: '#000000' }}>
+                  {(() => {
+                    let dateStr = booking.created_at;
+                    if (typeof dateStr === 'string' && !dateStr.endsWith('Z') && !dateStr.includes('+')) {
+                      dateStr = dateStr + 'Z';
+                    }
+                    const date = new Date(dateStr);
+                    return format(date, "MMM d, yyyy");
+                  })()}
+                </div>
+                <div className="text-xs font-bold mt-0.5" style={{ color: '#000000' }}>
+                  {(() => {
+                    let dateStr = booking.created_at;
+                    if (typeof dateStr === 'string' && !dateStr.endsWith('Z') && !dateStr.includes('+')) {
+                      dateStr = dateStr + 'Z';
+                    }
+                    const date = new Date(dateStr);
+                    const hours = date.getHours();
+                    const minutes = String(date.getMinutes()).padStart(2, '0');
+                    const ampm = hours >= 12 ? 'PM' : 'AM';
+                    const displayHours = hours % 12 || 12;
+                    return `${String(displayHours).padStart(2, '0')}:${minutes} ${ampm}`;
+                  })()}
+                </div>
+              </div>
+            )}
           </div>
         </CardHeader>
 
@@ -345,13 +376,24 @@ const MyServices = () => {
             <div className="p-2 bg-gray-100 rounded-lg text-gray-600 group-hover:bg-white group-hover:shadow-sm transition-all">
               <Car className="h-5 w-5" />
             </div>
-            <div>
-              <p className="text-xs font-medium uppercase tracking-wider" style={{ color: '#000000' }}>Vehicle</p>
-              <p className="text-sm font-semibold" style={{ color: '#000000' }}>
-                {booking.car_brand || booking.vehicle_make} {booking.car_model || booking.vehicle_model}
-              </p>
-              {booking.fuel_type && (
-                <p className="text-xs" style={{ color: '#000000' }}>{booking.fuel_type}</p>
+            <div className="flex-1 flex items-start justify-between gap-4">
+              <div className="flex-1">
+                <p className="text-xs font-medium uppercase tracking-wider" style={{ color: '#000000' }}>Vehicle</p>
+                <p className="text-sm font-semibold" style={{ color: '#000000' }}>
+                  {booking.car_brand || booking.vehicle_make} {booking.car_model || booking.vehicle_model}
+                </p>
+                {booking.fuel_type && (
+                  <p className="text-xs" style={{ color: '#000000' }}>{booking.fuel_type}</p>
+                )}
+              </div>
+              {/* Assigned Employee aligned with Vehicle on the right */}
+              {booking.assigned_employee_name && (
+                <div className="text-right">
+                  <p className="text-xs font-medium uppercase tracking-wider" style={{ color: '#000000' }}>Assigned To</p>
+                  <p className="text-sm font-semibold" style={{ color: '#000000' }}>
+                    {booking.assigned_employee_name}
+                  </p>
+                </div>
               )}
             </div>
           </div>
@@ -392,21 +434,44 @@ const MyServices = () => {
             {isAdmin && (() => {
               const nextStatus = getNextStatus(booking.status);
               if (nextStatus) {
-                return (
-                  <Button
-                    size="sm"
-                    onClick={() => handleStatusChange(booking.id, nextStatus)}
-                    disabled={updatingStatusId === booking.id}
-                    className="flex-1 text-white hover:bg-purple-700 w-full sm:w-auto"
-                    style={{ backgroundColor: '#a855f7' }}
-                  >
-                    {updatingStatusId === booking.id ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      `Move to ${getStatusLabel(nextStatus)}`
-                    )}
-                  </Button>
-                );
+                // Only enable button if employee is assigned
+                if (booking.assigned_employee_id) {
+                  return (
+                    <Button
+                      size="sm"
+                      onClick={() => handleStatusChange(booking.id, nextStatus)}
+                      disabled={updatingStatusId === booking.id}
+                      className="flex-1 text-white hover:bg-purple-700 w-full sm:w-auto"
+                      style={{ backgroundColor: '#a855f7' }}
+                    >
+                      {updatingStatusId === booking.id ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        `Move to ${getStatusLabel(nextStatus)}`
+                      )}
+                    </Button>
+                  );
+                } else {
+                  // Show disabled button with message
+                  return (
+                    <Button
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toast({
+                          title: "Employee Assignment Required",
+                          description: "Please assign an employee to this booking before changing status.",
+                          variant: "destructive",
+                        });
+                      }}
+                      disabled={true}
+                      className="flex-1 text-white w-full sm:w-auto cursor-not-allowed"
+                      style={{ backgroundColor: '#9ca3af' }}
+                    >
+                      Assign Employee First
+                    </Button>
+                  );
+                }
               }
               return null;
             })()}

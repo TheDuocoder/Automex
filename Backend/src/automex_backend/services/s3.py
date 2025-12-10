@@ -13,13 +13,29 @@ class S3Service:
     """
     
     def __init__(self):
-        self.s3_client = boto3.client(
-            's3',
-            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-            region_name=settings.AWS_REGION
+        # Check if AWS credentials are configured
+        self.aws_configured = bool(
+            settings.AWS_ACCESS_KEY_ID and 
+            settings.AWS_SECRET_ACCESS_KEY and 
+            settings.AWS_BUCKET_NAME
         )
-        self.bucket_name = settings.AWS_BUCKET_NAME
+        
+        if self.aws_configured:
+            try:
+                self.s3_client = boto3.client(
+                    's3',
+                    aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                    aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+                    region_name=settings.AWS_REGION
+                )
+                self.bucket_name = settings.AWS_BUCKET_NAME
+            except Exception as e:
+                print(f"[WARNING] Failed to initialize S3 client: {str(e)}")
+                self.aws_configured = False
+                self.s3_client = None
+        else:
+            self.s3_client = None
+            
         self.folder = settings.AWS_S3_FOLDER
 
     def _sanitize_username(self, username: str) -> str:
@@ -46,6 +62,7 @@ class S3Service:
     async def upload_file(self, file: UploadFile, folder: Optional[str] = None, username: Optional[str] = None, booking_email: Optional[str] = None, date_folder: Optional[str] = None) -> str:
         """
         Upload a file to S3 and return the URL.
+        Falls back to local storage if S3 is not configured.
         
         Args:
             file: The file to upload
@@ -63,6 +80,11 @@ class S3Service:
         Raises:
             HTTPException: If upload fails
         """
+        # Check if S3 is configured
+        if not self.aws_configured or not self.s3_client:
+            # Fallback to local storage
+            return await self._upload_file_local(file, folder, username, booking_email, date_folder)
+        
         try:
             # Build folder path
             if booking_email:
@@ -107,12 +129,99 @@ class S3Service:
             return url
 
         except Exception as e:
-            print(f"Error uploading to S3: {str(e)}")
-            raise HTTPException(status_code=500, detail=f"Failed to upload image to S3: {str(e)}")
+            error_msg = str(e)
+            print(f"[ERROR] S3 upload failed: {error_msg}")
+            
+            # Check for specific AWS credential errors
+            if "InvalidAccessKeyId" in error_msg or "SignatureDoesNotMatch" in error_msg:
+                print("[WARNING] AWS credentials are invalid or missing. Falling back to local storage.")
+                # Fallback to local storage
+                try:
+                    return await self._upload_file_local(file, folder, username, booking_email, date_folder)
+                except Exception as local_error:
+                    raise HTTPException(
+                        status_code=500, 
+                        detail=f"AWS S3 credentials are invalid. Please configure AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in your .env file. Local storage also failed: {str(local_error)}"
+                    )
+            
+            # For other S3 errors, try local fallback
+            print("[WARNING] S3 upload failed. Attempting local storage fallback.")
+            try:
+                return await self._upload_file_local(file, folder, username, booking_email, date_folder)
+            except Exception as local_error:
+                raise HTTPException(
+                    status_code=500, 
+                    detail=f"Failed to upload image to S3: {error_msg}. Local storage also failed: {str(local_error)}"
+                )
+
+    async def _upload_file_local(self, file: UploadFile, folder: Optional[str] = None, username: Optional[str] = None, booking_email: Optional[str] = None, date_folder: Optional[str] = None) -> str:
+        """
+        Fallback method to upload files locally when S3 is not available.
+        Stores files in a local 'uploads' directory.
+        """
+        try:
+            import aiofiles
+        except ImportError:
+            raise HTTPException(
+                status_code=500,
+                detail="aiofiles package is required for local file storage. Please install it: pip install aiofiles"
+            )
+        
+        from pathlib import Path
+        
+        try:
+            # Create uploads directory if it doesn't exist
+            uploads_dir = Path("uploads")
+            if folder:
+                # Extract folder name from path
+                folder_name = folder.strip("/").replace("/", "_")
+                uploads_dir = uploads_dir / folder_name
+            elif username:
+                sanitized_username = self._sanitize_username(username)
+                uploads_dir = uploads_dir / "my-cars" / sanitized_username
+            elif booking_email:
+                sanitized_email = self._sanitize_username(booking_email)
+                if date_folder:
+                    uploads_dir = uploads_dir / "bookings" / sanitized_email / date_folder
+                else:
+                    uploads_dir = uploads_dir / "bookings" / sanitized_email
+            else:
+                uploads_dir = uploads_dir / "default"
+            
+            uploads_dir.mkdir(parents=True, exist_ok=True)
+            
+            # Generate unique filename
+            file_extension = os.path.splitext(file.filename)[1]
+            filename = f"{uuid.uuid4()}{file_extension}"
+            file_path = uploads_dir / filename
+            
+            # Save file locally
+            async with aiofiles.open(file_path, 'wb') as f:
+                content = await file.read()
+                await f.write(content)
+            
+            # Reset file pointer
+            await file.seek(0)
+            
+            # Return relative URL path for static file serving
+            # Remove 'uploads' prefix from path since /static mounts the uploads directory
+            relative_path = str(file_path.relative_to(Path("uploads"))).replace("\\", "/")
+            print(f"[INFO] File saved locally: {file_path}")
+            
+            # Return a path that can be served by the backend static file mount
+            return f"/static/{relative_path}"
+            
+        except Exception as e:
+            print(f"[ERROR] Local file upload failed: {str(e)}")
+            raise HTTPException(
+                status_code=500,
+                detail=f"Failed to upload file locally: {str(e)}"
+            )
 
     async def delete_file(self, file_url: str) -> bool:
         """
         Delete a file from S3 using its URL.
+        Also handles local file deletion for fallback storage.
         
         Args:
             file_url: The full URL of the file to delete
@@ -120,6 +229,15 @@ class S3Service:
         Returns:
             bool: True if deletion was successful, False otherwise
         """
+        # Check if it's a local file
+        if file_url.startswith("/static/"):
+            return await self._delete_file_local(file_url)
+        
+        # S3 deletion
+        if not self.aws_configured or not self.s3_client:
+            print(f"[WARNING] S3 not configured, cannot delete S3 file: {file_url}")
+            return False
+            
         try:
             # Extract the key from the URL
             # URL format: https://{bucket}.s3.{region}.amazonaws.com/{key}
@@ -213,6 +331,38 @@ class S3Service:
         except Exception as e:
             print(f"[ERROR] Error deleting files from date folder {date_folder}: {str(e)}")
             return 0
+
+    async def _delete_file_local(self, file_url: str) -> bool:
+        """
+        Delete a local file using its URL path.
+        
+        Args:
+            file_url: The URL path of the file (e.g., /static/...)
+        
+        Returns:
+            bool: True if deletion was successful, False otherwise
+        """
+        try:
+            from pathlib import Path
+            
+            # Remove /static/ prefix and construct full path
+            if file_url.startswith("/static/"):
+                relative_path = file_url.replace("/static/", "")
+                file_path = Path("uploads") / relative_path
+            else:
+                file_path = Path(file_url)
+            
+            if file_path.exists():
+                file_path.unlink()
+                print(f"[INFO] Local file deleted: {file_path}")
+                return True
+            else:
+                print(f"[WARNING] Local file not found: {file_path}")
+                return False
+                
+        except Exception as e:
+            print(f"[ERROR] Error deleting local file {file_url}: {str(e)}")
+            return False
 
 # Global instance
 s3_service = S3Service()
