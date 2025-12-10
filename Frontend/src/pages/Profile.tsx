@@ -31,6 +31,7 @@ import { AdminUserSelector } from "@/components/dashboard/AdminUserSelector";
 
 import { carService, Car as CarModel, serviceHistoryService, ServiceHistory as ServiceHistoryModel } from "@/services/api";
 import Footer from "@/components/Footer";
+import ProfilePictureCropper from "@/components/ProfilePictureCropper";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -87,6 +88,10 @@ const Profile = () => {
   const [profilePictureKey, setProfilePictureKey] = useState(0); // Force re-render key
   const [localProfilePictureUrl, setLocalProfilePictureUrl] = useState<string | undefined>(undefined);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  // State for Image Cropper
+  const [isCropperOpen, setIsCropperOpen] = useState(false);
+  const [imageToCrop, setImageToCrop] = useState<string | null>(null);
 
   // Use Zustand user or context user (Zustand takes priority)
   // Subscribe to Zustand store changes - this will re-render when store updates
@@ -346,6 +351,51 @@ const Profile = () => {
     }
   };
 
+  // Handle cropped image upload
+  const handleCropComplete = async (croppedImageBlob: Blob) => {
+    setIsUploadingPicture(true);
+    try {
+      // Convert blob to file
+      const file = new File([croppedImageBlob], 'profile-picture.png', {
+        type: 'image/png',
+      });
+
+      const updatedUser = await uploadProfilePicture(file);
+
+      // IMMEDIATELY update local state to show picture right away in Profile component
+      if (updatedUser.profile_picture_url) {
+        setLocalProfilePictureUrl(updatedUser.profile_picture_url);
+        setProfilePictureKey(prev => prev + 1);
+      }
+
+      // IMMEDIATELY update AuthContext (for Header, Hero components)
+      updateUser(updatedUser);
+
+      // Zustand store is already updated in uploadProfilePicture function
+      const store = useAuthStore.getState();
+      if (store.user?.id !== updatedUser.id) {
+        store.setUser(updatedUser);
+      }
+
+      toast.success('Profile picture updated successfully!');
+    } catch (error) {
+      console.error('Error uploading profile picture:', error);
+      let errorMessage = 'Failed to upload profile picture';
+
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        errorMessage = 'Network error: Please check your connection and try again';
+      } else if (error instanceof Error) {
+        errorMessage = error.message || errorMessage;
+      }
+
+      toast.error(errorMessage);
+    } finally {
+      setIsUploadingPicture(false);
+      setIsCropperOpen(false);
+      setImageToCrop(null);
+    }
+  };
+
   // Initialize password reset when modal opens
   useEffect(() => {
     if (isChangePasswordOpen && currentUser?.email) {
@@ -568,7 +618,7 @@ const Profile = () => {
                 type="file"
                 accept="image/*"
                 className="hidden"
-                onChange={async (e) => {
+                onChange={(e) => {
                   const file = e.target.files?.[0];
                   if (!file) return;
 
@@ -578,51 +628,23 @@ const Profile = () => {
                     return;
                   }
 
-                  // Validate file size (5MB)
-                  if (file.size > 5 * 1024 * 1024) {
-                    toast.error('Image size must be less than 5MB');
+                  // Validate file size (10MB for cropping)
+                  if (file.size > 10 * 1024 * 1024) {
+                    toast.error('Image size must be less than 10MB');
                     return;
                   }
 
-                  setIsUploadingPicture(true);
-                  try {
-                    const updatedUser = await uploadProfilePicture(file);
+                  // Read file and open cropper
+                  const reader = new FileReader();
+                  reader.onload = () => {
+                    setImageToCrop(reader.result as string);
+                    setIsCropperOpen(true);
+                  };
+                  reader.readAsDataURL(file);
 
-                    // IMMEDIATELY update local state to show picture right away in Profile component
-                    if (updatedUser.profile_picture_url) {
-                      setLocalProfilePictureUrl(updatedUser.profile_picture_url);
-                      setProfilePictureKey(prev => prev + 1);
-                    }
-
-                    // IMMEDIATELY update AuthContext (for Header, Hero components)
-                    // This updates all components that use useAuth() hook
-                    updateUser(updatedUser);
-
-                    // Zustand store is already updated in uploadProfilePicture function
-                    // But ensure it's synced (redundant but safe)
-                    const store = useAuthStore.getState();
-                    if (store.user?.id !== updatedUser.id) {
-                      store.setUser(updatedUser);
-                    }
-
-                    toast.success('Profile picture uploaded successfully!');
-                  } catch (error) {
-                    console.error('Error uploading profile picture:', error);
-                    let errorMessage = 'Failed to upload profile picture';
-
-                    if (error instanceof TypeError && error.message.includes('fetch')) {
-                      errorMessage = 'Network error: Please check your connection and try again';
-                    } else if (error instanceof Error) {
-                      errorMessage = error.message || errorMessage;
-                    }
-
-                    toast.error(errorMessage);
-                  } finally {
-                    setIsUploadingPicture(false);
-                    // Reset file input
-                    if (fileInputRef.current) {
-                      fileInputRef.current.value = '';
-                    }
+                  // Reset file input
+                  if (fileInputRef.current) {
+                    fileInputRef.current.value = '';
                   }
                 }}
               />
@@ -864,35 +886,70 @@ const Profile = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <Card className="shadow-lg border-none max-w-2xl mx-auto">
-                <CardHeader className="border-b bg-gray-50/50 pb-4">
-                  <CardTitle className="flex items-center gap-2 text-xl">
-                    <User className="h-5 w-5 text-primary" />
+              <Card className="shadow-[0_8px_30px_rgba(0,0,0,0.08)] border-none max-w-3xl mx-auto rounded-[24px] overflow-hidden bg-white">
+                {/* Premium Header with Icon */}
+                <CardHeader className="border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white pb-6 pt-8 px-10">
+                  <CardTitle className="flex items-center gap-3 text-2xl font-bold">
+                    <div className="p-2.5 bg-primary/10 rounded-full">
+                      <User className="h-6 w-6 text-primary" />
+                    </div>
                     Profile Details
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="p-8 space-y-6">
+
+                <CardContent className="p-10 space-y-8">
+                  {/* Profile Fields in Elevated Containers */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <Label className="text-gray-500">Full Name</Label>
-                      <p className="text-lg font-medium">{currentUser?.full_name}</p>
+                    {/* Full Name */}
+                    <div className="bg-gradient-to-br from-gray-50 to-gray-50/50 rounded-[16px] p-5 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300">
+                      <Label className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2 block">
+                        Full Name
+                      </Label>
+                      <p className="text-xl font-bold text-gray-900">
+                        {currentUser?.full_name}
+                      </p>
                     </div>
-                    <div>
-                      <Label className="text-gray-500">Email</Label>
-                      <p className="text-lg font-medium">{currentUser?.email}</p>
+
+                    {/* Email */}
+                    <div className="bg-gradient-to-br from-gray-50 to-gray-50/50 rounded-[16px] p-5 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300">
+                      <Label className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2 block">
+                        Email
+                      </Label>
+                      <p className="text-xl font-bold text-gray-900 break-words">
+                        {currentUser?.email}
+                      </p>
                     </div>
-                    <div>
-                      <Label className="text-gray-500">Phone Number</Label>
-                      <p className="text-lg font-medium">{currentUser?.phone_number || 'Not set'}</p>
+
+                    {/* Phone Number */}
+                    <div className="bg-gradient-to-br from-gray-50 to-gray-50/50 rounded-[16px] p-5 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300">
+                      <Label className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2 block">
+                        Phone Number
+                      </Label>
+                      <p className="text-xl font-bold text-gray-900">
+                        {currentUser?.phone_number || 'Not set'}
+                      </p>
                     </div>
                   </div>
-                  <div className="pt-6 flex gap-4">
-                    <Button onClick={() => setIsEditOpen(true)}>
-                      <Edit className="mr-2 h-4 w-4" /> Edit Profile
-                    </Button>
-                    <Button variant="outline" onClick={() => setIsChangePasswordOpen(true)}>
-                      <Key className="mr-2 h-4 w-4" /> Change Password
-                    </Button>
+
+                  {/* Modern Action Buttons */}
+                  <div className="pt-6 border-t border-gray-100">
+                    <div className="flex flex-wrap gap-4">
+                      <Button 
+                        onClick={() => setIsEditOpen(true)}
+                        className="flex-1 min-w-[200px] h-12 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-[14px] shadow-[0_4px_14px_rgba(59,130,246,0.25)] hover:shadow-[0_6px_20px_rgba(59,130,246,0.35)] transition-all duration-300 hover:scale-[1.02]"
+                      >
+                        <Edit className="mr-2 h-5 w-5" /> 
+                        Edit Profile
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        onClick={() => setIsChangePasswordOpen(true)}
+                        className="flex-1 min-w-[200px] h-12 border-2 border-gray-300 bg-white hover:bg-gray-50 text-gray-700 hover:text-gray-900 font-semibold rounded-[14px] shadow-sm hover:shadow-md transition-all duration-300 hover:scale-[1.02] hover:border-gray-400"
+                      >
+                        <Key className="mr-2 h-5 w-5" /> 
+                        Change Password
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -981,7 +1038,11 @@ const Profile = () => {
               </div>
             </div>
             <DialogFooter>
-              <Button type="submit" disabled={isLoading}>
+              <Button 
+                type="submit" 
+                disabled={isLoading}
+                className="bg-green-600 hover:bg-green-700 text-white"
+              >
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Save changes
               </Button>
@@ -1089,6 +1150,19 @@ const Profile = () => {
           </form>
         </DialogContent>
       </Dialog >
+
+      {/* Profile Picture Cropper Modal */}
+      {imageToCrop && (
+        <ProfilePictureCropper
+          isOpen={isCropperOpen}
+          onClose={() => {
+            setIsCropperOpen(false);
+            setImageToCrop(null);
+          }}
+          imageSrc={imageToCrop}
+          onCropComplete={handleCropComplete}
+        />
+      )}
     </div >
   );
 };

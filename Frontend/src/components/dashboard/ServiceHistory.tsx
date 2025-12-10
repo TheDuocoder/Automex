@@ -165,7 +165,12 @@ const ServiceHistory = () => {
                 </CardTitle>
                 <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
                     <DialogTrigger asChild>
-                        <Button size="sm" className="gap-1" disabled={cars.length === 0} onClick={openAddModal}>
+                        <Button 
+                            size="sm" 
+                            className="gap-1 bg-green-600 hover:bg-green-700 text-white" 
+                            disabled={cars.length === 0} 
+                            onClick={openAddModal}
+                        >
                             <Plus className="h-4 w-4" /> Add Record
                         </Button>
                     </DialogTrigger>
@@ -227,7 +232,11 @@ const ServiceHistory = () => {
                                 </div>
                             </div>
                             <DialogFooter>
-                                <Button type="submit" disabled={isSubmitting || !selectedCarId}>
+                                <Button 
+                                    type="submit" 
+                                    disabled={isSubmitting || !selectedCarId}
+                                    className="bg-green-600 hover:bg-green-700 text-white"
+                                >
                                     {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                     {editingId ? "Update Record" : "Add Record"}
                                 </Button>
