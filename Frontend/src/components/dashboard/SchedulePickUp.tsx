@@ -14,7 +14,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { Calendar, MapPin, Clock, Loader2, MessageSquare, Navigation, Car as CarIcon, Car, XCircle, Trash2 } from "lucide-react";
+import { Calendar, MapPin, Clock, Loader2, MessageSquare, Navigation, Car as CarIcon, Car, XCircle, Trash2, Home } from "lucide-react";
 import { pickupRequestService, carService, Car as CarType, PickUpRequest, PickUpRequestCreate, PickUpRequestUpdate } from "@/services/api";
 import { toast } from "sonner";
 import { useAuthStore } from "@/stores/authStore";
@@ -308,13 +308,22 @@ const SchedulePickUp = () => {
                                             {req.status?.toLowerCase() === 'cancelled' && <XCircle className="h-3.5 w-3.5" />}
                                             {req.status || 'Pending'}
                                         </span>
-                                        <span className="text-xs font-medium" style={{ color: 'black' }}>
-                                            {new Date(req.scheduled_date).toLocaleDateString('en-US', {
-                                                month: 'short',
-                                                day: 'numeric',
-                                                year: 'numeric'
-                                            })}
-                                        </span>
+                                        <div className="text-right">
+                                            <div className="text-xs font-medium" style={{ color: 'black' }}>
+                                                {new Date(req.scheduled_date).toLocaleDateString('en-US', {
+                                                    month: 'short',
+                                                    day: 'numeric',
+                                                    year: 'numeric'
+                                                })}
+                                            </div>
+                                            <div className="text-xs font-bold mt-0.5" style={{ color: 'black' }}>
+                                                {new Date(req.scheduled_date).toLocaleTimeString('en-US', {
+                                                    hour: 'numeric',
+                                                    minute: '2-digit',
+                                                    hour12: true
+                                                })}
+                                            </div>
+                                        </div>
                                     </div>
 
                                     {isAdmin && req.user && (
@@ -370,63 +379,77 @@ const SchedulePickUp = () => {
 
             {/* Right Side: Schedule Form */}
             <div className="lg:col-span-2">
-                <Card className="shadow-[0_4px_20px_rgba(0,0,0,0.06)] border-none rounded-[22px]">
-                    <CardHeader className="border-b bg-gray-50/50 pb-5 px-8 pt-7">
-                        <CardTitle className="flex items-center gap-2.5 text-xl font-bold">
-                            <Calendar className="h-5 w-5 text-primary" />
+                <Card className="shadow-[0_8px_30px_rgba(0,0,0,0.08)] border-none rounded-[24px] overflow-hidden bg-white">
+                    {/* Premium Header with Gradient */}
+                    <CardHeader className="border-b border-gray-100 bg-gradient-to-r from-primary/5 via-blue-50 to-primary/5 pb-6 px-10 pt-8">
+                        <CardTitle className="flex items-center gap-3 text-2xl font-bold text-gray-900">
+                            <div className="p-3 bg-primary/10 rounded-full">
+                                <Calendar className="h-7 w-7 text-primary" />
+                            </div>
                             Schedule Your Pickup
                         </CardTitle>
                     </CardHeader>
-                    <CardContent className="p-8">
+                    <CardContent className="p-10">
                         {cars.length === 0 ? (
                             <div className="text-center py-12">
-                                <Car className="h-16 w-16 mx-auto text-gray-300 mb-4" />
-                                <p className="text-lg font-semibold text-gray-700 mb-2">No Vehicles Added</p>
-                                <p className="text-sm text-gray-500 mb-6 max-w-md mx-auto">
+                                <div className="mb-6 mx-auto w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center">
+                                    <Car className="h-10 w-10 text-gray-400" />
+                                </div>
+                                <p className="text-xl font-bold text-gray-800 mb-3">No Vehicles Added</p>
+                                <p className="text-sm text-gray-600 mb-8 max-w-md mx-auto leading-relaxed">
                                     Please add your vehicles in the <span className="font-semibold text-primary">My Cars</span> section to schedule a pickup and avail our services.
                                 </p>
                                 <Button
                                     onClick={() => navigate('/profile', { state: { view: 'my-cars' } })}
-                                    className="gap-2"
+                                    className="gap-2 bg-primary hover:bg-primary/90 h-12 px-6 rounded-[14px] shadow-md"
                                 >
-                                    <Car className="h-4 w-4" />
+                                    <Car className="h-5 w-5" />
                                     Go to My Cars
                                 </Button>
                             </div>
                         ) : (
-                            <form onSubmit={handleSubmit} className="space-y-7">
-                                <div className="grid gap-7">
-                                    {/* Select Vehicle */}
+                            <form onSubmit={handleSubmit} className="space-y-8">
+                                <div className="grid gap-8">
+                                    {/* Select Vehicle - Premium Card */}
                                     <div className="space-y-3">
-                                        <Label htmlFor="car" className="text-sm font-semibold text-gray-700">Select Vehicle</Label>
-                                        <Select
-                                            value={formData.car_id.toString()}
-                                            onValueChange={(val) => setFormData({ ...formData, car_id: parseInt(val) })}
-                                        >
-                                            <SelectTrigger className="h-12 bg-[#F8F8F8] border-gray-300 rounded-[14px] px-4 text-sm font-medium hover:border-gray-400 transition-colors">
-                                                <SelectValue placeholder="Select a car" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {cars.map((car) => (
-                                                    <SelectItem key={car.id} value={car.id.toString()}>
-                                                        {car.make} {car.model} ({car.registration_number})
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
+                                        <Label htmlFor="car" className="text-sm font-bold text-gray-700 uppercase tracking-wide">
+                                            Select Vehicle
+                                        </Label>
+                                        <div className="relative bg-gradient-to-br from-gray-50 to-white rounded-[16px] border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300">
+                                            <CarIcon className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-primary z-10" strokeWidth={2} />
+                                            <Select
+                                                value={formData.car_id.toString()}
+                                                onValueChange={(val) => setFormData({ ...formData, car_id: parseInt(val) })}
+                                            >
+                                                <SelectTrigger className="h-14 pl-14 pr-4 bg-transparent border-none rounded-[16px] text-base font-semibold text-gray-900 hover:bg-white transition-colors">
+                                                    <SelectValue placeholder="Choose your vehicle" />
+                                                </SelectTrigger>
+                                                <SelectContent className="rounded-[12px]">
+                                                    {cars.map((car) => (
+                                                        <SelectItem key={car.id} value={car.id.toString()} className="text-base py-3 hover:bg-[#e3b8b8] focus:bg-[#e3b8b8]">
+                                                            <div className="flex items-center gap-2">
+                                                                <CarIcon className="h-4 w-4 text-primary" />
+                                                                <span className="font-semibold">{car.make} {car.model}</span>
+                                                                <span className="text-gray-500 text-sm uppercase">({car.registration_number})</span>
+                                                            </div>
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
                                     </div>
 
-                                    {/* Pick Up Location (Google) */}
+                                    {/* Pick Up Location - Premium Card with GPS Button */}
                                     <div className="space-y-3">
-                                        <Label htmlFor="location" className="text-sm font-semibold text-gray-700">
-                                            Pick Up Location <span className="text-gray-400 font-normal">(Optional)</span>
+                                        <Label htmlFor="location" className="text-sm font-bold text-gray-700 uppercase tracking-wide">
+                                            Pick Up Location <span className="text-gray-400 font-normal normal-case">(Optional)</span>
                                         </Label>
                                         <div className="flex gap-3">
-                                            <div className="relative flex-1">
-                                                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" strokeWidth={1.5} />
+                                            <div className="relative flex-1 bg-gradient-to-br from-gray-50 to-white rounded-[16px] border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300">
+                                                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-primary z-10" strokeWidth={2} />
                                                 <Input
                                                     id="location"
-                                                    className="h-12 pl-12 pr-4 bg-[#F8F8F8] border-gray-300 rounded-[14px] text-sm placeholder:text-gray-400 hover:border-gray-400 focus:bg-white transition-all"
+                                                    className="h-14 pl-14 pr-4 bg-transparent border-none rounded-[16px] text-base font-medium text-gray-900 placeholder:text-gray-400 focus:bg-white transition-all"
                                                     placeholder="Google Maps Location"
                                                     value={formData.location}
                                                     onChange={(e) => setFormData({ ...formData, location: e.target.value })}
@@ -434,53 +457,61 @@ const SchedulePickUp = () => {
                                             </div>
                                             <Button
                                                 type="button"
-                                                variant="outline"
                                                 onClick={handleGetCurrentLocation}
                                                 disabled={isGettingLocation}
-                                                className="h-12 w-12 flex-shrink-0 rounded-[14px] border-gray-300 hover:bg-gray-100 hover:border-gray-400 transition-all"
+                                                className="h-14 w-14 flex-shrink-0 rounded-[16px] bg-primary hover:bg-primary/90 shadow-[0_4px_14px_rgba(59,130,246,0.25)] hover:shadow-[0_6px_20px_rgba(59,130,246,0.35)] transition-all hover:scale-105"
                                             >
                                                 {isGettingLocation ? (
-                                                    <Loader2 className="h-5 w-5 animate-spin" />
+                                                    <Loader2 className="h-5 w-5 animate-spin text-white" />
                                                 ) : (
-                                                    <Navigation className="h-5 w-5 text-gray-600" />
+                                                    <Navigation className="h-5 w-5 text-white" />
                                                 )}
                                             </Button>
                                         </div>
-                                        <p className="text-xs text-gray-500 ml-1">
+                                        <p className="text-xs text-gray-500 ml-1 flex items-center gap-1.5">
+                                            <Navigation className="h-3 w-3" />
                                             Click the location icon to use your current location
                                         </p>
                                         {formData.latitude && formData.longitude && (
-                                            <p className="text-xs text-green-600 flex items-center gap-1.5 ml-1 font-medium">
+                                            <p className="text-xs text-green-600 flex items-center gap-1.5 ml-1 font-semibold bg-green-50 px-3 py-1.5 rounded-full w-fit">
                                                 <MapPin className="h-3.5 w-3.5" />
                                                 Location coordinates captured
                                             </p>
                                         )}
                                     </div>
 
-                                    {/* Manual Address */}
+                                    {/* Manual Address - Premium Card */}
                                     <div className="space-y-3">
-                                        <Label htmlFor="address" className="text-sm font-semibold text-gray-700">
+                                        <Label htmlFor="address" className="text-sm font-bold text-gray-700 uppercase tracking-wide">
                                             Address <span className="text-red-500">*</span>
                                         </Label>
-                                        <Textarea
-                                            id="address"
-                                            className="min-h-[100px] bg-[#F8F8F8] border-gray-300 rounded-[14px] text-sm placeholder:text-gray-400 hover:border-gray-400 focus:bg-white transition-all p-4"
-                                            placeholder="Enter your full address manually..."
-                                            value={formData.address}
-                                            onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                                            required
-                                        />
+                                        <div className="relative bg-gradient-to-br from-gray-50 to-white rounded-[16px] border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300">
+                                            <Home className="absolute left-4 top-4 h-5 w-5 text-primary z-10" strokeWidth={2} />
+                                            <Textarea
+                                                id="address"
+                                                className="min-h-[120px] pl-14 pr-4 pt-3 pb-3 bg-transparent border-none rounded-[16px] text-base font-medium text-gray-900 placeholder:text-gray-400 focus:bg-white transition-all resize-none"
+                                                placeholder="Enter your full address manually..."
+                                                value={formData.address}
+                                                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                                                required
+                                            />
+                                        </div>
                                     </div>
 
-                                    {/* Preferred Date & Time */}
+                                    {/* Preferred Date & Time - Premium Card with Dual Icons */}
                                     <div className="space-y-3">
-                                        <Label htmlFor="datetime" className="text-sm font-semibold text-gray-700">Preferred Date & Time</Label>
-                                        <div className="relative">
-                                            <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none z-10" strokeWidth={1.5} />
+                                        <Label htmlFor="datetime" className="text-sm font-bold text-gray-700 uppercase tracking-wide">
+                                            Preferred Date & Time
+                                        </Label>
+                                        <div className="relative bg-gradient-to-br from-gray-50 to-white rounded-[16px] border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300">
+                                            <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-2 z-10">
+                                                <Calendar className="h-5 w-5 text-primary" strokeWidth={2} />
+                                                <Clock className="h-4 w-4 text-primary" strokeWidth={2} />
+                                            </div>
                                             <Input
                                                 id="datetime"
                                                 type="datetime-local"
-                                                className="h-12 pl-12 pr-4 bg-[#F8F8F8] border-gray-300 rounded-[14px] text-sm hover:border-gray-400 focus:bg-white transition-all"
+                                                className="h-14 pl-20 pr-4 bg-transparent border-none rounded-[16px] text-base font-semibold text-gray-900 focus:bg-white transition-all"
                                                 value={formData.scheduled_date}
                                                 onChange={(e) => setFormData({ ...formData, scheduled_date: e.target.value })}
                                                 min={new Date().toISOString().slice(0, 16)}
@@ -490,15 +521,24 @@ const SchedulePickUp = () => {
                                     </div>
                                 </div>
 
-                                {/* Submit Button */}
-                                <div className="pt-2">
+                                {/* Premium Submit Button with Green Gradient & Glow */}
+                                <div className="pt-4">
                                     <Button
                                         type="submit"
-                                        className="w-full h-12 bg-[#CD0000] hover:bg-[#A30000] text-white font-bold text-base rounded-[14px] shadow-sm hover:shadow-md transition-all duration-200"
+                                        className="w-full h-14 bg-gradient-to-r from-green-600 via-green-500 to-green-600 hover:from-green-700 hover:via-green-600 hover:to-green-700 text-white font-bold text-lg rounded-[16px] shadow-[0_6px_24px_rgba(34,197,94,0.25)] hover:shadow-[0_8px_32px_rgba(34,197,94,0.35)] transition-all duration-300 hover:scale-[1.02]"
                                         disabled={isSubmitting}
                                     >
-                                        {isSubmitting && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
-                                        Schedule Pick Up
+                                        {isSubmitting ? (
+                                            <>
+                                                <Loader2 className="mr-2 h-6 w-6 animate-spin" />
+                                                Scheduling...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Calendar className="mr-2 h-5 w-5" />
+                                                Schedule Pick Up
+                                            </>
+                                        )}
                                     </Button>
                                 </div>
                             </form>

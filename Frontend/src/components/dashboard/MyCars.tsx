@@ -262,8 +262,8 @@ const MyCars = () => {
                                     <Input
                                         id="reg"
                                         value={formData.registration_number}
-                                        onChange={(e) => setFormData({ ...formData, registration_number: e.target.value })}
-                                        className="col-span-3"
+                                        onChange={(e) => setFormData({ ...formData, registration_number: e.target.value.toUpperCase() })}
+                                        className="col-span-3 uppercase"
                                         placeholder="e.g. XYZ 123"
                                         required
                                     />
@@ -388,8 +388,8 @@ const MyCars = () => {
                                     <Input
                                         id="edit-reg"
                                         value={formData.registration_number}
-                                        onChange={(e) => setFormData({ ...formData, registration_number: e.target.value })}
-                                        className="col-span-3"
+                                        onChange={(e) => setFormData({ ...formData, registration_number: e.target.value.toUpperCase() })}
+                                        className="col-span-3 uppercase"
                                         placeholder="e.g. XYZ 123"
                                         required
                                     />
