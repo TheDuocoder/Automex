@@ -5,30 +5,30 @@ const Reviews = () => {
     {
       title: "AutoMex Delivered a Great Overall Experience",
       text: "I got my regular servicing done at their workshop. They provided a detailed inspection report and clearly explained what needed immediate attention and what could wait. It genuinely felt honest, because most garages try to push everything at once.",
-      author: "Hardik Chopra",
+      author: "Rakesh Kumar",
       platform: "Twitter",
-      workshop: "AutoMex - Patia, Bhubaneswar",
+      workshop: "AUTOMEX, Hanspal, Balianta market road",
     },
     {
       title: "A Finish That Looks Brand New",
       text: "Booked a car spa after weeks of driving through rain and dust, and the difference is unbelievable. The interiors smell fresh, the seat stains are gone, and the exterior polish has brought back the original shine.",
-      author: "Varun Chaudhary",
+      author: "Sidharth Sahoo",
       platform: "Facebook",
-      workshop: "AutoMex - Chandrasekharpur, Bhubaneswar",
+      workshop: "AUTOMEX, Hanspal, Balianta market road",
     },
     {
       title: "Impressed by Their Professionalism",
       text: "Booked my service and the experience was smoother than I imagined. They arrived on time for pickup, kept me updated all day, and returned the car spotless.",
-      author: "Gurkirat Singh",
+      author: "Tapas Parida",
       platform: "Twitter",
-      workshop: "AutoMex - Saheed Nagar, Bhubaneswar",
+      workshop: "AUTOMEX, Hanspal, Balianta market road",
     },
     {
       title: "Service That's Truly Top-Notch",
       text: "Got my AC serviced and the cooling is finally back to chill, which was desperately needed in this weather. The pickup and drop feature is an absolute lifesaver.",
-      author: "Ankur Singh",
+      author: "Bhabani shankar swain",
       platform: "Facebook",
-      workshop: "AutoMex - Master Canteen, Bhubaneswar",
+      workshop: "AUTOMEX, Hanspal, Balianta market road",
     },
   ];
 
