@@ -49,23 +49,62 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
     if (!heroRef.current) return;
 
     const ctx = gsap.context(() => {
-      gsap.set(
-        [
-          ".hero-title",
-          ".hero-description",
-          ".hero-bullets-item",
-          ".hero-cta",
-          ".hero-auth-card"
-        ],
-        { autoAlpha: 0, y: 36 }
-      );
+      // Set initial states for all elements
+      gsap.set(".hero-title", { autoAlpha: 0, y: 30 });
+      gsap.set(".hero-description", { autoAlpha: 0, y: 25 });
+      gsap.set(".hero-bullets-item", { autoAlpha: 0, x: -20 });
+      gsap.set(".hero-cta", { autoAlpha: 0, scale: 1.1 });
+      gsap.set(".hero-auth-card", { autoAlpha: 0, y: 20 });
+      gsap.set(".nav-button", { autoAlpha: 0, y: -10 });
 
-      gsap.timeline({ defaults: { duration: 0.9, ease: "power3.out" } })
-        .to(".hero-title", { autoAlpha: 1, y: 0 })
-        .to(".hero-description", { autoAlpha: 1, y: 0 }, "-=0.6")
-        .to(".hero-bullets-item", { autoAlpha: 1, y: 0, stagger: 0.15 }, "-=0.55")
-        .to(".hero-cta", { autoAlpha: 1, y: 0 }, "-=0.35")
-        .to(".hero-auth-card", { autoAlpha: 1, y: 0 }, "-=0.6");
+      // Create premium entrance timeline
+      const tl = gsap.timeline({ defaults: { ease: "cubic-bezier(0.22, 1, 0.36, 1)" } });
+
+      // Navigation buttons fade + slide down
+      tl.to(".nav-button", { 
+        autoAlpha: 1, 
+        y: 0, 
+        duration: 0.8,
+        stagger: 0.1
+      }, 0.2);
+
+      // Hero heading with soft fade-in + upward motion
+      tl.to(".hero-title", { 
+        autoAlpha: 1, 
+        y: 0, 
+        duration: 1.2 
+      }, 0.3);
+
+      // Subtitle with delayed fade-in for staggered effect
+      tl.to(".hero-description", { 
+        autoAlpha: 1, 
+        y: 0, 
+        duration: 1.0 
+      }, 0.6);
+
+      // Bullet points one-by-one with left slide-in and fade
+      tl.to(".hero-bullets-item", { 
+        autoAlpha: 1, 
+        x: 0, 
+        duration: 0.9,
+        stagger: 0.15,
+        ease: "power2.out"
+      }, 0.9);
+
+      // CTA button with spring scale effect
+      tl.to(".hero-cta", { 
+        autoAlpha: 1, 
+        scale: 1, 
+        duration: 1.0,
+        ease: "elastic.out(1, 0.5)"
+      }, 1.3);
+
+      // Auth card fade in
+      tl.to(".hero-auth-card", { 
+        autoAlpha: 1, 
+        y: 0, 
+        duration: 0.9 
+      }, 1.1);
       
       // Animate welcome section elements if authenticated
       if (isAuthenticated) {
@@ -74,9 +113,9 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
           autoAlpha: 1,
           y: 0,
           stagger: 0.1,
-          duration: 0.6,
+          duration: 0.8,
           ease: "power2.out",
-          delay: 0.3
+          delay: 1.5
         });
       }
     }, heroRef);
@@ -93,10 +132,15 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
 
     if (!activeBackground) return;
 
+    // Slow, smooth zoom-in for premium feel (2.5 seconds)
     const animation = gsap.fromTo(
       activeBackground,
-      { scale: 1.05 },
-      { scale: 1, duration: 1.2, ease: "power3.out" }
+      { scale: 1.08 },
+      { 
+        scale: 1, 
+        duration: 2.5, 
+        ease: "cubic-bezier(0.22, 1, 0.36, 1)" 
+      }
     );
 
     return () => {

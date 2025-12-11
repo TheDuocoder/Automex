@@ -133,7 +133,7 @@ const Header = ({ onLoginClick }: HeaderProps) => {
                   }
                   initial={false}
                   className={cn(
-                    "nav-link nav-button-rainbow relative lg:flex items-center justify-center overflow-hidden rounded-full px-6 py-2.5 text-sm xl:text-base font-bold tracking-wide text-white transition-all duration-300"
+                    "nav-button nav-link nav-button-rainbow relative lg:flex items-center justify-center overflow-hidden rounded-full px-6 py-2.5 text-sm xl:text-base font-bold tracking-wide text-white transition-all duration-300"
                   )}
                   style={{
                     background: 'rgba(20, 20, 20, 0.65)',
@@ -200,7 +200,7 @@ const Header = ({ onLoginClick }: HeaderProps) => {
                       onLoginClick?.();
                     }
                   }}
-                  className="nav-button-rainbow nav-link relative lg:flex items-center justify-center overflow-hidden rounded-full px-6 py-2.5 text-sm xl:text-base font-bold tracking-wide text-white transition-all duration-300"
+                  className="nav-button nav-button-rainbow nav-link relative lg:flex items-center justify-center overflow-hidden rounded-full px-6 py-2.5 text-sm xl:text-base font-bold tracking-wide text-white transition-all duration-300"
                   style={{
                     background: 'rgba(20, 20, 20, 0.65)',
                     backdropFilter: 'blur(10px)',
