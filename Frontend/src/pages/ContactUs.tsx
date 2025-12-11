@@ -1880,41 +1880,15 @@ const ContactUs = () => {
                   />
                 </div>
 
-                <Button 
+                <button 
                   type="submit" 
-                  size="lg" 
-                  className="w-full text-base px-8 py-6 font-bold transition-all duration-300 text-white border-0 group relative overflow-hidden"
-                  style={{
-                    background: 'linear-gradient(135deg, #E84C3D 0%, #CD0000 100%)',
-                    borderRadius: '16px',
-                    boxShadow: '0 8px 24px rgba(232, 76, 61, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.1) inset',
-                    letterSpacing: '-0.01em',
-                    fontSize: '16px',
-                    fontWeight: 700
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                    e.currentTarget.style.boxShadow = '0 12px 32px rgba(232, 76, 61, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.1) inset';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = '0 8px 24px rgba(232, 76, 61, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.1) inset';
-                  }}
+                  className="send-message-btn"
                 >
-                  <div className="relative z-10 flex items-center justify-center gap-3">
+                  <div className="svg-wrapper">
                     <Send className="w-5 h-5" />
-                    <span>Send Message</span>
                   </div>
-                  {/* Shine effect on hover */}
-                  <div 
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                    style={{
-                      background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent)',
-                      transform: 'translateX(-100%)',
-                      animation: 'shine 1.5s infinite'
-                    }}
-                  />
-                </Button>
+                  <span>Send Message</span>
+                </button>
               </form>
             </div>
 

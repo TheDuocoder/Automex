@@ -379,7 +379,7 @@ const Header = ({ onLoginClick }: HeaderProps) => {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       onClick={handleLogout}
-                      className="cursor-pointer text-red-600 focus:text-red-600"
+                      className="cursor-pointer text-red-600 hover:text-white focus:text-white hover:bg-red-600 focus:bg-red-600"
                     >
                       <LogOut className="mr-2 h-4 w-4" />
                       <span>Logout</span>

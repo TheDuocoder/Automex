@@ -31,8 +31,8 @@ const App = () => {
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
-              <Route path="/contact-us" element={<ProtectedRoute><ContactUs /></ProtectedRoute>} />
-              <Route path="/services" element={<ProtectedRoute><Services /></ProtectedRoute>} />
+              <Route path="/contact-us" element={<ContactUs />} />
+              <Route path="/services" element={<Services />} />
               <Route path="/services-demo" element={<ProtectedRoute><ServicesDemo /></ProtectedRoute>} />
               {/* Redirect /login to landing page */}
               <Route path="/login" element={<Navigate to="/" replace state={{ showAuth: true }} />} />
