@@ -19,9 +19,7 @@ services:
       - automex_network
 
   backend:
-    build:
-      context: ./Backend
-      dockerfile: Dockerfile
+    image: procoder9937/automex-backend:latest
     container_name: automex_backend
     restart: unless-stopped
     expose:
@@ -38,9 +36,7 @@ services:
       - automex_network
 
   frontend:
-    build:
-      context: ./Frontend
-      dockerfile: Dockerfile
+    image: procoder9937/automex-frontend:latest
     container_name: automex_frontend
     restart: unless-stopped
     expose:
