@@ -492,17 +492,19 @@ const MyCars = () => {
                             <div className="absolute top-4 right-4 flex items-center gap-2">
                                 <button
                                     onClick={() => handleEditCar(car)}
-                                    className="p-3.5 bg-[#0066FF] hover:bg-[#0052CC] text-white rounded-full transition-all duration-300 shadow-[0_4px_12px_rgba(0,102,255,0.3)] hover:shadow-[0_6px_20px_rgba(0,102,255,0.4)] hover:scale-110"
+                                    className="edit-btn-animated"
                                     title="Edit vehicle"
                                 >
-                                    <Pencil className="h-5 w-5" strokeWidth={2.5} />
+                                    Edit
+                                    <Pencil className="svg" strokeWidth={2.5} />
                                 </button>
                                 <button
                                     onClick={() => handleDeleteCar(car.id)}
-                                    className="p-3.5 bg-[#CD0000] hover:bg-[#A30000] text-white rounded-full transition-all duration-300 shadow-[0_4px_12px_rgba(205,0,0,0.3)] hover:shadow-[0_6px_20px_rgba(205,0,0,0.4)] hover:scale-110"
+                                    className="delete-btn-animated"
                                     title="Delete vehicle"
                                 >
-                                    <Trash2 className="h-5 w-5" strokeWidth={2.5} />
+                                    Delete
+                                    <Trash2 className="svg" strokeWidth={2.5} />
                                 </button>
                             </div>
 

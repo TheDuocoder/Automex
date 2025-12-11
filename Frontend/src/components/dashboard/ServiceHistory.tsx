@@ -158,9 +158,19 @@ const ServiceHistory = () => {
 
     return (
         <Card className="shadow-lg border-none">
-            <CardHeader className="border-b bg-gray-50/50 pb-4 flex flex-row items-center justify-between">
-                <CardTitle className="flex items-center gap-2 text-xl">
-                    <History className="h-5 w-5 text-primary" />
+            <CardHeader
+                className="border-b pb-4 flex flex-row items-center justify-between relative overflow-hidden"
+                style={{
+                    background: `
+                        radial-gradient(circle at 100% 0%, rgba(253, 253, 245, 0.3) 0%, transparent 50%),
+                        radial-gradient(circle at 0% 0%, rgba(253, 253, 245, 0.3) 0%, transparent 50%),
+                        linear-gradient(135deg, #7C2558 0%, #F96161 40%, #FA887E 70%, #FDFDF5 100%)
+                    `,
+                    boxShadow: 'inset 0 0 60px rgba(0, 0, 0, 0.1)'
+                }}
+            >
+                <CardTitle className="flex items-center gap-2 text-xl text-white drop-shadow-md">
+                    <History className="h-5 w-5" />
                     Service History
                 </CardTitle>
                 <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
@@ -280,8 +290,9 @@ const ServiceHistory = () => {
                     allHistory.map((record) => (
                         <div
                             key={record.id}
-                            className="bg-white rounded-[28px] p-8 transition-all duration-300 border border-gray-100/80 relative group hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)]"
+                            className="rounded-[28px] p-8 transition-all duration-300 border border-gray-100/80 relative group hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)]"
                             style={{
+                                backgroundColor: '#ECECEB',
                                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04), 0 12px 24px rgba(0, 0, 0, 0.06)',
                             }}
                         >
@@ -289,7 +300,7 @@ const ServiceHistory = () => {
                             <div className="flex items-start justify-between mb-6">
                                 <div className="flex-1 space-y-2">
                                     <h3
-                                        className="text-[19px] text-gray-900 leading-snug"
+                                        className="text-[19px] text-gray-900 leading-snug uppercase"
                                         style={{
                                             fontWeight: 700,
                                             letterSpacing: '-0.02em'
@@ -305,20 +316,22 @@ const ServiceHistory = () => {
                                 </div>
 
                                 {/* Action Buttons - Top Right */}
-                                <div className="flex items-center gap-1.5">
+                                <div className="flex items-center gap-2">
                                     <button
                                         onClick={() => handleEdit(record)}
-                                        className="p-2.5 text-gray-300 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-all duration-200"
+                                        className="edit-btn-animated"
                                         title="Edit"
                                     >
-                                        <Pencil className="h-4 w-4" strokeWidth={2} />
+                                        Edit
+                                        <Pencil className="svg" strokeWidth={2.5} />
                                     </button>
                                     <button
                                         onClick={() => handleDelete(record.id)}
-                                        className="p-2.5 text-gray-300 hover:text-red-600 hover:bg-red-50 rounded-full transition-all duration-200"
+                                        className="delete-btn-animated"
                                         title="Delete"
                                     >
-                                        <Trash2 className="h-4 w-4" strokeWidth={2} />
+                                        Delete
+                                        <Trash2 className="svg" strokeWidth={2.5} />
                                     </button>
                                 </div>
                             </div>

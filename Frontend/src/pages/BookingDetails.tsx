@@ -645,9 +645,10 @@ const BookingDetails = () => {
             </div>
             <h2 className="text-2xl font-semibold text-gray-900 mb-2">Booking Not Found</h2>
             <p className="text-gray-500 mb-8">The booking you're looking for doesn't exist or has been removed.</p>
-            <Button onClick={() => navigate('/my-services')} size="lg">
-              Back to My Services
-            </Button>
+            <button onClick={() => navigate('/my-services')} className="back-to-services-btn">
+              <ArrowLeft />
+              Back
+            </button>
           </Card>
         </main>
         <Footer />
@@ -671,14 +672,13 @@ const BookingDetails = () => {
           {/* Header Section */}
           <motion.div variants={itemVariants} className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="space-y-1">
-              <Button
-                variant="ghost"
+              <button
                 onClick={() => navigate('/my-services')}
-                className="pl-0 text-gray-500 hover:text-gray-900 hover:bg-transparent -ml-2 mb-2"
+                className="back-to-services-btn mb-2"
               >
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Back to My Services
-              </Button>
+                <ArrowLeft />
+                Back
+              </button>
               <div className="flex items-center gap-3">
                 <h1 className="text-3xl font-bold text-gray-900 tracking-tight">
                   Booking #{booking.id}
