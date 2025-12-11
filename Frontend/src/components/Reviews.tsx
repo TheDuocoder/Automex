@@ -1,32 +1,31 @@
-import { Card, CardContent } from "@/components/ui/card";
 import { Quote } from "lucide-react";
 
 const Reviews = () => {
   const reviews = [
     {
-      title: "Great Experience with AutoMex",
-      text: "Did regular servicing at their Borivali workshop. They gave me a proper inspection report, told me what needs fixing now and what can wait which honestly felt honest because most garages just try to push everything at once.",
+      title: "AutoMex Delivered a Great Overall Experience",
+      text: "I got my regular servicing done at their workshop. They provided a detailed inspection report and clearly explained what needed immediate attention and what could wait. It genuinely felt honest, because most garages try to push everything at once.",
       author: "Hardik Chopra",
       platform: "Twitter",
       workshop: "AutoMex - Patia, Bhubaneswar",
     },
     {
-      title: "Spotless Car Finish",
-      text: "Booked a car spa after weeks of driving through rain and dust, and man the difference is crazy. The interiors smell fresh, stains on the seats gone, and the exterior polish brought back the shine.",
+      title: "A Finish That Looks Brand New",
+      text: "Booked a car spa after weeks of driving through rain and dust, and the difference is unbelievable. The interiors smell fresh, the seat stains are gone, and the exterior polish has brought back the original shine.",
       author: "Varun Chaudhary",
       platform: "Facebook",
       workshop: "AutoMex - Chandrasekharpur, Bhubaneswar",
     },
     {
-      title: "Impressive Professionalism",
-      text: "Booked my service in Andheri and honestly it was smoother than I thought. They picked up the car right on time, sent me updates during the day, and dropped it back cleaner than I left it.",
+      title: "Impressed by Their Professionalism",
+      text: "Booked my service and the experience was smoother than I imagined. They arrived on time for pickup, kept me updated all day, and returned the car spotless.",
       author: "Gurkirat Singh",
       platform: "Twitter",
       workshop: "AutoMex - Saheed Nagar, Bhubaneswar",
     },
     {
-      title: "Top-Notch Service",
-      text: "Got my AC serviced in Powai. Cooling is back to proper chill now which was badly needed in this weather. The pickup and drop thing is a lifesaver.",
+      title: "Service That's Truly Top-Notch",
+      text: "Got my AC serviced and the cooling is finally back to chill, which was desperately needed in this weather. The pickup and drop feature is an absolute lifesaver.",
       author: "Ankur Singh",
       platform: "Facebook",
       workshop: "AutoMex - Master Canteen, Bhubaneswar",
@@ -46,37 +45,36 @@ const Reviews = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
           {reviews.map((review, index) => (
-            <Card 
-              key={index} 
-              className="bg-white hover:shadow-xl transition-all duration-300 border-0"
-              style={{
-                borderRadius: '16px',
-                boxShadow: '0 2px 10px rgba(0, 0, 0, 0.06)',
-              }}
-            >
-              <CardContent className="p-7 md:p-9">
-                <Quote className="w-10 h-10 text-primary mb-5" style={{ marginTop: '-2px' }} />
-                <h3 className="text-lg font-bold mb-3" style={{ color: '#111' }}>
-                  {review.title}
-                </h3>
-                <p className="mb-4 text-sm leading-relaxed" style={{ color: '#555' }}>
-                  {review.text}
-                </p>
-                <div className="flex items-center justify-between pt-4 border-t">
-                  <div>
-                    <p className="font-bold" style={{ color: '#222' }}>
-                      {review.author}
-                    </p>
-                    <p className="text-sm" style={{ color: '#777' }}>
+            <div key={index} className="testimonial-card">
+              <div className="testimonial-content">
+                <Quote className="quotes text-[#DC143C]" strokeWidth={1.5} />
+                
+                <div className="flex flex-col gap-4">
+                  <h3 className="text-xl font-bold text-black">
+                    {review.title}
+                  </h3>
+                  
+                  <p className="para text-black/80">
+                    {review.text}
+                  </p>
+                </div>
+
+                <div className="footer">
+                  <div className="flex flex-col gap-1">
+                    <button className="testimonial-button">
+                      <span>{review.author}</span>
+                    </button>
+                    <p className="text-sm text-black/60">
                       {review.platform}
                     </p>
                   </div>
+                  
+                  <p className="text-xs text-black/50">
+                    Workshop: {review.workshop}
+                  </p>
                 </div>
-                <p className="text-xs mt-3" style={{ color: '#999' }}>
-                  Workshop: {review.workshop}
-                </p>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           ))}
         </div>
       </div>

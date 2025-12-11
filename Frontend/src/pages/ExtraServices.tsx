@@ -208,7 +208,6 @@ const ExtraServices = () => {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 md:gap-4 mb-8">
             <div>
               <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight">Extra Services</h1>
-              <p className="text-gray-500 mt-2 text-sm md:text-lg">Manage additional services and assignments</p>
             </div>
             <Dialog open={isAddOpen} onOpenChange={(open) => {
               setIsAddOpen(open);

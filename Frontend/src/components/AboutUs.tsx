@@ -50,7 +50,12 @@ const AboutUs = () => {
                 e.currentTarget.src = "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&q=80&w=800";
               }}
             />
-            <div className="absolute -bottom-4 -right-4 md:-bottom-6 md:-right-6 bg-gradient-to-br from-orange-500 to-red-600 text-white rounded-lg md:rounded-xl p-4 md:p-6 shadow-xl">
+            <div className="absolute -bottom-4 -right-4 md:-bottom-6 md:-right-6 text-white rounded-lg md:rounded-xl p-4 md:p-6"
+              style={{
+                background: 'linear-gradient(135deg, #E84057 0%, #C4308A 50%, #8B1FB4 100%)',
+                boxShadow: '0 10px 30px rgba(255, 0, 100, 0.25)'
+              }}
+            >
               <p className="text-2xl md:text-4xl font-bold">10+</p>
               <p className="text-xs md:text-sm font-semibold">Years Experience</p>
             </div>
@@ -96,17 +101,43 @@ const AboutUs = () => {
         </div>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
           {features.map((feature, index) => (
             <div 
               key={index}
-              className="bg-white p-5 md:p-6 rounded-lg md:rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100"
+              className="group bg-white p-8 md:p-10 rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.08)] hover:shadow-[0_15px_50px_rgba(199,78,137,0.2)] transition-all duration-500 transform hover:-translate-y-3 border border-gray-100/50 hover:border-pink-200/50 relative overflow-hidden"
             >
-              <div className="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg flex items-center justify-center mb-3 md:mb-4">
-                <feature.icon className="w-6 h-6 md:w-7 md:h-7 text-white" />
+              {/* Subtle gradient background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-pink-50/30 via-white to-purple-50/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              
+              {/* Icon Container with enhanced gradient and glow */}
+              <div className="relative w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center mb-6 md:mb-8 transition-all duration-500 group-hover:scale-110 group-hover:rotate-3"
+                style={{
+                  background: 'linear-gradient(135deg, #E84057 0%, #C4308A 50%, #8B1FB4 100%)',
+                  boxShadow: '0 10px 30px rgba(255, 0, 100, 0.25)'
+                }}
+              >
+                {/* Glow effect */}
+                <div className="absolute inset-0 rounded-2xl blur-md opacity-50 group-hover:opacity-75 transition-opacity duration-500"
+                  style={{
+                    background: 'linear-gradient(135deg, #E84057 0%, #C4308A 50%, #8B1FB4 100%)'
+                  }}
+                ></div>
+                <feature.icon className="relative w-6 h-6 md:w-7 md:h-7 text-white stroke-[2.5] group-hover:scale-110 transition-transform duration-500" />
               </div>
-              <h4 className="text-base md:text-lg font-bold text-gray-900 mb-2">{feature.title}</h4>
-              <p className="text-xs md:text-sm text-gray-600 leading-relaxed">{feature.description}</p>
+              
+              {/* Title */}
+              <h4 className="relative text-xl md:text-2xl font-bold text-gray-900 mb-4 tracking-tight group-hover:text-gray-800 transition-colors duration-300">
+                {feature.title}
+              </h4>
+              
+              {/* Description */}
+              <p className="relative text-sm md:text-base text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
+                {feature.description}
+              </p>
+              
+              {/* Decorative corner accent */}
+              <div className="absolute bottom-0 right-0 w-24 h-24 bg-gradient-to-tl from-pink-100/40 to-transparent rounded-tl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             </div>
           ))}
         </div>
@@ -116,24 +147,45 @@ const AboutUs = () => {
           <h3 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8 text-center">Why Choose AutoMex?</h3>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8">
             <div className="text-center">
-              <Users className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 md:mb-4 text-orange-400" />
+              <div className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 md:mb-4 rounded-lg flex items-center justify-center"
+                style={{
+                  background: 'linear-gradient(135deg, #E84057 0%, #C4308A 50%, #8B1FB4 100%)',
+                  boxShadow: '0 10px 30px rgba(255, 0, 100, 0.25)'
+                }}
+              >
+                <Users className="w-6 h-6 md:w-7 md:h-7 text-white" />
+              </div>
               <h4 className="font-bold text-lg md:text-xl mb-2">Customer First</h4>
               <p className="text-xs md:text-sm text-gray-300">
-                Your satisfaction is our top priority with 24/7 customer support
+                Your satisfaction is our priority, with support available from 9 AM to 7 PM.
               </p>
             </div>
             <div className="text-center">
-              <Shield className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 md:mb-4 text-orange-400" />
+              <div className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 md:mb-4 rounded-lg flex items-center justify-center"
+                style={{
+                  background: 'linear-gradient(135deg, #E84057 0%, #C4308A 50%, #8B1FB4 100%)',
+                  boxShadow: '0 10px 30px rgba(255, 0, 100, 0.25)'
+                }}
+              >
+                <Shield className="w-6 h-6 md:w-7 md:h-7 text-white" />
+              </div>
               <h4 className="font-bold text-lg md:text-xl mb-2">100% Transparency</h4>
               <p className="text-xs md:text-sm text-gray-300">
-                No hidden charges, complete transparency in pricing and services
+                No hidden charges — we ensure total transparency in all pricing and services.
               </p>
             </div>
             <div className="text-center">
-              <Car className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 md:mb-4 text-orange-400" />
+              <div className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 md:mb-4 rounded-lg flex items-center justify-center"
+                style={{
+                  background: 'linear-gradient(135deg, #E84057 0%, #C4308A 50%, #8B1FB4 100%)',
+                  boxShadow: '0 10px 30px rgba(255, 0, 100, 0.25)'
+                }}
+              >
+                <Car className="w-6 h-6 md:w-7 md:h-7 text-white" />
+              </div>
               <h4 className="font-bold text-lg md:text-xl mb-2">Free Pick & Drop</h4>
               <p className="text-xs md:text-sm text-gray-300">
-                Complimentary doorstep pickup and delivery for all services
+                Enjoy complimentary doorstep pickup and delivery with every service.
               </p>
             </div>
           </div>

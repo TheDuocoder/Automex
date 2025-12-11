@@ -1251,3 +1251,386 @@ All colors MUST be HSL.
   box-shadow: 9px 9px 33px #d1d1d1, -9px -9px 33px #ffffff;
   transform: translateY(-2px);
 }
+
+/* Testimonial Card Animation */
+.testimonial-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 360px;
+  padding: 32px;
+  border-radius: 24px;
+  overflow: hidden;
+  line-height: 1.6;
+  border: 1px solid #cccccc;
+  transition: all 0.48s cubic-bezier(0.23, 1, 0.32, 1);
+  background: white;
+}
+
+.testimonial-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+  gap: 8px;
+  color: #000000;
+  transition: all 0.48s cubic-bezier(0.23, 1, 0.32, 1);
+  width: 100%;
+}
+
+.testimonial-content .quotes {
+  width: 48px;
+  height: 48px;
+}
+
+.testimonial-content .footer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.testimonial-content .para {
+  z-index: 1;
+  opacity: 0.8;
+  font-size: 16px;
+  transition: all 0.48s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.testimonial-card:hover {
+  box-shadow: 8px 8px #0a3cff;
+  border-color: #0a3cff;
+  transform: translate(-8px, -8px);
+}
+
+.testimonial-button {
+  position: relative;
+  font-family: inherit;
+  border: none;
+  background-color: transparent;
+  font-size: 16px;
+  padding: 4px 0px;
+  font-weight: 700;
+  line-height: 1.6;
+  color: #000000;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.48s cubic-bezier(0.23, 1, 0.32, 1);
+  z-index: 1;
+}
+
+.testimonial-button span {
+  transition: all 0.48s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.testimonial-button::before {
+  position: absolute;
+  content: "";
+  width: 112%;
+  height: 1px;
+  left: 0%;
+  bottom: 0%;
+  background: #0a3cff;
+  pointer-events: none;
+  margin: auto;
+  transition: transform 0.64s cubic-bezier(0.23, 1, 0.32, 1);
+  z-index: -1;
+  transform: scaleX(0);
+  transform-origin: right;
+}
+
+.testimonial-button:hover::before {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.testimonial-button:active {
+  scale: 0.95;
+}
+
+/* Upload Area Animation - Modal Style */
+.upload-modal-container {
+  background-color: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  padding: 1.5rem;
+  margin-top: 1rem;
+}
+
+.logo-circle {
+  width: 5rem;
+  height: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: #e9f5ff;
+  margin: 0 auto 1.5rem;
+}
+
+.logo-circle svg {
+  width: 3rem;
+  height: 3rem;
+  color: #1cc972;
+}
+
+.upload-area {
+  margin-top: 1.25rem;
+  background-color: transparent;
+  padding: 3rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2px dashed #d1d5db;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.upload-area:hover,
+.upload-area:focus {
+  border-color: #1cc972;
+  background-color: rgba(26, 201, 114, 0.02);
+}
+
+.upload-area:hover .upload-area-icon,
+.upload-area:focus .upload-area-icon {
+  transform: scale(1.3);
+  transition-duration: 0.3s;
+}
+
+.upload-area-icon {
+  display: block;
+  width: 3rem;
+  height: 3rem;
+  color: #1cc972;
+  margin-bottom: 1rem;
+}
+
+.upload-area-title {
+  margin-top: 0.5rem;
+  display: block;
+  font-weight: 700;
+  color: #0d0f21;
+  font-size: 1.125rem;
+}
+
+.upload-area-description {
+  display: block;
+  color: #6a6b76;
+  text-align: center;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.upload-area-description strong {
+  color: #1cc972;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.upload-area-description strong:hover {
+  color: #17a85e;
+}
+
+.upload-modal-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0d0f21;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.upload-modal-subtitle {
+  font-size: 0.875rem;
+  color: #6a6b76;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+/* Daily Work Log Delete Button Animation */
+.delete-log-btn {
+  width: 100px;
+  height: 36px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  background: #e62222;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+  transition: 200ms;
+  position: relative;
+  overflow: hidden;
+}
+
+.delete-log-btn .text {
+  transform: translateX(20px);
+  color: white;
+  font-weight: bold;
+  transition: 200ms;
+  font-size: 14px;
+}
+
+.delete-log-btn .icon {
+  position: absolute;
+  border-left: 1px solid #c41b1b;
+  transform: translateX(70px);
+  height: 28px;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 200ms;
+}
+
+.delete-log-btn svg {
+  width: 14px;
+  height: 14px;
+  fill: #eee;
+}
+
+.delete-log-btn:hover {
+  background: #ff3636;
+}
+
+.delete-log-btn:hover .text {
+  color: transparent;
+}
+
+.delete-log-btn:hover .icon {
+  width: 100px;
+  border-left: none;
+  transform: translateX(0);
+}
+
+.delete-log-btn:focus {
+  outline: none;
+}
+
+.delete-log-btn:active .icon svg {
+  transform: scale(0.8);
+}
+
+/* Daily Work Log Edit Button Animation */
+.edit-log-btn {
+  width: 100px;
+  height: 36px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  background: #2563eb;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+  transition: 200ms;
+  position: relative;
+  overflow: hidden;
+}
+
+.edit-log-btn .text {
+  transform: translateX(20px);
+  color: white;
+  font-weight: bold;
+  transition: 200ms;
+  font-size: 14px;
+}
+
+.edit-log-btn .icon {
+  position: absolute;
+  border-left: 1px solid #1d4ed8;
+  transform: translateX(70px);
+  height: 28px;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 200ms;
+}
+
+.edit-log-btn svg {
+  width: 14px;
+  height: 14px;
+  fill: #eee;
+}
+
+.edit-log-btn:hover {
+  background: #3b82f6;
+}
+
+.edit-log-btn:hover .text {
+  color: transparent;
+}
+
+.edit-log-btn:hover .icon {
+  width: 100px;
+  border-left: none;
+  transform: translateX(0);
+}
+
+.edit-log-btn:focus {
+  outline: none;
+}
+
+.edit-log-btn:active .icon svg {
+  transform: scale(0.8);
+}
+
+/* Create New Log Button Animation */
+.cssbuttons-io-button {
+  background: #22c55e;
+  color: white;
+  font-family: inherit;
+  padding: 0.35em;
+  padding-left: 1.2em;
+  font-size: 17px;
+  font-weight: 500;
+  border-radius: 0.9em;
+  border: none;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  box-shadow: inset 0 0 1.6em -0.6em #16a34a;
+  overflow: hidden;
+  position: relative;
+  height: 2.8em;
+  padding-right: 3.3em;
+  cursor: pointer;
+}
+
+.cssbuttons-io-button .icon {
+  background: white;
+  margin-left: 1em;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.2em;
+  width: 2.2em;
+  border-radius: 0.7em;
+  box-shadow: 0.1em 0.1em 0.6em 0.2em #16a34a;
+  right: 0.3em;
+  transition: all 0.3s;
+}
+
+.cssbuttons-io-button:hover .icon {
+  width: calc(100% - 0.6em);
+}
+
+.cssbuttons-io-button .icon svg {
+  width: 1.1em;
+  transition: transform 0.3s;
+  color: #16a34a;
+}
+
+.cssbuttons-io-button:hover .icon svg {
+  transform: translateX(0.1em);
+}
+
+.cssbuttons-io-button:active .icon {
+  transform: scale(0.95);
+}

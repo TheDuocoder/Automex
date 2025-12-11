@@ -24,7 +24,8 @@ import {
   AlertCircle,
   ChevronRight,
   ShieldCheck,
-  Mail
+  Mail,
+  FolderOpen
 } from "lucide-react";
 import { getBooking, cancelBooking, updateBookingStatus, createDailyWorkLog, updateDailyWorkLogDescription, uploadDailyWorkMedia, deleteDailyWorkMedia, deleteDailyWorkByDate, assignEmployeeToBooking, type Booking, BookingStatus, type DailyWorkLog, type EmployeeAssignmentHistory } from "@/services/bookingService";
 import { employeeService, type Employee } from "@/services/api";
@@ -1014,19 +1015,19 @@ const BookingDetails = () => {
                         Daily Work Logs
                       </CardTitle>
                       {isAdmin && (
-                        <Button
-                          size="sm"
-                          variant="outline"
+                        <button
                           onClick={() => {
                             setNewLogDate(getCurrentDate());
                             setNewLogDescription("");
                             setShowCreateLogDialog(true);
                           }}
-                          className="hover:bg-green-500 hover:text-white hover:border-green-500 transition-colors"
+                          className="cssbuttons-io-button"
                         >
-                          <Plus className="h-4 w-4 mr-2" />
                           Create New Log
-                        </Button>
+                          <div className="icon">
+                            <Plus />
+                          </div>
+                        </button>
                       )}
                     </div>
                   </CardHeader>
@@ -1086,38 +1087,40 @@ const BookingDetails = () => {
                                           </Button>
                                         </>
                                       ) : (
-                                        <Button
-                                          size="sm"
-                                          variant="outline"
+                                        <button
                                           onClick={() => {
                                             setEditingDescriptionDate(log.log_date);
                                             setEditingDescription(log.description || "");
                                           }}
-                                          className="hover:bg-blue-500 hover:text-white hover:border-blue-500 transition-colors"
+                                          className="edit-log-btn"
                                         >
-                                          <Edit2 className="h-3.5 w-3.5 mr-2" />
-                                          Edit
-                                        </Button>
+                                          <span className="text">Edit</span>
+                                          <span className="icon">
+                                            <Edit2 />
+                                          </span>
+                                        </button>
                                       )}
-                                      <Button
-                                        size="sm"
-                                        variant="destructive"
+                                      <button
                                         onClick={() => handleDeleteDate(log.log_date)}
                                         disabled={isDeletingDate === log.log_date}
-                                        className="flex items-center gap-2"
+                                        className="delete-log-btn"
                                       >
                                         {isDeletingDate === log.log_date ? (
                                           <>
-                                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                                            Deleting...
+                                            <span className="text">Deleting...</span>
+                                            <span className="icon">
+                                              <Loader2 className="animate-spin" />
+                                            </span>
                                           </>
                                         ) : (
                                           <>
-                                            <Trash2 className="h-3.5 w-3.5" />
-                                            Delete
+                                            <span className="text">Delete</span>
+                                            <span className="icon">
+                                              <Trash2 />
+                                            </span>
                                           </>
                                         )}
-                                      </Button>
+                                      </button>
                                     </div>
                                   )}
                                 </div>
@@ -1276,43 +1279,42 @@ const BookingDetails = () => {
                           })}
                       </div>
                     ) : (
-                      <div className="text-center py-8 bg-gray-50 rounded-lg border border-dashed border-gray-200">
-                        <FileText className="h-12 w-12 text-gray-400 mx-auto mb-3" />
-                        <p className="text-sm text-gray-500">
+                      <div className="upload-modal-container">
+                        <div className="logo-circle">
+                          <FolderOpen className="text-green-500" strokeWidth={2} />
+                        </div>
+                        
+                        <h3 className="upload-modal-title">Upload image / video files</h3>
+                        <p className="upload-modal-subtitle">
                           {isAdmin 
-                            ? "No daily work logs added yet. Upload photos/videos to create a log entry for today's date."
+                            ? "Attach the file below"
                             : "No daily work logs available yet."}
                         </p>
+                        
                         {isAdmin && (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="mt-4"
+                          <div
+                            className="upload-area"
                             onClick={() => {
                               const today = getCurrentDate();
                               setSelectedDate(today);
                               setUploadingDate(today);
                               if (fileInputRef.current) {
                                 fileInputRef.current.setAttribute('data-date', today);
-                                // Reset the input value to allow selecting the same file again
                                 fileInputRef.current.value = '';
                                 fileInputRef.current.click();
                               }
                             }}
-                            disabled={isUploadingMedia && uploadingDate === getCurrentDate()}
                           >
-                            {isUploadingMedia && uploadingDate === getCurrentDate() ? (
-                              <>
-                                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                                Uploading...
-                              </>
-                            ) : (
-                              <>
-                                <Upload className="h-4 w-4 mr-2" />
-                                Upload Media
-                              </>
-                            )}
-                          </Button>
+                            <Upload className="upload-area-icon" strokeWidth={2} />
+                            <span className="upload-area-title">
+                              {isUploadingMedia && uploadingDate === getCurrentDate() 
+                                ? "Uploading..." 
+                                : "Drag file(s) here to upload."}
+                            </span>
+                            <span className="upload-area-description">
+                              Alternatively, you can select a file by <strong>clicking here</strong>
+                            </span>
+                          </div>
                         )}
                       </div>
                     )}
@@ -1661,6 +1663,7 @@ const BookingDetails = () => {
             <Button
               onClick={handleCreateLog}
               disabled={isCreatingLog || !newLogDate}
+              className="bg-green-500 hover:bg-green-600 text-white"
             >
               {isCreatingLog ? (
                 <>
