@@ -27,7 +27,9 @@ RUN pip install --no-cache-dir \
     pydantic-settings>=2.11.0 \
     python-dotenv>=1.1.1 \
     "sqlalchemy[asyncio]>=2.0.0" \
-    uvicorn[standard]>=0.37.0
+    uvicorn[standard]>=0.37.0 \
+    boto3>=1.34.0 \
+    aiofiles>=24.1.0
 
 # Copy application code
 COPY . .
