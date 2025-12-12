@@ -12,8 +12,7 @@ RUN npm ci
 # Copy application code
 COPY . .
 
-# Build the application with increased memory and optimizations
-ENV NODE_OPTIONS="--max-old-space-size=4096"
+# Build the application
 RUN npm run build -- --mode production
 
 # Production Stage
