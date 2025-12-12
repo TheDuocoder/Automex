@@ -28,10 +28,9 @@ services:
       - DATABASE_URL=mysql+aiomysql://root:root@mysql:3306/automex
       - HOST=0.0.0.0
       - PORT=8000
-      - PORT=8000
       - DEBUG=False
     env_file:
-      - .env
+      - ./Backend/.env
     volumes:
       - ./uploads:/app/uploads
     depends_on:
