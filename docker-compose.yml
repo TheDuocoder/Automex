@@ -38,9 +38,7 @@ services:
       - automex_network
 
   frontend:
-    build:
-      context: ./Frontend
-      dockerfile: Dockerfile
+    image: procoder9937/automex:frontend
     container_name: automex_frontend
     restart: unless-stopped
     expose:
