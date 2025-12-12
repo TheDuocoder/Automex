@@ -50,7 +50,6 @@ services:
 
   nginx:
     image: procoder9937/automex:nginx
-    platform: linux/amd64
     container_name: automex_nginx
     restart: unless-stopped
     ports:
