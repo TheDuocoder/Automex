@@ -19,9 +19,7 @@ services:
       - automex_network
 
   backend:
-    build:
-      context: ./Backend
-      dockerfile: Dockerfile
+    image: procoder9937/automex:backend
     container_name: automex_backend
     restart: unless-stopped
     expose:
