@@ -30,7 +30,7 @@ services:
       - PORT=8000
       - DEBUG=False
     env_file:
-      - .env
+      - ./Backend/.env
     volumes:
       - ./uploads:/app/uploads
     depends_on:
