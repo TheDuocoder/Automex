@@ -40,7 +40,7 @@ interface ServicePackage {
 const Services = () => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  const { resetSelection } = useCarSelectionStore();
+  const { resetSelection, selectedFuelType, selectedBrandId, selectedModelId, catalog } = useCarSelectionStore();
 
   const [selectedCategory, setSelectedCategory] = useState("car-services");
   const [selectedBrand, setSelectedBrand] = useState("");
@@ -3572,6 +3572,17 @@ const Services = () => {
     };
   }, [resetSelection]);
 
+  // Close mobile brand modal when selection is complete (fuel type selected)
+  useEffect(() => {
+    if (selectedFuelType) {
+      const modal = document.getElementById('mobile-brand-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+      }
+    }
+  }, [selectedFuelType]);
+
   // Lenis smooth scrolling setup
   useEffect(() => {
     const lenis = new Lenis({
@@ -3873,24 +3884,65 @@ const Services = () => {
             </div>
           </div>
 
-          {/* Mobile Floating Button for Brand Selector */}
-          <button
-            onClick={() => {
-              const modal = document.getElementById('mobile-brand-modal');
-              if (modal) {
-                modal.classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
-              }
-            }}
-            className="xl:hidden fixed bottom-6 right-6 z-40 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-full px-5 py-3 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 flex items-center gap-2 animate-bounce"
-            style={{ animationDuration: '2s' }}
-            aria-label="Select Manufacturer"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-            </svg>
-            <span className="font-bold text-sm whitespace-nowrap">Select Car</span>
-          </button>
+          {/* Mobile Floating Button OR Selected Car Bar */}
+          {selectedBrandId && selectedModelId && selectedFuelType ? (
+            <div className="xl:hidden fixed bottom-6 left-4 right-4 z-40">
+              <div
+                className="bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] p-4 flex items-center justify-between border border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors"
+                onClick={() => {
+                  const modal = document.getElementById('mobile-brand-modal');
+                  if (modal) {
+                    modal.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                  }
+                }}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 relative flex-shrink-0">
+                    <img
+                      src={catalog.find(b => b.id === selectedBrandId)?.logo || ''}
+                      alt={catalog.find(b => b.id === selectedBrandId)?.name}
+                      className="h-full w-full object-contain"
+                    />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-gray-900 text-sm">
+                      {catalog.find(b => b.id === selectedBrandId)?.name} {catalog.find(b => b.id === selectedBrandId)?.models.find(m => m.id === selectedModelId)?.name}
+                    </h3>
+                    <p className="text-xs text-gray-500 font-medium">
+                      {selectedFuelType}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-semibold text-red-600 uppercase tracking-wider">Change</span>
+                  <div className="w-8 h-8 rounded-full bg-red-50 flex items-center justify-center text-red-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <button
+              onClick={() => {
+                const modal = document.getElementById('mobile-brand-modal');
+                if (modal) {
+                  modal.classList.remove('hidden');
+                  document.body.style.overflow = 'hidden';
+                }
+              }}
+              className="xl:hidden fixed bottom-6 right-6 z-40 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-full px-5 py-3 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 flex items-center gap-2 animate-bounce"
+              style={{ animationDuration: '2s' }}
+              aria-label="Select Manufacturer"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+              </svg>
+              <span className="font-bold text-sm whitespace-nowrap">Select Car</span>
+            </button>
+          )}
 
           {/* Mobile Brand Selector Modal */}
           <div
@@ -3928,11 +3980,6 @@ const Services = () => {
                   selectedBrand={selectedBrand}
                   onBrandSelect={(brand) => {
                     setSelectedBrand(brand);
-                    const modal = document.getElementById('mobile-brand-modal');
-                    if (modal) {
-                      modal.classList.add('hidden');
-                      document.body.style.overflow = '';
-                    }
                   }}
                   className="h-auto overflow-visible rounded-2xl bg-white"
                 />

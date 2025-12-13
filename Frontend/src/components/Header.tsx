@@ -32,7 +32,7 @@ const Header = ({ onLoginClick }: HeaderProps) => {
   // Helper function to capitalize name properly
   const capitalizeName = (name: string | undefined) => {
     if (!name) return 'User';
-    return name.split(' ').map(word => 
+    return name.split(' ').map(word =>
       word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
     ).join(' ');
   };
@@ -63,7 +63,7 @@ const Header = ({ onLoginClick }: HeaderProps) => {
 
   useLayoutEffect(() => {
     // Hover effects disabled
-    return () => {};
+    return () => { };
   }, [isTransparent]);
 
   return (
@@ -142,7 +142,7 @@ const Header = ({ onLoginClick }: HeaderProps) => {
                   }}
                   onClick={(e) => {
                     e.preventDefault();
-                    
+
                     if (item.type === "route") {
                       navigate(item.href);
                       return;
@@ -172,7 +172,7 @@ const Header = ({ onLoginClick }: HeaderProps) => {
                   <span className="nav-link-label relative z-20 select-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]">
                     {item.label}
                   </span>
-                  <span 
+                  <span
                     className="pointer-events-none absolute inset-0 rounded-full opacity-0 transition-opacity duration-300"
                     style={{
                       background: 'radial-gradient(circle at center, rgba(255, 255, 255, 0.15), transparent 70%)',
@@ -210,7 +210,7 @@ const Header = ({ onLoginClick }: HeaderProps) => {
                   <span className="nav-link-label relative z-20 select-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]">
                     Login
                   </span>
-                  <span 
+                  <span
                     className="pointer-events-none absolute inset-0 rounded-full opacity-0 transition-opacity duration-300"
                     style={{
                       background: 'radial-gradient(circle at center, rgba(255, 255, 255, 0.15), transparent 70%)',
@@ -307,7 +307,7 @@ const Header = ({ onLoginClick }: HeaderProps) => {
                           }}
                         />
                       ) : null}
-                      <div 
+                      <div
                         className={`h-8 w-8 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center flex-shrink-0 relative ${user?.profile_picture_url ? 'hidden' : ''}`}
                         style={{
                           boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
@@ -339,7 +339,7 @@ const Header = ({ onLoginClick }: HeaderProps) => {
                             }}
                           />
                         ) : null}
-                        <div 
+                        <div
                           className={`h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-semibold ${user?.profile_picture_url ? 'hidden' : ''}`}
                         >
                           {user?.full_name?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || 'U'}
@@ -409,6 +409,19 @@ const Header = ({ onLoginClick }: HeaderProps) => {
               {location.pathname !== '/my-services' && (
                 <>
                   <div className="text-xs text-white/70 mb-2 px-0">Navigation</div>
+                  {location.pathname !== '/services' && !location.pathname.startsWith('/booking') && (
+                    <a
+                      href="/services"
+                      className="text-sm text-white hover-automex py-2"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        navigate('/services');
+                        setMobileMenuOpen(false);
+                      }}
+                    >
+                      Services
+                    </a>
+                  )}
                   <a
                     href="#about-us"
                     className="text-sm text-white hover-automex py-2"
@@ -540,6 +553,17 @@ const Header = ({ onLoginClick }: HeaderProps) => {
                     }}
                   >
                     Services
+                  </a>
+                  <a
+                    href="/profile"
+                    className="text-sm text-white hover-automex py-2 cursor-pointer"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigate('/profile');
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    Profile
                   </a>
                   <a
                     href="/my-services"

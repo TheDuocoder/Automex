@@ -262,9 +262,9 @@ const BrandSelectorModal = ({
         // Special handling for Skoda, Land Rover, and Audi - use correct folder paths
         let imagePath;
         if (brandName === 'skoda') {
-          // Skoda images are in "Skoda" folder with proper capitalization
+          // Skoda images are in "skoda" folder (lowercase 's')
           let skodaFileName = model.name; // Use original name with proper capitalization
-          imagePath = `/images/Car_images/Skoda/${skodaFileName}.png`;
+          imagePath = `/images/Car_images/skoda/${skodaFileName}.png`;
         } else if (brandName === 'land_rover') {
           // Land Rover images are in "Land rover" folder with proper naming
           let landRoverFileName = model.name; // Use original name with proper capitalization
@@ -768,7 +768,7 @@ const BrandSelectorModal = ({
       </DialogTrigger>
 
       <DialogContent
-        className="w-[400px] max-w-[400px] max-h-[80vh] p-0 gap-0 overflow-hidden flex flex-col"
+        className="w-[95vw] sm:w-[400px] max-w-[400px] max-h-[80vh] p-0 gap-0 overflow-hidden flex flex-col rounded-xl"
         style={{
           background: 'linear-gradient(to bottom, #FFFFFF, #FAFAFA)'
         }}
