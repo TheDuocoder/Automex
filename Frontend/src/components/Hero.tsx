@@ -378,11 +378,13 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
             <div>
               <span
                 className="hero-cta inline-block text-white px-4 md:px-6 py-2 md:py-3 rounded-full text-sm md:text-base font-bold shadow-xl transition-all cursor-pointer"
+                onClick={() => navigate('/services')}
                 style={{ background: 'linear-gradient(90deg, #ff3d3d, #ff6a45)' }}
-                onMouseEnter={(e) => (e.target as HTMLElement).style.background = 'linear-gradient(90deg, #e63535, #e65a3d)'}
-                onMouseLeave={(e) => (e.target as HTMLElement).style.background = 'linear-gradient(90deg, #ff3d3d, #ff6a45)'}
+                onMouseEnter={(e) => (e.currentTarget as HTMLElement).style.background = 'linear-gradient(90deg, #e63535, #e65a3d)'}
+                onMouseLeave={(e) => (e.currentTarget as HTMLElement).style.background = 'linear-gradient(90deg, #ff3d3d, #ff6a45)'}
               >
-                Crafted for Quality. Built on Trust
+                <span className="md:hidden">Our Services</span>
+                <span className="hidden md:inline">Crafted for Quality. Built on Trust</span>
               </span>
             </div>
           </div>

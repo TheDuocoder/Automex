@@ -91,7 +91,7 @@ const Login = ({ onClose, onSwitchToRegister }: LoginProps) => {
         onClose();
       }
       // Redirect to home page after successful login to show welcome form
-      navigate('/');
+      navigate('/services');
     } catch (error) {
       toast({
         title: "Login Failed",
@@ -114,7 +114,7 @@ const Login = ({ onClose, onSwitchToRegister }: LoginProps) => {
   }
 
   return (
-    <div 
+    <div
       className="w-full max-w-[540px] bg-black/5 border border-white/5 rounded-3xl p-8 relative"
       style={{
         backdropFilter: 'blur(18px)',
@@ -141,7 +141,7 @@ const Login = ({ onClose, onSwitchToRegister }: LoginProps) => {
       {/* Logo/Icon */}
       <div className="flex justify-center mb-4 relative">
         {/* Spotlight glow behind logo */}
-        <div 
+        <div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full pointer-events-none"
           style={{
             background: 'radial-gradient(circle, rgba(255, 80, 80, 0.15) 0%, rgba(255, 255, 255, 0.05) 40%, transparent 70%)',
@@ -161,7 +161,7 @@ const Login = ({ onClose, onSwitchToRegister }: LoginProps) => {
 
       {/* Title */}
       <div className="mb-8">
-        <h2 
+        <h2
           className="font-bold text-center text-white"
           style={{
             fontSize: '40px',
