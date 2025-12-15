@@ -264,59 +264,49 @@ const SchedulePickUp = ({ userId }: SchedulePickUpProps = {}) => {
             }
         }
 
-        // Handle pickup_time conversion for admin/super admin
-        if (dataToSend.pickup_time && isAdmin) {
-            try {
-                // If it's a datetime-local format (YYYY-MM-DDTHH:mm), treat as local time
-                if (typeof dataToSend.pickup_time === 'string' && dataToSend.pickup_time.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/)) {
-                    // Parse the datetime-local value
+        // Handle pickup_time conversion
+        if (dataToSend.pickup_time !== undefined) {
+            if (dataToSend.pickup_time === '') {
+                dataToSend.pickup_time = null;
+            } else if (isAdmin && typeof dataToSend.pickup_time === 'string' && dataToSend.pickup_time.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/)) {
+                // Parse local time from input only if admin (who can edit it)
+                try {
                     const [datePart, timePart] = dataToSend.pickup_time.split('T');
                     const [year, month, day] = datePart.split('-').map(Number);
                     const [hours, minutes] = timePart.split(':').map(Number);
-
-                    // Create a date object in local timezone
                     const localDate = new Date(year, month - 1, day, hours, minutes);
                     dataToSend.pickup_time = localDate.toISOString();
-                } else if (dataToSend.pickup_time === '') {
-                    // Empty string means clear the pickup_time
-                    dataToSend.pickup_time = null;
-                } else {
-                    // Already in ISO format or other format
-                    const dateObj = new Date(dataToSend.pickup_time);
-                    if (!isNaN(dateObj.getTime())) {
-                        dataToSend.pickup_time = dateObj.toISOString();
-                    }
+                } catch (e) {
+                    console.error("Pickup time parsing error", e);
                 }
-            } catch (e) {
-                console.error("Pickup time parsing error", e);
+            } else if (typeof dataToSend.pickup_time === 'string') {
+                // Ensure valid ISO string if it's not empty/null
+                const dateObj = new Date(dataToSend.pickup_time);
+                if (!isNaN(dateObj.getTime())) {
+                    dataToSend.pickup_time = dateObj.toISOString();
+                }
             }
         }
 
-        // Handle drop_time conversion for admin/super admin
-        if (dataToSend.drop_time && isAdmin) {
-            try {
-                // If it's a datetime-local format (YYYY-MM-DDTHH:mm), treat as local time
-                if (typeof dataToSend.drop_time === 'string' && dataToSend.drop_time.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/)) {
-                    // Parse the datetime-local value
+        // Handle drop_time conversion
+        if (dataToSend.drop_time !== undefined) {
+            if (dataToSend.drop_time === '') {
+                dataToSend.drop_time = null;
+            } else if (isAdmin && typeof dataToSend.drop_time === 'string' && dataToSend.drop_time.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/)) {
+                try {
                     const [datePart, timePart] = dataToSend.drop_time.split('T');
                     const [year, month, day] = datePart.split('-').map(Number);
                     const [hours, minutes] = timePart.split(':').map(Number);
-
-                    // Create a date object in local timezone
                     const localDate = new Date(year, month - 1, day, hours, minutes);
                     dataToSend.drop_time = localDate.toISOString();
-                } else if (dataToSend.drop_time === '') {
-                    // Empty string means clear the drop_time
-                    dataToSend.drop_time = null;
-                } else {
-                    // Already in ISO format or other format
-                    const dateObj = new Date(dataToSend.drop_time);
-                    if (!isNaN(dateObj.getTime())) {
-                        dataToSend.drop_time = dateObj.toISOString();
-                    }
+                } catch (e) {
+                    console.error("Drop time parsing error", e);
                 }
-            } catch (e) {
-                console.error("Drop time parsing error", e);
+            } else if (typeof dataToSend.drop_time === 'string') {
+                const dateObj = new Date(dataToSend.drop_time);
+                if (!isNaN(dateObj.getTime())) {
+                    dataToSend.drop_time = dateObj.toISOString();
+                }
             }
         }
 

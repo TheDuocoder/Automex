@@ -133,7 +133,22 @@ export async function apiCall<T>(
         }
       }
 
-      const errorMessage = data?.detail || data?.message || `Request failed with status ${response.status}`;
+      let errorMessage = data?.detail || data?.message || `Request failed with status ${response.status}`;
+
+      // If error message is an object or array (e.g. Pydantic validation errors), stringify it
+      if (typeof errorMessage === 'object') {
+        try {
+          // If it's a Pydantic error array, try to make it more readable
+          if (Array.isArray(errorMessage) && errorMessage.length > 0 && errorMessage[0].msg) {
+            errorMessage = errorMessage.map((e: any) => `${e.loc?.join('.')}: ${e.msg}`).join(', ');
+          } else {
+            errorMessage = JSON.stringify(errorMessage);
+          }
+        } catch (e) {
+          errorMessage = "An error occurred (could not parse error details)";
+        }
+      }
+
       console.error('[API] Request failed:', {
         endpoint,
         url,
