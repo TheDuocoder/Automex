@@ -749,6 +749,61 @@ async def get_all_users(
         )
 
 
+@router.get(
+    "/users/{user_id}",
+    response_model=UserRead,
+    summary="Get User By ID (Admin/Super Admin Only)",
+    description="Get details of a specific user by their ID. Only accessible to admins and super admins.",
+    tags=["Authentication", "Admin"],
+    responses={
+        200: {"description": "User details retrieved successfully"},
+        401: {"description": "Not authenticated"},
+        403: {"description": "Not authorized - Admin or Super Admin role required"},
+        404: {"description": "User not found"},
+    }
+)
+async def get_user_by_id(
+    user_id: int,
+    user: User = Depends(get_current_user_with_role),
+    session: AsyncSession = Depends(get_async_session),
+):
+    """
+    Get user details by ID.
+    
+    This endpoint is restricted to admins and super admins only.
+    """
+    # Check if user is admin or super admin
+    if not user.is_superuser and (not user.role or user.role.name not in ['admin', 'super']):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Access denied. Admin or Super Admin role required."
+        )
+    
+    try:
+        # Query user by ID with role
+        result = await session.execute(
+            select(User).where(User.id == user_id).options(selectinload(User.role))
+        )
+        target_user = result.scalar_one_or_none()
+        
+        if not target_user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"User with ID {user_id} not found"
+            )
+        
+        return UserRead.model_validate(target_user)
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"[ERROR] Error fetching user {user_id}: {str(e)}")
+        print(f"[ERROR] Traceback:\n{traceback.format_exc()}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to retrieve user: {str(e)}"
+        )
+
+
 @router.post("/login", response_model=LoginResponse, status_code=status.HTTP_200_OK)
 async def login(
     login_data: LoginRequest,

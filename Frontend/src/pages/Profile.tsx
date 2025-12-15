@@ -99,6 +99,18 @@ const Profile = () => {
   // Subscribe to Zustand store changes - this will re-render when store updates
   const currentUser = user || contextUser;
 
+  // Role helpers
+  const isSuperAdmin = currentUser?.role?.name === 'super' || currentUser?.is_superuser;
+  const isAdmin = currentUser?.role?.name === 'admin';
+  const isAnyAdmin = isSuperAdmin || isAdmin;
+
+  // Redirect admins who land on restricted views
+  useEffect(() => {
+    if (isAnyAdmin && ['dashboard', 'profile', 'my-cars', 'service-history', 'schedule-pickup'].includes(activeView)) {
+      setActiveView('all-users');
+    }
+  }, [isAnyAdmin, activeView]);
+
   // Sync local profile picture URL with user data
   useEffect(() => {
     if (currentUser?.profile_picture_url) {
@@ -157,7 +169,7 @@ const Profile = () => {
           // For admin/super admin: fetch ALL service history
           // For regular users: fetch history for their cars only
           const isAdmin = currentUser?.role?.name === 'admin' || currentUser?.role?.name === 'super' || currentUser?.is_superuser;
-          
+
           try {
             let historyResponse;
             if (isAdmin) {
@@ -170,7 +182,7 @@ const Profile = () => {
                   serviceHistoryService.getAll(car.id)
                 );
                 const allHistoryResponses = await Promise.all(allHistoryPromises);
-                
+
                 // Combine all service histories from all cars
                 const combinedHistory: ServiceHistoryModel[] = [];
                 allHistoryResponses.forEach(response => {
@@ -178,17 +190,17 @@ const Profile = () => {
                     combinedHistory.push(...response.data);
                   }
                 });
-                
+
                 // Sort by service date (most recent first)
                 combinedHistory.sort((a, b) =>
                   new Date(b.service_date).getTime() - new Date(a.service_date).getTime()
                 );
-                
+
                 setDashboardHistory(combinedHistory);
                 return; // Exit early for regular users
               }
             }
-            
+
             // For admin: process the response
             if (historyResponse && !historyResponse.error && historyResponse.data) {
               const allHistory = historyResponse.data;
@@ -517,68 +529,72 @@ const Profile = () => {
 
         {/* Navigation */}
         <nav className="p-4 space-y-3">
-          <button
-            onClick={() => setActiveView('dashboard')}
-            className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${activeView === 'dashboard'
-              ? 'text-white shadow-lg'
-              : 'text-white hover:bg-white/5'
-              }`}
-            style={activeView === 'dashboard' ? { backgroundColor: '#191970' } : {}}
-          >
-            <LayoutDashboard className="h-4 w-4" />
-            Dashboard
-          </button>
+          {!isAnyAdmin && (
+            <>
+              <button
+                onClick={() => setActiveView('dashboard')}
+                className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${activeView === 'dashboard'
+                  ? 'text-white shadow-lg'
+                  : 'text-white hover:bg-white/5'
+                  }`}
+                style={activeView === 'dashboard' ? { backgroundColor: '#191970' } : {}}
+              >
+                <LayoutDashboard className="h-4 w-4" />
+                Dashboard
+              </button>
 
-          <button
-            onClick={() => setActiveView('profile')}
-            className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${activeView === 'profile'
-              ? 'text-white shadow-lg'
-              : 'text-white hover:bg-white/5'
-              }`}
-            style={activeView === 'profile' ? { backgroundColor: '#191970' } : {}}
-          >
-            <User className="h-4 w-4" />
-            Profile
-          </button>
+              <button
+                onClick={() => setActiveView('profile')}
+                className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${activeView === 'profile'
+                  ? 'text-white shadow-lg'
+                  : 'text-white hover:bg-white/5'
+                  }`}
+                style={activeView === 'profile' ? { backgroundColor: '#191970' } : {}}
+              >
+                <User className="h-4 w-4" />
+                Profile
+              </button>
 
-          <button
-            onClick={() => setActiveView('my-cars')}
-            className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${activeView === 'my-cars'
-              ? 'text-white shadow-lg'
-              : 'text-white hover:bg-white/5'
-              }`}
-            style={activeView === 'my-cars' ? { backgroundColor: '#191970' } : {}}
-          >
-            <Car className="h-4 w-4" />
-            My Cars
-          </button>
+              <button
+                onClick={() => setActiveView('my-cars')}
+                className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${activeView === 'my-cars'
+                  ? 'text-white shadow-lg'
+                  : 'text-white hover:bg-white/5'
+                  }`}
+                style={activeView === 'my-cars' ? { backgroundColor: '#191970' } : {}}
+              >
+                <Car className="h-4 w-4" />
+                My Cars
+              </button>
 
-          <button
-            onClick={() => setActiveView('service-history')}
-            className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${activeView === 'service-history'
-              ? 'text-white shadow-lg'
-              : 'text-white hover:bg-white/5'
-              }`}
-            style={activeView === 'service-history' ? { backgroundColor: '#191970' } : {}}
-          >
-            <History className="h-4 w-4" />
-            Service History
-          </button>
+              <button
+                onClick={() => setActiveView('service-history')}
+                className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${activeView === 'service-history'
+                  ? 'text-white shadow-lg'
+                  : 'text-white hover:bg-white/5'
+                  }`}
+                style={activeView === 'service-history' ? { backgroundColor: '#191970' } : {}}
+              >
+                <History className="h-4 w-4" />
+                Service History
+              </button>
 
-          <button
-            onClick={() => setActiveView('schedule-pickup')}
-            className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${activeView === 'schedule-pickup'
-              ? 'text-white shadow-lg'
-              : 'text-white hover:bg-white/5'
-              }`}
-            style={activeView === 'schedule-pickup' ? { backgroundColor: '#191970' } : {}}
-          >
-            <Calendar className="h-4 w-4" />
-            Schedule Pick Up
-          </button>
+              <button
+                onClick={() => setActiveView('schedule-pickup')}
+                className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${activeView === 'schedule-pickup'
+                  ? 'text-white shadow-lg'
+                  : 'text-white hover:bg-white/5'
+                  }`}
+                style={activeView === 'schedule-pickup' ? { backgroundColor: '#191970' } : {}}
+              >
+                <Calendar className="h-4 w-4" />
+                Schedule Pick Up
+              </button>
+            </>
+          )}
 
-          {/* Super Admin Only Section */}
-          {(currentUser?.role?.name === 'super' || currentUser?.is_superuser) && (
+          {/* Admin Panel Section */}
+          {isAnyAdmin && (
             <>
               <div className="border-t border-white/10 my-3" />
               <div className="px-4 py-2 text-xs text-white/50 uppercase tracking-wide font-semibold">
@@ -595,17 +611,20 @@ const Profile = () => {
                 <User className="h-4 w-4" />
                 All Users
               </button>
-              <button
-                onClick={() => setActiveView('employees')}
-                className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${activeView === 'employees'
-                  ? 'text-white shadow-lg'
-                  : 'text-white hover:bg-white/5'
-                  }`}
-                style={activeView === 'employees' ? { backgroundColor: '#191970' } : {}}
-              >
-                <Users className="h-4 w-4" />
-                Employees
-              </button>
+
+              {isSuperAdmin && (
+                <button
+                  onClick={() => setActiveView('employees')}
+                  className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${activeView === 'employees'
+                    ? 'text-white shadow-lg'
+                    : 'text-white hover:bg-white/5'
+                    }`}
+                  style={activeView === 'employees' ? { backgroundColor: '#191970' } : {}}
+                >
+                  <Users className="h-4 w-4" />
+                  Employees
+                </button>
+              )}
             </>
           )}
         </nav>
@@ -863,8 +882,8 @@ const Profile = () => {
                   <CardHeader className="border-b bg-gray-50/50 pb-2 pt-3">
                     <CardTitle className="flex items-center gap-2 text-base">
                       <Car className="h-4 w-4 text-primary" />
-                      {(currentUser?.role?.name === 'admin' || currentUser?.role?.name === 'super' || currentUser?.is_superuser) 
-                        ? 'All Vehicles' 
+                      {(currentUser?.role?.name === 'admin' || currentUser?.role?.name === 'super' || currentUser?.is_superuser)
+                        ? 'All Vehicles'
                         : 'My Vehicles'}
                     </CardTitle>
                   </CardHeader>

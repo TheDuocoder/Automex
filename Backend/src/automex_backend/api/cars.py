@@ -38,12 +38,14 @@ async def is_admin_or_super_admin(user: User, session: AsyncSession) -> bool:
 
 @router.get("/", response_model=List[CarRead])
 async def get_cars(
+    user_id: Optional[int] = None,
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(current_active_user)
 ):
     """
     Get list of cars.
     Admins can see all cars; users see only their own.
+    Admins can filter by user_id to see specific user's cars.
     """
     is_admin = await is_admin_or_super_admin(user, session)
     
@@ -51,6 +53,9 @@ async def get_cars(
     
     if not is_admin:
         query = query.where(Car.user_id == user.id)
+    elif user_id:
+        # If admin and user_id is provided, filter by that user
+        query = query.where(Car.user_id == user_id)
         
     # Always load user relationship as it is required by schema
     query = query.options(selectinload(Car.user).selectinload(User.role))

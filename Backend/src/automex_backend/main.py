@@ -218,6 +218,16 @@ for route in app.routes:
         print(f"  {methods:20s} {route.path}")
 print(f"\n[INFO] Total routes registered: {len([r for r in app.routes if hasattr(r, 'path')])}\n")
 
+# Write routes to file for debugging
+try:
+    with open("routes.txt", "w") as f:
+        for route in app.routes:
+            if hasattr(route, 'path'):
+                methods = ', '.join(sorted(route.methods)) if hasattr(route, 'methods') and route.methods else 'N/A'
+                f.write(f"{methods:20s} {route.path}\n")
+except Exception as e:
+    print(f"Failed to write routes.txt: {e}")
+
 
 @app.get("/")
 async def root():

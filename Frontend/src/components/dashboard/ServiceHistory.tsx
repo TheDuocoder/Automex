@@ -24,7 +24,11 @@ interface ServiceHistoryWithCar extends ServiceHistoryType {
     car?: Car;
 }
 
-const ServiceHistory = () => {
+interface ServiceHistoryProps {
+    userId?: number;
+}
+
+const ServiceHistory = ({ userId }: ServiceHistoryProps = {}) => {
     const navigate = useNavigate();
     const { user } = useAuth();
     const isAdmin = user?.role?.name === 'admin' || user?.role?.name === 'super' || user?.is_superuser;
@@ -47,19 +51,19 @@ const ServiceHistory = () => {
     // Fetch all cars and their service history on mount
     useEffect(() => {
         fetchAllData();
-    }, []);
+    }, [userId]); // Add userId dependency
 
     const fetchAllData = async () => {
         setIsLoading(true);
         try {
-            // Fetch all cars (for dropdown)
-            const carsResponse = await carService.getAll();
+            // Fetch all cars (for dropdown) - filtered by userId if provided
+            const carsResponse = await carService.getAll(userId);
             if (carsResponse.data) {
                 setCars(carsResponse.data);
             }
 
-            // Fetch service history (Admin sees all, User sees theirs)
-            const historyResponse = await serviceHistoryService.getAll();
+            // Fetch service history (Admin sees all, User sees theirs) - filtered by userId if provided
+            const historyResponse = await serviceHistoryService.getAll(undefined, userId);
 
             if (historyResponse.data) {
                 const combinedHistory = historyResponse.data;
@@ -174,18 +178,20 @@ const ServiceHistory = () => {
                     Service History
                 </CardTitle>
                 <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-                    <DialogTrigger asChild>
-                        <button
-                            className="add-record-animated"
-                            disabled={cars.length === 0}
-                            onClick={openAddModal}
-                        >
-                            <ArrowRight className="arr-2" />
-                            <span className="text">Add Record</span>
-                            <span className="circle"></span>
-                            <ArrowRight className="arr-1" />
-                        </button>
-                    </DialogTrigger>
+                    {!userId && (
+                        <DialogTrigger asChild>
+                            <button
+                                className="add-record-animated"
+                                disabled={cars.length === 0}
+                                onClick={openAddModal}
+                            >
+                                <ArrowRight className="arr-2" />
+                                <span className="text">Add Record</span>
+                                <span className="circle"></span>
+                                <ArrowRight className="arr-1" />
+                            </button>
+                        </DialogTrigger>
+                    )}
                     <DialogContent>
                         <DialogHeader>
                             <DialogTitle>{editingId ? "Edit Service Record" : "Add Service Record"}</DialogTitle>

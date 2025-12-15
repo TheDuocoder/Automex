@@ -41,7 +41,11 @@ const CarImageWithFallback = ({ src, alt }: { src: string; alt: string }) => {
     );
 };
 
-const MyCars = () => {
+interface MyCarsProps {
+    userId?: number;
+}
+
+const MyCars = ({ userId }: MyCarsProps = {}) => {
     const navigate = useNavigate();
     const { user } = useAuth();
     const isAdmin = user?.role?.name === 'admin' || user?.role?.name === 'super' || user?.is_superuser;
@@ -65,7 +69,8 @@ const MyCars = () => {
 
     const fetchCars = async () => {
         setIsLoading(true);
-        const response = await carService.getAll();
+        // Pass userId if provided
+        const response = await carService.getAll(userId);
         if (response.data) {
             setCars(response.data);
         } else {
@@ -210,14 +215,16 @@ const MyCars = () => {
                         }
                     }}
                 >
-                    <DialogTrigger asChild>
-                        <button className="add-car-animated">
-                            <span className="button__text">Add Car</span>
-                            <span className="button__icon">
-                                <Plus className="svg" />
-                            </span>
-                        </button>
-                    </DialogTrigger>
+                    {!userId && (
+                        <DialogTrigger asChild>
+                            <button className="add-car-animated">
+                                <span className="button__text">Add Car</span>
+                                <span className="button__icon">
+                                    <Plus className="svg" />
+                                </span>
+                            </button>
+                        </DialogTrigger>
+                    )}
                     <DialogContent>
                         <DialogHeader>
                             <DialogTitle>Add New Vehicle</DialogTitle>

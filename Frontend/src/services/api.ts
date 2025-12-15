@@ -105,14 +105,14 @@ export async function apiCall<T>(
         // Clear all authentication data
         removeAuthToken();
         localStorage.removeItem('user_data');
-        
+
         // Clear Zustand auth store
         try {
           useAuthStore.getState().clearAuth();
         } catch (e) {
           console.warn('[API] Failed to clear Zustand store:', e);
         }
-        
+
         // Clear Zustand persisted storage (double-check)
         try {
           localStorage.removeItem('auth-storage');
@@ -240,7 +240,10 @@ export interface CarCreate {
 }
 
 export const carService = {
-  getAll: () => apiCall<Car[]>('/api/v1/cars/'),
+  getAll: (userId?: number) => {
+    const query = userId ? `?user_id=${userId}` : '';
+    return apiCall<Car[]>(`/api/v1/cars/${query}`);
+  },
   get: (id: number) => apiCall<Car>(`/api/v1/cars/${id}`),
   create: async (data: CarCreate, imageFile?: File): Promise<ApiResponse<Car>> => {
     const formData = new FormData();
@@ -363,8 +366,11 @@ export interface ServiceHistoryCreate {
 }
 
 export const serviceHistoryService = {
-  getAll: (carId?: number) => {
-    const query = carId ? `?car_id=${carId}` : '';
+  getAll: (carId?: number, userId?: number) => {
+    const params = new URLSearchParams();
+    if (carId) params.append('car_id', carId.toString());
+    if (userId) params.append('user_id', userId.toString());
+    const query = params.toString() ? `?${params.toString()}` : '';
     return apiCall<ServiceHistory[]>(`/api/v1/service-history/${query}`);
   },
   create: (data: ServiceHistoryCreate) => apiCall<ServiceHistory>('/api/v1/service-history/', {
@@ -422,7 +428,10 @@ export interface PickUpRequestUpdate {
 }
 
 export const pickupRequestService = {
-  getAll: () => apiCall<PickUpRequest[]>('/api/v1/pickup-requests/'),
+  getAll: (userId?: number) => {
+    const query = userId ? `?user_id=${userId}` : '';
+    return apiCall<PickUpRequest[]>(`/api/v1/pickup-requests/${query}`);
+  },
   getById: (id: number) => apiCall<PickUpRequest>(`/api/v1/pickup-requests/${id}`),
   create: (data: PickUpRequestCreate) => apiCall<PickUpRequest>('/api/v1/pickup-requests/', {
     method: 'POST',

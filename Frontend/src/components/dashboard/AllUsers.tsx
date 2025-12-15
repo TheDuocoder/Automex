@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -8,6 +9,7 @@ import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 
 const AllUsers = () => {
+  const navigate = useNavigate();
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -44,7 +46,7 @@ const AllUsers = () => {
     }
 
     const lowercaseSearch = searchTerm.toLowerCase();
-    const filtered = users.filter(user => 
+    const filtered = users.filter(user =>
       user.full_name?.toLowerCase().includes(lowercaseSearch) ||
       user.email.toLowerCase().includes(lowercaseSearch) ||
       user.phone_number?.toLowerCase().includes(lowercaseSearch) ||
@@ -102,7 +104,8 @@ const AllUsers = () => {
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+                  className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
+                  onClick={() => navigate(`/admin/user-details/${user.id}`)}
                 >
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     {/* User Info */}
@@ -126,10 +129,10 @@ const AllUsers = () => {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
                           <h3 className="font-semibold text-gray-900 text-base">
-                            {user.full_name ? 
-                              user.full_name.split(' ').map(word => 
+                            {user.full_name ?
+                              user.full_name.split(' ').map(word =>
                                 word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-                              ).join(' ') 
+                              ).join(' ')
                               : 'Unknown User'
                             }
                           </h3>
@@ -140,7 +143,7 @@ const AllUsers = () => {
                             </Badge>
                           )}
                         </div>
-                        
+
                         <div className="space-y-1">
                           <div className="flex items-center gap-2 text-sm text-gray-600">
                             <Mail className="h-3.5 w-3.5 flex-shrink-0" />
@@ -160,10 +163,10 @@ const AllUsers = () => {
                     <div className="flex flex-wrap gap-2 items-center justify-end">
                       {/* Role Badge */}
                       {user.role && (
-                        <Badge 
+                        <Badge
                           variant={
-                            user.role.name === 'super' || user.role.name === 'admin' 
-                              ? 'default' 
+                            user.role.name === 'super' || user.role.name === 'admin'
+                              ? 'default'
                               : 'secondary'
                           }
                           className="text-xs"

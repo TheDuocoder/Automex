@@ -16,6 +16,7 @@ import ServicesDemo from "./pages/ServicesDemo";
 import VehicleDetails from "./pages/VehicleDetails";
 import ExtraServices from "./pages/ExtraServices";
 import NotFound from "./pages/NotFound";
+import UserDetails from "./pages/UserDetails";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
@@ -42,6 +43,7 @@ const App = () => {
               <Route path="/extra-services" element={<ProtectedRoute><ExtraServices /></ProtectedRoute>} />
               <Route path="/booking/:bookingId" element={<ProtectedRoute><BookingDetails /></ProtectedRoute>} />
               <Route path="/vehicle/:id" element={<ProtectedRoute><VehicleDetails /></ProtectedRoute>} />
+              <Route path="/admin/user-details/:userId" element={<ProtectedRoute><UserDetails /></ProtectedRoute>} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

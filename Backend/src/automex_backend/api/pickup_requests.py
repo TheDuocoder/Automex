@@ -1,7 +1,7 @@
 """
 Pick Up Requests API routes
 """
-from typing import List
+from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -41,12 +41,13 @@ from sqlalchemy.orm import selectinload
 
 @router.get("/", response_model=List[PickUpRequestRead])
 async def get_pickup_requests(
+    user_id: Optional[int] = None,
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(current_active_user)
 ):
     """
     Get list of pickup requests.
-    - Admins: View all requests with user and car details
+    - Admins: View all requests with user and car details. Can filter by user_id.
     - Users: View only their own requests
     """
     is_admin = await check_is_admin_or_super(user, session)
@@ -55,6 +56,9 @@ async def get_pickup_requests(
     
     if not is_admin:
         query = query.where(PickUpRequest.user_id == user.id)
+    elif user_id:
+        # Admin filtering by specific user
+        query = query.where(PickUpRequest.user_id == user_id)
 
     # Always load relations required by schema
     query = query.options(

@@ -1,7 +1,7 @@
 """
 Service History API routes
 """
-from typing import List
+from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -37,6 +37,7 @@ async def is_admin_or_super_admin(user: User, session: AsyncSession) -> bool:
 @router.get("/", response_model=List[ServiceHistoryRead])
 async def get_service_history(
     car_id: Optional[int] = Query(None, description="Filter by Car ID"),
+    user_id: Optional[int] = Query(None, description="Filter by User ID (Admin only)"),
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(current_active_user)
 ):
@@ -44,7 +45,7 @@ async def get_service_history(
     Get service history.
     If car_id provided: get history for that car (must own car unless Admin).
     If car_id NOT provided:
-        - Admin: get ALL history.
+        - Admin: get ALL history, or filter by user_id if provided.
         - User: get history for ALL their cars.
     """
     is_admin = await is_admin_or_super_admin(user, session)
@@ -65,6 +66,9 @@ async def get_service_history(
         if not is_admin:
             # Filter by user's cars
             query = query.where(Car.user_id == user.id)
+        elif user_id:
+            # Admin filtering by specific user
+            query = query.where(Car.user_id == user_id)
             
     # Always load Car and User relations required by schema
     query = query.options(

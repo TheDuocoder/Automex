@@ -291,3 +291,18 @@ export async function getAllUsers(): Promise<User[]> {
 
   return response.data || [];
 }
+
+/**
+ * Get user by ID (Admin/Super Admin only)
+ */
+export async function getUserById(id: number): Promise<User> {
+  const response = await apiCall<User>(`/api/v1/auth/users/${id}`, {
+    method: 'GET',
+  });
+
+  if (response.error) {
+    throw new Error(response.error);
+  }
+
+  return response.data as User;
+}
