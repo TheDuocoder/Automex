@@ -122,7 +122,7 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
       // FastAPI Users returns 202 Accepted for forgot-password
       if (response.ok || response.status === 202) {
         const isResend = step === 2;
-        
+
         // Try to get response data (may include token in development mode)
         let responseData: any = null;
         try {
@@ -130,7 +130,7 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
         } catch {
           // Response might be empty
         }
-        
+
         // If token is returned (development mode), store it in Zustand
         if (responseData?.token) {
           setResetToken(responseData.token, emailData.email);
@@ -144,7 +144,7 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
             description: responseData?.message || `If an account exists with ${emailData.email}, you will receive a password reset token. Please check your email.`,
           });
         }
-        
+
         // Move to step 2 after successful request (only if not already there)
         if (step === 1) {
           setStep(2);
@@ -208,7 +208,7 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
           title: "Password Reset Successful!",
           description: "Your password has been reset. You can now login with your new password.",
         });
-        
+
         // Reset form and clear store, then go back to login
         clearResetToken();
         setTimeout(() => {
@@ -252,7 +252,7 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
   };
 
   return (
-    <div 
+    <div
       className="w-full max-w-[540px] bg-black/5 border border-white/5 rounded-3xl p-8 relative"
       style={{
         backdropFilter: 'blur(18px)',
@@ -371,20 +371,7 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
       {/* Step 2: Token + New Password Form */}
       {step === 2 && (
         <form onSubmit={handleResetSubmit}>
-          {/* Info Message */}
-          <div className="mb-4 p-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl">
-            <p className="text-xs text-white/90">
-              <strong>Password Reset Token:</strong> The token has been generated for{" "}
-              <span className="font-semibold">{emailData.email}</span>. 
-              {resetToken ? (
-                <span className="block mt-1 text-green-300 font-semibold">
-                  ✓ Token received! You can now set your new password below.
-                </span>
-              ) : (
-                <span> Please check your email for the token.</span>
-              )}
-            </p>
-          </div>
+          {/* Info Message Removed as per requirement */}
 
           {/* New Password Input */}
           <div className="mb-4">
