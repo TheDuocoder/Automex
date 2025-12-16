@@ -349,9 +349,19 @@ const SchedulePickUp = ({ userId }: SchedulePickUpProps = {}) => {
             {/* Left Side: Pick Up Details & Status */}
             <div className={`${userId ? 'lg:col-span-3' : 'lg:col-span-1'} space-y-6`}>
                 <Card className="shadow-[0_4px_20px_rgba(0,0,0,0.06)] border-none rounded-[20px] h-full">
-                    <CardHeader className="border-b bg-gray-50/50 pb-5 px-7 pt-6">
-                        <CardTitle className="flex items-center gap-2.5 text-xl font-bold">
-                            <Clock className="h-5 w-5 text-primary" />
+                    <CardHeader 
+                        className="border-b pb-4 flex flex-row items-center justify-between relative overflow-hidden"
+                        style={{
+                            background: `
+                                radial-gradient(circle at 100% 0%, rgba(253, 253, 245, 0.3) 0%, transparent 50%),
+                                radial-gradient(circle at 0% 0%, rgba(253, 253, 245, 0.3) 0%, transparent 50%),
+                                linear-gradient(135deg, #7C2558 0%, #F96161 40%, #FA887E 70%, #FDFDF5 100%)
+                            `,
+                            boxShadow: 'inset 0 0 60px rgba(0, 0, 0, 0.1)'
+                        }}
+                    >
+                        <CardTitle className="flex items-center gap-2 text-xl text-white drop-shadow-md">
+                            <Clock className="h-5 w-5" />
                             Pick Up Status
                         </CardTitle>
                     </CardHeader>

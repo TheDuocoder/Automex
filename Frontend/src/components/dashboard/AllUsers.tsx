@@ -79,15 +79,34 @@ const AllUsers = () => {
               <Users className="h-5 w-5 text-primary" />
               All Users ({filteredUsers.length})
             </CardTitle>
-            <div className="relative w-full md:w-80">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <div className="relative w-full md:w-80 group">
+              {/* Search Icon Container with Gradient */}
+              <div className="absolute left-3 top-1/2 transform -translate-y-1/2 z-10 pointer-events-none">
+                <div className="p-2 bg-gradient-to-r from-primary/15 to-primary/10 rounded-lg group-focus-within:from-primary/25 group-focus-within:to-primary/15 transition-all duration-300 shadow-sm">
+                  <Search className="h-5 w-5 text-primary font-bold" strokeWidth={2.5} />
+                </div>
+              </div>
+
+              {/* Input Field with Glassmorphism */}
               <Input
                 type="text"
                 placeholder="Search by name, email, phone, or role..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="pl-14 pr-12 py-2.5 bg-gradient-to-r from-white/70 to-white/60 backdrop-blur-md border-2 border-gray-200/60 rounded-xl text-sm font-medium text-gray-900 placeholder:text-gray-500 placeholder:font-medium transition-all duration-300 focus:border-primary/50 focus:from-white/90 focus:to-white/80 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:shadow-lg focus:shadow-primary/10 hover:border-gray-300/80 hover:shadow-md hover:shadow-primary/5"
               />
+
+              {/* Clear Button (X) - Right Side */}
+              {searchTerm && (
+                <button
+                  onClick={() => setSearchTerm('')}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100/60 rounded-lg transition-all duration-200 backdrop-blur-sm"
+                  title="Clear search"
+                  aria-label="Clear search"
+                >
+                  <XCircle className="h-5 w-5" strokeWidth={2} />
+                </button>
+              )}
             </div>
           </div>
         </CardHeader>
@@ -98,112 +117,146 @@ const AllUsers = () => {
             </div>
           ) : (
             <div className="space-y-4">
-              {filteredUsers.map((user) => (
-                <motion.div
-                  key={user.id}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
-                  onClick={() => navigate(`/admin/user-details/${user.id}`)}
-                >
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                    {/* User Info */}
-                    <div className="flex items-start gap-4 flex-1">
-                      {/* Avatar */}
-                      <div className="flex-shrink-0">
-                        {user.profile_picture_url ? (
-                          <img
-                            src={user.profile_picture_url}
-                            alt={user.full_name || 'User'}
-                            className="h-12 w-12 rounded-full object-cover border-2 border-gray-200"
-                          />
-                        ) : (
-                          <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center text-primary font-bold text-lg border-2 border-gray-200">
-                            {user.full_name?.charAt(0).toUpperCase() || user.email.charAt(0).toUpperCase()}
+              {filteredUsers.map((user) => {
+                // Determine role-based border gradient
+                const getRoleBorderColor = () => {
+                  if (user.is_superuser) return { gradient: 'from-red-500 to-red-400', glow: 'shadow-red-500/30', ring: 'ring-red-100' };
+                  if (user.role?.name === 'admin') return { gradient: 'from-orange-500 to-orange-400', glow: 'shadow-orange-500/30', ring: 'ring-orange-100' };
+                  return { gradient: 'from-blue-400 to-gray-300', glow: 'shadow-blue-500/20', ring: 'ring-blue-100' };
+                };
+                
+                const roleStyle = getRoleBorderColor();
+
+                return (
+                  <motion.div
+                    key={user.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="group rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+                    onClick={() => navigate(`/admin/user-details/${user.id}`)}
+                    style={{
+                      background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%)',
+                      backdropFilter: 'blur(10px)',
+                      border: '1px solid rgba(255, 255, 255, 0.6)',
+                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02)',
+                    }}
+                  >
+                    <div className="p-5 space-y-4">
+                      {/* Top Row: Avatar, Info, and Status Badge */}
+                      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                        <div className="flex items-start gap-4 flex-1">
+                          {/* Avatar with Role-Based Glow Ring */}
+                          <div className="flex-shrink-0 relative">
+                            {/* Glow ring */}
+                            <div 
+                              className={`absolute inset-0 rounded-full opacity-20 blur-md`}
+                              style={{
+                                background: `linear-gradient(135deg, ${roleStyle.gradient.split(' to ')[0].replace('from-', '')} 0%, ${roleStyle.gradient.split(' to ')[1]} 100%)`,
+                                transform: 'scale(1.15)',
+                              }}
+                            ></div>
+                            
+                            {/* Avatar Image */}
+                            {user.profile_picture_url ? (
+                              <img
+                                src={user.profile_picture_url}
+                                alt={user.full_name || 'User'}
+                                className={`h-16 w-16 rounded-full object-cover border-3 border-white shadow-lg relative z-10 ring-4 ${roleStyle.ring}`}
+                              />
+                            ) : (
+                              <div className={`h-16 w-16 rounded-full bg-gradient-to-br flex items-center justify-center text-white font-bold text-xl border-3 border-white shadow-lg relative z-10 ring-4 ${
+                                user.is_superuser ? 'from-red-500 to-red-400 ring-red-100' : 
+                                user.role?.name === 'admin' ? 'from-orange-500 to-orange-400 ring-orange-100' : 
+                                'from-blue-500 to-blue-400 ring-blue-100'
+                              }`}>
+                                {user.full_name?.charAt(0).toUpperCase() || user.email.charAt(0).toUpperCase()}
+                              </div>
+                            )}
+                          </div>
+
+                          {/* User Details */}
+                          <div className="flex-1 min-w-0 pt-1">
+                            {/* Name and Role Badge */}
+                            <div className="flex items-center gap-2 mb-2 flex-wrap">
+                              <h3 className="font-black text-lg text-gray-900 tracking-tight">
+                                {user.full_name ?
+                                  user.full_name.split(' ').map(word =>
+                                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                                  ).join(' ')
+                                  : 'Unknown User'
+                                }
+                              </h3>
+                              
+                              {/* Role Badge with Role-Based Styling */}
+                              {user.is_superuser ? (
+                                <div className="flex items-center gap-1.5 px-3 py-1 rounded-full font-bold text-xs text-white bg-gradient-to-r from-red-500 to-red-600 shadow-lg shadow-red-500/30">
+                                  <Shield className="h-3.5 w-3.5" />
+                                  <span>Super Admin</span>
+                                </div>
+                              ) : user.role?.name === 'admin' ? (
+                                <div className="flex items-center gap-1.5 px-3 py-1 rounded-full font-bold text-xs text-white bg-gradient-to-r from-orange-500 to-orange-600 shadow-lg shadow-orange-500/30">
+                                  <Shield className="h-3.5 w-3.5" />
+                                  <span>Admin</span>
+                                </div>
+                              ) : (
+                                <div className="px-3 py-1 rounded-full font-bold text-xs text-gray-700 bg-gray-200/70">
+                                  Normal
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Contact Information */}
+                            <div className="space-y-1.5">
+                              <div className="flex items-center gap-2.5 text-sm text-gray-700">
+                                <Mail className="h-4 w-4 text-primary flex-shrink-0" />
+                                <span className="truncate">{user.email}</span>
+                              </div>
+                              {user.phone_number && (
+                                <div className="flex items-center gap-2.5 text-sm text-gray-700">
+                                  <Phone className="h-4 w-4 text-primary flex-shrink-0" />
+                                  <span>{user.phone_number}</span>
+                                </div>
+                              )}
+                              <div className="text-xs text-gray-500 font-semibold opacity-60">
+                                User ID: {user.id}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Active Status Badge - Right Aligned */}
+                        {user.is_active && (
+                          <div className="flex items-center gap-1.5 px-4 py-2 rounded-full font-bold text-xs text-white bg-gradient-to-r from-green-500 to-green-600 shadow-lg shadow-green-500/30">
+                            <CheckCircle className="h-4 w-4" />
+                            <span>Active</span>
                           </div>
                         )}
                       </div>
 
-                      {/* User Details */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className="font-semibold text-gray-900 text-base">
-                            {user.full_name ?
-                              user.full_name.split(' ').map(word =>
-                                word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-                              ).join(' ')
-                              : 'Unknown User'
-                            }
-                          </h3>
-                          {user.is_superuser && (
-                            <Badge variant="destructive" className="text-xs">
-                              <Shield className="h-3 w-3 mr-1" />
-                              Super Admin
-                            </Badge>
-                          )}
-                        </div>
+                      {/* Thin Divider */}
+                      <div className="h-px bg-gradient-to-r from-gray-200/0 via-gray-200/50 to-gray-200/0"></div>
 
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2 text-sm text-gray-600">
-                            <Mail className="h-3.5 w-3.5 flex-shrink-0" />
-                            <span className="truncate">{user.email}</span>
+                      {/* Status Badges Row */}
+                      <div className="flex flex-wrap gap-2.5 items-center">
+                        {!user.is_active && (
+                          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full font-bold text-xs text-white bg-gradient-to-r from-red-500 to-red-600 shadow-lg shadow-red-500/30">
+                            <XCircle className="h-4 w-4" />
+                            <span>Inactive</span>
                           </div>
-                          {user.phone_number && (
-                            <div className="flex items-center gap-2 text-sm text-gray-600">
-                              <Phone className="h-3.5 w-3.5 flex-shrink-0" />
-                              <span>{user.phone_number}</span>
-                            </div>
-                          )}
-                        </div>
+                        )}
+
+                        {user.is_verified && (
+                          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full font-bold text-xs text-white bg-gradient-to-r from-blue-500 to-blue-600 shadow-lg shadow-blue-500/30">
+                            <CheckCircle className="h-4 w-4" />
+                            <span>Verified</span>
+                          </div>
+                        )}
                       </div>
                     </div>
-
-                    {/* Status & Role Badges */}
-                    <div className="flex flex-wrap gap-2 items-center justify-end">
-                      {/* Role Badge */}
-                      {user.role && (
-                        <Badge
-                          variant={
-                            user.role.name === 'super' || user.role.name === 'admin'
-                              ? 'default'
-                              : 'secondary'
-                          }
-                          className="text-xs"
-                        >
-                          {user.role.name.charAt(0).toUpperCase() + user.role.name.slice(1)}
-                        </Badge>
-                      )}
-
-                      {/* Active Status */}
-                      {user.is_active ? (
-                        <Badge variant="outline" className="text-xs border-green-500 text-green-700 bg-green-50">
-                          <CheckCircle className="h-3 w-3 mr-1" />
-                          Active
-                        </Badge>
-                      ) : (
-                        <Badge variant="outline" className="text-xs border-red-500 text-red-700 bg-red-50">
-                          <XCircle className="h-3 w-3 mr-1" />
-                          Inactive
-                        </Badge>
-                      )}
-
-                      {/* Verified Status */}
-                      {user.is_verified && (
-                        <Badge variant="outline" className="text-xs border-blue-500 text-blue-700 bg-blue-50">
-                          <CheckCircle className="h-3 w-3 mr-1" />
-                          Verified
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* User ID (for admins) */}
-                  <div className="mt-2 pt-2 border-t border-gray-100">
-                    <span className="text-xs text-gray-400">User ID: {user.id}</span>
-                  </div>
-                </motion.div>
-              ))}
+                  </motion.div>
+                );
+              })}
             </div>
           )}
         </CardContent>

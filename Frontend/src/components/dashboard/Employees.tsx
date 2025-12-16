@@ -18,6 +18,159 @@ import {
   Users, Plus, Search, Mail, Phone, Briefcase, Building, MapPin, DollarSign, Calendar, 
   FileText, Loader2, Edit, Trash2, CheckCircle, XCircle, UserPlus
 } from 'lucide-react';
+
+// Animated Add Employee Button Styles
+const buttonStyles = `
+  .add-employee-button {
+    position: relative;
+    width: 170px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    border: 1px solid #34974d;
+    background-color: #3aa856;
+    border-radius: 6px;
+    overflow: hidden;
+    padding: 0 12px;
+  }
+
+  .add-employee-button,
+  .add-employee-button .button-text,
+  .add-employee-button .button-icon {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .add-employee-button .button-text {
+    flex: 1;
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+    white-space: nowrap;
+    position: relative;
+    z-index: 2;
+  }
+
+  .add-employee-button .button-icon {
+    position: absolute;
+    right: 0;
+    height: 100%;
+    width: 40px;
+    background-color: #34974d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+  }
+
+  .add-employee-button .button-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: #fff;
+    stroke-width: 2.5;
+  }
+
+  .add-employee-button:hover {
+    background: #34974d;
+    width: 170px;
+    padding: 0;
+  }
+
+  .add-employee-button:hover .button-text {
+    display: none;
+  }
+
+  .add-employee-button:hover .button-icon {
+    width: 170px;
+    right: 0;
+  }
+
+  .add-employee-button:active .button-icon {
+    background-color: #2e8644;
+  }
+
+  .add-employee-button:active {
+    border: 1px solid #2e8644;
+  }
+
+  .update-employee-button {
+    position: relative;
+    width: 190px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    border: 1px solid #2563eb;
+    background-color: #3b82f6;
+    border-radius: 6px;
+    overflow: hidden;
+    padding: 0 12px;
+  }
+
+  .update-employee-button,
+  .update-employee-button .button-text,
+  .update-employee-button .button-icon {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .update-employee-button .button-text {
+    flex: 1;
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+    white-space: nowrap;
+    position: relative;
+    z-index: 2;
+  }
+
+  .update-employee-button .button-icon {
+    position: absolute;
+    right: 0;
+    height: 100%;
+    width: 40px;
+    background-color: #1d4ed8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+  }
+
+  .update-employee-button .button-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: #fff;
+    stroke-width: 2.5;
+  }
+
+  .update-employee-button:hover {
+    background: #2563eb;
+    width: 190px;
+    padding: 0;
+  }
+
+  .update-employee-button:hover .button-text {
+    display: none;
+  }
+
+  .update-employee-button:hover .button-icon {
+    width: 190px;
+    right: 0;
+  }
+
+  .update-employee-button:active .button-icon {
+    background-color: #1e40af;
+  }
+
+  .update-employee-button:active {
+    border: 1px solid #1e40af;
+  }
+
+  .add-employee-button:disabled,
+  .update-employee-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
 import { employeeService, Employee, EmployeeCreate, EmployeeUpdate } from '@/services/api';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
@@ -278,22 +431,49 @@ const Employees = () => {
               Employees ({filteredEmployees.length})
             </CardTitle>
             <div className="flex gap-2">
-              <div className="relative w-full md:w-80">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <div className="relative w-full md:w-80 group">
+                {/* Search Icon Container with Gradient */}
+                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 z-10 pointer-events-none">
+                  <div className="p-2 bg-gradient-to-r from-primary/15 to-primary/10 rounded-lg group-focus-within:from-primary/25 group-focus-within:to-primary/15 transition-all duration-300 shadow-sm">
+                    <Search className="h-5 w-5 text-primary font-bold" strokeWidth={2.5} />
+                  </div>
+                </div>
+
+                {/* Input Field with Glassmorphism */}
                 <Input
                   type="text"
-                  placeholder="Search employees..."
+                  placeholder="Search by name, email, phone..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
+                  className="pl-14 pr-12 py-2.5 bg-gradient-to-r from-white/70 to-white/60 backdrop-blur-md border-2 border-gray-200/60 rounded-xl text-sm font-medium text-gray-900 placeholder:text-gray-500 placeholder:font-medium transition-all duration-300 focus:border-primary/50 focus:from-white/90 focus:to-white/80 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:shadow-lg focus:shadow-primary/10 hover:border-gray-300/80 hover:shadow-md hover:shadow-primary/5"
                 />
+
+                {/* Clear Button (X) - Right Side */}
+                {searchTerm && (
+                  <button
+                    onClick={() => setSearchTerm('')}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100/60 rounded-lg transition-all duration-200 backdrop-blur-sm"
+                    title="Clear search"
+                    aria-label="Clear search"
+                  >
+                    <XCircle className="h-5 w-5" strokeWidth={2} />
+                  </button>
+                )}
               </div>
               <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+                <style>{buttonStyles}</style>
                 <DialogTrigger asChild>
-                  <Button onClick={openAddModal} className="gap-2">
-                    <UserPlus className="h-4 w-4" />
-                    Add Employee
-                  </Button>
+                  <button 
+                    onClick={openAddModal}
+                    className="add-employee-button"
+                    type="button"
+                    title="Add new employee"
+                  >
+                    <span className="button-text">Add Employee</span>
+                    <div className="button-icon">
+                      <Plus strokeWidth={2.5} />
+                    </div>
+                  </button>
                 </DialogTrigger>
                 <DialogContent className="max-w-4xl max-h-[90vh] rounded-2xl p-0 overflow-hidden flex flex-col shadow-2xl">
                   {/* Header Section */}
@@ -558,23 +738,30 @@ const Employees = () => {
                         >
                           Cancel
                         </Button>
-                        <Button
+                        <button
                           type="submit"
                           disabled={isSubmitting}
-                          className="h-11 px-6 bg-primary hover:bg-primary/90 text-white font-semibold shadow-sm hover:shadow-md transition-all duration-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="add-employee-button"
+                          style={{ width: '170px', height: '44px' }}
+                          title="Save employee"
                         >
-                          {isSubmitting ? (
-                            <>
-                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                              Adding...
-                            </>
-                          ) : (
-                            <>
-                              <UserPlus className="mr-2 h-4 w-4" />
-                              Add Employee
-                            </>
-                          )}
-                        </Button>
+                          <span className="button-text">
+                            {isSubmitting ? (
+                              <>
+                                <Loader2 className="inline mr-2 h-4 w-4 animate-spin" />
+                                Saving...
+                              </>
+                            ) : (
+                              <>
+                                <UserPlus className="inline mr-2 h-4 w-4" />
+                                Save
+                              </>
+                            )}
+                          </span>
+                          <div className="button-icon">
+                            <Plus strokeWidth={2.5} />
+                          </div>
+                        </button>
                       </div>
                     </DialogFooter>
                   </form>
@@ -612,143 +799,214 @@ const Employees = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 relative group"
+                    className="relative group rounded-2xl overflow-hidden backdrop-blur-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
                     style={{
-                      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)',
+                      background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%)',
+                      backdropFilter: 'blur(10px)',
+                      border: '1px solid rgba(255, 255, 255, 0.6)',
+                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02)',
                     }}
                   >
-                    {/* Edit and Delete Buttons - Top Right */}
-                    <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    {/* Edit and Delete Buttons - Top Right with Glassmorphism */}
+                    <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 z-10">
                       <button
                         onClick={() => handleEditEmployee(employee)}
-                        className="p-2 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-lg transition-colors shadow-sm"
+                        className="p-2.5 backdrop-blur-md transition-all duration-300 rounded-lg hover:scale-110 hover:shadow-lg"
+                        style={{
+                          background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(59, 130, 246, 0.1) 100%)',
+                          border: '1px solid rgba(59, 130, 246, 0.3)',
+                          color: '#3b82f6',
+                          boxShadow: '0 8px 16px rgba(59, 130, 246, 0.15)',
+                        }}
                         title="Edit Employee"
                       >
                         <Edit className="h-4 w-4" />
                       </button>
                       <button
                         onClick={() => handleDeleteEmployee(employee.id)}
-                        className="p-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition-colors shadow-sm"
+                        className="p-2.5 backdrop-blur-md transition-all duration-300 rounded-lg hover:scale-110 hover:shadow-lg"
+                        style={{
+                          background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(239, 68, 68, 0.1) 100%)',
+                          border: '1px solid rgba(239, 68, 68, 0.3)',
+                          color: '#ef4444',
+                          boxShadow: '0 8px 16px rgba(239, 68, 68, 0.15)',
+                        }}
                         title="Delete Employee"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </div>
 
-                    {/* Employee Avatar and Name Section */}
-                    <div className="flex items-start gap-4 mb-5">
-                      {/* Avatar */}
-                      <div className="flex-shrink-0">
-                        <div 
-                          className="h-16 w-16 rounded-full flex items-center justify-center text-white font-bold text-2xl shadow-md"
-                          style={{
-                            background: 'linear-gradient(135deg, #FF6B9D 0%, #FF8E9B 100%)',
-                          }}
-                        >
-                          {employee.full_name.charAt(0).toUpperCase()}
+                    <div className="p-6 space-y-4">
+                      {/* Employee Avatar and Name Section */}
+                      <div className="flex items-start gap-4">
+                        {/* Avatar with Gradient Background and Glow */}
+                        <div className="flex-shrink-0 relative">
+                          <div 
+                            className="absolute inset-0 rounded-full blur-xl opacity-30"
+                            style={{
+                              background: 'linear-gradient(135deg, #FF6B9D 0%, #FF8E9B 100%)',
+                              transform: 'scale(1.2)',
+                            }}
+                          ></div>
+                          <div 
+                            className="h-16 w-16 rounded-full flex items-center justify-center text-white font-bold text-2xl relative z-10 border-2 border-white shadow-lg"
+                            style={{
+                              background: 'linear-gradient(135deg, #FF6B9D 0%, #FF8E9B 100%)',
+                              boxShadow: '0 8px 24px rgba(255, 107, 157, 0.3)',
+                            }}
+                          >
+                            {employee.full_name.charAt(0).toUpperCase()}
+                          </div>
                         </div>
-                      </div>
 
-                      {/* Name and Status */}
-                      <div className="flex-1 min-w-0 pt-1">
-                        <div className="flex items-center gap-2 mb-2 flex-wrap">
-                          <h3 className="font-bold text-gray-900 text-lg leading-tight">
-                            {employee.full_name.split(' ').map(word => 
-                              word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-                            ).join(' ')}
-                          </h3>
-                          {employee.is_active ? (
-                            <Badge className="text-xs px-2.5 py-1 bg-green-500 text-white border-0 shadow-sm">
-                              <CheckCircle className="h-3 w-3 mr-1" />
-                              Active
-                            </Badge>
-                          ) : (
-                            <Badge className="text-xs px-2.5 py-1 bg-red-500 text-white border-0 shadow-sm">
-                              <XCircle className="h-3 w-3 mr-1" />
-                              Inactive
-                            </Badge>
+                        {/* Name and Status with Better Hierarchy */}
+                        <div className="flex-1 min-w-0 pt-1">
+                          <div className="flex items-center gap-3 mb-1 flex-wrap">
+                            <h3 className="font-black text-gray-900 text-xl leading-tight tracking-tight">
+                              {employee.full_name.split(' ').map(word => 
+                                word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                              ).join(' ')}
+                            </h3>
+                            {employee.is_active ? (
+                              <div className="flex items-center gap-1.5 px-3 py-1 rounded-full font-bold text-xs text-white" style={{
+                                background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                                boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)',
+                              }}>
+                                <CheckCircle className="h-3.5 w-3.5" />
+                                <span>Active</span>
+                              </div>
+                            ) : (
+                              <div className="flex items-center gap-1.5 px-3 py-1 rounded-full font-bold text-xs text-white" style={{
+                                background: 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)',
+                                boxShadow: '0 4px 12px rgba(239, 68, 68, 0.3)',
+                              }}>
+                                <XCircle className="h-3.5 w-3.5" />
+                                <span>Inactive</span>
+                              </div>
+                            )}
+                          </div>
+                          {employee.position && (
+                            <p className="text-xs text-gray-500 font-medium">@{employee.position}</p>
                           )}
                         </div>
                       </div>
-                    </div>
 
-                    {/* Contact Information */}
-                    <div className="space-y-2.5 mb-5">
-                      <div className="flex items-center gap-2.5 text-sm text-gray-700">
-                        <Mail className="h-4 w-4 text-gray-400 flex-shrink-0" />
-                        <span className="truncate">{employee.email}</span>
+                      {/* Contact Information with Enhanced Icons */}
+                      <div className="space-y-2.5">
+                        <div className="flex items-center gap-3 text-sm">
+                          <div className="p-2 rounded-lg" style={{
+                            background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.08) 100%)',
+                          }}>
+                            <Mail className="h-4 w-4 text-blue-600" />
+                          </div>
+                          <span className="truncate text-gray-700">{employee.email}</span>
+                        </div>
+                        {employee.phone_number && (
+                          <div className="flex items-center gap-3 text-sm">
+                            <div className="p-2 rounded-lg" style={{
+                              background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(34, 197, 94, 0.08) 100%)',
+                            }}>
+                              <Phone className="h-4 w-4 text-green-600" />
+                            </div>
+                            <span className="text-gray-700">{employee.phone_number}</span>
+                          </div>
+                        )}
                       </div>
-                      {employee.phone_number && (
-                        <div className="flex items-center gap-2.5 text-sm text-gray-700">
-                          <Phone className="h-4 w-4 text-gray-400 flex-shrink-0" />
-                          <span>{employee.phone_number}</span>
+
+                      {/* Department and Position Badges with Gradients */}
+                      {(employee.position || employee.department) && (
+                        <div className="flex flex-wrap gap-2 pt-1">
+                          {employee.position && (
+                            <div 
+                              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold text-white"
+                              style={{
+                                background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
+                                boxShadow: '0 4px 12px rgba(59, 130, 246, 0.25)',
+                              }}
+                            >
+                              <Briefcase className="h-3.5 w-3.5" />
+                              {employee.position}
+                            </div>
+                          )}
+                          {employee.department && (
+                            <div 
+                              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold text-white"
+                              style={{
+                                background: 'linear-gradient(135deg, #A855F7 0%, #9333EA 100%)',
+                                boxShadow: '0 4px 12px rgba(168, 85, 247, 0.25)',
+                              }}
+                            >
+                              <Building className="h-3.5 w-3.5" />
+                              {employee.department}
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Salary - Premium Badge with Icon Container */}
+                      {formattedSalary && (
+                        <div className="pt-2">
+                          <div 
+                            className="flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-base text-white"
+                            style={{
+                              background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                              boxShadow: '0 8px 24px rgba(16, 185, 129, 0.3)',
+                            }}
+                          >
+                            <div className="p-2 rounded-lg" style={{
+                              background: 'rgba(255, 255, 255, 0.2)',
+                              backdropFilter: 'blur(10px)',
+                            }}>
+                              <DollarSign className="h-5 w-5" />
+                            </div>
+                            <span>{formattedSalary}</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Hire Date and Last Working Day */}
+                      {(hireDateFormatted || employee.last_working_day) && (
+                        <div className="space-y-2 text-sm">
+                          {hireDateFormatted && (
+                            <div className="flex items-center gap-3">
+                              <div className="p-2 rounded-lg" style={{
+                                background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.08) 100%)',
+                              }}>
+                                <Calendar className="h-4 w-4 text-amber-600" />
+                              </div>
+                              <span className="text-gray-600 font-medium">Hired: <span className="text-gray-700 font-semibold">{hireDateFormatted}</span></span>
+                            </div>
+                          )}
+                          {employee.last_working_day && (
+                            <div className="flex items-center gap-3">
+                              <div className="p-2 rounded-lg" style={{
+                                background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.08) 100%)',
+                              }}>
+                                <Calendar className="h-4 w-4 text-red-600" />
+                              </div>
+                              <span className="text-gray-600 font-medium">Last Day: <span className="text-gray-700 font-semibold">{new Date(employee.last_working_day).toLocaleDateString('en-IN', {
+                                day: '2-digit',
+                                month: 'short',
+                                year: 'numeric'
+                              })}</span></span>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
 
-                    {/* Department and Team Tags */}
-                    {(employee.position || employee.department) && (
-                      <div className="flex flex-wrap gap-2 mb-5">
-                        {employee.position && (
-                          <Badge 
-                            variant="outline" 
-                            className="text-xs px-3 py-1.5 border-blue-200 bg-blue-50 text-blue-700 font-medium"
-                          >
-                            <Briefcase className="h-3 w-3 mr-1.5" />
-                            {employee.position}
-                          </Badge>
-                        )}
-                        {employee.department && (
-                          <Badge 
-                            variant="outline" 
-                            className="text-xs px-3 py-1.5 border-purple-200 bg-purple-50 text-purple-700 font-medium"
-                          >
-                            <Building className="h-3 w-3 mr-1.5" />
-                            {employee.department}
-                          </Badge>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Salary - Highlighted Green Badge */}
-                    {formattedSalary && (
-                      <div className="mb-4">
-                        <div 
-                          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-base text-white shadow-md"
-                          style={{
-                            background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-                          }}
-                        >
-                          <DollarSign className="h-4 w-4" />
-                          <span>{formattedSalary}</span>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Hire Date */}
-                    {hireDateFormatted && (
-                      <div className="flex items-center gap-2.5 text-sm text-gray-600 mb-4">
-                        <Calendar className="h-4 w-4 text-gray-400 flex-shrink-0" />
-                        <span className="font-medium">Hired: {hireDateFormatted}</span>
-                      </div>
-                    )}
-
-                    {/* Last Working Day */}
-                    {employee.last_working_day && (
-                      <div className="flex items-center gap-2.5 text-sm text-gray-600 mb-4">
-                        <Calendar className="h-4 w-4 text-gray-400 flex-shrink-0" />
-                        <span className="font-medium">Last Working Day: {new Date(employee.last_working_day).toLocaleDateString('en-IN', {
-                          day: '2-digit',
-                          month: 'short',
-                          year: 'numeric'
-                        })}</span>
-                      </div>
-                    )}
-
-                    {/* Employee ID - Bottom */}
+                    {/* Clean Footer with Employee ID */}
                     {employee.employee_id && (
-                      <div className="pt-4 border-t border-gray-100">
-                        <span className="text-xs text-gray-500 font-medium">Employee ID: <span className="text-gray-700">{employee.employee_id}</span></span>
+                      <div 
+                        className="px-6 py-3 flex items-center justify-between"
+                        style={{
+                          background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.2) 100%)',
+                          borderTop: '1px solid rgba(0, 0, 0, 0.05)',
+                        }}
+                      >
+                        <span className="text-xs font-semibold text-gray-600">ID: <span className="text-gray-800 font-bold tracking-wider">{employee.employee_id}</span></span>
+                        <div className="text-xs text-gray-500">Employee</div>
                       </div>
                     )}
                   </motion.div>
@@ -1024,23 +1282,30 @@ const Employees = () => {
                 >
                   Cancel
                 </Button>
-                <Button
+                <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="h-11 px-6 bg-primary hover:bg-primary/90 text-white font-semibold shadow-sm hover:shadow-md transition-all duration-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="update-employee-button"
+                  style={{ width: '190px', height: '44px' }}
+                  title="Update employee"
                 >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Updating...
-                    </>
-                  ) : (
-                    <>
-                      <Edit className="mr-2 h-4 w-4" />
-                      Update Employee
-                    </>
-                  )}
-                </Button>
+                  <span className="button-text">
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="inline mr-2 h-4 w-4 animate-spin" />
+                        Updating...
+                      </>
+                    ) : (
+                      <>
+                        <Edit className="inline mr-2 h-4 w-4" />
+                        Update Employee
+                      </>
+                    )}
+                  </span>
+                  <div className="button-icon">
+                    <Plus strokeWidth={2.5} />
+                  </div>
+                </button>
               </div>
             </DialogFooter>
           </form>
