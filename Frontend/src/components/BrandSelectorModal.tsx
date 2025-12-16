@@ -262,9 +262,9 @@ const BrandSelectorModal = ({
         // Special handling for Skoda, Land Rover, and Audi - use correct folder paths
         let imagePath;
         if (brandName === 'skoda') {
-          // Skoda images are in "skoda" folder (lowercase 's')
+          // Skoda images are in "Skoda" folder (capital S)
           let skodaFileName = model.name; // Use original name with proper capitalization
-          imagePath = `/images/Car_images/skoda/${skodaFileName}.png`;
+          imagePath = `/images/Car_images/Skoda/${skodaFileName}.png`;
         } else if (brandName === 'land_rover') {
           // Land Rover images are in "Land rover" folder with proper naming
           let landRoverFileName = model.name; // Use original name with proper capitalization
@@ -320,8 +320,9 @@ const BrandSelectorModal = ({
           } else if (cleanName === 'polo') {
             imagePath = `/images/Car_images/Volkswagen/polo.png`;
           } else {
-            // Default to lowercase for others (ameo, beetle, jetta, passat, phaeton, taigun, tiguan, vento, virtus)
-            imagePath = `/images/Car_images/Volkswagen/${modelName.toLowerCase()}.png`;
+            // Default to capitalized first letter for others (Ameo, Beetle, Jetta, Passat, Phaeton, Taigun, Tiguan, Vento, Virtus)
+            const capitalizedName = modelName.charAt(0).toUpperCase() + modelName.slice(1).toLowerCase();
+            imagePath = `/images/Car_images/Volkswagen/${capitalizedName}.png`;
           }
         } else if (brandName === 'bmw') {
           // BMW images are in "BMW" folder with spaces in filenames

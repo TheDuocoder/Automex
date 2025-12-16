@@ -100,7 +100,7 @@ const carCatalog: CarBrand[] = [
   {
     id: "skoda",
     name: "Skoda",
-    logo: "/images/car_brands/skoda.png",
+    logo: "/images/car_brands/Skoda.png",
     models: [
       { id: "skoda-rapid", name: "Rapid", fuelTypes: ["Petrol", "Diesel"] },
       { id: "skoda-fabia", name: "Fabia", fuelTypes: ["Petrol", "Diesel"] },
