@@ -49,7 +49,7 @@ const ExtraServices = () => {
   });
 
   // Check if user is Admin or Super Admin
-  const isAdmin = user?.role?.name === "admin" || user?.role?.name === "super" || user?.is_superuser;
+  const isAdmin = user?.role?.name?.toLowerCase() === "admin" || user?.role?.name?.toLowerCase() === "super" || user?.is_superuser;
 
   useEffect(() => {
     if (!isAuthenticated) {

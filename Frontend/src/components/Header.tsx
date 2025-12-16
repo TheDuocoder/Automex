@@ -360,7 +360,7 @@ const Header = ({ onLoginClick }: HeaderProps) => {
                       </div>
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    {(user?.role?.name === 'admin' || user?.role?.name === 'super' || user?.is_superuser) && (
+                    {(user?.role?.name?.toLowerCase() === 'admin' || user?.role?.name?.toLowerCase() === 'super' || user?.is_superuser) && (
                       <DropdownMenuItem
                         onClick={() => navigate('/extra-services')}
                         className="cursor-pointer"

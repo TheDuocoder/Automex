@@ -100,8 +100,8 @@ const Profile = () => {
   const currentUser = user || contextUser;
 
   // Role helpers
-  const isSuperAdmin = currentUser?.role?.name === 'super' || currentUser?.is_superuser;
-  const isAdmin = currentUser?.role?.name === 'admin';
+  const isSuperAdmin = currentUser?.role?.name?.toLowerCase() === 'super' || currentUser?.is_superuser;
+  const isAdmin = currentUser?.role?.name?.toLowerCase() === 'admin';
   const isAnyAdmin = isSuperAdmin || isAdmin;
 
   // Redirect admins who land on restricted views
@@ -168,7 +168,7 @@ const Profile = () => {
           // Fetch Service History
           // For admin/super admin: fetch ALL service history
           // For regular users: fetch history for their cars only
-          const isAdmin = currentUser?.role?.name === 'admin' || currentUser?.role?.name === 'super' || currentUser?.is_superuser;
+          const isAdmin = currentUser?.role?.name?.toLowerCase() === 'admin' || currentUser?.role?.name?.toLowerCase() === 'super' || currentUser?.is_superuser;
 
           try {
             let historyResponse;
@@ -842,7 +842,7 @@ const Profile = () => {
                                 <p className="font-medium text-xs">{history.service_name}</p>
                                 <p className="text-xs text-gray-500">{new Date(history.service_date).toLocaleDateString()}</p>
                                 {/* Admin: Show Owner */}
-                                {(currentUser?.role?.name === 'admin' || currentUser?.role?.name === 'super' || currentUser?.is_superuser) && history.car?.user && (
+                                {(currentUser?.role?.name?.toLowerCase() === 'admin' || currentUser?.role?.name?.toLowerCase() === 'super' || currentUser?.is_superuser) && history.car?.user && (
                                   <p className="text-[10px] text-blue-600 mt-0.5 font-medium flex items-center gap-1">
                                     <span className="opacity-70">Owner:</span> {history.car.user.full_name || history.car.user.email}
                                   </p>
@@ -860,7 +860,7 @@ const Profile = () => {
                       </div>
                     ) : (
                       <p className="text-gray-500 text-xs">
-                        {(currentUser?.role?.name === 'admin' || currentUser?.role?.name === 'super' || currentUser?.is_superuser)
+                        {(currentUser?.role?.name?.toLowerCase() === 'admin' || currentUser?.role?.name?.toLowerCase() === 'super' || currentUser?.is_superuser)
                           ? 'No service history found in system.'
                           : 'No recent activity found.'}
                       </p>
@@ -882,7 +882,7 @@ const Profile = () => {
                   <CardHeader className="border-b bg-gray-50/50 pb-2 pt-3">
                     <CardTitle className="flex items-center gap-2 text-base">
                       <Car className="h-4 w-4 text-primary" />
-                      {(currentUser?.role?.name === 'admin' || currentUser?.role?.name === 'super' || currentUser?.is_superuser)
+                      {(currentUser?.role?.name?.toLowerCase() === 'admin' || currentUser?.role?.name?.toLowerCase() === 'super' || currentUser?.is_superuser)
                         ? 'All Vehicles'
                         : 'My Vehicles'}
                     </CardTitle>
@@ -899,7 +899,7 @@ const Profile = () => {
                               <p className="font-medium text-xs">{car.make} {car.model}</p>
                               <p className="text-xs text-gray-500">{car.registration_number}</p>
                               {/* Admin: Show Owner */}
-                              {(currentUser?.role?.name === 'admin' || currentUser?.role?.name === 'super' || currentUser?.is_superuser) && car.user && (
+                              {(currentUser?.role?.name?.toLowerCase() === 'admin' || currentUser?.role?.name?.toLowerCase() === 'super' || currentUser?.is_superuser) && car.user && (
                                 <p className="text-[10px] text-blue-600 mt-0.5 font-medium flex items-center gap-1">
                                   <span className="opacity-70 text-blue-400">Owner:</span> {car.user.full_name || car.user.email}
                                 </p>
@@ -910,13 +910,13 @@ const Profile = () => {
                       </div>
                     ) : (
                       <p className="text-gray-500 text-xs">
-                        {(currentUser?.role?.name === 'admin' || currentUser?.role?.name === 'super' || currentUser?.is_superuser)
+                        {(currentUser?.role?.name?.toLowerCase() === 'admin' || currentUser?.role?.name?.toLowerCase() === 'super' || currentUser?.is_superuser)
                           ? 'No vehicles in system yet.'
                           : 'No vehicles added yet.'}
                       </p>
                     )}
                     <Button variant="outline" onClick={() => setActiveView('my-cars')} className="w-full text-xs h-8 mt-2">
-                      {(currentUser?.role?.name === 'admin' || currentUser?.role?.name === 'super' || currentUser?.is_superuser)
+                      {(currentUser?.role?.name?.toLowerCase() === 'admin' || currentUser?.role?.name?.toLowerCase() === 'super' || currentUser?.is_superuser)
                         ? 'View All Vehicles'
                         : 'Manage Vehicles'}
                     </Button>

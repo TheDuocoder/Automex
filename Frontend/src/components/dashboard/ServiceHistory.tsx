@@ -31,7 +31,7 @@ interface ServiceHistoryProps {
 const ServiceHistory = ({ userId }: ServiceHistoryProps = {}) => {
     const navigate = useNavigate();
     const { user } = useAuth();
-    const isAdmin = user?.role?.name === 'admin' || user?.role?.name === 'super' || user?.is_superuser;
+    const isAdmin = user?.role?.name?.toLowerCase() === 'admin' || user?.role?.name?.toLowerCase() === 'super' || user?.is_superuser;
 
     const [cars, setCars] = useState<Car[]>([]);
     const [selectedCarId, setSelectedCarId] = useState<string>("");
@@ -322,24 +322,26 @@ const ServiceHistory = ({ userId }: ServiceHistoryProps = {}) => {
                                 </div>
 
                                 {/* Action Buttons - Top Right */}
-                                <div className="flex items-center gap-2">
-                                    <button
-                                        onClick={() => handleEdit(record)}
-                                        className="edit-btn-animated"
-                                        title="Edit"
-                                    >
-                                        Edit
-                                        <Pencil className="svg" strokeWidth={2.5} />
-                                    </button>
-                                    <button
-                                        onClick={() => handleDelete(record.id)}
-                                        className="delete-btn-animated"
-                                        title="Delete"
-                                    >
-                                        Delete
-                                        <Trash2 className="svg" strokeWidth={2.5} />
-                                    </button>
-                                </div>
+                                {isAdmin && (
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            onClick={() => handleEdit(record)}
+                                            className="edit-btn-animated"
+                                            title="Edit"
+                                        >
+                                            Edit
+                                            <Pencil className="svg" strokeWidth={2.5} />
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(record.id)}
+                                            className="delete-btn-animated"
+                                            title="Delete"
+                                        >
+                                            Delete
+                                            <Trash2 className="svg" strokeWidth={2.5} />
+                                        </button>
+                                    </div>
+                                )}
                             </div>
 
                             {/* Vehicle Info Row - Enhanced */}

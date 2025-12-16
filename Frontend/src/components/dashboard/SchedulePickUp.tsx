@@ -58,7 +58,7 @@ const SchedulePickUp = ({ userId }: SchedulePickUpProps = {}) => {
     });
 
     // Check if user is admin or super admin
-    const isAdmin = role?.name === "admin" || role?.name === "super";
+    const isAdmin = role?.name?.toLowerCase() === "admin" || role?.name?.toLowerCase() === "super";
     const isCreator = selectedRequest?.user_id === user?.id;
 
     const fetchData = async () => {

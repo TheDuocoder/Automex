@@ -799,7 +799,7 @@ const Employees = () => {
               {searchTerm ? 'No employees found matching your search.' : 'No employees added yet.'}
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-[1800px] mx-auto">
               {filteredEmployees.map((employee) => {
                 // Format salary in INR with /- notation
                 const formattedSalary = employee.salary 
@@ -821,275 +821,317 @@ const Employees = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="relative group rounded-3xl overflow-hidden backdrop-blur-sm employee-card"
+                    className="relative group rounded-[2.5rem] overflow-hidden backdrop-blur-sm employee-card"
                     style={{
-                      background: 'linear-gradient(180deg, #ffffff 0%, #fafafa 100%)',
+                      background: 'linear-gradient(to bottom right, #ffffff 0%, rgba(243, 244, 246, 0.6) 100%)',
                       backdropFilter: 'blur(10px)',
                       border: '1px solid rgba(255, 255, 255, 0.6)',
                     }}
                   >
-                    <div className="p-6 space-y-4">
-                      {/* Employee Avatar and Name Section */}
-                      <div className="flex items-start gap-4">
-                        {/* Avatar with Gradient Ring and Active Status */}
-                        <div className="flex-shrink-0 relative">
-                          {/* Outer gradient ring with glow */}
-                          <div 
-                            className="absolute inset-0 rounded-full blur-lg opacity-40"
+                    {/* Top accent gradient bar */}
+                    <div 
+                      className="h-1"
+                      style={{
+                        background: 'linear-gradient(90deg, #6366f1 0%, #a855f7 50%, #ec4899 100%)',
+                      }}
+                    ></div>
+
+                    <div className="p-8">
+                      {/* Centered Profile Section */}
+                      <div className="flex flex-col items-center mb-6">
+                        {/* Profile Photo with Glow */}
+                        <div className="relative mb-5">
+                          {/* Outer glow ring */}
+                          <div
+                            className="absolute inset-0 rounded-full blur-2xl"
                             style={{
-                              background: 'linear-gradient(135deg, #ff4d4f, #ff7a7a)',
+                              background: 'linear-gradient(135deg, rgba(255, 81, 47, 0.4) 0%, rgba(221, 36, 118, 0.4) 50%, rgba(147, 51, 234, 0.4) 100%)',
                               transform: 'scale(1.3)',
                             }}
                           ></div>
-                          
-                          {/* Gradient border ring */}
-                          <div 
+
+                          {/* Glowing ring */}
+                          <div
                             className="absolute inset-0 rounded-full"
                             style={{
-                              background: 'linear-gradient(135deg, #ff4d4f, #ff7a7a)',
+                              background: 'linear-gradient(135deg, #FF512F 0%, #DD2476 50%, #9333ea 100%)',
                               padding: '3px',
-                              boxShadow: '0 0 0 4px rgba(255,77,79,0.15)',
+                              transform: 'scale(1.08)',
                             }}
                           >
-                            {/* Inner white ring */}
-                            <div 
-                              className="absolute inset-0 rounded-full"
-                              style={{
-                                background: '#fff',
-                                margin: '3px',
-                              }}
-                            ></div>
+                            <div className="w-full h-full rounded-full bg-white"></div>
                           </div>
 
                           {/* Avatar */}
-                          <div 
-                            className="h-16 w-16 rounded-full flex items-center justify-center text-white font-bold text-2xl relative z-10 border-2 border-white shadow-lg"
+                          <div
+                            className="relative w-28 h-28 rounded-full flex items-center justify-center text-white text-4xl font-bold border-4 border-white z-10"
                             style={{
-                              background: 'radial-gradient(circle at top, #ff8fa3, #f06292)',
-                              boxShadow: '0 12px 30px rgba(240,98,146,0.45)',
+                              background: 'linear-gradient(135deg, #ec4899 0%, #a855f7 100%)',
+                              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
                             }}
                           >
                             {employee.full_name.charAt(0).toUpperCase()}
                           </div>
 
-                          {/* Floating Active Check - Green badge on bottom-right */}
-                          {employee.is_active && (
-                            <div 
-                              className="absolute -bottom-2 -right-2 bg-green-500 rounded-full p-1 shadow-lg border-3 border-white flex items-center justify-center"
-                              style={{
-                                boxShadow: '0 4px 12px rgba(16, 185, 129, 0.5)',
-                                width: '28px',
-                                height: '28px',
-                              }}
-                            >
-                              <CheckCircle className="h-5 w-5 text-white" strokeWidth={2.5} />
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Name and Status with Better Hierarchy */}
-                        <div className="flex-1 min-w-0 pt-1">
-                          <div className="mb-2">
-                            <h3 className="font-extrabold text-gray-900 text-lg leading-tight tracking-tight">
-                              {employee.full_name.split(' ').map(word => 
-                                word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-                              ).join(' ')}
-                            </h3>
-                          </div>
-                          {/* ID and Status Badges on Same Line */}
-                          <div className="flex items-center gap-2 flex-wrap mb-3">
-                            {employee.employee_id && (
-                              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full font-bold text-xs text-white" style={{
-                                background: 'linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)',
-                                boxShadow: '0 4px 12px rgba(99, 102, 241, 0.3)',
-                                height: '28px',
-                              }}>
-                                <FileText className="h-3.5 w-3.5" />
-                                <span>{employee.employee_id}</span>
-                              </div>
-                            )}
+                          {/* Status Badge */}
+                          <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 z-20">
                             {employee.is_active ? (
-                              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full font-bold text-xs text-white" style={{
-                                background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-                                boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)',
-                                height: '28px',
-                              }}>
-                                <CheckCircle className="h-3.5 w-3.5" />
-                                <span>Active</span>
+                              <div
+                                className="px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 border-2 border-white bg-gradient-to-r from-emerald-400 to-green-500 text-white"
+                                style={{
+                                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                                }}
+                              >
+                                <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                                Active
                               </div>
                             ) : (
-                              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full font-bold text-xs text-white" style={{
-                                background: 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)',
-                                boxShadow: '0 4px 12px rgba(239, 68, 68, 0.3)',
-                                height: '28px',
-                              }}>
-                                <XCircle className="h-3.5 w-3.5" />
-                                <span>Inactive</span>
+                              <div
+                                className="px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 border-2 border-white bg-gradient-to-r from-slate-400 to-slate-500 text-white"
+                                style={{
+                                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                                }}
+                              >
+                                <div className="w-2 h-2 bg-white rounded-full"></div>
+                                Inactive
                               </div>
                             )}
                           </div>
+                        </div>
+
+                        {/* Name */}
+                        <h1
+                          className="text-3xl font-black text-center mb-2"
+                          style={{
+                            background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text',
+                            letterSpacing: '-0.02em',
+                          }}
+                        >
+                          {employee.full_name.split(' ').map(word => 
+                            word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                          ).join(' ')}
+                        </h1>
+
+                        {/* Role and Employee Code */}
+                        <div className="flex items-center gap-2 text-slate-600 font-medium mb-4">
                           {employee.position && (
-                            <p className="text-sm text-gray-500 font-medium letter-spacing-0.3">@{employee.position}</p>
+                            <>
+                              <span className="text-base">{employee.position}</span>
+                              <span className="text-slate-400">·</span>
+                            </>
+                          )}
+                          {employee.employee_id && (
+                            <div
+                              className="px-3 py-1 rounded-full text-sm font-semibold"
+                              style={{
+                                background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                                color: 'white',
+                              }}
+                            >
+                              {employee.employee_id}
+                            </div>
                           )}
                         </div>
                       </div>
 
-                      {/* Contact Information with Enhanced Icons */}
-                      <div className="space-y-2.5">
-                        <div className="flex items-center gap-3 text-sm p-3 rounded-2xl" style={{
-                          background: '#f8fafc',
-                        }}>
-                          <div className="p-2.5 rounded-xl flex-shrink-0" style={{
-                            background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.08) 100%)',
-                          }}>
-                            <Mail className="h-4 w-4 text-blue-600" />
-                          </div>
-                          <span className="truncate text-gray-700">{employee.email}</span>
-                        </div>
-                        {employee.phone_number && (
-                          <div className="flex items-center gap-3 text-sm p-3 rounded-2xl" style={{
-                            background: '#f8fafc',
-                          }}>
-                            <div className="p-2.5 rounded-xl flex-shrink-0" style={{
-                              background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(34, 197, 94, 0.08) 100%)',
-                            }}>
-                              <Phone className="h-4 w-4 text-green-600" />
-                            </div>
-                            <span className="text-gray-700">{employee.phone_number}</span>
-                          </div>
-                        )}
-                      </div>
+                      {/* Quick Info Section */}
+                      <div className="mb-6">
+                        <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 text-center">
+                          Quick Info
+                        </h2>
 
-                      {/* Department, Position and Salary Badges with Gradients */}
-                      <div className="space-y-3 pt-1">
-                        {/* Position, Department, and Salary Badges - Same Line */}
-                        <div className="flex flex-wrap gap-2">
-                          {employee.position && (
-                            <div 
-                              className="flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-bold text-white"
-                              style={{
-                                background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
-                                boxShadow: '0 6px 16px rgba(59, 130, 246, 0.35)',
-                                height: '32px',
-                              }}
-                            >
-                              <Briefcase className="h-4 w-4" />
-                              {employee.position}
-                            </div>
-                          )}
-                          {employee.department && (
-                            <div 
-                              className="flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-bold text-white"
-                              style={{
-                                background: 'linear-gradient(135deg, #A855F7 0%, #9333EA 100%)',
-                                boxShadow: '0 6px 16px rgba(168, 85, 247, 0.35)',
-                                height: '32px',
-                              }}
-                            >
-                              <Building className="h-4 w-4" />
-                              {employee.department}
-                            </div>
-                          )}
-                          {formattedSalary && (
-                            <div 
-                              className="flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-bold text-white"
-                              style={{
-                                background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-                                boxShadow: '0 6px 16px rgba(245, 158, 11, 0.35)',
-                                height: '32px',
-                              }}
-                            >
-                              <span className="text-sm font-extrabold">₹</span>
-                              {formattedSalary.replace('₹', '')}
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Address - Full Width Badge */}
-                        {employee.address && (
-                          <div 
-                            className="flex items-center gap-2 px-4 py-3 rounded-2xl font-bold text-sm text-white"
+                        <div className="space-y-2">
+                          {/* Email */}
+                          <div
+                            className="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-3 transition-all duration-300 hover:scale-105"
                             style={{
-                              background: 'linear-gradient(135deg, #4caf50 0%, #43a047 100%)',
-                              boxShadow: '0 8px 24px rgba(76, 175, 80, 0.3), inset 0 1px 0 rgba(255,255,255,0.3)',
+                              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.8)',
                             }}
                           >
-                            <div className="p-2 rounded-lg flex-shrink-0" style={{
-                              background: 'rgba(255, 255, 255, 0.2)',
-                              backdropFilter: 'blur(10px)',
-                            }}>
-                              <MapPin className="h-4 w-4" />
+                            <div className="flex items-start gap-3">
+                              <div
+                                className="p-2 rounded-xl bg-gradient-to-br from-blue-400 to-blue-600 text-white flex-shrink-0"
+                                style={{
+                                  boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)',
+                                }}
+                              >
+                                <Mail className="w-4 h-4" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-0.5">
+                                  Email
+                                </p>
+                                <p className="text-sm font-medium text-slate-700 truncate">{employee.email}</p>
+                              </div>
                             </div>
-                            <span className="truncate text-xs">{employee.address}</span>
+                          </div>
+
+                          {/* Phone */}
+                          {employee.phone_number && (
+                            <div
+                              className="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-3 transition-all duration-300 hover:scale-105"
+                              style={{
+                                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.8)',
+                              }}
+                            >
+                              <div className="flex items-start gap-3">
+                                <div
+                                  className="p-2 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 text-white flex-shrink-0"
+                                  style={{
+                                    boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)',
+                                  }}
+                                >
+                                  <Phone className="w-4 h-4" />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-0.5">
+                                    Phone
+                                  </p>
+                                  <p className="text-sm font-medium text-slate-700">{employee.phone_number}</p>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Address */}
+                          {employee.address && (
+                            <div
+                              className="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-3 transition-all duration-300 hover:scale-105"
+                              style={{
+                                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.8)',
+                              }}
+                            >
+                              <div className="flex items-start gap-3">
+                                <div
+                                  className="p-2 rounded-xl bg-gradient-to-br from-green-400 to-green-600 text-white flex-shrink-0"
+                                  style={{
+                                    boxShadow: '0 4px 12px rgba(34, 197, 94, 0.3)',
+                                  }}
+                                >
+                                  <MapPin className="w-4 h-4" />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-0.5">
+                                    Address
+                                  </p>
+                                  <p className="text-sm font-medium text-slate-700 line-clamp-2">{employee.address}</p>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Badges Section */}
+                      <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
+                        {/* Position Badge */}
+                        {employee.position && (
+                          <div
+                            className="px-4 py-2 rounded-full flex items-center gap-2 text-sm font-bold text-white transition-all duration-300 hover:scale-105"
+                            style={{
+                              background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+                              boxShadow: '0 4px 16px rgba(59, 130, 246, 0.4)',
+                            }}
+                          >
+                            <Briefcase className="w-4 h-4" />
+                            {employee.position}
+                          </div>
+                        )}
+
+                        {/* Department Badge */}
+                        {employee.department && (
+                          <div
+                            className="px-4 py-2 rounded-full flex items-center gap-2 text-sm font-bold text-white transition-all duration-300 hover:scale-105"
+                            style={{
+                              background: 'linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)',
+                              boxShadow: '0 4px 16px rgba(168, 85, 247, 0.4)',
+                            }}
+                          >
+                            <Building className="w-4 h-4" />
+                            {employee.department}
+                          </div>
+                        )}
+
+                        {/* Salary Badge */}
+                        {formattedSalary && (
+                          <div
+                            className="px-4 py-2 rounded-full flex items-center gap-2 text-sm font-bold text-white transition-all duration-300 hover:scale-105"
+                            style={{
+                              background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                              boxShadow: '0 4px 16px rgba(245, 158, 11, 0.4)',
+                            }}
+                          >
+                            <span className="text-base">₹</span>
+                            {formattedSalary.replace('₹', '')}
                           </div>
                         )}
                       </div>
 
-                      {/* Hire Date and Last Working Day */}
-                      {(hireDateFormatted || employee.last_working_day) && (
-                        <div className="space-y-2 text-sm">
-                          {hireDateFormatted && (
-                            <div className="flex items-center gap-3">
-                              <div className="p-2 rounded-lg" style={{
-                                background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.08) 100%)',
-                              }}>
-                                <Calendar className="h-4 w-4 text-amber-600" />
-                              </div>
-                              <span className="text-gray-600 font-medium">Hired: <span className="text-gray-700 font-semibold">{hireDateFormatted}</span></span>
-                            </div>
-                          )}
-                          {employee.last_working_day && (
-                            <div className="flex items-center gap-3">
-                              <div className="p-2 rounded-lg" style={{
-                                background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.08) 100%)',
-                              }}>
-                                <Calendar className="h-4 w-4 text-red-600" />
-                              </div>
-                              <span className="text-gray-600 font-medium">Last Day: <span className="text-gray-700 font-semibold">{new Date(employee.last_working_day).toLocaleDateString('en-IN', {
-                                day: '2-digit',
-                                month: 'short',
-                                year: 'numeric'
-                              })}</span></span>
-                            </div>
-                          )}
+                      {/* Hired Date */}
+                      {hireDateFormatted && (
+                        <div
+                          className="flex items-center justify-center gap-3 p-3 rounded-2xl bg-gradient-to-r from-slate-50 to-purple-50/50 mb-6"
+                          style={{
+                            boxShadow: 'inset 0 2px 8px rgba(0, 0, 0, 0.04)',
+                          }}
+                        >
+                          <div
+                            className="p-2 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 text-white"
+                            style={{
+                              boxShadow: '0 4px 12px rgba(251, 146, 60, 0.3)',
+                            }}
+                          >
+                            <Calendar className="w-4 h-4" />
+                          </div>
+                          <div>
+                            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide">
+                              Hired on
+                            </p>
+                            <p className="text-base font-bold text-slate-700">{hireDateFormatted}</p>
+                          </div>
                         </div>
                       )}
+
+                      {/* Action Buttons */}
+                      <div className="flex items-center gap-3">
+                        {/* Delete Button */}
+                        <button
+                          onClick={() => handleDeleteEmployee(employee.id)}
+                          className="flex-1 flex items-center justify-center gap-2 px-5 py-3 rounded-2xl font-bold text-red-600 bg-white border-2 border-red-200 hover:border-red-300 hover:bg-red-50 transition-all duration-300 hover:scale-105"
+                          style={{
+                            boxShadow: '0 4px 12px rgba(239, 68, 68, 0.15)',
+                          }}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                          Delete
+                        </button>
+
+                        {/* Edit Button */}
+                        <button
+                          onClick={() => handleEditEmployee(employee)}
+                          className="flex-1 flex items-center justify-center gap-2 px-5 py-3 rounded-2xl font-bold text-white transition-all duration-300 hover:scale-105"
+                          style={{
+                            background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+                            boxShadow: '0 4px 16px rgba(59, 130, 246, 0.4)',
+                          }}
+                        >
+                          <Edit className="w-4 h-4" />
+                          Edit
+                        </button>
+                      </div>
                     </div>
 
-                    {/* Card Footer with Edit and Delete Buttons */}
-                    <div 
-                      className="px-6 py-3 flex gap-3 justify-between border-t"
+                    {/* Bottom decorative gradient */}
+                    <div
+                      className="h-2"
                       style={{
-                        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.2) 100%)',
-                        borderTopColor: 'rgba(0, 0, 0, 0.05)',
+                        background: 'linear-gradient(90deg, #ec4899 0%, #a855f7 50%, #6366f1 100%)',
+                        opacity: 0.5,
                       }}
-                    >
-                      <button
-                        onClick={() => handleDeleteEmployee(employee.id)}
-                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-300 hover:translateY-[-2px] hover:shadow-lg font-semibold text-sm border-2"
-                        style={{
-                          background: 'transparent',
-                          color: '#EF4444',
-                          borderColor: '#EF4444',
-                        }}
-                        title="Delete Employee"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                        Delete
-                      </button>
-                      <button
-                        onClick={() => handleEditEmployee(employee)}
-                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-300 hover:shadow-lg hover:translateY-[-2px] font-semibold text-sm text-white"
-                        style={{
-                          background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
-                          boxShadow: '0 4px 12px rgba(59, 130, 246, 0.25)',
-                        }}
-                        title="Edit Employee"
-                      >
-                        <Edit className="h-4 w-4" />
-                        Edit
-                      </button>
-                    </div>
+                    ></div>
                   </motion.div>
                 );
               })}
