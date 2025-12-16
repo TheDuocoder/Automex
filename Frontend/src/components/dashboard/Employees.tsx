@@ -19,8 +19,30 @@ import {
   FileText, Loader2, Edit, Trash2, CheckCircle, XCircle, UserPlus
 } from 'lucide-react';
 
-// Animated Add Employee Button Styles
+// Animated Add Employee Button Styles + Card Shadow Effects
 const buttonStyles = `
+  .employee-card {
+    box-shadow: 
+      0 20px 40px rgba(0,0,0,0.08),
+      0 8px 20px rgba(0,0,0,0.06),
+      0 4px 10px rgba(0,0,0,0.04),
+      0 2px 4px rgba(0,0,0,0.02),
+      inset 0 1px 0 rgba(255,255,255,0.8),
+      inset 0 -1px 0 rgba(0,0,0,0.02);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .employee-card:hover {
+    box-shadow: 
+      0 30px 60px rgba(0,0,0,0.12),
+      0 12px 30px rgba(0,0,0,0.10),
+      0 6px 15px rgba(0,0,0,0.06),
+      0 3px 6px rgba(0,0,0,0.03),
+      inset 0 1px 0 rgba(255,255,255,0.8),
+      inset 0 -1px 0 rgba(0,0,0,0.02);
+    transform: translateY(-8px);
+  }
+
   .add-employee-button {
     position: relative;
     width: 170px;
@@ -423,6 +445,7 @@ const Employees = () => {
       transition={{ duration: 0.5 }}
       className="space-y-4"
     >
+      <style>{buttonStyles}</style>
       <Card className="shadow-lg border-none">
         <CardHeader className="border-b bg-gray-50/50">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -778,10 +801,9 @@ const Employees = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredEmployees.map((employee) => {
-                // Convert salary to Indian Rupees (assuming salary is in USD, 1 USD = 83 INR)
-                const salaryInRupees = employee.salary ? Math.round(employee.salary * 83) : null;
-                const formattedSalary = salaryInRupees 
-                  ? `₹${salaryInRupees.toLocaleString('en-IN')}/year`
+                // Format salary in INR with /- notation
+                const formattedSalary = employee.salary 
+                  ? `₹${Math.round(employee.salary).toLocaleString('en-IN')}/-`
                   : null;
 
                 // Format hire date
@@ -799,87 +821,107 @@ const Employees = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="relative group rounded-2xl overflow-hidden backdrop-blur-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
+                    className="relative group rounded-3xl overflow-hidden backdrop-blur-sm employee-card"
                     style={{
-                      background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%)',
+                      background: 'linear-gradient(180deg, #ffffff 0%, #fafafa 100%)',
                       backdropFilter: 'blur(10px)',
                       border: '1px solid rgba(255, 255, 255, 0.6)',
-                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02)',
                     }}
                   >
-                    {/* Edit and Delete Buttons - Top Right with Glassmorphism */}
-                    <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 z-10">
-                      <button
-                        onClick={() => handleEditEmployee(employee)}
-                        className="p-2.5 backdrop-blur-md transition-all duration-300 rounded-lg hover:scale-110 hover:shadow-lg"
-                        style={{
-                          background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(59, 130, 246, 0.1) 100%)',
-                          border: '1px solid rgba(59, 130, 246, 0.3)',
-                          color: '#3b82f6',
-                          boxShadow: '0 8px 16px rgba(59, 130, 246, 0.15)',
-                        }}
-                        title="Edit Employee"
-                      >
-                        <Edit className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteEmployee(employee.id)}
-                        className="p-2.5 backdrop-blur-md transition-all duration-300 rounded-lg hover:scale-110 hover:shadow-lg"
-                        style={{
-                          background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(239, 68, 68, 0.1) 100%)',
-                          border: '1px solid rgba(239, 68, 68, 0.3)',
-                          color: '#ef4444',
-                          boxShadow: '0 8px 16px rgba(239, 68, 68, 0.15)',
-                        }}
-                        title="Delete Employee"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
-                    </div>
-
                     <div className="p-6 space-y-4">
                       {/* Employee Avatar and Name Section */}
                       <div className="flex items-start gap-4">
-                        {/* Avatar with Gradient Background and Glow */}
+                        {/* Avatar with Gradient Ring and Active Status */}
                         <div className="flex-shrink-0 relative">
+                          {/* Outer gradient ring with glow */}
                           <div 
-                            className="absolute inset-0 rounded-full blur-xl opacity-30"
+                            className="absolute inset-0 rounded-full blur-lg opacity-40"
                             style={{
-                              background: 'linear-gradient(135deg, #FF6B9D 0%, #FF8E9B 100%)',
-                              transform: 'scale(1.2)',
+                              background: 'linear-gradient(135deg, #ff4d4f, #ff7a7a)',
+                              transform: 'scale(1.3)',
                             }}
                           ></div>
+                          
+                          {/* Gradient border ring */}
+                          <div 
+                            className="absolute inset-0 rounded-full"
+                            style={{
+                              background: 'linear-gradient(135deg, #ff4d4f, #ff7a7a)',
+                              padding: '3px',
+                              boxShadow: '0 0 0 4px rgba(255,77,79,0.15)',
+                            }}
+                          >
+                            {/* Inner white ring */}
+                            <div 
+                              className="absolute inset-0 rounded-full"
+                              style={{
+                                background: '#fff',
+                                margin: '3px',
+                              }}
+                            ></div>
+                          </div>
+
+                          {/* Avatar */}
                           <div 
                             className="h-16 w-16 rounded-full flex items-center justify-center text-white font-bold text-2xl relative z-10 border-2 border-white shadow-lg"
                             style={{
-                              background: 'linear-gradient(135deg, #FF6B9D 0%, #FF8E9B 100%)',
-                              boxShadow: '0 8px 24px rgba(255, 107, 157, 0.3)',
+                              background: 'radial-gradient(circle at top, #ff8fa3, #f06292)',
+                              boxShadow: '0 12px 30px rgba(240,98,146,0.45)',
                             }}
                           >
                             {employee.full_name.charAt(0).toUpperCase()}
                           </div>
+
+                          {/* Floating Active Check - Green badge on bottom-right */}
+                          {employee.is_active && (
+                            <div 
+                              className="absolute -bottom-2 -right-2 bg-green-500 rounded-full p-1 shadow-lg border-3 border-white flex items-center justify-center"
+                              style={{
+                                boxShadow: '0 4px 12px rgba(16, 185, 129, 0.5)',
+                                width: '28px',
+                                height: '28px',
+                              }}
+                            >
+                              <CheckCircle className="h-5 w-5 text-white" strokeWidth={2.5} />
+                            </div>
+                          )}
                         </div>
 
                         {/* Name and Status with Better Hierarchy */}
                         <div className="flex-1 min-w-0 pt-1">
-                          <div className="flex items-center gap-3 mb-1 flex-wrap">
-                            <h3 className="font-black text-gray-900 text-xl leading-tight tracking-tight">
+                          <div className="mb-2">
+                            <h3 className="font-extrabold text-gray-900 text-lg leading-tight tracking-tight">
                               {employee.full_name.split(' ').map(word => 
                                 word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
                               ).join(' ')}
                             </h3>
+                          </div>
+                          {/* ID and Status Badges on Same Line */}
+                          <div className="flex items-center gap-2 flex-wrap mb-3">
+                            {employee.employee_id && (
+                              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full font-bold text-xs text-white" style={{
+                                background: 'linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)',
+                                boxShadow: '0 4px 12px rgba(99, 102, 241, 0.3)',
+                                height: '28px',
+                              }}>
+                                <FileText className="h-3.5 w-3.5" />
+                                <span>{employee.employee_id}</span>
+                              </div>
+                            )}
                             {employee.is_active ? (
-                              <div className="flex items-center gap-1.5 px-3 py-1 rounded-full font-bold text-xs text-white" style={{
+                              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full font-bold text-xs text-white" style={{
                                 background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
                                 boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)',
+                                height: '28px',
                               }}>
                                 <CheckCircle className="h-3.5 w-3.5" />
                                 <span>Active</span>
                               </div>
                             ) : (
-                              <div className="flex items-center gap-1.5 px-3 py-1 rounded-full font-bold text-xs text-white" style={{
+                              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full font-bold text-xs text-white" style={{
                                 background: 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)',
                                 boxShadow: '0 4px 12px rgba(239, 68, 68, 0.3)',
+                                height: '28px',
                               }}>
                                 <XCircle className="h-3.5 w-3.5" />
                                 <span>Inactive</span>
@@ -887,15 +929,17 @@ const Employees = () => {
                             )}
                           </div>
                           {employee.position && (
-                            <p className="text-xs text-gray-500 font-medium">@{employee.position}</p>
+                            <p className="text-sm text-gray-500 font-medium letter-spacing-0.3">@{employee.position}</p>
                           )}
                         </div>
                       </div>
 
                       {/* Contact Information with Enhanced Icons */}
                       <div className="space-y-2.5">
-                        <div className="flex items-center gap-3 text-sm">
-                          <div className="p-2 rounded-lg" style={{
+                        <div className="flex items-center gap-3 text-sm p-3 rounded-2xl" style={{
+                          background: '#f8fafc',
+                        }}>
+                          <div className="p-2.5 rounded-xl flex-shrink-0" style={{
                             background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.08) 100%)',
                           }}>
                             <Mail className="h-4 w-4 text-blue-600" />
@@ -903,8 +947,10 @@ const Employees = () => {
                           <span className="truncate text-gray-700">{employee.email}</span>
                         </div>
                         {employee.phone_number && (
-                          <div className="flex items-center gap-3 text-sm">
-                            <div className="p-2 rounded-lg" style={{
+                          <div className="flex items-center gap-3 text-sm p-3 rounded-2xl" style={{
+                            background: '#f8fafc',
+                          }}>
+                            <div className="p-2.5 rounded-xl flex-shrink-0" style={{
                               background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(34, 197, 94, 0.08) 100%)',
                             }}>
                               <Phone className="h-4 w-4 text-green-600" />
@@ -914,56 +960,70 @@ const Employees = () => {
                         )}
                       </div>
 
-                      {/* Department and Position Badges with Gradients */}
-                      {(employee.position || employee.department) && (
-                        <div className="flex flex-wrap gap-2 pt-1">
+                      {/* Department, Position and Salary Badges with Gradients */}
+                      <div className="space-y-3 pt-1">
+                        {/* Position, Department, and Salary Badges - Same Line */}
+                        <div className="flex flex-wrap gap-2">
                           {employee.position && (
                             <div 
-                              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold text-white"
+                              className="flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-bold text-white"
                               style={{
                                 background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
-                                boxShadow: '0 4px 12px rgba(59, 130, 246, 0.25)',
+                                boxShadow: '0 6px 16px rgba(59, 130, 246, 0.35)',
+                                height: '32px',
                               }}
                             >
-                              <Briefcase className="h-3.5 w-3.5" />
+                              <Briefcase className="h-4 w-4" />
                               {employee.position}
                             </div>
                           )}
                           {employee.department && (
                             <div 
-                              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold text-white"
+                              className="flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-bold text-white"
                               style={{
                                 background: 'linear-gradient(135deg, #A855F7 0%, #9333EA 100%)',
-                                boxShadow: '0 4px 12px rgba(168, 85, 247, 0.25)',
+                                boxShadow: '0 6px 16px rgba(168, 85, 247, 0.35)',
+                                height: '32px',
                               }}
                             >
-                              <Building className="h-3.5 w-3.5" />
+                              <Building className="h-4 w-4" />
                               {employee.department}
                             </div>
                           )}
+                          {formattedSalary && (
+                            <div 
+                              className="flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-bold text-white"
+                              style={{
+                                background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+                                boxShadow: '0 6px 16px rgba(245, 158, 11, 0.35)',
+                                height: '32px',
+                              }}
+                            >
+                              <span className="text-sm font-extrabold">₹</span>
+                              {formattedSalary.replace('₹', '')}
+                            </div>
+                          )}
                         </div>
-                      )}
 
-                      {/* Salary - Premium Badge with Icon Container */}
-                      {formattedSalary && (
-                        <div className="pt-2">
+                        {/* Address - Full Width Badge */}
+                        {employee.address && (
                           <div 
-                            className="flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-base text-white"
+                            className="flex items-center gap-2 px-4 py-3 rounded-2xl font-bold text-sm text-white"
                             style={{
-                              background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-                              boxShadow: '0 8px 24px rgba(16, 185, 129, 0.3)',
+                              background: 'linear-gradient(135deg, #4caf50 0%, #43a047 100%)',
+                              boxShadow: '0 8px 24px rgba(76, 175, 80, 0.3), inset 0 1px 0 rgba(255,255,255,0.3)',
                             }}
                           >
-                            <div className="p-2 rounded-lg" style={{
+                            <div className="p-2 rounded-lg flex-shrink-0" style={{
                               background: 'rgba(255, 255, 255, 0.2)',
                               backdropFilter: 'blur(10px)',
                             }}>
-                              <DollarSign className="h-5 w-5" />
+                              <MapPin className="h-4 w-4" />
                             </div>
-                            <span>{formattedSalary}</span>
+                            <span className="truncate text-xs">{employee.address}</span>
                           </div>
-                        </div>
-                      )}
+                        )}
+                      </div>
 
                       {/* Hire Date and Last Working Day */}
                       {(hireDateFormatted || employee.last_working_day) && (
@@ -996,19 +1056,40 @@ const Employees = () => {
                       )}
                     </div>
 
-                    {/* Clean Footer with Employee ID */}
-                    {employee.employee_id && (
-                      <div 
-                        className="px-6 py-3 flex items-center justify-between"
+                    {/* Card Footer with Edit and Delete Buttons */}
+                    <div 
+                      className="px-6 py-3 flex gap-3 justify-between border-t"
+                      style={{
+                        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.2) 100%)',
+                        borderTopColor: 'rgba(0, 0, 0, 0.05)',
+                      }}
+                    >
+                      <button
+                        onClick={() => handleDeleteEmployee(employee.id)}
+                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-300 hover:translateY-[-2px] hover:shadow-lg font-semibold text-sm border-2"
                         style={{
-                          background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.2) 100%)',
-                          borderTop: '1px solid rgba(0, 0, 0, 0.05)',
+                          background: 'transparent',
+                          color: '#EF4444',
+                          borderColor: '#EF4444',
                         }}
+                        title="Delete Employee"
                       >
-                        <span className="text-xs font-semibold text-gray-600">ID: <span className="text-gray-800 font-bold tracking-wider">{employee.employee_id}</span></span>
-                        <div className="text-xs text-gray-500">Employee</div>
-                      </div>
-                    )}
+                        <Trash2 className="h-4 w-4" />
+                        Delete
+                      </button>
+                      <button
+                        onClick={() => handleEditEmployee(employee)}
+                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-300 hover:shadow-lg hover:translateY-[-2px] font-semibold text-sm text-white"
+                        style={{
+                          background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
+                          boxShadow: '0 4px 12px rgba(59, 130, 246, 0.25)',
+                        }}
+                        title="Edit Employee"
+                      >
+                        <Edit className="h-4 w-4" />
+                        Edit
+                      </button>
+                    </div>
                   </motion.div>
                 );
               })}
@@ -1298,7 +1379,7 @@ const Employees = () => {
                     ) : (
                       <>
                         <Edit className="inline mr-2 h-4 w-4" />
-                        Update Employee
+                        Update
                       </>
                     )}
                   </span>

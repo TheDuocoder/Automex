@@ -545,30 +545,28 @@ const MyCars = ({ userId }: MyCarsProps = {}) => {
                                         <p className="text-lg text-gray-500 font-medium">Manufacturing Year: {car.year}</p>
                                     </div>
 
+                                    {/* Admin Owner Badge - Positioned Above */}
+                                    {isAdmin && car.user && (
+                                        <div className="flex items-center gap-2 p-3 px-4 bg-blue-50 rounded-lg border border-blue-200 w-fit shadow-sm">
+                                            <span className="text-sm text-blue-600 font-bold">Owner :-</span>
+                                            <span className="text-sm text-blue-900 font-semibold">{car.user.full_name || car.user.email}</span>
+                                        </div>
+                                    )}
+
                                     {/* Info Pills - Reg No. and VIN No. */}
-                                    <div className="flex flex-col gap-3">
+                                    <div className="flex flex-wrap gap-3 items-center">
                                         {/* Registration Number Pill */}
                                         <div className="bg-white border-3 border-[#CD0000] rounded-full px-6 py-3 shadow-[0_4px_15px_rgba(205,0,0,0.15)] hover:shadow-[0_6px_20px_rgba(205,0,0,0.25)] transition-all duration-300 inline-flex items-center gap-2 w-fit">
                                             <span className="text-base font-bold text-gray-700">Reg No:</span>
                                             <span className="text-base font-black text-gray-900 uppercase tracking-wider">{car.registration_number}</span>
                                         </div>
 
-                                        {/* VIN Number Pill */}
-                                        {car.vin_number && (
-                                            <div className="bg-white border-3 border-[#7C2558] rounded-full px-6 py-3 shadow-[0_4px_15px_rgba(124,37,88,0.15)] hover:shadow-[0_6px_20px_rgba(124,37,88,0.25)] transition-all duration-300 inline-flex items-center gap-2 w-fit">
-                                                <span className="text-base font-bold text-gray-700">VIN No:</span>
-                                                <span className="text-base font-bold text-gray-900 tracking-wide">{car.vin_number}</span>
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    {/* Admin Owner Badge */}
-                                    {isAdmin && car.user && (
-                                        <div className="flex items-center gap-2 p-2 px-3 bg-blue-50 rounded-full border border-blue-200 inline-block w-fit shadow-sm">
-                                            <span className="text-xs text-blue-600 font-bold uppercase tracking-wider">Owner</span>
-                                            <span className="text-sm text-blue-800 font-medium">{car.user.full_name || car.user.email}</span>
+                                        {/* VIN Number Pill - Same Line */}
+                                        <div className="bg-white border-3 border-[#7C2558] rounded-full px-6 py-3 shadow-[0_4px_15px_rgba(124,37,88,0.15)] hover:shadow-[0_6px_20px_rgba(124,37,88,0.25)] transition-all duration-300 inline-flex items-center gap-2 w-fit">
+                                            <span className="text-base font-bold text-gray-700">VIN No:</span>
+                                            <span className="text-base font-bold text-gray-900 tracking-wide">{car.vin_number || 'Not specified'}</span>
                                         </div>
-                                    )}
+                                    </div>
 
                                     {/* Action Buttons - Horizontal Row with Equal Width */}
                                     <div className="grid grid-cols-3 gap-3 pt-2">
