@@ -8,6 +8,35 @@ import { Loader2, Search, Users, Mail, Phone, Shield, CheckCircle, XCircle } fro
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 
+// Premium Card Styles with Multi-Layer Shadows and Hover Effects
+const cardStyles = `
+  .user-card {
+    position: relative;
+    background: #fff;
+    box-shadow:
+      0 20px 40px rgba(0, 0, 0, 0.08),
+      0 8px 20px rgba(0, 0, 0, 0.06),
+      0 4px 10px rgba(0, 0, 0, 0.04),
+      0 2px 4px rgba(0, 0, 0, 0.02),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.03) !important;
+    transition:
+      box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important,
+      transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  .user-card:hover {
+    box-shadow:
+      0 30px 60px rgba(0, 0, 0, 0.12),
+      0 12px 30px rgba(0, 0, 0, 0.10),
+      0 6px 15px rgba(0, 0, 0, 0.06),
+      0 3px 6px rgba(0, 0, 0, 0.03),
+      inset 0 1px 0 rgba(255, 255, 255, 0.7),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.04) !important;
+    transform: translateY(-8px) !important;
+  }
+`;
+
 const AllUsers = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState<User[]>([]);
@@ -72,6 +101,7 @@ const AllUsers = () => {
       transition={{ duration: 0.5 }}
       className="space-y-4"
     >
+      <style>{cardStyles}</style>
       <Card className="shadow-lg border-none">
         <CardHeader className="border-b bg-gray-50/50">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -133,13 +163,12 @@ const AllUsers = () => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="group rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+                    className="group rounded-2xl overflow-hidden cursor-pointer user-card"
                     onClick={() => navigate(`/admin/user-details/${user.id}`)}
                     style={{
                       background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%)',
                       backdropFilter: 'blur(10px)',
                       border: '1px solid rgba(255, 255, 255, 0.6)',
-                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02)',
                     }}
                   >
                     <div className="p-5 space-y-4">
