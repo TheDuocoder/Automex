@@ -295,12 +295,12 @@ const BrandSelectorModal = ({
         } else if (brandName === 'audi') {
           // Audi images are in "Audi_car" folder
           // Files use proper capitalization: A3.png, A4.png, Q7.png, etc.
-          // Exception: "e-tron.png" is lowercase
+          // Exception: "Q8 e-tron.png" for the electric model
 
           const modelName = model.name;
 
-          if (modelName.toLowerCase() === 'e-tron') {
-            imagePath = `/images/Car_images/Audi_car/e-tron.png`;
+          if (modelName.toLowerCase() === 'e-tron' || modelName.toLowerCase() === 'q8 e-tron') {
+            imagePath = `/images/Car_images/Audi_car/Q8 e-tron.png`;
           } else {
             // Use the model name as-is with proper capitalization (A3, A4, Q7, etc.)
             imagePath = `/images/Car_images/Audi_car/${modelName}.png`;
