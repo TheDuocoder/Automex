@@ -262,9 +262,9 @@ const BrandSelectorModal = ({
         // Special handling for Skoda, Land Rover, and Audi - use correct folder paths
         let imagePath;
         if (brandName === 'skoda') {
-          // Skoda images are in "skoda" folder (lowercase)
-          // Files are lowercase with underscores (e.g. rapid.png) which matches modelName
-          imagePath = `/images/Car_images/skoda/${modelName}.png`;
+          // Skoda images are in "Skoda" folder (capitalized)
+          // Files are capitalized (e.g. Rapid.png, Fabia.png) - use original model name
+          imagePath = `/images/Car_images/Skoda/${model.name}.png`;
         } else if (brandName === 'land_rover') {
           // Land Rover images are in "Land rover" folder with proper naming
           let landRoverFileName = model.name; // Use original name with proper capitalization
@@ -306,9 +306,21 @@ const BrandSelectorModal = ({
             imagePath = `/images/Car_images/Audi_car/${modelName}.png`;
           }
         } else if (brandName === 'volkswagen') {
-          // Volkswagen images are in "volkswagen" folder (lowercase)
-          // Files are lowercase with underscores (e.g. polo.png, cross_polo.png) which matches modelName
-          imagePath = `/images/Car_images/volkswagen/${modelName}.png`;
+          // Volkswagen images are in "Volkswagen" folder
+          // Most files are capitalized: Ameo.png, Vento.png, Jetta.png, Passat.png, etc.
+          // Exceptions: "polo.png" is lowercase, "cross_polo.png" is lowercase with underscore
+
+          const vwModelName = model.name;
+          const cleanName = vwModelName.toLowerCase().replace(/\s+/g, ' ');
+
+          if (cleanName === 'cross polo') {
+            imagePath = `/images/Car_images/Volkswagen/cross_polo.png`;
+          } else if (cleanName === 'polo') {
+            imagePath = `/images/Car_images/Volkswagen/polo.png`;
+          } else {
+            // Use the model name as-is with proper capitalization
+            imagePath = `/images/Car_images/Volkswagen/${vwModelName}.png`;
+          }
         } else if (brandName === 'bmw') {
           // BMW images are in "BMW" folder with spaces in filenames
           // Convert model name to have proper spacing and capitalization
