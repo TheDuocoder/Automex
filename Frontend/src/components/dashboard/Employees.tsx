@@ -753,14 +753,6 @@ const Employees = () => {
                     {/* Sticky Footer */}
                     <DialogFooter className="px-8 py-5 border-t border-gray-100 bg-gray-50/50 sticky bottom-0 z-10">
                       <div className="flex items-center justify-end gap-3 w-full">
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          onClick={() => setIsAddOpen(false)}
-                          className="h-11 px-6 text-gray-700 hover:bg-gray-100 transition-colors rounded-lg"
-                        >
-                          Cancel
-                        </Button>
                         <button
                           type="submit"
                           disabled={isSubmitting}
@@ -838,9 +830,9 @@ const Employees = () => {
 
                     <div className="p-5 sm:p-8">
                       {/* Centered Profile Section */}
-                      <div className="flex flex-col items-center mb-6">
+                      <div className="flex flex-col items-center mb-4">
                         {/* Profile Photo with Glow */}
-                        <div className="relative mb-5">
+                        <div className="relative mb-4">
                           {/* Outer glow ring */}
                           <div
                             className="absolute inset-0 rounded-full blur-2xl"
@@ -864,7 +856,7 @@ const Employees = () => {
 
                           {/* Avatar */}
                           <div
-                            className="relative w-28 h-28 rounded-full flex items-center justify-center text-white text-4xl font-bold border-4 border-white z-10"
+                            className="relative w-24 h-24 rounded-full flex items-center justify-center text-white text-3xl font-bold border-4 border-white z-10"
                             style={{
                               background: 'linear-gradient(135deg, #ec4899 0%, #a855f7 100%)',
                               boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
@@ -901,7 +893,7 @@ const Employees = () => {
 
                         {/* Name */}
                         <h1
-                          className="text-3xl font-black text-center mb-2"
+                          className="text-2xl font-black text-center mb-1.5"
                           style={{
                             background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
                             WebkitBackgroundClip: 'text',
@@ -915,50 +907,60 @@ const Employees = () => {
                           ).join(' ')}
                         </h1>
 
-                        {/* Role and Employee Code */}
-                        <div className="flex items-center gap-2 text-slate-600 font-medium mb-4">
-                          {employee.position && (
-                            <>
-                              <span className="text-base">{employee.position}</span>
-                              <span className="text-slate-400">·</span>
-                            </>
-                          )}
+                        {/* Employee Details - ID, Joining Date, Last Date */}
+                        <div className="flex items-center justify-center gap-2 text-xs font-medium mb-3 flex-wrap">
                           {employee.employee_id && (
                             <div
-                              className="px-3 py-1 rounded-full text-sm font-semibold"
+                              className="px-2.5 py-0.5 rounded-full font-semibold"
                               style={{
                                 background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
                                 color: 'white',
                               }}
                             >
-                              {employee.employee_id}
+                              ID: {employee.employee_id}
                             </div>
+                          )}
+                          {employee.hire_date && (
+                            <>
+                              <span className="text-slate-400">·</span>
+                              <div className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 font-semibold">
+                                Joined: {new Date(employee.hire_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                              </div>
+                            </>
+                          )}
+                          {employee.last_working_day && (
+                            <>
+                              <span className="text-slate-400">·</span>
+                              <div className="px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-700 font-semibold">
+                                Last Day: {new Date(employee.last_working_day).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                              </div>
+                            </>
                           )}
                         </div>
                       </div>
 
                       {/* Quick Info Section */}
-                      <div className="mb-6">
-                        <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 text-center">
+                      <div className="mb-4">
+                        <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 text-center">
                           Quick Info
                         </h2>
 
-                        <div className="space-y-2">
+                        <div className="space-y-1.5">
                           {/* Email */}
                           <div
-                            className="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-3 transition-all duration-300 hover:scale-105"
+                            className="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-2.5 transition-all duration-300 hover:scale-105"
                             style={{
                               boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.8)',
                             }}
                           >
-                            <div className="flex items-start gap-3">
+                            <div className="flex items-start gap-2.5">
                               <div
-                                className="p-2 rounded-xl bg-gradient-to-br from-blue-400 to-blue-600 text-white flex-shrink-0"
+                                className="p-1.5 rounded-xl bg-gradient-to-br from-blue-400 to-blue-600 text-white flex-shrink-0"
                                 style={{
                                   boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)',
                                 }}
                               >
-                                <Mail className="w-4 h-4" />
+                                <Mail className="w-3.5 h-3.5" />
                               </div>
                               <div className="flex-1 min-w-0">
                                 <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-0.5">
@@ -977,14 +979,14 @@ const Employees = () => {
                                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.8)',
                               }}
                             >
-                              <div className="flex items-start gap-3">
+                              <div className="flex items-start gap-2.5">
                                 <div
-                                  className="p-2 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 text-white flex-shrink-0"
+                                  className="p-1.5 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 text-white flex-shrink-0"
                                   style={{
                                     boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)',
                                   }}
                                 >
-                                  <Phone className="w-4 h-4" />
+                                  <Phone className="w-3.5 h-3.5" />
                                 </div>
                                 <div className="flex-1 min-w-0">
                                   <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-0.5">
@@ -999,19 +1001,19 @@ const Employees = () => {
                           {/* Address */}
                           {employee.address && (
                             <div
-                              className="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-3 transition-all duration-300 hover:scale-105"
+                              className="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-2.5 transition-all duration-300 hover:scale-105"
                               style={{
                                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.8)',
                               }}
                             >
-                              <div className="flex items-start gap-3">
+                              <div className="flex items-start gap-2.5">
                                 <div
-                                  className="p-2 rounded-xl bg-gradient-to-br from-green-400 to-green-600 text-white flex-shrink-0"
+                                  className="p-1.5 rounded-xl bg-gradient-to-br from-green-400 to-green-600 text-white flex-shrink-0"
                                   style={{
                                     boxShadow: '0 4px 12px rgba(34, 197, 94, 0.3)',
                                   }}
                                 >
-                                  <MapPin className="w-4 h-4" />
+                                  <MapPin className="w-3.5 h-3.5" />
                                 </div>
                                 <div className="flex-1 min-w-0">
                                   <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-0.5">
@@ -1070,36 +1072,16 @@ const Employees = () => {
                         )}
                       </div>
 
-                      {/* Hired Date */}
-                      {hireDateFormatted && (
-                        <div
-                          className="flex items-center justify-center gap-3 p-3 rounded-2xl bg-gradient-to-r from-slate-50 to-purple-50/50 mb-6"
-                          style={{
-                            boxShadow: 'inset 0 2px 8px rgba(0, 0, 0, 0.04)',
-                          }}
-                        >
-                          <div
-                            className="p-2 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 text-white"
-                            style={{
-                              boxShadow: '0 4px 12px rgba(251, 146, 60, 0.3)',
-                            }}
-                          >
-                            <Calendar className="w-4 h-4" />
-                          </div>
-                          <div>
-                            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide">
-                              Hired on
-                            </p>
-                            <p className="text-base font-bold text-slate-700">{hireDateFormatted}</p>
-                          </div>
-                        </div>
-                      )}
-
                       {/* Action Buttons */}
                       <div className="flex items-center gap-3">
                         {/* Delete Button */}
                         <button
-                          onClick={() => handleDeleteEmployee(employee.id)}
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleDeleteEmployee(employee.id);
+                          }}
                           className="flex-1 flex items-center justify-center gap-2 px-5 py-3 rounded-2xl font-bold text-red-600 bg-white border-2 border-red-200 hover:border-red-300 hover:bg-red-50 transition-all duration-300 hover:scale-105"
                           style={{
                             boxShadow: '0 4px 12px rgba(239, 68, 68, 0.15)',
@@ -1111,6 +1093,7 @@ const Employees = () => {
 
                         {/* Edit Button */}
                         <button
+                          type="button"
                           onClick={() => handleEditEmployee(employee)}
                           className="flex-1 flex items-center justify-center gap-2 px-5 py-3 rounded-2xl font-bold text-white transition-all duration-300 hover:scale-105"
                           style={{
@@ -1397,14 +1380,6 @@ const Employees = () => {
             {/* Sticky Footer */}
             <DialogFooter className="px-8 py-5 border-t border-gray-100 bg-gray-50/50 sticky bottom-0 z-10">
               <div className="flex items-center justify-end gap-3 w-full">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  onClick={() => setIsEditOpen(false)}
-                  className="h-11 px-6 text-gray-700 hover:bg-gray-100 transition-colors rounded-lg"
-                >
-                  Cancel
-                </Button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
