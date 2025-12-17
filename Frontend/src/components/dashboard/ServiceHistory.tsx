@@ -165,12 +165,7 @@ const ServiceHistory = ({ userId }: ServiceHistoryProps = {}) => {
             <CardHeader
                 className="border-b pb-4 flex flex-row items-center justify-between relative overflow-hidden"
                 style={{
-                    background: `
-                        radial-gradient(circle at 100% 0%, rgba(253, 253, 245, 0.3) 0%, transparent 50%),
-                        radial-gradient(circle at 0% 0%, rgba(253, 253, 245, 0.3) 0%, transparent 50%),
-                        linear-gradient(135deg, #7C2558 0%, #F96161 40%, #FA887E 70%, #FDFDF5 100%)
-                    `,
-                    boxShadow: 'inset 0 0 60px rgba(0, 0, 0, 0.1)'
+                    background: 'linear-gradient(90deg, #a67ba9 0%, #c8a2c8 50%, #e6b8c0 100%)',
                 }}
             >
                 <CardTitle className="flex items-center gap-2 text-xl text-white drop-shadow-md">

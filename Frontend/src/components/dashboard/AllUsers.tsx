@@ -103,10 +103,10 @@ const AllUsers = () => {
     >
       <style>{cardStyles}</style>
       <Card className="shadow-lg border-none">
-        <CardHeader className="border-b bg-gray-50/50">
+        <CardHeader className="border-b" style={{ background: 'linear-gradient(90deg, #a67ba9 0%, #c8a2c8 50%, #e6b8c0 100%)' }}>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <CardTitle className="flex items-center gap-2 text-xl">
-              <Users className="h-5 w-5 text-primary" />
+            <CardTitle className="flex items-center gap-2 text-xl text-white">
+              <Users className="h-5 w-5 text-white" />
               All Users ({filteredUsers.length})
             </CardTitle>
             <div className="relative w-full md:w-80 group">
@@ -120,7 +120,7 @@ const AllUsers = () => {
               {/* Input Field with Glassmorphism */}
               <Input
                 type="text"
-                placeholder="Search by name, email, phone, or role..."
+                placeholder="Search by name, phone no.."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-14 pr-12 py-2.5 bg-gradient-to-r from-white/70 to-white/60 backdrop-blur-md border-2 border-gray-200/60 rounded-xl text-sm font-medium text-gray-900 placeholder:text-gray-500 placeholder:font-medium transition-all duration-300 focus:border-primary/50 focus:from-white/90 focus:to-white/80 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:shadow-lg focus:shadow-primary/10 hover:border-gray-300/80 hover:shadow-md hover:shadow-primary/5"

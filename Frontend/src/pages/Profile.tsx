@@ -826,9 +826,14 @@ const Profile = () => {
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
                 <Card className="shadow-lg border-none h-full">
-                  <CardHeader className="border-b bg-gray-50/50 pb-2 pt-3">
-                    <CardTitle className="flex items-center gap-2 text-base">
-                      <History className="h-4 w-4 text-primary" />
+                  <CardHeader 
+                    className="border-b pb-2 pt-3"
+                    style={{
+                      background: 'linear-gradient(90deg, #a67ba9 0%, #c8a2c8 50%, #e6b8c0 100%)',
+                    }}
+                  >
+                    <CardTitle className="flex items-center gap-2 text-base text-white">
+                      <History className="h-4 w-4 text-white" />
                       Service History
                     </CardTitle>
                   </CardHeader>
@@ -879,9 +884,14 @@ const Profile = () => {
                 transition={{ duration: 0.6, delay: 0.3 }}
               >
                 <Card className="shadow-lg border-none h-full">
-                  <CardHeader className="border-b bg-gray-50/50 pb-2 pt-3">
-                    <CardTitle className="flex items-center gap-2 text-base">
-                      <Car className="h-4 w-4 text-primary" />
+                  <CardHeader 
+                    className="border-b pb-2 pt-3"
+                    style={{
+                      background: 'linear-gradient(90deg, #a67ba9 0%, #c8a2c8 50%, #e6b8c0 100%)',
+                    }}
+                  >
+                    <CardTitle className="flex items-center gap-2 text-base text-white">
+                      <Car className="h-4 w-4 text-white" />
                       {(currentUser?.role?.name?.toLowerCase() === 'admin' || currentUser?.role?.name?.toLowerCase() === 'super' || currentUser?.is_superuser)
                         ? 'All Vehicles'
                         : 'My Vehicles'}

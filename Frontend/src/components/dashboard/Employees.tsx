@@ -16,31 +16,134 @@ import {
 } from '@/components/ui/dialog';
 import {
   Users, Plus, Search, Mail, Phone, Briefcase, Building, MapPin, DollarSign, Calendar,
-  FileText, Loader2, Edit, Trash2, CheckCircle, XCircle, UserPlus
+  FileText, Loader2, Edit, Trash2, CheckCircle, XCircle, UserPlus, MoreVertical
 } from 'lucide-react';
 
-// Animated Add Employee Button Styles + Card Shadow Effects
+// Premium Table Styles
 const buttonStyles = `
-  .employee-card {
-    box-shadow: 
-      0 20px 40px rgba(0,0,0,0.08),
-      0 8px 20px rgba(0,0,0,0.06),
-      0 4px 10px rgba(0,0,0,0.04),
-      0 2px 4px rgba(0,0,0,0.02),
-      inset 0 1px 0 rgba(255,255,255,0.8),
-      inset 0 -1px 0 rgba(0,0,0,0.02);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  .employee-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
   }
 
-  .employee-card:hover {
-    box-shadow: 
-      0 30px 60px rgba(0,0,0,0.12),
-      0 12px 30px rgba(0,0,0,0.10),
-      0 6px 15px rgba(0,0,0,0.06),
-      0 3px 6px rgba(0,0,0,0.03),
-      inset 0 1px 0 rgba(255,255,255,0.8),
-      inset 0 -1px 0 rgba(0,0,0,0.02);
-    transform: translateY(-8px);
+  .employee-table thead th {
+    background: #fafafa;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 16px 24px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b7280;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .employee-table thead th:first-child {
+    border-top-left-radius: 12px;
+    padding-left: 32px;
+  }
+
+  .employee-table thead th:last-child {
+    border-top-right-radius: 12px;
+    padding-right: 32px;
+  }
+
+  .employee-table tbody tr {
+    background: white;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid #f3f4f6;
+  }
+
+  .employee-table tbody tr:hover {
+    background: #fafafa;
+  }
+
+  .employee-table tbody tr:last-child {
+    border-bottom: none;
+  }
+
+  .employee-table tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 12px;
+  }
+
+  .employee-table tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 12px;
+  }
+
+  .employee-table tbody td {
+    padding: 20px 24px;
+    vertical-align: middle;
+  }
+
+  .employee-table tbody td:first-child {
+    padding-left: 32px;
+  }
+
+  .employee-table tbody td:last-child {
+    padding-right: 32px;
+  }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+
+  .status-active {
+    background: #d1fae5;
+    color: #047857;
+  }
+
+  .status-inactive {
+    background: #fee2e2;
+    color: #dc2626;
+  }
+
+  .status-banned {
+    background: #fee2e2;
+    color: #dc2626;
+  }
+
+  .action-menu-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #9ca3af;
+  }
+
+  .action-menu-btn:hover {
+    background: #f3f4f6;
+    color: #4b5563;
+  }
+
+  .checkbox-custom {
+    width: 18px;
+    height: 18px;
+    border-radius: 6px;
+    border: 2px solid #d1d5db;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .checkbox-custom:hover {
+    border-color: #9ca3af;
+  }
+
+  .checkbox-custom:checked {
+    background: #3b82f6;
+    border-color: #3b82f6;
   }
 
   .add-employee-button {
@@ -204,6 +307,8 @@ const Employees = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isViewOpen, setIsViewOpen] = useState(false);
+  const [viewingEmployee, setViewingEmployee] = useState<Employee | null>(null);
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -334,6 +439,11 @@ const Employees = () => {
     setIsEditOpen(true);
   };
 
+  const handleViewEmployee = (employee: Employee) => {
+    setViewingEmployee(employee);
+    setIsViewOpen(true);
+  };
+
   const handleUpdateEmployee = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingEmployee) return;
@@ -446,11 +556,16 @@ const Employees = () => {
       className="space-y-4"
     >
       <style>{buttonStyles}</style>
-      <Card className="shadow-lg border-none">
-        <CardHeader className="border-b bg-gray-50/50">
+      <Card className="shadow-sm border border-gray-200 rounded-2xl overflow-hidden">
+        <CardHeader 
+          className="border-b border-gray-100 px-8 py-6"
+          style={{
+            background: 'linear-gradient(90deg, #a67ba9 0%, #c8a2c8 50%, #e6b8c0 100%)',
+          }}
+        >
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <CardTitle className="flex items-center gap-2 text-xl">
-              <Users className="h-5 w-5 text-primary" />
+            <CardTitle className="flex items-center gap-2 text-xl font-semibold text-white">
+              <Users className="h-5 w-5 text-white" />
               Employees ({filteredEmployees.length})
             </CardTitle>
             <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
@@ -785,343 +900,425 @@ const Employees = () => {
             </div>
           </div>
         </CardHeader>
-        <CardContent className="p-4 sm:p-6">
+        <CardContent className="p-0">
           {filteredEmployees.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-16 text-gray-500">
               {searchTerm ? 'No employees found matching your search.' : 'No employees added yet.'}
             </div>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-[1800px] mx-auto">
-              {filteredEmployees.map((employee) => {
-                // Format salary in INR with /- notation
-                const formattedSalary = employee.salary
-                  ? `₹${Math.round(employee.salary).toLocaleString('en-IN')}/-`
-                  : null;
+            <div className="overflow-x-auto">
+              <table className="employee-table">
+                <thead>
+                  <tr>
+                    <th>
+                      <input type="checkbox" className="checkbox-custom" />
+                    </th>
+                    <th>Employee Name</th>
+                    <th>EMP-ID</th>
+                    <th>Contact No</th>
+                    <th>Position</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredEmployees.map((employee) => (
+                    <tr key={employee.id}>
+                      {/* Checkbox */}
+                      <td>
+                        <input type="checkbox" className="checkbox-custom" />
+                      </td>
 
-                // Format hire date
-                const hireDateFormatted = employee.hire_date
-                  ? new Date(employee.hire_date).toLocaleDateString('en-IN', {
-                    day: '2-digit',
-                    month: 'short',
-                    year: 'numeric'
-                  })
-                  : null;
-
-                return (
-                  <motion.div
-                    key={employee.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="relative group rounded-[2.5rem] overflow-hidden backdrop-blur-sm employee-card"
-                    style={{
-                      background: 'linear-gradient(to bottom right, #ffffff 0%, rgba(243, 244, 246, 0.6) 100%)',
-                      backdropFilter: 'blur(10px)',
-                      border: '1px solid rgba(255, 255, 255, 0.6)',
-                    }}
-                  >
-                    {/* Top accent gradient bar */}
-                    <div
-                      className="h-1"
-                      style={{
-                        background: 'linear-gradient(90deg, #6366f1 0%, #a855f7 50%, #ec4899 100%)',
-                      }}
-                    ></div>
-
-                    <div className="p-5 sm:p-8">
-                      {/* Centered Profile Section */}
-                      <div className="flex flex-col items-center mb-4">
-                        {/* Profile Photo with Glow */}
-                        <div className="relative mb-4">
-                          {/* Outer glow ring */}
-                          <div
-                            className="absolute inset-0 rounded-full blur-2xl"
-                            style={{
-                              background: 'linear-gradient(135deg, rgba(255, 81, 47, 0.4) 0%, rgba(221, 36, 118, 0.4) 50%, rgba(147, 51, 234, 0.4) 100%)',
-                              transform: 'scale(1.3)',
-                            }}
-                          ></div>
-
-                          {/* Glowing ring */}
-                          <div
-                            className="absolute inset-0 rounded-full"
-                            style={{
-                              background: 'linear-gradient(135deg, #FF512F 0%, #DD2476 50%, #9333ea 100%)',
-                              padding: '3px',
-                              transform: 'scale(1.08)',
-                            }}
-                          >
-                            <div className="w-full h-full rounded-full bg-white"></div>
-                          </div>
-
-                          {/* Avatar */}
-                          <div
-                            className="relative w-24 h-24 rounded-full flex items-center justify-center text-white text-3xl font-bold border-4 border-white z-10"
-                            style={{
-                              background: 'linear-gradient(135deg, #ec4899 0%, #a855f7 100%)',
-                              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
-                            }}
-                          >
-                            {employee.full_name.charAt(0).toUpperCase()}
-                          </div>
-
-                          {/* Status Badge */}
-                          <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 z-20">
-                            {employee.is_active ? (
-                              <div
-                                className="px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 border-2 border-white bg-gradient-to-r from-emerald-400 to-green-500 text-white"
-                                style={{
-                                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                                }}
-                              >
-                                <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                                Active
-                              </div>
-                            ) : (
-                              <div
-                                className="px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 border-2 border-white bg-gradient-to-r from-slate-400 to-slate-500 text-white"
-                                style={{
-                                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                                }}
-                              >
-                                <div className="w-2 h-2 bg-white rounded-full"></div>
-                                Inactive
-                              </div>
-                            )}
-                          </div>
-                        </div>
-
-                        {/* Name */}
-                        <h1
-                          className="text-2xl font-black text-center mb-1.5"
-                          style={{
-                            background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
-                            WebkitBackgroundClip: 'text',
-                            WebkitTextFillColor: 'transparent',
-                            backgroundClip: 'text',
-                            letterSpacing: '-0.02em',
-                          }}
+                      {/* Employee Name */}
+                      <td>
+                        <div 
+                          className="flex flex-col gap-0.5 cursor-pointer hover:text-blue-600 transition-colors"
+                          onClick={() => handleViewEmployee(employee)}
                         >
-                          {employee.full_name.split(' ').map(word =>
-                            word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-                          ).join(' ')}
-                        </h1>
-
-                        {/* Employee Details - ID, Joining Date, Last Date */}
-                        <div className="flex items-center justify-center gap-2 text-xs font-medium mb-3 flex-wrap">
-                          {employee.employee_id && (
-                            <div
-                              className="px-2.5 py-0.5 rounded-full font-semibold"
-                              style={{
-                                background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
-                                color: 'white',
-                              }}
-                            >
-                              ID: {employee.employee_id}
-                            </div>
-                          )}
-                          {employee.hire_date && (
-                            <>
-                              <span className="text-slate-400">·</span>
-                              <div className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 font-semibold">
-                                Joined: {new Date(employee.hire_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                              </div>
-                            </>
-                          )}
-                          {employee.last_working_day && (
-                            <>
-                              <span className="text-slate-400">·</span>
-                              <div className="px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-700 font-semibold">
-                                Last Day: {new Date(employee.last_working_day).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                              </div>
-                            </>
-                          )}
+                          <div className="font-semibold text-gray-900 text-[15px]">
+                            {employee.full_name.split(' ').map(word => 
+                              word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                            ).join(' ')}
+                          </div>
+                          <div className="text-sm text-gray-500">{employee.email}</div>
                         </div>
-                      </div>
+                      </td>
 
-                      {/* Quick Info Section */}
-                      <div className="mb-4">
-                        <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 text-center">
-                          Quick Info
-                        </h2>
-
-                        <div className="space-y-1.5">
-                          {/* Email */}
-                          <div
-                            className="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-2.5 transition-all duration-300 hover:scale-105"
-                            style={{
-                              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.8)',
-                            }}
-                          >
-                            <div className="flex items-start gap-2.5">
-                              <div
-                                className="p-1.5 rounded-xl bg-gradient-to-br from-blue-400 to-blue-600 text-white flex-shrink-0"
-                                style={{
-                                  boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)',
-                                }}
-                              >
-                                <Mail className="w-3.5 h-3.5" />
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-0.5">
-                                  Email
-                                </p>
-                                <p className="text-sm font-medium text-slate-700 truncate">{employee.email}</p>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Phone */}
-                          {employee.phone_number && (
-                            <div
-                              className="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-3 transition-all duration-300 hover:scale-105"
-                              style={{
-                                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.8)',
-                              }}
-                            >
-                              <div className="flex items-start gap-2.5">
-                                <div
-                                  className="p-1.5 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 text-white flex-shrink-0"
-                                  style={{
-                                    boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)',
-                                  }}
-                                >
-                                  <Phone className="w-3.5 h-3.5" />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                  <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-0.5">
-                                    Phone
-                                  </p>
-                                  <p className="text-sm font-medium text-slate-700">{employee.phone_number}</p>
-                                </div>
-                              </div>
-                            </div>
-                          )}
-
-                          {/* Address */}
-                          {employee.address && (
-                            <div
-                              className="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-2.5 transition-all duration-300 hover:scale-105"
-                              style={{
-                                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.8)',
-                              }}
-                            >
-                              <div className="flex items-start gap-2.5">
-                                <div
-                                  className="p-1.5 rounded-xl bg-gradient-to-br from-green-400 to-green-600 text-white flex-shrink-0"
-                                  style={{
-                                    boxShadow: '0 4px 12px rgba(34, 197, 94, 0.3)',
-                                  }}
-                                >
-                                  <MapPin className="w-3.5 h-3.5" />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                  <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wide mb-0.5">
-                                    Address
-                                  </p>
-                                  <p className="text-sm font-medium text-slate-700 line-clamp-2">{employee.address}</p>
-                                </div>
-                              </div>
-                            </div>
-                          )}
+                      {/* EMP-ID */}
+                      <td>
+                        <div className="text-sm text-gray-700 font-medium">
+                          {employee.employee_id || <span className="text-gray-400">-</span>}
                         </div>
-                      </div>
+                      </td>
 
-                      {/* Badges Section */}
-                      <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
-                        {/* Position Badge */}
-                        {employee.position && (
-                          <div
-                            className="px-4 py-2 rounded-full flex items-center gap-2 text-sm font-bold text-white transition-all duration-300 hover:scale-105"
-                            style={{
-                              background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
-                              boxShadow: '0 4px 16px rgba(59, 130, 246, 0.4)',
-                            }}
-                          >
-                            <Briefcase className="w-4 h-4" />
-                            {employee.position}
-                          </div>
+                      {/* Contact No */}
+                      <td>
+                        <div className="text-sm text-gray-700">
+                          {employee.phone_number || <span className="text-gray-400">-</span>}
+                        </div>
+                      </td>
+
+                      {/* Position */}
+                      <td>
+                        <div className="text-sm text-gray-700">
+                          {employee.position || <span className="text-gray-400">-</span>}
+                        </div>
+                      </td>
+
+                      {/* Status */}
+                      <td>
+                        {employee.is_active ? (
+                          <span className="status-badge status-active">Active</span>
+                        ) : (
+                          <span className="status-badge status-inactive">Inactive</span>
                         )}
-
-                        {/* Department Badge */}
-                        {employee.department && (
-                          <div
-                            className="px-4 py-2 rounded-full flex items-center gap-2 text-sm font-bold text-white transition-all duration-300 hover:scale-105"
-                            style={{
-                              background: 'linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)',
-                              boxShadow: '0 4px 16px rgba(168, 85, 247, 0.4)',
-                            }}
-                          >
-                            <Building className="w-4 h-4" />
-                            {employee.department}
-                          </div>
-                        )}
-
-                        {/* Salary Badge */}
-                        {formattedSalary && (
-                          <div
-                            className="px-4 py-2 rounded-full flex items-center gap-2 text-sm font-bold text-white transition-all duration-300 hover:scale-105"
-                            style={{
-                              background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
-                              boxShadow: '0 4px 16px rgba(245, 158, 11, 0.4)',
-                            }}
-                          >
-                            <span className="text-base">₹</span>
-                            {formattedSalary.replace('₹', '')}
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Action Buttons */}
-                      <div className="flex items-center gap-3">
-                        {/* Delete Button */}
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            handleDeleteEmployee(employee.id);
-                          }}
-                          className="flex-1 flex items-center justify-center gap-2 px-5 py-3 rounded-2xl font-bold text-red-600 bg-white border-2 border-red-200 hover:border-red-300 hover:bg-red-50 transition-all duration-300 hover:scale-105"
-                          style={{
-                            boxShadow: '0 4px 12px rgba(239, 68, 68, 0.15)',
-                          }}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                          Delete
-                        </button>
-
-                        {/* Edit Button */}
-                        <button
-                          type="button"
-                          onClick={() => handleEditEmployee(employee)}
-                          className="flex-1 flex items-center justify-center gap-2 px-5 py-3 rounded-2xl font-bold text-white transition-all duration-300 hover:scale-105"
-                          style={{
-                            background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
-                            boxShadow: '0 4px 16px rgba(59, 130, 246, 0.4)',
-                          }}
-                        >
-                          <Edit className="w-4 h-4" />
-                          Edit
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Bottom decorative gradient */}
-                    <div
-                      className="h-2"
-                      style={{
-                        background: 'linear-gradient(90deg, #ec4899 0%, #a855f7 50%, #6366f1 100%)',
-                        opacity: 0.5,
-                      }}
-                    ></div>
-                  </motion.div>
-                );
-              })}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
         </CardContent>
       </Card>
+
+      {/* View Employee Dialog */}
+      <Dialog open={isViewOpen} onOpenChange={setIsViewOpen}>
+        <DialogContent className="max-w-2xl rounded-3xl p-0 overflow-hidden shadow-2xl border-none">
+          {viewingEmployee && (
+            <div className="relative">
+              {/* Top gradient bar */}
+              <div
+                className="h-1"
+                style={{
+                  background: 'linear-gradient(90deg, #6366f1 0%, #a855f7 50%, #ec4899 100%)',
+                }}
+              ></div>
+
+              <div className="p-8">
+                {/* Centered Profile Section */}
+                <div className="flex flex-col items-center mb-6">
+                  {/* Profile Photo with Glow */}
+                  <div className="relative mb-5">
+                    {/* Outer glow ring */}
+                    <div
+                      className="absolute inset-0 rounded-full blur-2xl"
+                      style={{
+                        background: 'linear-gradient(135deg, rgba(255, 81, 47, 0.4) 0%, rgba(221, 36, 118, 0.4) 50%, rgba(147, 51, 234, 0.4) 100%)',
+                        transform: 'scale(1.3)',
+                      }}
+                    ></div>
+
+                    {/* Glowing ring */}
+                    <div
+                      className="absolute inset-0 rounded-full"
+                      style={{
+                        background: 'linear-gradient(135deg, #FF512F 0%, #DD2476 50%, #9333ea 100%)',
+                        padding: '3px',
+                        transform: 'scale(1.08)',
+                      }}
+                    >
+                      <div className="w-full h-full rounded-full bg-white"></div>
+                    </div>
+
+                    {/* Avatar */}
+                    <div
+                      className="relative w-24 h-24 rounded-full flex items-center justify-center text-white text-3xl font-bold border-4 border-white z-10"
+                      style={{
+                        background: 'linear-gradient(135deg, #ec4899 0%, #a855f7 100%)',
+                        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
+                      }}
+                    >
+                      {viewingEmployee.full_name.charAt(0).toUpperCase()}
+                    </div>
+
+                    {/* Status Badge */}
+                    <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 z-20">
+                      {viewingEmployee.is_active ? (
+                        <div
+                          className="px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 border-2 border-white bg-gradient-to-r from-emerald-400 to-green-500 text-white"
+                          style={{
+                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                          }}
+                        >
+                          <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                          Active
+                        </div>
+                      ) : (
+                        <div
+                          className="px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 border-2 border-white bg-gradient-to-r from-slate-400 to-slate-500 text-white"
+                          style={{
+                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                          }}
+                        >
+                          <div className="w-2 h-2 bg-white rounded-full"></div>
+                          Inactive
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Name */}
+                  <h1
+                    className="text-3xl font-black text-center mb-2"
+                    style={{
+                      background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      backgroundClip: 'text',
+                      letterSpacing: '-0.02em',
+                    }}
+                  >
+                    {viewingEmployee.full_name.split(' ').map(word => 
+                      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                    ).join(' ')}
+                  </h1>
+
+                  {/* Employee Details - ID, Joining Date, Last Date */}
+                  <div className="flex items-center justify-center gap-2 text-xs font-medium mb-4 flex-wrap">
+                    {viewingEmployee.employee_id && (
+                      <div
+                        className="px-3 py-1 rounded-full font-semibold"
+                        style={{
+                          background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                          color: 'white',
+                        }}
+                      >
+                        ID: {viewingEmployee.employee_id}
+                      </div>
+                    )}
+                    {viewingEmployee.hire_date && (
+                      <>
+                        <span className="text-slate-400">·</span>
+                        <div className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 font-semibold">
+                          Joined: {new Date(viewingEmployee.hire_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                        </div>
+                      </>
+                    )}
+                    {viewingEmployee.last_working_day && (
+                      <>
+                        <span className="text-slate-400">·</span>
+                        <div className="px-3 py-1 rounded-full bg-rose-100 text-rose-700 font-semibold">
+                          Last Day: {new Date(viewingEmployee.last_working_day).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                {/* Quick Info Section */}
+                <div className="mb-6">
+                  <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 text-center">
+                    Quick Info
+                  </h2>
+
+                  <div className="space-y-3">
+                    {/* Email and Phone in same row */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {/* Email */}
+                      <div
+                        className="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-3 transition-all duration-300"
+                        style={{
+                          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.8)',
+                        }}
+                      >
+                        <div className="flex items-start gap-3">
+                          <div
+                            className="p-2 rounded-xl bg-gradient-to-br from-blue-400 to-blue-600 text-white flex-shrink-0"
+                            style={{
+                              boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)',
+                            }}
+                          >
+                            <Mail className="w-4 h-4" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">
+                              Email
+                            </p>
+                            <p className="text-base font-medium text-slate-700 truncate">{viewingEmployee.email}</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Phone */}
+                      {viewingEmployee.phone_number && (
+                        <div
+                          className="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-3 transition-all duration-300"
+                          style={{
+                            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.8)',
+                          }}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div
+                              className="p-2 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 text-white flex-shrink-0"
+                              style={{
+                                boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)',
+                              }}
+                            >
+                              <Phone className="w-4 h-4" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">
+                                Phone
+                              </p>
+                              <p className="text-base font-medium text-slate-700">{viewingEmployee.phone_number}</p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Address */}
+                    {viewingEmployee.address && (
+                      <div
+                        className="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-3 transition-all duration-300"
+                        style={{
+                          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.8)',
+                        }}
+                      >
+                        <div className="flex items-start gap-3">
+                          <div
+                            className="p-2 rounded-xl bg-gradient-to-br from-green-400 to-green-600 text-white flex-shrink-0"
+                            style={{
+                              boxShadow: '0 4px 12px rgba(34, 197, 94, 0.3)',
+                            }}
+                          >
+                            <MapPin className="w-4 h-4" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">
+                              Address
+                            </p>
+                            <p className="text-base font-medium text-slate-700">{viewingEmployee.address}</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Notes */}
+                    {viewingEmployee.notes && (
+                      <div
+                        className="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-3 transition-all duration-300"
+                        style={{
+                          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.8)',
+                        }}
+                      >
+                        <div className="flex items-start gap-3">
+                          <div
+                            className="p-2 rounded-xl bg-gradient-to-br from-purple-400 to-purple-600 text-white flex-shrink-0"
+                            style={{
+                              boxShadow: '0 4px 12px rgba(147, 51, 234, 0.3)',
+                            }}
+                          >
+                            <FileText className="w-4 h-4" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1">
+                              Notes
+                            </p>
+                            <p className="text-base font-medium text-slate-700 whitespace-pre-wrap">{viewingEmployee.notes}</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Badges Section */}
+                <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
+                  {/* Position Badge */}
+                  {viewingEmployee.position && (
+                    <div
+                      className="px-4 py-2 rounded-full flex items-center gap-2 text-sm font-bold text-white"
+                      style={{
+                        background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+                        boxShadow: '0 4px 16px rgba(59, 130, 246, 0.4)',
+                      }}
+                    >
+                      <Briefcase className="w-4 h-4" />
+                      {viewingEmployee.position}
+                    </div>
+                  )}
+
+                  {/* Department Badge */}
+                  {viewingEmployee.department && (
+                    <div
+                      className="px-4 py-2 rounded-full flex items-center gap-2 text-sm font-bold text-white"
+                      style={{
+                        background: 'linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)',
+                        boxShadow: '0 4px 16px rgba(168, 85, 247, 0.4)',
+                      }}
+                    >
+                      <Building className="w-4 h-4" />
+                      {viewingEmployee.department}
+                    </div>
+                  )}
+
+                  {/* Salary Badge */}
+                  {viewingEmployee.salary && (
+                    <div
+                      className="px-4 py-2 rounded-full flex items-center gap-2 text-sm font-bold text-white"
+                      style={{
+                        background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                        boxShadow: '0 4px 16px rgba(245, 158, 11, 0.4)',
+                      }}
+                    >
+                      <span className="text-base">₹</span>
+                      {Math.round(viewingEmployee.salary).toLocaleString('en-IN')}/-
+                    </div>
+                  )}
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex items-center gap-3">
+                  {/* Delete Button */}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleDeleteEmployee(viewingEmployee.id);
+                      setIsViewOpen(false);
+                    }}
+                    className="flex-1 flex items-center justify-center gap-2 px-5 py-3 rounded-2xl font-bold text-red-600 bg-white border-2 border-red-200 hover:border-red-300 hover:bg-red-50 transition-all duration-300"
+                    style={{
+                      boxShadow: '0 4px 12px rgba(239, 68, 68, 0.15)',
+                    }}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    Delete
+                  </button>
+
+                  {/* Edit Button */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsViewOpen(false);
+                      handleEditEmployee(viewingEmployee);
+                    }}
+                    className="flex-1 flex items-center justify-center gap-2 px-5 py-3 rounded-2xl font-bold text-white transition-all duration-300"
+                    style={{
+                      background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+                      boxShadow: '0 4px 16px rgba(59, 130, 246, 0.4)',
+                    }}
+                  >
+                    <Edit className="w-4 h-4" />
+                    Edit
+                  </button>
+                </div>
+              </div>
+
+              {/* Bottom decorative gradient */}
+              <div
+                className="h-2"
+                style={{
+                  background: 'linear-gradient(90deg, #ec4899 0%, #a855f7 50%, #6366f1 100%)',
+                  opacity: 0.5,
+                }}
+              ></div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* Edit Dialog */}
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
