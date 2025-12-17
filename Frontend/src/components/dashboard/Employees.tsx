@@ -15,7 +15,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import {
-  Users, Plus, Search, Mail, Phone, Briefcase, Building, MapPin, DollarSign, Calendar, 
+  Users, Plus, Search, Mail, Phone, Briefcase, Building, MapPin, DollarSign, Calendar,
   FileText, Loader2, Edit, Trash2, CheckCircle, XCircle, UserPlus
 } from 'lucide-react';
 
@@ -206,7 +206,7 @@ const Employees = () => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   const [formData, setFormData] = useState<EmployeeCreate>({
     full_name: '',
     email: '',
@@ -289,7 +289,7 @@ const Employees = () => {
         notes: formData.notes?.trim() || undefined,
         is_active: formData.is_active ?? true,
       };
-      
+
       const response = await employeeService.create(cleanedData);
       if (response.error) {
         // If 401, api.ts will handle redirect, just return early
@@ -355,7 +355,7 @@ const Employees = () => {
         notes: formData.notes?.trim() || undefined,
         is_active: formData.is_active,
       };
-      
+
       const response = await employeeService.update(editingEmployee.id, updateData);
       if (response.error) {
         // If 401, api.ts will handle redirect, just return early
@@ -453,7 +453,7 @@ const Employees = () => {
               <Users className="h-5 w-5 text-primary" />
               Employees ({filteredEmployees.length})
             </CardTitle>
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
               <div className="relative w-full md:w-80 group">
                 {/* Search Icon Container with Gradient */}
                 <div className="absolute left-3 top-1/2 transform -translate-y-1/2 z-10 pointer-events-none">
@@ -486,7 +486,7 @@ const Employees = () => {
               <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
                 <style>{buttonStyles}</style>
                 <DialogTrigger asChild>
-                  <button 
+                  <button
                     onClick={openAddModal}
                     className="add-employee-button"
                     type="button"
@@ -793,7 +793,7 @@ const Employees = () => {
             </div>
           </div>
         </CardHeader>
-        <CardContent className="p-6">
+        <CardContent className="p-4 sm:p-6">
           {filteredEmployees.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
               {searchTerm ? 'No employees found matching your search.' : 'No employees added yet.'}
@@ -802,17 +802,17 @@ const Employees = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-[1800px] mx-auto">
               {filteredEmployees.map((employee) => {
                 // Format salary in INR with /- notation
-                const formattedSalary = employee.salary 
+                const formattedSalary = employee.salary
                   ? `₹${Math.round(employee.salary).toLocaleString('en-IN')}/-`
                   : null;
 
                 // Format hire date
                 const hireDateFormatted = employee.hire_date
                   ? new Date(employee.hire_date).toLocaleDateString('en-IN', {
-                      day: '2-digit',
-                      month: 'short',
-                      year: 'numeric'
-                    })
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric'
+                  })
                   : null;
 
                 return (
@@ -829,14 +829,14 @@ const Employees = () => {
                     }}
                   >
                     {/* Top accent gradient bar */}
-                    <div 
+                    <div
                       className="h-1"
                       style={{
                         background: 'linear-gradient(90deg, #6366f1 0%, #a855f7 50%, #ec4899 100%)',
                       }}
                     ></div>
 
-                    <div className="p-8">
+                    <div className="p-5 sm:p-8">
                       {/* Centered Profile Section */}
                       <div className="flex flex-col items-center mb-6">
                         {/* Profile Photo with Glow */}
@@ -910,7 +910,7 @@ const Employees = () => {
                             letterSpacing: '-0.02em',
                           }}
                         >
-                          {employee.full_name.split(' ').map(word => 
+                          {employee.full_name.split(' ').map(word =>
                             word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
                           ).join(' ')}
                         </h1>

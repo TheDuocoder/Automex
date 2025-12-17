@@ -140,7 +140,7 @@ const AllUsers = () => {
             </div>
           </div>
         </CardHeader>
-        <CardContent className="p-6">
+        <CardContent className="p-4 sm:p-6">
           {filteredUsers.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
               {searchTerm ? 'No users found matching your search.' : 'No users in the system.'}
@@ -154,7 +154,7 @@ const AllUsers = () => {
                   if (user.role?.name === 'admin') return { gradient: 'from-orange-500 to-orange-400', glow: 'shadow-orange-500/30', ring: 'ring-orange-100' };
                   return { gradient: 'from-blue-400 to-gray-300', glow: 'shadow-blue-500/20', ring: 'ring-blue-100' };
                 };
-                
+
                 const roleStyle = getRoleBorderColor();
 
                 return (
@@ -171,21 +171,21 @@ const AllUsers = () => {
                       border: '1px solid rgba(255, 255, 255, 0.6)',
                     }}
                   >
-                    <div className="p-5 space-y-4">
+                    <div className="p-4 sm:p-5 space-y-4">
                       {/* Top Row: Avatar, Info, and Status Badge */}
                       <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                         <div className="flex items-start gap-4 flex-1">
                           {/* Avatar with Role-Based Glow Ring */}
                           <div className="flex-shrink-0 relative">
                             {/* Glow ring */}
-                            <div 
+                            <div
                               className={`absolute inset-0 rounded-full opacity-20 blur-md`}
                               style={{
                                 background: `linear-gradient(135deg, ${roleStyle.gradient.split(' to ')[0].replace('from-', '')} 0%, ${roleStyle.gradient.split(' to ')[1]} 100%)`,
                                 transform: 'scale(1.15)',
                               }}
                             ></div>
-                            
+
                             {/* Avatar Image */}
                             {user.profile_picture_url ? (
                               <img
@@ -194,11 +194,10 @@ const AllUsers = () => {
                                 className={`h-16 w-16 rounded-full object-cover border-3 border-white shadow-lg relative z-10 ring-4 ${roleStyle.ring}`}
                               />
                             ) : (
-                              <div className={`h-16 w-16 rounded-full bg-gradient-to-br flex items-center justify-center text-white font-bold text-xl border-3 border-white shadow-lg relative z-10 ring-4 ${
-                                user.is_superuser ? 'from-red-500 to-red-400 ring-red-100' : 
-                                user.role?.name === 'admin' ? 'from-orange-500 to-orange-400 ring-orange-100' : 
-                                'from-blue-500 to-blue-400 ring-blue-100'
-                              }`}>
+                              <div className={`h-16 w-16 rounded-full bg-gradient-to-br flex items-center justify-center text-white font-bold text-xl border-3 border-white shadow-lg relative z-10 ring-4 ${user.is_superuser ? 'from-red-500 to-red-400 ring-red-100' :
+                                user.role?.name === 'admin' ? 'from-orange-500 to-orange-400 ring-orange-100' :
+                                  'from-blue-500 to-blue-400 ring-blue-100'
+                                }`}>
                                 {user.full_name?.charAt(0).toUpperCase() || user.email.charAt(0).toUpperCase()}
                               </div>
                             )}
@@ -216,7 +215,7 @@ const AllUsers = () => {
                                   : 'Unknown User'
                                 }
                               </h3>
-                              
+
                               {/* Role Badge with Role-Based Styling */}
                               {user.is_superuser ? (
                                 <div className="flex items-center gap-1.5 px-3 py-1 rounded-full font-bold text-xs text-white bg-gradient-to-r from-red-500 to-red-600 shadow-lg shadow-red-500/30">

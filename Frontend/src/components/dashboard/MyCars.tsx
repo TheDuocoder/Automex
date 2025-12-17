@@ -480,7 +480,7 @@ const MyCars = ({ userId }: MyCarsProps = {}) => {
                     </DialogContent>
                 </Dialog>
             </CardHeader>
-            <CardContent className="p-8 space-y-6">
+            <CardContent className="p-4 sm:p-8 space-y-6">
                 {isLoading ? (
                     <div className="flex justify-center p-8">
                         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -569,7 +569,7 @@ const MyCars = ({ userId }: MyCarsProps = {}) => {
                                     </div>
 
                                     {/* Action Buttons - Horizontal Row with Equal Width */}
-                                    <div className="grid grid-cols-3 gap-3 pt-2">
+                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
                                         <button
                                             className="group flex items-center justify-center gap-2 h-14 bg-white border-2 font-bold rounded-[14px] shadow-[0_4px_15px_rgba(95,75,139,0.12)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_6px_25px_rgba(95,75,139,0.3)]"
                                             style={{

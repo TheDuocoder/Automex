@@ -145,8 +145,8 @@ const UserDetails = () => {
     return (
         <div className="container mx-auto p-4 md:p-8 space-y-6 max-w-7xl">
             <style>{premiumStyles}</style>
-            
-            <button 
+
+            <button
                 onClick={() => navigate(-1)}
                 className="back-button mb-6"
             >
@@ -178,11 +178,11 @@ const UserDetails = () => {
                 {/* Gradient Highlight Strip */}
                 <div className="gradient-strip"></div>
 
-                <div className="p-6 md:p-8 flex flex-col md:flex-row items-center gap-8">
+                <div className="p-4 md:p-8 flex flex-col md:flex-row items-center gap-6 md:gap-8">
                     {/* Enhanced Profile Photo */}
                     <div className="relative flex-shrink-0">
                         {/* Subtle Glow Ring */}
-                        <div 
+                        <div
                             className="absolute inset-0 rounded-full opacity-25 blur-lg"
                             style={{
                                 background: 'radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, transparent 70%)',
@@ -259,23 +259,23 @@ const UserDetails = () => {
 
             {/* Premium Tabs Section */}
             <Tabs defaultValue="cars" className="w-full">
-                <TabsList className="grid w-full grid-cols-3 mb-8 bg-transparent p-0 gap-8 border-b border-gray-200">
-                    <TabsTrigger 
-                        value="cars" 
+                <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 mb-8 bg-transparent p-0 gap-4 sm:gap-8 border-b border-gray-200 h-auto">
+                    <TabsTrigger
+                        value="cars"
                         className="tab-trigger rounded-none py-3 px-0 font-bold text-base data-[state=active]:text-primary data-[state=inactive]:text-gray-500 hover:text-primary/80 transition-colors"
                         style={{ background: 'transparent', border: 'none' }}
                     >
                         Cars
                     </TabsTrigger>
-                    <TabsTrigger 
-                        value="history" 
+                    <TabsTrigger
+                        value="history"
                         className="tab-trigger rounded-none py-3 px-0 font-bold text-base data-[state=active]:text-primary data-[state=inactive]:text-gray-500 hover:text-primary/80 transition-colors"
                         style={{ background: 'transparent', border: 'none' }}
                     >
                         Service History
                     </TabsTrigger>
-                    <TabsTrigger 
-                        value="pickups" 
+                    <TabsTrigger
+                        value="pickups"
                         className="tab-trigger rounded-none py-3 px-0 font-bold text-base data-[state=active]:text-primary data-[state=inactive]:text-gray-500 hover:text-primary/80 transition-colors"
                         style={{ background: 'transparent', border: 'none' }}
                     >

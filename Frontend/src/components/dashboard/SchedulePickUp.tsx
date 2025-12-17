@@ -349,7 +349,7 @@ const SchedulePickUp = ({ userId }: SchedulePickUpProps = {}) => {
             {/* Left Side: Pick Up Details & Status */}
             <div className={`${userId ? 'lg:col-span-3' : 'lg:col-span-1'} space-y-6`}>
                 <Card className="shadow-[0_4px_20px_rgba(0,0,0,0.06)] border-none rounded-[20px] h-full">
-                    <CardHeader 
+                    <CardHeader
                         className="border-b pb-4 flex flex-row items-center justify-between relative overflow-hidden"
                         style={{
                             background: `
@@ -365,7 +365,7 @@ const SchedulePickUp = ({ userId }: SchedulePickUpProps = {}) => {
                             Pick Up Status
                         </CardTitle>
                     </CardHeader>
-                    <CardContent className="p-7 space-y-5">
+                    <CardContent className="p-4 sm:p-7 space-y-5">
                         {isLoading ? (
                             <div className="flex justify-center p-4">
                                 <Loader2 className="h-6 w-6 animate-spin text-primary" />
@@ -398,7 +398,7 @@ const SchedulePickUp = ({ userId }: SchedulePickUpProps = {}) => {
                             requests.map((req) => (
                                 <div
                                     key={req.id}
-                                    className="border border-gray-100 rounded-[18px] p-6 shadow-sm cursor-pointer hover:shadow-md transition-all duration-200"
+                                    className="border border-gray-100 rounded-[18px] p-4 sm:p-6 shadow-sm cursor-pointer hover:shadow-md transition-all duration-200"
                                     style={{
                                         backgroundColor: req.status?.toLowerCase() === 'approved' ? '#F0FF00' : req.status?.toLowerCase() === 'cancelled' ? 'red' : req.status?.toLowerCase() === 'completed' ? '#7ED957' : '#EFDFBB',
                                         color: 'black'
@@ -543,7 +543,7 @@ const SchedulePickUp = ({ userId }: SchedulePickUpProps = {}) => {
                 <div className="lg:col-span-2">
                     <Card className="shadow-[0_8px_30px_rgba(0,0,0,0.08)] border-none rounded-[24px] overflow-hidden bg-white">
                         {/* Premium Header with Gradient */}
-                        <CardHeader className="border-b border-gray-100 bg-gradient-to-r from-primary/5 via-blue-50 to-primary/5 pb-6 px-10 pt-8">
+                        <CardHeader className="border-b border-gray-100 bg-gradient-to-r from-primary/5 via-blue-50 to-primary/5 pb-6 px-6 pt-6 sm:px-10 sm:pt-8">
                             <CardTitle className="flex items-center gap-3 text-2xl font-bold text-gray-900">
                                 <div className="p-3 bg-primary/10 rounded-full">
                                     <Calendar className="h-7 w-7 text-primary" />
@@ -551,7 +551,7 @@ const SchedulePickUp = ({ userId }: SchedulePickUpProps = {}) => {
                                 Schedule Your Pickup
                             </CardTitle>
                         </CardHeader>
-                        <CardContent className="p-10">
+                        <CardContent className="p-6 sm:p-10">
                             {cars.length === 0 ? (
                                 <div className="text-center py-12">
                                     <div className="mb-6 mx-auto w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center">

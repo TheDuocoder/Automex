@@ -265,7 +265,7 @@ const ServiceHistory = ({ userId }: ServiceHistoryProps = {}) => {
                     </DialogContent>
                 </Dialog>
             </CardHeader>
-            <CardContent className="p-8 space-y-4">
+            <CardContent className="p-4 sm:p-8 space-y-4">
                 {isLoading ? (
                     <div className="flex justify-center p-8">
                         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -345,7 +345,7 @@ const ServiceHistory = ({ userId }: ServiceHistoryProps = {}) => {
                             </div>
 
                             {/* Vehicle Info Row - Enhanced */}
-                            <div className="flex items-center gap-3.5 mb-4">
+                            <div className="flex flex-wrap items-center gap-3.5 mb-4">
                                 <div className="flex items-center gap-2.5">
                                     <CarIcon className="h-5 w-5 text-gray-500" strokeWidth={2} />
                                     <span className="text-[15px] font-semibold text-gray-800">
