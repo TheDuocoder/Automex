@@ -24,6 +24,10 @@ services:
     restart: unless-stopped
     expose:
       - "8000"
+    networks:
+      - automex_network
+    env_file:
+      - ./Backend/.env
     environment:
       - DATABASE_URL=mysql+aiomysql://root:root@mysql:3306/automex
       - HOST=0.0.0.0
@@ -33,8 +37,6 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-    networks:
-      - automex_network
 
   frontend:
     image: procoder9937/automex:frontend
