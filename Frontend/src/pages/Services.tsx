@@ -1541,42 +1541,6 @@ const Services = () => {
     ],
     "detailing": [
       {
-        id: "polishing-heading",
-        name: "Polishing",
-        thumbnail: "",
-        warranty: "",
-        recommended: "",
-        features: [],
-        moreServicesCount: 0,
-        originalPrice: 0,
-        discountedPrice: 0,
-        duration: "",
-        sectionTitle: "Polishing",
-        isRecommended: false
-      },
-      {
-        id: "rubbing-polishing-3m",
-        name: "3M Car Rubbing & Polishing",
-        thumbnail: "/images/product_images/Detailing Services/3M Car Rubbing & Polishing.png",
-        warranty: "",
-        recommended: "Every 6 Months (Recommended)",
-        features: [
-          { name: "Pressure Car Wash", included: true },
-          { name: "Alloy Polishing", included: true },
-          { name: "Rubbing with 3M Compound", included: true },
-          { name: "Tyre Dressing", included: true },
-          { name: "Machine Rubbing", included: true },
-          { name: "3M Wax Polishing", included: true }
-        ],
-        moreServicesCount: 0,
-        originalPrice: 2499,
-        discountedPrice: 1999,
-        duration: "Takes 6 Hours",
-        specialLabel: "RECOMMENDED",
-        isRecommended: true
-      },
-
-      {
         id: "ceramic-coating-heading",
         name: "Ceramic Coating",
         thumbnail: "",
