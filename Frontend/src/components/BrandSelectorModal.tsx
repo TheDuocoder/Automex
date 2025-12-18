@@ -341,6 +341,10 @@ const BrandSelectorModal = ({
           if (modelName === 'gle43_amg' || model.name === 'GLE43 AMG' || model.name === 'GLE 43 AMG') {
             mercedesFileName = 'GLE43 AMG';
           }
+          // Special case: GLE 250d uses uppercase D
+          if (modelName === 'gle_250d' || model.name === 'GLE 250d') {
+            mercedesFileName = 'GLE 250D';
+          }
           // Special case: GLE Class uses space format
           if (modelName === 'gle_class' || model.name === 'GLE Class' || model.name === 'GLE-Class') {
             mercedesFileName = 'GLE Class';
@@ -418,7 +422,7 @@ const BrandSelectorModal = ({
                 : "border border-gray-200/50 hover:border-[#E74A3B]/40"
             )}
             style={{
-              aspectRatio: '0.95',
+              aspectRatio: '0.85',
               padding: '8px',
               backgroundColor: '#FFFFFF',
               boxShadow: isSelected
@@ -477,14 +481,20 @@ const BrandSelectorModal = ({
               }}
             >
               <span className={cn(
-                "text-[9px] font-semibold tracking-tight leading-tight block whitespace-nowrap",
+                "text-[9px] font-semibold tracking-tight leading-tight block",
                 isSelected
                   ? "text-[#E74A3B]"
                   : "text-gray-800 group-hover:text-[#E74A3B]"
               )}
                 style={{
                   fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-                  letterSpacing: '-0.02em'
+                  letterSpacing: '-0.02em',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  wordBreak: 'break-word'
                 }}
               >
                 {model.name}
