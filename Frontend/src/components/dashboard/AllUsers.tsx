@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { User, getAllUsers } from '@/services/authService';
-import { Loader2, Search, Users, Mail, Phone, Shield, CheckCircle, XCircle } from 'lucide-react';
+import { Loader2, Search, Users, Mail, Phone, Shield, CheckCircle, XCircle, UserCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 
@@ -221,12 +221,42 @@ const AllUsers = () => {
               <table className="users-table">
                 <thead>
                   <tr>
-                    <th>User ID</th>
-                    <th>Name</th>
-                    <th>User Role</th>
-                    <th>Contact No</th>
-                    <th>Email ID</th>
-                    <th style={{ textAlign: 'center' }}>Status</th>
+                    <th>
+                      <div className="flex items-center justify-center gap-2">
+                        <Users className="h-4 w-4" />
+                        <span>User ID</span>
+                      </div>
+                    </th>
+                    <th>
+                      <div className="flex items-center justify-center gap-2">
+                        <UserCircle className="h-4 w-4" />
+                        <span>Name</span>
+                      </div>
+                    </th>
+                    <th>
+                      <div className="flex items-center justify-center gap-2">
+                        <Shield className="h-4 w-4" />
+                        <span>User Role</span>
+                      </div>
+                    </th>
+                    <th>
+                      <div className="flex items-center justify-center gap-2">
+                        <Phone className="h-4 w-4" />
+                        <span>Contact No</span>
+                      </div>
+                    </th>
+                    <th>
+                      <div className="flex items-center justify-center gap-2">
+                        <Mail className="h-4 w-4" />
+                        <span>Email ID</span>
+                      </div>
+                    </th>
+                    <th>
+                      <div className="flex items-center justify-center gap-2">
+                        <CheckCircle className="h-4 w-4" />
+                        <span>Status</span>
+                      </div>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -256,7 +286,7 @@ const AllUsers = () => {
                       </td>
 
                       {/* User Role */}
-                      <td>
+                      <td style={{ textAlign: 'center' }}>
                         {user.is_superuser ? (
                           <span style={{
                             color: '#dc2626',
@@ -287,19 +317,19 @@ const AllUsers = () => {
                       {/* Contact No */}
                       <td>
                         {user.phone_number ? (
-                          <div className="flex items-center gap-2 text-gray-700">
-                            <Phone className="h-4 w-4 text-gray-400" />
+                          <div className="text-gray-700 text-center">
                             <span>{user.phone_number}</span>
                           </div>
                         ) : (
-                          <span className="text-gray-400 text-sm">—</span>
+                          <div className="text-center">
+                            <span className="text-gray-400 text-sm">—</span>
+                          </div>
                         )}
                       </td>
 
                       {/* Email ID */}
                       <td>
-                        <div className="flex items-center gap-2 text-gray-600">
-                          <Mail className="h-4 w-4 text-gray-400" />
+                        <div className="text-gray-600 text-center">
                           <span className="text-sm">{user.email}</span>
                         </div>
                       </td>

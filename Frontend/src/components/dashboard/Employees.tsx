@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/dialog';
 import {
   Users, Plus, Search, Mail, Phone, Briefcase, Building, MapPin, DollarSign, Calendar,
-  FileText, Loader2, Edit, Trash2, CheckCircle, XCircle, UserPlus, MoreVertical
+  FileText, Loader2, Edit, Trash2, CheckCircle, XCircle, UserPlus, MoreVertical, UserCircle, BadgeCheck
 } from 'lucide-react';
 
 // Premium Table Styles
@@ -920,12 +920,42 @@ const Employees = () => {
               <table className="employee-table">
                 <thead>
                   <tr>
-                    <th style={{ textAlign: 'center' }}>ID</th>
-                    <th>Employee Name</th>
-                    <th>Contact No</th>
-                    <th>Email ID</th>
-                    <th>Position</th>
-                    <th>Status</th>
+                    <th>
+                      <div className="flex items-center justify-center gap-2">
+                        <Users className="h-4 w-4" />
+                        <span>EMP-ID</span>
+                      </div>
+                    </th>
+                    <th>
+                      <div className="flex items-center justify-center gap-2">
+                        <UserCircle className="h-4 w-4" />
+                        <span>Employee Name</span>
+                      </div>
+                    </th>
+                    <th>
+                      <div className="flex items-center justify-center gap-2">
+                        <Phone className="h-4 w-4" />
+                        <span>Contact No</span>
+                      </div>
+                    </th>
+                    <th>
+                      <div className="flex items-center justify-center gap-2">
+                        <Mail className="h-4 w-4" />
+                        <span>Email ID</span>
+                      </div>
+                    </th>
+                    <th>
+                      <div className="flex items-center justify-center gap-2">
+                        <Briefcase className="h-4 w-4" />
+                        <span>Position</span>
+                      </div>
+                    </th>
+                    <th>
+                      <div className="flex items-center justify-center gap-2">
+                        <CheckCircle className="h-4 w-4" />
+                        <span>Status</span>
+                      </div>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -954,28 +984,27 @@ const Employees = () => {
 
                       {/* Contact No */}
                       <td>
-                        <div className="text-sm text-gray-700">
+                        <div className="text-sm text-gray-700 text-center">
                           {employee.phone_number || <span className="text-gray-400">-</span>}
                         </div>
                       </td>
 
                       {/* Email ID */}
                       <td>
-                        <div className="flex items-center gap-2 text-gray-600">
-                          <Mail className="h-4 w-4 text-gray-400" />
+                        <div className="text-gray-600 text-center">
                           <span className="text-sm">{employee.email}</span>
                         </div>
                       </td>
 
                       {/* Position */}
-                      <td>
+                      <td style={{ textAlign: 'center' }}>
                         <div className="text-sm text-gray-700">
                           {employee.position || <span className="text-gray-400">-</span>}
                         </div>
                       </td>
 
                       {/* Status */}
-                      <td>
+                      <td style={{ textAlign: 'center' }}>
                         {employee.is_active ? (
                           <span className="status-badge status-active">Active</span>
                         ) : (
