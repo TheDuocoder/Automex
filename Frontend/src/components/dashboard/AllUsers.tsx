@@ -8,32 +8,87 @@ import { Loader2, Search, Users, Mail, Phone, Shield, CheckCircle, XCircle } fro
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 
-// Premium Card Styles with Multi-Layer Shadows and Hover Effects
-const cardStyles = `
-  .user-card {
-    position: relative;
-    background: #fff;
-    box-shadow:
-      0 20px 40px rgba(0, 0, 0, 0.08),
-      0 8px 20px rgba(0, 0, 0, 0.06),
-      0 4px 10px rgba(0, 0, 0, 0.04),
-      0 2px 4px rgba(0, 0, 0, 0.02),
-      inset 0 1px 0 rgba(255, 255, 255, 0.6),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.03) !important;
-    transition:
-      box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important,
-      transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+// Modern Table Styles
+const tableStyles = `
+  .users-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
   }
 
-  .user-card:hover {
-    box-shadow:
-      0 30px 60px rgba(0, 0, 0, 0.12),
-      0 12px 30px rgba(0, 0, 0, 0.10),
-      0 6px 15px rgba(0, 0, 0, 0.06),
-      0 3px 6px rgba(0, 0, 0, 0.03),
-      inset 0 1px 0 rgba(255, 255, 255, 0.7),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.04) !important;
-    transform: translateY(-8px) !important;
+  .users-table thead {
+    background: linear-gradient(to bottom, #f9fafb 0%, #f3f4f6 100%);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .users-table thead th {
+    padding: 16px 20px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: #374151;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid #e5e7eb;
+  }
+
+  .users-table tbody tr {
+    background: #ffffff;
+    border-bottom: 1px solid #f3f4f6;
+    transition: all 0.2s ease;
+  }
+
+  .users-table tbody tr:hover {
+    background: linear-gradient(to right, #f9fafb 0%, #ffffff 100%);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transform: translateY(-1px);
+  }
+
+  .users-table tbody td {
+    padding: 20px;
+    font-size: 14px;
+    color: #1f2937;
+    vertical-align: middle;
+  }
+
+  .users-table tbody tr:last-child {
+    border-bottom: none;
+  }
+
+  .role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 600;
+    justify-content: center;
+  }
+
+  .status-active {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+  }
+
+  .status-inactive {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
   }
 `;
 
@@ -43,6 +98,10 @@ const AllUsers = () => {
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const usersPerPage = 5;
 
   // Fetch all users on mount
   useEffect(() => {
@@ -71,6 +130,7 @@ const AllUsers = () => {
   useEffect(() => {
     if (!searchTerm.trim()) {
       setFilteredUsers(users);
+      setCurrentPage(1); // Reset to page 1
       return;
     }
 
@@ -82,7 +142,18 @@ const AllUsers = () => {
       user.role?.name.toLowerCase().includes(lowercaseSearch)
     );
     setFilteredUsers(filtered);
+    setCurrentPage(1); // Reset to page 1 when searching
   }, [searchTerm, users]);
+
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
 
   if (isLoading) {
     return (
@@ -101,7 +172,7 @@ const AllUsers = () => {
       transition={{ duration: 0.5 }}
       className="space-y-4"
     >
-      <style>{cardStyles}</style>
+      <style>{tableStyles}</style>
       <Card className="shadow-lg border-none">
         <CardHeader className="border-b" style={{ background: 'linear-gradient(90deg, #a67ba9 0%, #c8a2c8 50%, #e6b8c0 100%)' }}>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -140,151 +211,157 @@ const AllUsers = () => {
             </div>
           </div>
         </CardHeader>
-        <CardContent className="p-4 sm:p-6">
+        <CardContent className="p-0">
           {filteredUsers.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-12 text-gray-500">
               {searchTerm ? 'No users found matching your search.' : 'No users in the system.'}
             </div>
           ) : (
-            <div className="space-y-4">
-              {filteredUsers.map((user) => {
-                // Determine role-based border gradient
-                const getRoleBorderColor = () => {
-                  if (user.is_superuser) return { gradient: 'from-red-500 to-red-400', glow: 'shadow-red-500/30', ring: 'ring-red-100' };
-                  if (user.role?.name === 'admin') return { gradient: 'from-orange-500 to-orange-400', glow: 'shadow-orange-500/30', ring: 'ring-orange-100' };
-                  return { gradient: 'from-blue-400 to-gray-300', glow: 'shadow-blue-500/20', ring: 'ring-blue-100' };
-                };
-
-                const roleStyle = getRoleBorderColor();
-
-                return (
-                  <motion.div
-                    key={user.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="group rounded-2xl overflow-hidden cursor-pointer user-card"
-                    onClick={() => navigate(`/admin/user-details/${user.id}`)}
-                    style={{
-                      background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%)',
-                      backdropFilter: 'blur(10px)',
-                      border: '1px solid rgba(255, 255, 255, 0.6)',
-                    }}
-                  >
-                    <div className="p-4 sm:p-5 space-y-4">
-                      {/* Top Row: Avatar, Info, and Status Badge */}
-                      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-                        <div className="flex items-start gap-4 flex-1">
-                          {/* Avatar with Role-Based Glow Ring */}
-                          <div className="flex-shrink-0 relative">
-                            {/* Glow ring */}
-                            <div
-                              className={`absolute inset-0 rounded-full opacity-20 blur-md`}
-                              style={{
-                                background: `linear-gradient(135deg, ${roleStyle.gradient.split(' to ')[0].replace('from-', '')} 0%, ${roleStyle.gradient.split(' to ')[1]} 100%)`,
-                                transform: 'scale(1.15)',
-                              }}
-                            ></div>
-
-                            {/* Avatar Image */}
-                            {user.profile_picture_url ? (
-                              <img
-                                src={user.profile_picture_url}
-                                alt={user.full_name || 'User'}
-                                className={`h-16 w-16 rounded-full object-cover border-3 border-white shadow-lg relative z-10 ring-4 ${roleStyle.ring}`}
-                              />
-                            ) : (
-                              <div className={`h-16 w-16 rounded-full bg-gradient-to-br flex items-center justify-center text-white font-bold text-xl border-3 border-white shadow-lg relative z-10 ring-4 ${user.is_superuser ? 'from-red-500 to-red-400 ring-red-100' :
-                                user.role?.name === 'admin' ? 'from-orange-500 to-orange-400 ring-orange-100' :
-                                  'from-blue-500 to-blue-400 ring-blue-100'
-                                }`}>
-                                {user.full_name?.charAt(0).toUpperCase() || user.email.charAt(0).toUpperCase()}
-                              </div>
-                            )}
-                          </div>
-
-                          {/* User Details */}
-                          <div className="flex-1 min-w-0 pt-1">
-                            {/* Name and Role Badge */}
-                            <div className="flex items-center gap-2 mb-2 flex-wrap">
-                              <h3 className="font-black text-lg text-gray-900 tracking-tight">
-                                {user.full_name ?
-                                  user.full_name.split(' ').map(word =>
-                                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-                                  ).join(' ')
-                                  : 'Unknown User'
-                                }
-                              </h3>
-
-                              {/* Role Badge with Role-Based Styling */}
-                              {user.is_superuser ? (
-                                <div className="flex items-center gap-1.5 px-3 py-1 rounded-full font-bold text-xs text-white bg-gradient-to-r from-red-500 to-red-600 shadow-lg shadow-red-500/30">
-                                  <Shield className="h-3.5 w-3.5" />
-                                  <span>Super Admin</span>
-                                </div>
-                              ) : user.role?.name === 'admin' ? (
-                                <div className="flex items-center gap-1.5 px-3 py-1 rounded-full font-bold text-xs text-white bg-gradient-to-r from-orange-500 to-orange-600 shadow-lg shadow-orange-500/30">
-                                  <Shield className="h-3.5 w-3.5" />
-                                  <span>Admin</span>
-                                </div>
-                              ) : (
-                                <div className="px-3 py-1 rounded-full font-bold text-xs text-gray-700 bg-gray-200/70">
-                                  Normal
-                                </div>
-                              )}
-                            </div>
-
-                            {/* Contact Information */}
-                            <div className="space-y-1.5">
-                              <div className="flex items-center gap-2.5 text-sm text-gray-700">
-                                <Mail className="h-4 w-4 text-primary flex-shrink-0" />
-                                <span className="truncate">{user.email}</span>
-                              </div>
-                              {user.phone_number && (
-                                <div className="flex items-center gap-2.5 text-sm text-gray-700">
-                                  <Phone className="h-4 w-4 text-primary flex-shrink-0" />
-                                  <span>{user.phone_number}</span>
-                                </div>
-                              )}
-                              <div className="text-xs text-gray-500 font-semibold opacity-60">
-                                User ID: {user.id}
-                              </div>
-                            </div>
-                          </div>
+            <div className="overflow-x-auto">
+              <table className="users-table">
+                <thead>
+                  <tr>
+                    <th>User ID</th>
+                    <th>Name</th>
+                    <th>User Role</th>
+                    <th>Contact No</th>
+                    <th>Email ID</th>
+                    <th style={{ textAlign: 'center' }}>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {currentUsers.map((user) => (
+                    <tr 
+                      key={user.id}
+                      onClick={() => navigate(`/admin/user-details/${user.id}`)}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      {/* User ID */}
+                      <td style={{ textAlign: 'center' }}>
+                        <div className="text-sm text-gray-500 font-semibold">
+                          {user.id}
                         </div>
+                      </td>
 
-                        {/* Active Status Badge - Right Aligned */}
-                        {user.is_active && (
-                          <div className="flex items-center gap-1.5 px-4 py-2 rounded-full font-bold text-xs text-white bg-gradient-to-r from-green-500 to-green-600 shadow-lg shadow-green-500/30">
-                            <CheckCircle className="h-4 w-4" />
-                            <span>Active</span>
-                          </div>
+                      {/* Name */}
+                      <td>
+                        <div className="font-bold text-gray-900">
+                          {user.full_name ?
+                            user.full_name.split(' ').map(word =>
+                              word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                            ).join(' ')
+                            : 'Unknown User'
+                          }
+                        </div>
+                      </td>
+
+                      {/* User Role */}
+                      <td>
+                        {user.is_superuser ? (
+                          <span style={{
+                            color: '#dc2626',
+                            fontWeight: 'bold',
+                            fontSize: '14px'
+                          }}>
+                            Super Admin
+                          </span>
+                        ) : user.role?.name === 'admin' ? (
+                          <span className="role-badge" style={{
+                            background: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)',
+                            color: 'white',
+                            boxShadow: '0 2px 8px rgba(249, 115, 22, 0.3)'
+                          }}>
+                            <Shield className="h-3.5 w-3.5" />
+                            Admin
+                          </span>
+                        ) : (
+                          <span className="role-badge" style={{
+                            background: '#f3f4f6',
+                            color: '#374151'
+                          }}>
+                            Normal
+                          </span>
                         )}
-                      </div>
+                      </td>
 
-                      {/* Thin Divider */}
-                      <div className="h-px bg-gradient-to-r from-gray-200/0 via-gray-200/50 to-gray-200/0"></div>
-
-                      {/* Status Badges Row */}
-                      <div className="flex flex-wrap gap-2.5 items-center">
-                        {!user.is_active && (
-                          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full font-bold text-xs text-white bg-gradient-to-r from-red-500 to-red-600 shadow-lg shadow-red-500/30">
-                            <XCircle className="h-4 w-4" />
-                            <span>Inactive</span>
+                      {/* Contact No */}
+                      <td>
+                        {user.phone_number ? (
+                          <div className="flex items-center gap-2 text-gray-700">
+                            <Phone className="h-4 w-4 text-gray-400" />
+                            <span>{user.phone_number}</span>
                           </div>
+                        ) : (
+                          <span className="text-gray-400 text-sm">—</span>
                         )}
+                      </td>
 
-                        {user.is_verified && (
-                          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full font-bold text-xs text-white bg-gradient-to-r from-blue-500 to-blue-600 shadow-lg shadow-blue-500/30">
-                            <CheckCircle className="h-4 w-4" />
-                            <span>Verified</span>
-                          </div>
+                      {/* Email ID */}
+                      <td>
+                        <div className="flex items-center gap-2 text-gray-600">
+                          <Mail className="h-4 w-4 text-gray-400" />
+                          <span className="text-sm">{user.email}</span>
+                        </div>
+                      </td>
+
+                      {/* Status */}
+                      <td style={{ textAlign: 'center' }}>
+                        {user.is_active ? (
+                          <span className="status-pill status-active">
+                            <CheckCircle className="h-3.5 w-3.5" />
+                            Active
+                          </span>
+                        ) : (
+                          <span className="status-pill status-inactive">
+                            <XCircle className="h-3.5 w-3.5" />
+                            Inactive
+                          </span>
                         )}
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {/* Pagination Controls */}
+          {filteredUsers.length > 0 && totalPages > 1 && (
+            <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200">
+              <div className="text-sm text-gray-600">
+                Showing {indexOfFirstUser + 1} to {Math.min(indexOfLastUser, filteredUsers.length)} of {filteredUsers.length} users
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="px-3 py-1 rounded-lg border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Previous
+                </button>
+                
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
+                  <button
+                    key={pageNumber}
+                    onClick={() => handlePageChange(pageNumber)}
+                    className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
+                      currentPage === pageNumber
+                        ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-md'
+                        : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    {pageNumber}
+                  </button>
+                ))}
+                
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="px-3 py-1 rounded-lg border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Next
+                </button>
+              </div>
             </div>
           )}
         </CardContent>
@@ -294,4 +371,3 @@ const AllUsers = () => {
 };
 
 export default AllUsers;
-

@@ -27,16 +27,22 @@ const buttonStyles = `
     border-spacing: 0;
   }
 
+  .employee-table thead {
+    background: linear-gradient(to bottom, #f9fafb 0%, #f3f4f6 100%);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
   .employee-table thead th {
-    background: #fafafa;
-    border-bottom: 1px solid #e5e7eb;
-    padding: 16px 24px;
+    padding: 16px 20px;
     text-align: left;
     font-size: 13px;
-    font-weight: 600;
-    color: #6b7280;
-    letter-spacing: 0.02em;
+    font-weight: 700;
+    color: #374151;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
+    border-bottom: 2px solid #e5e7eb;
   }
 
   .employee-table thead th:first-child {
@@ -51,37 +57,25 @@ const buttonStyles = `
 
   .employee-table tbody tr {
     background: white;
-    transition: all 0.2s ease;
     border-bottom: 1px solid #f3f4f6;
+    transition: all 0.2s ease;
   }
 
   .employee-table tbody tr:hover {
-    background: #fafafa;
+    background: linear-gradient(to right, #f9fafb 0%, #ffffff 100%);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transform: translateY(-1px);
   }
 
   .employee-table tbody tr:last-child {
     border-bottom: none;
   }
 
-  .employee-table tbody tr:last-child td:first-child {
-    border-bottom-left-radius: 12px;
-  }
-
-  .employee-table tbody tr:last-child td:last-child {
-    border-bottom-right-radius: 12px;
-  }
-
   .employee-table tbody td {
-    padding: 20px 24px;
+    padding: 20px;
+    font-size: 14px;
+    color: #1f2937;
     vertical-align: middle;
-  }
-
-  .employee-table tbody td:first-child {
-    padding-left: 32px;
-  }
-
-  .employee-table tbody td:last-child {
-    padding-right: 32px;
   }
 
   .status-badge {
@@ -311,6 +305,10 @@ const Employees = () => {
   const [viewingEmployee, setViewingEmployee] = useState<Employee | null>(null);
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const employeesPerPage = 5;
 
   const [formData, setFormData] = useState<EmployeeCreate>({
     full_name: '',
@@ -334,6 +332,7 @@ const Employees = () => {
   useEffect(() => {
     if (!searchTerm.trim()) {
       setFilteredEmployees(employees);
+      setCurrentPage(1); // Reset to page 1
       return;
     }
 
@@ -347,7 +346,18 @@ const Employees = () => {
       emp.employee_id?.toLowerCase().includes(lowercaseSearch)
     );
     setFilteredEmployees(filtered);
+    setCurrentPage(1); // Reset to page 1 when searching
   }, [searchTerm, employees]);
+
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredEmployees.length / employeesPerPage);
+  const indexOfLastEmployee = currentPage * employeesPerPage;
+  const indexOfFirstEmployee = indexOfLastEmployee - employeesPerPage;
+  const currentEmployees = filteredEmployees.slice(indexOfFirstEmployee, indexOfLastEmployee);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
 
   const fetchEmployees = async () => {
     try {
@@ -910,28 +920,28 @@ const Employees = () => {
               <table className="employee-table">
                 <thead>
                   <tr>
-                    <th>
-                      <input type="checkbox" className="checkbox-custom" />
-                    </th>
+                    <th style={{ textAlign: 'center' }}>ID</th>
                     <th>Employee Name</th>
-                    <th>EMP-ID</th>
                     <th>Contact No</th>
+                    <th>Email ID</th>
                     <th>Position</th>
                     <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredEmployees.map((employee) => (
+                  {currentEmployees.map((employee) => (
                     <tr key={employee.id}>
-                      {/* Checkbox */}
-                      <td>
-                        <input type="checkbox" className="checkbox-custom" />
+                      {/* Employee ID */}
+                      <td style={{ textAlign: 'center' }}>
+                        <div className="text-sm text-gray-700 font-semibold">
+                          {employee.employee_id || `EMP-${employee.id}`}
+                        </div>
                       </td>
 
                       {/* Employee Name */}
                       <td>
                         <div 
-                          className="flex flex-col gap-0.5 cursor-pointer hover:text-blue-600 transition-colors"
+                          className="cursor-pointer hover:text-blue-600 transition-colors"
                           onClick={() => handleViewEmployee(employee)}
                         >
                           <div className="font-semibold text-gray-900 text-[15px]">
@@ -939,14 +949,6 @@ const Employees = () => {
                               word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
                             ).join(' ')}
                           </div>
-                          <div className="text-sm text-gray-500">{employee.email}</div>
-                        </div>
-                      </td>
-
-                      {/* EMP-ID */}
-                      <td>
-                        <div className="text-sm text-gray-700 font-medium">
-                          {employee.employee_id || <span className="text-gray-400">-</span>}
                         </div>
                       </td>
 
@@ -954,6 +956,14 @@ const Employees = () => {
                       <td>
                         <div className="text-sm text-gray-700">
                           {employee.phone_number || <span className="text-gray-400">-</span>}
+                        </div>
+                      </td>
+
+                      {/* Email ID */}
+                      <td>
+                        <div className="flex items-center gap-2 text-gray-600">
+                          <Mail className="h-4 w-4 text-gray-400" />
+                          <span className="text-sm">{employee.email}</span>
                         </div>
                       </td>
 
@@ -976,6 +986,46 @@ const Employees = () => {
                   ))}
                 </tbody>
               </table>
+            </div>
+          )}
+
+          {/* Pagination Controls */}
+          {filteredEmployees.length > 0 && totalPages > 1 && (
+            <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200">
+              <div className="text-sm text-gray-600">
+                Showing {indexOfFirstEmployee + 1} to {Math.min(indexOfLastEmployee, filteredEmployees.length)} of {filteredEmployees.length} employees
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="px-3 py-1 rounded-lg border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Previous
+                </button>
+                
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
+                  <button
+                    key={pageNumber}
+                    onClick={() => handlePageChange(pageNumber)}
+                    className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
+                      currentPage === pageNumber
+                        ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-md'
+                        : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    {pageNumber}
+                  </button>
+                ))}
+                
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="px-3 py-1 rounded-lg border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Next
+                </button>
+              </div>
             </div>
           )}
         </CardContent>
