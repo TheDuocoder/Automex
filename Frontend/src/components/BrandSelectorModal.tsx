@@ -262,9 +262,9 @@ const BrandSelectorModal = ({
         // Special handling for Skoda, Land Rover, and Audi - use correct folder paths
         let imagePath;
         if (brandName === 'skoda') {
-          // Skoda images are in "skoda" folder (lowercase)
-          // Files are lowercase with underscores (e.g. rapid.png) which matches modelName
-          imagePath = `/images/Car_images/skoda/${modelName}.png`;
+          // Skoda images are in "Skoda" folder (capitalized)
+          // Files are capitalized (e.g. Rapid.png, Fabia.png) - use original model name
+          imagePath = `/images/Car_images/Skoda/${model.name}.png`;
         } else if (brandName === 'land_rover') {
           // Land Rover images are in "Land rover" folder with proper naming
           let landRoverFileName = model.name; // Use original name with proper capitalization
@@ -295,20 +295,32 @@ const BrandSelectorModal = ({
         } else if (brandName === 'audi') {
           // Audi images are in "Audi_car" folder
           // Files use proper capitalization: A3.png, A4.png, Q7.png, etc.
-          // Exception: "e-tron.png" is lowercase
+          // Exception: "Q8 e-tron.png" for the electric model
 
           const modelName = model.name;
 
-          if (modelName.toLowerCase() === 'e-tron') {
-            imagePath = `/images/Car_images/Audi_car/e-tron.png`;
+          if (modelName.toLowerCase() === 'e-tron' || modelName.toLowerCase() === 'q8 e-tron') {
+            imagePath = `/images/Car_images/Audi_car/Q8 e-tron.png`;
           } else {
             // Use the model name as-is with proper capitalization (A3, A4, Q7, etc.)
             imagePath = `/images/Car_images/Audi_car/${modelName}.png`;
           }
         } else if (brandName === 'volkswagen') {
-          // Volkswagen images are in "volkswagen" folder (lowercase)
-          // Files are lowercase with underscores (e.g. polo.png, cross_polo.png) which matches modelName
-          imagePath = `/images/Car_images/volkswagen/${modelName}.png`;
+          // Volkswagen images are in "Volkswagen" folder
+          // Most files are capitalized: Ameo.png, Vento.png, Jetta.png, Passat.png, etc.
+          // Exceptions: "polo.png" is lowercase, "cross_polo.png" is lowercase with underscore
+
+          const vwModelName = model.name;
+          const cleanName = vwModelName.toLowerCase().replace(/\s+/g, ' ');
+
+          if (cleanName === 'cross polo') {
+            imagePath = `/images/Car_images/Volkswagen/cross_polo.png`;
+          } else if (cleanName === 'polo') {
+            imagePath = `/images/Car_images/Volkswagen/polo.png`;
+          } else {
+            // Use the model name as-is with proper capitalization
+            imagePath = `/images/Car_images/Volkswagen/${vwModelName}.png`;
+          }
         } else if (brandName === 'bmw') {
           // BMW images are in "BMW" folder with spaces in filenames
           // Convert model name to have proper spacing and capitalization
@@ -328,6 +340,10 @@ const BrandSelectorModal = ({
           // Special case: GLE43 AMG uses space and number format
           if (modelName === 'gle43_amg' || model.name === 'GLE43 AMG' || model.name === 'GLE 43 AMG') {
             mercedesFileName = 'GLE43 AMG';
+          }
+          // Special case: GLE 250d uses uppercase D
+          if (modelName === 'gle_250d' || model.name === 'GLE 250d') {
+            mercedesFileName = 'GLE 250D';
           }
           // Special case: GLE Class uses space format
           if (modelName === 'gle_class' || model.name === 'GLE Class' || model.name === 'GLE-Class') {
@@ -406,7 +422,7 @@ const BrandSelectorModal = ({
                 : "border border-gray-200/50 hover:border-[#E74A3B]/40"
             )}
             style={{
-              aspectRatio: '0.95',
+              aspectRatio: '0.85',
               padding: '8px',
               backgroundColor: '#FFFFFF',
               boxShadow: isSelected
@@ -465,14 +481,20 @@ const BrandSelectorModal = ({
               }}
             >
               <span className={cn(
-                "text-[9px] font-semibold tracking-tight leading-tight block whitespace-nowrap",
+                "text-[9px] font-semibold tracking-tight leading-tight block",
                 isSelected
                   ? "text-[#E74A3B]"
                   : "text-gray-800 group-hover:text-[#E74A3B]"
               )}
                 style={{
                   fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-                  letterSpacing: '-0.02em'
+                  letterSpacing: '-0.02em',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  wordBreak: 'break-word'
                 }}
               >
                 {model.name}
