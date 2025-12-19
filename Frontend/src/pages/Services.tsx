@@ -1,5 +1,5 @@
 import { Fragment, useState, useEffect, useRef, useLayoutEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -40,6 +40,7 @@ interface ServicePackage {
 const Services = () => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const { resetSelection, selectedFuelType, selectedBrandId, selectedModelId, catalog } = useCarSelectionStore();
 
   const [selectedCategory, setSelectedCategory] = useState("car-services");
@@ -3535,6 +3536,39 @@ const Services = () => {
       resetSelection();
     };
   }, [resetSelection]);
+
+  // Handle scroll to specific section from navigation
+  useEffect(() => {
+    if (location.state?.scrollTo) {
+      const sectionId = location.state.scrollTo;
+      const categoryMap: Record<string, string> = {
+        "premium": "car-services",
+        "ac-repair": "car-services",
+        "batteries": "batteries",
+        "tyres-wheel-care": "tyres",
+        "denting": "denting",
+        "detailing": "detailing",
+        "cleaning": "car-spa",
+        "inspections": "car-services"
+      };
+      
+      const category = categoryMap[sectionId];
+      if (category) {
+        setSelectedCategory(category);
+        // Scroll to top of page first
+        window.scrollTo({ top: 0, behavior: 'auto' });
+        
+        // Wait for the category to render then scroll to the header
+        setTimeout(() => {
+          const headerElement = containerRef.current?.querySelector('h1');
+          if (headerElement) {
+            const headerPosition = headerElement.getBoundingClientRect().top + window.pageYOffset;
+            window.scrollTo({ top: headerPosition - 100, behavior: 'smooth' });
+          }
+        }, 300);
+      }
+    }
+  }, [location]);
 
   // Close mobile brand modal when selection is complete (fuel type selected)
   useEffect(() => {

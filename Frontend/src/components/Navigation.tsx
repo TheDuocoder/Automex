@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import batteryIcon from "@/assets/service-battery.png";
 import tyreIcon from "@/assets/service-tyres.png";
 import { useEffect, useState, useRef, useLayoutEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
@@ -172,6 +173,7 @@ const curatedServices = [
 ];
 
 const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange: (tab: string) => void }) => {
+  const navigate = useNavigate();
   const [carouselApi, setCarouselApi] = useState<CarouselApi>();
   const [summerCarouselApi, setSummerCarouselApi] = useState<CarouselApi>();
   const [curatedCarouselApi, setCuratedCarouselApi] = useState<CarouselApi>();
@@ -638,6 +640,20 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
                 <Card
                   key={index}
                   className="service-card group hover:shadow-xl hover:-translate-y-1 transition-all duration-500 bg-white relative overflow-hidden cursor-pointer w-full rounded-2xl"
+                  onClick={() => {
+                    const sectionMap: Record<string, string> = {
+                      "Premium Car Services": "premium",
+                      "AC Service & Repair": "ac-repair",
+                      "Batteries": "batteries",
+                      "Tyres & Wheel Care": "tyres-wheel-care",
+                      "Denting & Painting": "denting",
+                      "Detailing Services": "detailing",
+                      "Car Spa & Cleaning": "cleaning",
+                      "Car Inspections": "inspections"
+                    };
+                    const sectionId = sectionMap[service.title];
+                    navigate('/services', { state: { scrollTo: sectionId } });
+                  }}
                 >
                   {service.isNew && (
                     <div className="absolute top-2 right-2 bg-green-500 text-white text-[10px] px-1.5 py-0.5 rounded-full z-10">

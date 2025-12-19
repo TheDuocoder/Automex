@@ -4,8 +4,10 @@ import { CheckCircle } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import { useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 const SummerServices = () => {
+  const navigate = useNavigate();
   const autoplayPlugin = useRef(
     Autoplay({ delay: 4000, stopOnInteraction: false })
   );
@@ -111,6 +113,16 @@ const SummerServices = () => {
               key={index}
               className="group relative hover:shadow-2xl transition-all duration-500 overflow-hidden border-0 bg-white animate-slide-up cursor-pointer"
               style={{ animationDelay: `${index * 100}ms` }}
+              onClick={() => {
+                const sectionMap: Record<string, string> = {
+                  "Front Bumper Paint": "denting",
+                  "Rubbing & Polishing": "cleaning",
+                  "Deep All Round Spa": "car-spa",
+                  "Periodic Service": "car-services"
+                };
+                const sectionId = sectionMap[service.title];
+                navigate('/services', { state: { scrollTo: sectionId } });
+              }}
             >
               {/* Hover Overlay */}
               <div className="absolute inset-0 bg-gradient-to-br from-orange-500/0 to-red-500/0 group-hover:from-orange-500/10 group-hover:to-red-500/10 transition-all duration-500 z-10 pointer-events-none"></div>

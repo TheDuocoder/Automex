@@ -907,7 +907,6 @@ const Profile = () => {
                             </div>
                             <div>
                               <p className="font-medium text-xs">{car.make} {car.model}</p>
-                              <p className="text-xs text-gray-500">{car.registration_number}</p>
                               {/* Admin: Show Owner */}
                               {(currentUser?.role?.name?.toLowerCase() === 'admin' || currentUser?.role?.name?.toLowerCase() === 'super' || currentUser?.is_superuser) && car.user && (
                                 <p className="text-[10px] text-blue-600 mt-0.5 font-medium flex items-center gap-1">

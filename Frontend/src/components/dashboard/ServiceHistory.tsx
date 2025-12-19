@@ -16,7 +16,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { History, Plus, CheckCircle, ChevronRight, Loader2, Car as CarIcon, Check, Pencil, Trash2, Calendar, ArrowRight } from "lucide-react";
+import { History, Plus, CheckCircle, ChevronRight, Loader2, Car as CarIcon, Check, Pencil, Trash2, Calendar, ArrowRight, Hash, Settings, X } from "lucide-react";
 import { serviceHistoryService, carService, Car, ServiceHistory as ServiceHistoryType, ServiceHistoryCreate } from "@/services/api";
 import { toast } from "sonner";
 
@@ -288,167 +288,220 @@ const ServiceHistory = ({ userId }: ServiceHistoryProps = {}) => {
                         <p className="text-sm">Add your first service record to get started.</p>
                     </div>
                 ) : (
-                    allHistory.map((record) => (
-                        <div
-                            key={record.id}
-                            className="rounded-[28px] p-8 transition-all duration-300 border border-gray-100/80 relative group hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)]"
-                            style={{
-                                backgroundColor: '#ECECEB',
-                                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04), 0 12px 24px rgba(0, 0, 0, 0.06)',
-                            }}
-                        >
-                            {/* Title Section with Service Type Tag */}
-                            <div className="flex items-start justify-between mb-6">
-                                <div className="flex-1 space-y-2">
-                                    <h3
-                                        className="text-[19px] text-gray-900 leading-snug uppercase"
-                                        style={{
-                                            fontWeight: 700,
-                                            letterSpacing: '-0.02em'
-                                        }}
+                    <div className="overflow-x-auto">
+                        <table className="w-full border-collapse">
+                            <thead>
+                                <tr style={{ 
+                                    background: 'linear-gradient(to bottom, #f9fafb 0%, #f3f4f6 100%)',
+                                    borderBottom: '2px solid #e5e7eb'
+                                }}>
+                                    <th className="px-6 py-4 text-center font-bold text-gray-700 text-sm">
+                                        Sl No
+                                    </th>
+                                    <th className="px-6 py-4 text-center font-bold text-gray-700 text-sm">
+                                        Service Name
+                                    </th>
+                                    <th className="px-6 py-4 text-center font-bold text-gray-700 text-sm">
+                                        Date
+                                    </th>
+                                    <th className="px-6 py-4 text-center font-bold text-gray-700 text-sm">
+                                        Vehicle Name
+                                    </th>
+                                    {isAdmin && (
+                                        <th className="px-6 py-4 text-center font-bold text-gray-700 text-sm">
+                                            Actions
+                                        </th>
+                                    )}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {allHistory.map((record, index) => (
+                                    <tr 
+                                        key={record.id}
+                                        className="border-b border-gray-200 hover:bg-gray-50 transition-colors"
                                     >
-                                        {record.service_name}
-                                    </h3>
-                                    <div className="flex items-center gap-2 text-xs">
-                                        <span className="text-gray-500 font-medium">Service Type</span>
-                                        <span className="text-gray-300">·</span>
-                                        <span className="text-gray-700 font-semibold">Standard</span>
-                                    </div>
-                                </div>
+                                        {/* Sl No */}
+                                        <td className="px-6 py-4 text-center text-gray-700 font-medium">
+                                            {index + 1}
+                                        </td>
 
-                                {/* Action Buttons - Top Right */}
-                                {isAdmin && (
-                                    <div className="flex items-center gap-2">
-                                        <button
-                                            onClick={() => handleEdit(record)}
-                                            className="edit-btn-animated"
-                                            title="Edit"
-                                        >
-                                            Edit
-                                            <Pencil className="svg" strokeWidth={2.5} />
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(record.id)}
-                                            className="delete-btn-animated"
-                                            title="Delete"
-                                        >
-                                            Delete
-                                            <Trash2 className="svg" strokeWidth={2.5} />
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
+                                        {/* Service Name - Clickable */}
+                                        <td className="px-6 py-4 text-center">
+                                            <Dialog>
+                                                <DialogTrigger asChild>
+                                                    <button className="text-blue-600 hover:text-blue-800 font-semibold hover:underline transition-colors">
+                                                        {record.service_name}
+                                                    </button>
+                                                </DialogTrigger>
+                                                <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto p-0 gap-0">
+                                                    {/* Sticky Header with Badge */}
+                                                    <div className="sticky top-0 z-10 bg-white border-b border-gray-100 px-8 py-6">
+                                                        <div className="flex items-center justify-between">
+                                                            <div className="flex-1">
+                                                                <h2 className="text-[26px] font-semibold text-gray-900 mb-2">
+                                                                    {record.service_name}
+                                                                </h2>
+                                                                <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-gray-100 rounded-full">
+                                                                    <span className="text-sm text-gray-700 font-medium">Service Type:</span>
+                                                                    <span className="text-sm text-gray-900 font-semibold uppercase tracking-wide">Standard</span>
+                                                                </div>
+                                                            </div>
+                                                            <DialogTrigger asChild>
+                                                                <button 
+                                                                    className="ml-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
+                                                                    aria-label="Close"
+                                                                >
+                                                                    <X className="h-5 w-5 text-gray-500 hover:text-gray-700" />
+                                                                </button>
+                                                            </DialogTrigger>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    {/* Content Container */}
+                                                    <div className="px-8 py-6 space-y-6">
+                                                        {/* Vehicle Details Card */}
+                                                        <div 
+                                                            className="bg-white rounded-2xl p-6 border border-gray-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+                                                            style={{ boxShadow: '0 4px 12px rgba(0,0,0,0.06)' }}
+                                                        >
+                                                            <div className="flex items-center gap-2 mb-4">
+                                                                <CarIcon className="h-5 w-5 text-gray-700" />
+                                                                <h3 className="text-lg font-semibold text-gray-900">Vehicle Details</h3>
+                                                            </div>
+                                                            <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+                                                                <div>
+                                                                    <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Make & Model</p>
+                                                                    <p className="text-base font-semibold text-gray-900">{record.car?.make} {record.car?.model}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Registration No</p>
+                                                                    <p className="text-base font-semibold text-gray-900 uppercase">{record.car?.registration_number}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Year</p>
+                                                                    <p className="text-base font-semibold text-gray-900">{record.car?.year}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">VIN Number</p>
+                                                                    <p className="text-base font-semibold text-gray-900 font-mono tracking-wider">{record.car?.vin_number || 'N/A'}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
 
-                            {/* Vehicle Info Row - Enhanced */}
-                            <div className="flex flex-wrap items-center gap-3.5 mb-4">
-                                <div className="flex items-center gap-2.5">
-                                    <CarIcon className="h-5 w-5 text-gray-500" strokeWidth={2} />
-                                    <span className="text-[15px] font-semibold text-gray-800">
-                                        {record.car?.make} {record.car?.model}
-                                    </span>
-                                </div>
-                                <span className="text-gray-300 font-light">|</span>
-                                <div
-                                    className="px-3 py-1.5 rounded-lg font-bold text-[13px] tracking-wider uppercase"
-                                    style={{
-                                        background: 'linear-gradient(135deg, #F3F4F6 0%, #E5E7EB 100%)',
-                                        border: '1.5px solid #D1D5DB',
-                                        color: '#374151',
-                                        letterSpacing: '0.05em',
-                                    }}
-                                >
-                                    {record.car?.registration_number}
-                                </div>
-                                {isAdmin && record.car?.user && (
-                                    <>
-                                        <span className="text-gray-300 font-light">|</span>
-                                        <span className="text-blue-600 font-medium text-xs bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-100">
-                                            {record.car.user.full_name || record.car.user.email}
-                                        </span>
-                                    </>
-                                )}
-                            </div>
+                                                        {/* Service Date Card */}
+                                                        <div 
+                                                            className="bg-white rounded-2xl p-6 border border-gray-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+                                                            style={{ boxShadow: '0 4px 12px rgba(0,0,0,0.06)' }}
+                                                        >
+                                                            <div className="flex items-center gap-2 mb-3">
+                                                                <Calendar className="h-5 w-5 text-gray-700" />
+                                                                <h3 className="text-lg font-semibold text-gray-900">Service Date</h3>
+                                                            </div>
+                                                            <p className="text-gray-600 text-sm mb-1">Completed on</p>
+                                                            <p className="text-lg font-semibold text-gray-900">
+                                                                {new Date(record.service_date).toLocaleDateString('en-US', {
+                                                                    year: 'numeric',
+                                                                    month: 'long',
+                                                                    day: 'numeric'
+                                                                })}
+                                                            </p>
+                                                        </div>
 
-                            {/* Date with Calendar Icon */}
-                            <div className="flex items-center gap-2 mb-5">
-                                <Calendar className="h-3.5 w-3.5 text-gray-400" strokeWidth={2} />
-                                <p className="text-[13px] font-medium" style={{ color: '#6B7280' }}>
-                                    {new Date(record.service_date).toLocaleDateString('en-US', {
-                                        year: 'numeric',
-                                        month: 'long',
-                                        day: 'numeric'
-                                    })}
-                                </p>
-                            </div>
+                                                        {/* Service Details Card */}
+                                                        <div 
+                                                            className="bg-white rounded-2xl p-6 border border-gray-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+                                                            style={{ boxShadow: '0 4px 12px rgba(0,0,0,0.06)' }}
+                                                        >
+                                                            <div className="flex items-center gap-2 mb-3">
+                                                                <Settings className="h-5 w-5 text-gray-700" />
+                                                                <h3 className="text-lg font-semibold text-gray-900">Service Details</h3>
+                                                            </div>
+                                                            {record.description ? (
+                                                                <div className="flex flex-wrap gap-2">
+                                                                    {record.description.split(',').map((service, idx) => (
+                                                                        <span 
+                                                                            key={idx}
+                                                                            className="inline-flex items-center px-4 py-2 bg-slate-100 text-slate-700 text-sm font-medium rounded-full"
+                                                                        >
+                                                                            {service.trim()}
+                                                                        </span>
+                                                                    ))}
+                                                                </div>
+                                                            ) : (
+                                                                <span className="inline-flex items-center px-4 py-2 bg-slate-100 text-slate-700 text-sm font-medium rounded-full">
+                                                                    {record.service_name}
+                                                                </span>
+                                                            )}
+                                                        </div>
 
-                            {/* Service Details Box - Enhanced */}
-                            {record.description && (
-                                <div
-                                    className="relative rounded-[16px] p-5 mb-5"
-                                    style={{
-                                        backgroundColor: '#F7F7F8',
-                                        border: '1px solid #EFEFEF',
-                                    }}
-                                >
-                                    {/* Left Red Indicator Bar */}
-                                    <div
-                                        className="absolute left-0 top-4 bottom-4 w-1 rounded-r-full"
-                                        style={{
-                                            background: 'linear-gradient(180deg, #EF4444 0%, #DC2626 100%)',
-                                        }}
-                                    />
-                                    <p
-                                        className="text-[14px] leading-relaxed pl-4"
-                                        style={{
-                                            color: '#4B5563',
-                                            fontWeight: 500,
-                                        }}
-                                    >
-                                        {record.description}
-                                    </p>
-                                </div>
-                            )}
+                                                        {/* Owner Info Card (Admin only) */}
+                                                        {isAdmin && record.car?.user && (
+                                                            <div 
+                                                                className="bg-blue-50 rounded-2xl p-6 border border-blue-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+                                                                style={{ boxShadow: '0 4px 12px rgba(59, 130, 246, 0.1)' }}
+                                                            >
+                                                                <h3 className="text-lg font-semibold text-blue-900 mb-2">Vehicle Owner</h3>
+                                                                <p className="text-blue-700 font-medium">{record.car.user.full_name || record.car.user.email}</p>
+                                                            </div>
+                                                        )}
 
-                            {/* Bottom Row - Status & Action */}
-                            <div className="flex items-center justify-between pt-4">
-                                {/* Enhanced Status Badge with Gradient & Shadow */}
-                                <div
-                                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-[13px] font-semibold border"
-                                    style={{
-                                        background: 'linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%)',
-                                        color: '#065F46',
-                                        borderColor: '#6EE7B7',
-                                        boxShadow: '0 2px 8px rgba(16, 185, 129, 0.15), 0 0 0 3px rgba(16, 185, 129, 0.05)',
-                                    }}
-                                >
-                                    <div className="relative flex items-center justify-center">
-                                        <div className="absolute inset-0 bg-green-500/30 rounded-full blur-sm" />
-                                        <CheckCircle className="relative h-4 w-4" strokeWidth={2.5} />
-                                    </div>
-                                    {record.status}
-                                </div>
+                                                        {/* Status Banner - Sticky at Bottom */}
+                                                        <div className="sticky bottom-0 left-0 right-0 mt-6">
+                                                            <div 
+                                                                className="bg-emerald-50 rounded-xl p-5 border border-emerald-200 flex items-center justify-center gap-3"
+                                                                style={{ boxShadow: '0 -2px 10px rgba(16, 185, 129, 0.1)' }}
+                                                            >
+                                                                <CheckCircle className="h-6 w-6 text-emerald-600" />
+                                                                <span className="text-emerald-800 font-semibold text-lg">Service Completed Successfully</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </DialogContent>
+                                            </Dialog>
+                                        </td>
 
-                                {/* Enhanced Arrow Button with Gradient & Shadow */}
-                                <button
-                                    className="relative h-11 w-11 rounded-full flex items-center justify-center text-white transition-all duration-300 hover:scale-110 group-hover:translate-x-1"
-                                    style={{
-                                        background: 'linear-gradient(135deg, #EF4444 0%, #DC2626 50%, #B91C1C 100%)',
-                                        boxShadow: '0 4px 12px rgba(220, 38, 38, 0.35), 0 2px 4px rgba(0, 0, 0, 0.1)',
-                                    }}
-                                    aria-label="View details"
-                                >
-                                    <ChevronRight className="h-5 w-5" strokeWidth={3} />
-                                    {/* Shine effect on hover */}
-                                    <div
-                                        className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-30 transition-opacity duration-300"
-                                        style={{
-                                            background: 'linear-gradient(135deg, rgba(255,255,255,0.4) 0%, transparent 60%)',
-                                        }}
-                                    />
-                                </button>
-                            </div>
-                        </div>
-                    ))
+                                        {/* Date */}
+                                        <td className="px-6 py-4 text-center text-gray-700">
+                                            {new Date(record.service_date).toLocaleDateString('en-US', {
+                                                year: 'numeric',
+                                                month: 'short',
+                                                day: 'numeric'
+                                            })}
+                                        </td>
+
+                                        {/* Vehicle Name */}
+                                        <td className="px-6 py-4 text-center">
+                                            <div className="font-semibold text-gray-800">
+                                                {record.car?.make} {record.car?.model}
+                                            </div>
+                                        </td>
+
+                                        {/* Actions (Admin only) */}
+                                        {isAdmin && (
+                                            <td className="px-6 py-4 text-center">
+                                                <div className="flex items-center justify-center gap-2">
+                                                    <button
+                                                        onClick={() => handleEdit(record)}
+                                                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                                        title="Edit"
+                                                    >
+                                                        <Pencil className="h-4 w-4" />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDelete(record.id)}
+                                                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                        title="Delete"
+                                                    >
+                                                        <Trash2 className="h-4 w-4" />
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        )}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 )}
             </CardContent>
         </Card>
