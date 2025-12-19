@@ -245,7 +245,13 @@ async def health_check():
     """Health check endpoint"""
     return {
         "status": "healthy",
-        "service": "AutoMex Backend"
+    "service": "AutoMex Backend",
+        "s3_status": {
+            "configured": bool(settings.AWS_ACCESS_KEY_ID and settings.AWS_SECRET_ACCESS_KEY and settings.AWS_BUCKET_NAME),
+            "bucket": settings.AWS_BUCKET_NAME,
+            "region": settings.AWS_REGION,
+            "access_key_prefix": settings.AWS_ACCESS_KEY_ID[:4] + "***" if settings.AWS_ACCESS_KEY_ID else "MISSING"
+        }
     }
 
 

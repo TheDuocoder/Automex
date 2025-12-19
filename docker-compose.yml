@@ -27,7 +27,7 @@ services:
     networks:
       - automex_network
     env_file:
-      - ./Backend/.env
+      - ./.env
     environment:
       - DATABASE_URL=mysql+aiomysql://root:root@mysql:3306/automex
       - HOST=0.0.0.0

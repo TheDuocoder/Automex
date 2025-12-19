@@ -29,11 +29,17 @@ class S3Service:
                     region_name=settings.AWS_REGION
                 )
                 self.bucket_name = settings.AWS_BUCKET_NAME
+                print(f"[INFO] S3 Service initialized successfully. Bucket: {self.bucket_name}")
             except Exception as e:
                 print(f"[WARNING] Failed to initialize S3 client: {str(e)}")
                 self.aws_configured = False
                 self.s3_client = None
         else:
+            print("[WARNING] AWS S3 Not Configured. Check the following settings:")
+            print(f"  - AWS_ACCESS_KEY_ID: {'Set' if settings.AWS_ACCESS_KEY_ID else 'Missing'}")
+            print(f"  - AWS_SECRET_ACCESS_KEY: {'Set' if settings.AWS_SECRET_ACCESS_KEY else 'Missing'}")
+            print(f"  - AWS_BUCKET_NAME: {'Set' if settings.AWS_BUCKET_NAME else 'Missing'}")
+            print("[INFO] Application will fallback to local storage.")
             self.s3_client = None
             
         self.folder = settings.AWS_S3_FOLDER
