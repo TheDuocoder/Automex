@@ -4,7 +4,7 @@ interface FooterProps {
 
 const Footer = ({ compact = false }: FooterProps = {}) => {
   return (
-    <footer 
+    <footer
       className={`bg-slate-900 text-white ${compact ? 'py-6 md:py-8' : 'py-12 md:py-16'}`}
       style={{
         position: 'relative',
@@ -25,9 +25,9 @@ const Footer = ({ compact = false }: FooterProps = {}) => {
             <h3 className={`text-base md:text-lg font-bold ${compact ? 'mb-2 md:mb-3' : 'mb-4 md:mb-6'} text-white tracking-wide`}>ABOUT US</h3>
             <ul className={compact ? 'space-y-1' : 'space-y-2.5'}>
               <li><a href="/#faq" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">FAQs</a></li>
-              <li><a href="/#about-us" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Contact Us</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Terms and Conditions</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Privacy Policy</a></li>
+              <li><a href="/contact-us" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Contact Us</a></li>
+              <li><a href="/images/Conditions/Terms%20and%20Conditions%20Automex.pdf" download target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Terms and Conditions</a></li>
+              <li><a href="/images/Conditions/Privacy%20Policy%20Automex.pdf" download target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Privacy Policy</a></li>
               <li><a href="/#summer-services" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Offers</a></li>
               <li><a href="/#reviews" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Reviews</a></li>
               <li><a href="/#" className="text-gray-300 hover:text-primary text-sm transition-colors duration-200 block">Directory</a></li>

@@ -305,7 +305,7 @@ const Employees = () => {
   const [viewingEmployee, setViewingEmployee] = useState<Employee | null>(null);
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const employeesPerPage = 5;
@@ -324,6 +324,8 @@ const Employees = () => {
     notes: '',
     is_active: true,
   });
+
+  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
     fetchEmployees();
@@ -385,8 +387,30 @@ const Employees = () => {
     }
   };
 
+  const validateForm = () => {
+    const errors: { [key: string]: string } = {};
+    let isValid = true;
+
+    if (formData.phone_number && formData.phone_number.trim()) {
+      const phoneRegex = /^[6-9]\d{9}$/;
+      if (!phoneRegex.test(formData.phone_number.trim())) {
+        errors.phone_number = "Invalid phone number. Must be 10 digits and start with 6-9.";
+        isValid = false;
+      }
+    }
+
+    setFormErrors(errors);
+    return isValid;
+  };
+
   const handleAddEmployee = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      toast.error("Please fix form errors before submitting");
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       // Clean form data: convert empty strings to undefined
@@ -457,6 +481,11 @@ const Employees = () => {
   const handleUpdateEmployee = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingEmployee) return;
+
+    if (!validateForm()) {
+      toast.error("Please fix form errors before submitting");
+      return;
+    }
 
     setIsSubmitting(true);
     try {
@@ -541,6 +570,7 @@ const Employees = () => {
       notes: '',
       is_active: true,
     });
+    setFormErrors({});
   };
 
   const openAddModal = () => {
@@ -567,7 +597,7 @@ const Employees = () => {
     >
       <style>{buttonStyles}</style>
       <Card className="shadow-sm border border-gray-200 rounded-2xl overflow-hidden">
-        <CardHeader 
+        <CardHeader
           className="border-b border-gray-100 px-8 py-6"
           style={{
             background: 'linear-gradient(90deg, #a67ba9 0%, #c8a2c8 50%, #e6b8c0 100%)',
@@ -685,11 +715,19 @@ const Employees = () => {
                                 <Input
                                   id="phone_number"
                                   value={formData.phone_number}
-                                  onChange={(e) => setFormData({ ...formData, phone_number: e.target.value })}
-                                  className="h-11 pl-10 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 rounded-lg"
+                                  onChange={(e) => {
+                                    setFormData({ ...formData, phone_number: e.target.value });
+                                    if (formErrors.phone_number) {
+                                      setFormErrors({ ...formErrors, phone_number: '' });
+                                    }
+                                  }}
+                                  className={`h-11 pl-10 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 rounded-lg ${formErrors.phone_number ? 'border-red-500' : ''}`}
                                   placeholder="+91 9876543210"
                                 />
                               </div>
+                              {formErrors.phone_number && (
+                                <p className="text-xs text-red-500 mt-1">{formErrors.phone_number}</p>
+                              )}
                             </div>
                             <div className="space-y-2">
                               <Label htmlFor="employee_id" className="text-sm font-medium text-gray-700">
@@ -970,12 +1008,12 @@ const Employees = () => {
 
                       {/* Employee Name */}
                       <td>
-                        <div 
+                        <div
                           className="cursor-pointer hover:text-blue-600 transition-colors"
                           onClick={() => handleViewEmployee(employee)}
                         >
                           <div className="font-semibold text-gray-900 text-[15px]">
-                            {employee.full_name.split(' ').map(word => 
+                            {employee.full_name.split(' ').map(word =>
                               word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
                             ).join(' ')}
                           </div>
@@ -1032,21 +1070,20 @@ const Employees = () => {
                 >
                   Previous
                 </button>
-                
+
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
                   <button
                     key={pageNumber}
                     onClick={() => handlePageChange(pageNumber)}
-                    className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
-                      currentPage === pageNumber
-                        ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-md'
-                        : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
-                    }`}
+                    className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${currentPage === pageNumber
+                      ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-md'
+                      : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
+                      }`}
                   >
                     {pageNumber}
                   </button>
                 ))}
-                
+
                 <button
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === totalPages}
@@ -1147,7 +1184,7 @@ const Employees = () => {
                       letterSpacing: '-0.02em',
                     }}
                   >
-                    {viewingEmployee.full_name.split(' ').map(word => 
+                    {viewingEmployee.full_name.split(' ').map(word =>
                       word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
                     ).join(' ')}
                   </h1>
@@ -1463,11 +1500,19 @@ const Employees = () => {
                         <Input
                           id="edit-phone_number"
                           value={formData.phone_number}
-                          onChange={(e) => setFormData({ ...formData, phone_number: e.target.value })}
-                          className="h-11 pl-10 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 rounded-lg"
+                          onChange={(e) => {
+                            setFormData({ ...formData, phone_number: e.target.value });
+                            if (formErrors.phone_number) {
+                              setFormErrors({ ...formErrors, phone_number: '' });
+                            }
+                          }}
+                          className={`h-11 pl-10 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 rounded-lg ${formErrors.phone_number ? 'border-red-500' : ''}`}
                           placeholder="+91 9876543210"
                         />
                       </div>
+                      {formErrors.phone_number && (
+                        <p className="text-xs text-red-500 mt-1">{formErrors.phone_number}</p>
+                      )}
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="edit-employee_id" className="text-sm font-medium text-gray-700">
