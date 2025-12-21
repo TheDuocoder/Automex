@@ -1,10 +1,11 @@
 import React from 'react';
-import { Clock, Plus } from "lucide-react";
+import { Clock, Plus, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useCarSelectionStore } from "@/stores/carSelectionStore";
+import { useCartStore } from "@/stores/cartStore";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { toast as sonnerToast } from "sonner";
@@ -60,7 +61,8 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   descriptions = [],
   variant = "default",
 }) => {
-  const { isCarSelected, selectPart, triggerHighlight } = useCarSelectionStore();
+  const { isCarSelected, selectPart, triggerHighlight, selectedBrandId, selectedModelId, selectedFuelType, catalog } = useCarSelectionStore();
+  const { addToCart, isInCart } = useCartStore();
   const { toast } = useToast();
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
@@ -70,8 +72,9 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   const hasMoreFeatures = features.length > DEFAULT_VISIBLE;
   const visibleFeatures = showMore ? features : features.slice(0, DEFAULT_VISIBLE);
   const remainingCount = Math.max(features.length - DEFAULT_VISIBLE, 0);
-  const shouldShowButton = hasMoreFeatures || descriptions.length > 0;
+  const shouldShowButton = hasMoreFeatures;
   const showPrice = discountedPrice > 0;
+  const isAdded = isInCart(id || name);
 
   const handleBookClick = () => {
     // Check if user is authenticated
@@ -110,9 +113,30 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
       return;
     }
 
-    // If validation passes, store the part and show date picker
-    selectPart(name);
-    setIsDatePickerOpen(true);
+
+
+    if (isInCart(id || name)) {
+      return;
+    }
+
+    // If validation passes, add to cart
+    const brand = catalog.find(b => b.id === selectedBrandId);
+    const modelObj = brand?.models.find(m => m.id === selectedModelId);
+
+    addToCart({
+      id: id || name, // Use Name as ID fallback? Ideally ID.
+      name: name,
+      price: discountedPrice > 0 ? discountedPrice : originalPrice, // Fallback logic? Or just price.
+      image: thumbnail,
+      brand: brand?.name,
+      model: modelObj?.name,
+      fuelType: selectedFuelType || undefined
+    });
+
+    sonnerToast.success("Added to Cart", {
+      description: `${name} has been added to your cart.`,
+      duration: 3000,
+    });
   };
 
   const handleDatePickerClose = () => {
@@ -125,27 +149,35 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   const displayImage = (
     <div
       className={`${variant === "gom"
-          ? "w-[150px] h-[150px] rounded-[6px]"
-          : variant === "reference"
-            ? "w-[180px] h-[120px] rounded-lg"
-            : "h-48 w-full rounded-xl"
-        } overflow-hidden bg-white flex items-center justify-center`}
+        ? "w-[150px] h-[150px] rounded-[6px]"
+        : variant === "reference"
+          ? "w-[180px] h-[120px] rounded-lg"
+          : "h-full w-full rounded-[12px]"
+        } relative overflow-hidden bg-white flex items-center justify-center`}
       style={{ backgroundColor: '#ffffff' }}
     >
       {thumbnail ? (
-        <img src={thumbnail} alt={name} className="w-full h-full object-contain bg-white" style={{ backgroundColor: '#ffffff' }} />
+        <img
+          src={thumbnail}
+          alt={name}
+          className={`w-full h-full ${variant === "default" ? "object-cover" : "object-contain"} bg-white`}
+          style={{ backgroundColor: '#ffffff' }}
+        />
       ) : (
         <img
           src="/images/service_icons/car_service.png"
           alt="Service"
           className={`${variant === "gom"
-              ? "h-[60px] w-[60px]"
-              : variant === "reference"
-                ? "h-16 w-16"
-                : "h-24 w-24"
+            ? "h-[60px] w-[60px]"
+            : variant === "reference"
+              ? "h-16 w-16"
+              : "h-24 w-24"
             } object-contain opacity-90 bg-white`}
           style={{ backgroundColor: '#ffffff' }}
         />
+      )}
+      {variant === "default" && (
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
       )}
     </div>
   );
@@ -159,10 +191,10 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
       />
       <div className="space-y-4">
         <Card className={`relative overflow-hidden border border-gray-200 bg-white ${variant === "gom"
-            ? "rounded-[6px] shadow-sm"
-            : variant === "reference"
-              ? "rounded-xl shadow-sm"
-              : "rounded-xl"
+          ? "rounded-[6px] shadow-sm"
+          : variant === "reference"
+            ? "rounded-xl shadow-sm"
+            : "rounded-xl"
           }`}>
           {variant === "reference" ? (
             <div className="absolute top-4 right-4 flex items-center gap-1 text-sm text-gray-600">
@@ -177,10 +209,10 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
           )}
 
           <CardContent className={`${variant === "gom"
-              ? "p-4"
-              : variant === "reference"
-                ? "p-6"
-                : "p-4 md:p-5"
+            ? "p-4"
+            : variant === "reference"
+              ? "p-6"
+              : "p-4 md:p-5"
             }`}>
             {variant === "reference" ? (
               // Reference layout matching the first image exactly
@@ -210,34 +242,35 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 
                   {shouldShowButton && (
                     <button
-                      className="text-[#4CAF50] text-sm font-medium flex items-center gap-1 hover:text-[#45A049] transition-colors"
+                      className="text-[#4CAF50] text-sm font-bold flex items-center gap-1 hover:text-[#45A049] hover:underline transition-all mt-2"
                       onClick={() => setShowMore((prev) => !prev)}
                     >
-                      {!showMore && <Plus className="h-4 w-4" />}
+                      {!showMore && remainingCount === 0 && <Plus className="h-4 w-4" />}
                       {showMore
                         ? "Show Less"
                         : remainingCount > 0
-                          ? `+ ${remainingCount} more View All`
+                          ? <span className="flex items-center gap-1">+ {remainingCount} more services <ArrowRight className="h-3 w-3" /> View All</span>
                           : "View More"}
                     </button>
                   )}
 
-                  {showMore && descriptions.length > 0 && (
-                    <div className="space-y-2 text-sm text-gray-700 border border-gray-200 rounded-lg p-3 bg-gray-50/70">
-                      {descriptions.map((text, idx) => (
-                        <p key={idx} className="leading-relaxed">
-                          {text}
-                        </p>
-                      ))}
-                    </div>
-                  )}
 
-                  <div className="flex items-end justify-end pt-2">
+
+                  <div className="flex items-center justify-end gap-4 pt-2">
+                    {discountedPrice > 0 && (
+                      <div className="flex flex-col items-end">
+                        {originalPrice > discountedPrice && (
+                          <span className="text-xs text-gray-500 line-through">₹ {originalPrice.toLocaleString()}</span>
+                        )}
+                        <span className="text-xl font-bold text-gray-900">₹ {discountedPrice.toLocaleString()}</span>
+                      </div>
+                    )}
                     <Button
                       className="w-full sm:w-auto bg-white border-[3px] border-[#E53935] text-[#E53935] hover:bg-[#E53935] hover:text-white px-6 md:px-8 h-[44px] md:h-[48px] rounded-[12px] font-bold uppercase text-sm tracking-wider transition-all duration-300 min-w-[140px] hover:scale-105 hover:shadow-lg ml-auto"
                       onClick={handleBookClick}
+                      disabled={isAdded}
                     >
-                      Book
+                      {isAdded ? "ADDED" : "ADD"}
                     </Button>
                   </div>
                 </div>
@@ -246,7 +279,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
               // Original layout for other variants
               <div className="flex flex-col md:flex-row gap-4 md:gap-6">
                 <div className={`w-full ${variant === "gom" ? "md:w-[170px]" : "md:w-[220px]"} flex-shrink-0 h-full`}>
-                  <div className={`${variant === "gom" ? "h-auto" : "h-48"}`}>{displayImage}</div>
+                  <div className={`${variant === "gom" ? "h-auto" : "h-full"}`}>{displayImage}</div>
                 </div>
 
                 <div className="flex-1 space-y-3">
@@ -270,34 +303,35 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 
                   {shouldShowButton && (
                     <button
-                      className="text-green-600 text-sm font-semibold flex items-center gap-1 underline underline-offset-2 hover:text-green-700 transition-colors"
+                      className="text-green-600 text-sm font-bold flex items-center gap-1 hover:text-green-700 hover:underline transition-all mt-2"
                       onClick={() => setShowMore((prev) => !prev)}
                     >
-                      {!showMore && <Plus className="h-4 w-4" />}
+                      {!showMore && remainingCount === 0 && <Plus className="h-4 w-4" />}
                       {showMore
                         ? "Show Less"
                         : remainingCount > 0
-                          ? `+ ${remainingCount} more View All`
+                          ? <span className="flex items-center gap-1">+ {remainingCount} more services <ArrowRight className="h-3 w-3" /> View All</span>
                           : "View More"}
                     </button>
                   )}
 
-                  {showMore && descriptions.length > 0 && (
-                    <div className="space-y-2 text-sm text-gray-700 border border-gray-200 rounded-lg p-3 bg-gray-50/70">
-                      {descriptions.map((text, idx) => (
-                        <p key={idx} className="leading-relaxed">
-                          {text}
-                        </p>
-                      ))}
-                    </div>
-                  )}
 
-                  <div className="flex flex-col md:flex-row md:items-end md:justify-end gap-3 pt-1">
+
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-end gap-3 pt-1">
+                    {discountedPrice > 0 && (
+                      <div className="flex flex-col items-end justify-center">
+                        {originalPrice > discountedPrice && (
+                          <span className="text-xs text-gray-500 line-through">₹ {originalPrice.toLocaleString()}</span>
+                        )}
+                        <span className="text-xl font-bold text-gray-900">₹ {discountedPrice.toLocaleString()}</span>
+                      </div>
+                    )}
                     <Button
                       className="uppercase tracking-wider text-sm font-bold border-[3px] border-red-500 text-red-500 bg-white hover:bg-red-500 hover:text-white px-8 h-[48px] rounded-[12px] min-w-[140px] transition-all duration-300 hover:scale-105 hover:shadow-lg ml-auto"
                       onClick={handleBookClick}
+                      disabled={isAdded}
                     >
-                      Book
+                      {isAdded ? "ADDED" : "ADD"}
                     </Button>
                   </div>
                 </div>

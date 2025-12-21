@@ -11,6 +11,7 @@ import ContactUs from "./pages/ContactUs";
 import Services from "./pages/Services";
 import Profile from "./pages/Profile";
 import MyServices from "./pages/MyServices";
+import MyCart from "./pages/MyCart";
 import BookingDetails from "./pages/BookingDetails";
 import ServicesDemo from "./pages/ServicesDemo";
 import VehicleDetails from "./pages/VehicleDetails";
@@ -40,6 +41,7 @@ const App = () => {
               {/* Protected routes - require authentication */}
               <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
               <Route path="/my-services" element={<ProtectedRoute><MyServices /></ProtectedRoute>} />
+              <Route path="/my-cart" element={<ProtectedRoute><MyCart /></ProtectedRoute>} />
               <Route path="/extra-services" element={<ProtectedRoute><ExtraServices /></ProtectedRoute>} />
               <Route path="/booking/:bookingId" element={<ProtectedRoute><BookingDetails /></ProtectedRoute>} />
               <Route path="/vehicle/:id" element={<ProtectedRoute><VehicleDetails /></ProtectedRoute>} />

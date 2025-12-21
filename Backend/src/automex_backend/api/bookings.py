@@ -366,8 +366,9 @@ async def create_service_booking(
                 "service_name": booking_data.service_name,
                 "vehicle_make": booking_data.car_brand,
                 "vehicle_model": booking_data.car_model,
+                "booking_group_id": booking_data.booking_group_id,
             })
-            print(f"[INFO] Added car selection fields: brand={booking_data.car_brand}, model={booking_data.car_model}")
+            print(f"[INFO] Added car selection fields: brand={booking_data.car_brand}, model={booking_data.car_model}, group_id={booking_data.booking_group_id}")
         except Exception as field_error:
             print(f"[WARNING] Could not add car selection fields: {field_error}")
             # Fallback: use vehicle_make/model only

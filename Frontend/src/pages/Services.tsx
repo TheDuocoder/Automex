@@ -12,6 +12,9 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 
+import { useCartStore } from "@/stores/cartStore";
+import { ShoppingCart } from "lucide-react";
+
 gsap.registerPlugin(ScrollTrigger);
 
 interface ServicePackage {
@@ -37,11 +40,42 @@ interface ServicePackage {
   expertRating?: string;
 }
 
+
+const PRICING_CONFIG: Record<string, { general: number; premium: number }> = {
+  jaguar: { general: 7999, premium: 18499 },
+  "maruti-suzuki": { general: 2499, premium: 4999 },
+  mahindra: { general: 4499, premium: 5999 },
+  volvo: { general: 5999, premium: 7999 },
+  "land-rover": { general: 7999, premium: 14999 },
+  toyota: { general: 5999, premium: 7999 },
+  kia: { general: 4499, premium: 5999 },
+  mg: { general: 5999, premium: 7499 },
+  mini: { general: 5999, premium: 7999 },
+  lexus: { general: 10999, premium: 19999 },
+  hyundai: { general: 4999, premium: 6999 },
+  jeep: { general: 5999, premium: 7999 },
+  nissan: { general: 5499, premium: 6999 },
+  bmw: { general: 7999, premium: 14499 },
+  mercedes: { general: 7999, premium: 16499 },
+  skoda: { general: 4999, premium: 6999 },
+  volkswagen: { general: 4999, premium: 6999 },
+  audi: { general: 6999, premium: 11999 },
+};
+
 const Services = () => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const { resetSelection, selectedFuelType, selectedBrandId, selectedModelId, catalog } = useCarSelectionStore();
+  const { items } = useCartStore();
+
+  const getDynamicPrice = (type: "general" | "premium", defaultPrice: number) => {
+    if (!selectedBrandId) return 0;
+    if (PRICING_CONFIG[selectedBrandId]) {
+      return PRICING_CONFIG[selectedBrandId][type];
+    }
+    return defaultPrice;
+  };
 
   const [selectedCategory, setSelectedCategory] = useState("car-services");
   const [selectedBrand, setSelectedBrand] = useState("");
@@ -123,101 +157,54 @@ const Services = () => {
     "car-services": [
       {
         id: "basic-service",
-        name: "Basic Service",
+        name: "General Service",
         thumbnail: "/images/product_images/Car services/Basic Service.png",
         warranty: "1000 Kms or 3 Months Warranty",
         recommended: "Every 5000 Kms or 6 Months (Recommended)",
         features: [
-          { name: "Wiper Fluid Replacement", included: true },
-          { name: "Car Wash", included: true },
-          { name: "Engine Oil Replacement", included: true },
-          { name: "Battery Water Top Up", included: true },
-          { name: "Interior Vacuuming (Carpet & Seats)", included: true },
-          { name: "Air Filter Cleaning", included: true },
-          { name: "Spark Plug Inspection", included: true },
-          { name: "Coolant Top-Up 200ml", included: true }
+          { name: "Engine oil & oil filter replacement", included: true },
+          { name: "Air filter inspection", included: true },
+          { name: "Washer fluid top-up", included: true },
+          { name: "Brake fluid check", included: true },
+          { name: "Brake pad inspection", included: true }
         ],
-        moreServicesCount: 4,
+        moreServicesCount: 1,
         descriptions: [
           "Complete 34-point inspection covering brakes, suspension, electricals, tyres and safety.",
           "Top-up of all essential fluids including radiator coolant, power steering and windshield washer.",
           "Detailed cabin sanitisation with dashboard polish and door-pad wipe down.",
           "Road test with post-service quality checklist before final handover."
         ],
-        originalPrice: 3559,
-        discountedPrice: 2669,
+        originalPrice: getDynamicPrice("general", 3559),
+        discountedPrice: getDynamicPrice("general", 2669),
         duration: "4 Hrs Taken",
-        offer: {
-          price: 2169,
-          discount: "Extra ₹500 OFF",
-          badgeColor: "bg-green-500"
-        },
         isRecommended: false
       },
-      {
-        id: "standard-service",
-        name: "Standard Service",
-        thumbnail: "/images/product_images/Car services/Standard Service.png",
-        warranty: "1000 Kms or 3 Months Warranty",
-        recommended: "Every 10,000 Kms or 6 Months (Recommended)",
-        features: [
-          { name: "Car Scanning", included: true },
-          { name: "Battery Water Top up", included: true },
-          { name: "Interior Vacuuming (Carpet & Seats)", included: true },
-          { name: "Wiper Fluid Replacement", included: true },
-          { name: "Car Wash", included: true },
-          { name: "Brake Cleaning & Adjustment", included: true },
-          { name: "Fuel Filter Replacement", included: true },
-          { name: "AC Filter Replacement", included: true },
-          { name: "Throttle Body Cleaning", included: true },
-          { name: "Wheel Alignment Check", included: true }
-        ],
-        moreServicesCount: 6,
-        descriptions: [
-          "Premium service includes synthetic oil refill and OEM filter kit.",
-          "Comprehensive 50-point inspection with digital scan report.",
-          "Torque setting of suspension, steering and wheel components.",
-          "Exterior foam wash and interior germ cleaning with ozone treatment."
-        ],
-        originalPrice: 4813,
-        discountedPrice: 3369,
-        duration: "6 Hrs Taken",
-        isRecommended: true
-      },
+
       {
         id: "comprehensive-service",
-        name: "Comprehensive Service",
+        name: "Premium Service",
         thumbnail: "/images/product_images/Car services/Comprehensive Service.png",
         warranty: "1000 Kms or 1 Month Warranty",
         recommended: "Every 20,000 Kms or 12 Months (Recommended)",
         features: [
-          { name: "AC Filter Replacement", included: true },
-          { name: "Car Scanning", included: true },
-          { name: "Interior Vacuuming (Carpet & Seats)", included: true },
-          { name: "Front Brake Pads Serviced", included: true },
-          { name: "Wheel Alignment", included: true },
-          { name: "Engine Oil Replacement", included: true },
-          { name: "Air Filter Replacement", included: true },
-          { name: "Gear Oil Top Up", included: true },
-          { name: "Spark Plug Inspection", included: true },
-          { name: "Fuel Filter Cleaning", included: true },
-          { name: "Rear Brake Shoes Serviced", included: true },
-          { name: "Wheel Balancing", included: true },
-          { name: "Tyre Rotation", included: true },
-          { name: "Throttle Body Cleaning", included: true },
-          { name: "Coolant Top Up (200 ml)", included: true },
-          { name: "Brake Fluid Top Up", included: true }
+          { name: "Engine oil & oil filter replacement", included: true },
+          { name: "Air filter inspection", included: true },
+          { name: "Washer fluid top-up", included: true },
+          { name: "Brake fluid check", included: true },
+          { name: "Brake pad inspection", included: true },
+          { name: "Engine oil replacement", included: true },
+          { name: "Oil filter replacement", included: true },
+          { name: "Air filter replacement", included: true },
+          { name: "AC cabin filter replacement", included: true },
+          { name: "Diesel filter replacement", included: true }
         ],
-        moreServicesCount: 8,
-        originalPrice: 5299,
-        discountedPrice: 4199,
+        moreServicesCount: 6,
+        originalPrice: getDynamicPrice("premium", 5299),
+        discountedPrice: getDynamicPrice("premium", 4199),
         duration: "8 Hrs Taken",
         specialLabel: "FREE AC GAS TOP-UP",
-        offer: {
-          price: 3799,
-          discount: "Extra ₹400 OFF",
-          badgeColor: "bg-green-500"
-        },
+
         isRecommended: false,
         descriptions: [
           "Full synthetic oil service with OEM filter kit and complete top-up of all fluids.",
@@ -3551,13 +3538,13 @@ const Services = () => {
         "cleaning": "car-spa",
         "inspections": "car-services"
       };
-      
+
       const category = categoryMap[sectionId];
       if (category) {
         setSelectedCategory(category);
         // Scroll to top of page first
         window.scrollTo({ top: 0, behavior: 'auto' });
-        
+
         // Wait for the category to render then scroll to the header
         setTimeout(() => {
           const headerElement = containerRef.current?.querySelector('h1');
@@ -3825,18 +3812,24 @@ const Services = () => {
                               features={pkg.features}
                               moreServicesCount={pkg.moreServicesCount}
                               originalPrice={pkg.originalPrice}
-                              discountedPrice={pkg.discountedPrice}
+                              discountedPrice={
+                                ["basic-service", "comprehensive-service"].includes(pkg.id || "")
+                                  ? pkg.discountedPrice
+                                  : 0
+                              }
                               duration={pkg.duration}
                               offer={pkg.offer}
                               isRecommended={pkg.isRecommended}
                               specialLabel={pkg.specialLabel}
                               descriptions={pkg.descriptions}
                               variant={
-                                pkg.id === "front-brake-pads"
-                                  ? "reference"
-                                  : ["car-services", "batteries"].includes(selectedCategory)
-                                    ? "gom"
-                                    : "default"
+                                ["basic-service", "comprehensive-service"].includes(pkg.id || "")
+                                  ? "default"
+                                  : pkg.id === "front-brake-pads"
+                                    ? "reference"
+                                    : ["car-services", "batteries"].includes(selectedCategory)
+                                      ? "gom"
+                                      : "default"
                               }
                               onAddToCart={handleAddToCart}
                             />
@@ -3986,6 +3979,23 @@ const Services = () => {
           </div>
         </div>
       </div>
+
+      {items.length > 0 && (
+        <div className="fixed bottom-6 left-4 z-50 md:bottom-8 md:left-8">
+          <Button
+            className="rounded-full shadow-lg bg-red-600 hover:bg-red-700 text-white px-6 py-4 h-auto flex items-center gap-3 animate-in fade-in slide-in-from-bottom-5"
+            onClick={() => navigate('/my-cart')}
+          >
+            <div className="relative">
+              <ShoppingCart className="h-5 w-5" />
+              <span className="absolute -top-2 -right-2 bg-white text-red-600 text-[10px] font-bold h-4 w-4 flex items-center justify-center rounded-full">
+                {items.length}
+              </span>
+            </div>
+            <span className="text-sm font-bold tracking-wide">View Cart</span>
+          </Button>
+        </div>
+      )}
       <Footer />
     </div>
   );

@@ -14,6 +14,7 @@ import {
   Wrench,
   History,
   MessageSquare,
+  ShoppingCart,
 } from "lucide-react";
 
 interface HelpDropdownProps {
@@ -59,6 +60,12 @@ const HelpDropdown = ({ variant = "light" }: HelpDropdownProps) => {
       onClick: () => navigate("/my-services"),
     },
     {
+      label: "My Cart",
+      icon: ShoppingCart,
+      path: "/my-cart",
+      onClick: () => navigate("/my-cart"),
+    },
+    {
       label: "Contact Us",
       icon: MessageSquare,
       path: "/contact-us",
@@ -80,7 +87,7 @@ const HelpDropdown = ({ variant = "light" }: HelpDropdownProps) => {
   return (
     <DropdownMenu onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
-        <button 
+        <button
           className="nav-button-rainbow group flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-300 ease-out active:scale-95 relative overflow-hidden"
           style={{
             background: 'transparent',
@@ -94,15 +101,15 @@ const HelpDropdown = ({ variant = "light" }: HelpDropdownProps) => {
           }}
         >
           {/* Glossy Highlight */}
-          <div 
+          <div
             className="absolute top-0 left-0 right-0 h-[40%] pointer-events-none"
             style={{
               background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, transparent 100%)',
               borderRadius: '12px 12px 0 0',
             }}
           />
-          
-          <div 
+
+          <div
             className="h-6 w-6 rounded-full flex items-center justify-center flex-shrink-0 text-white transition-transform duration-300 group-hover:rotate-12 relative z-10"
             style={{
               background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))',
@@ -113,9 +120,9 @@ const HelpDropdown = ({ variant = "light" }: HelpDropdownProps) => {
             <HelpCircle className="h-3.5 w-3.5 text-white" strokeWidth={2} />
           </div>
           <span className="text-base font-medium text-white relative z-10">Help</span>
-          <ChevronDown 
-            className={`h-4 w-4 text-white transition-transform duration-300 relative z-10 ${isOpen ? 'rotate-180' : ''}`} 
-            strokeWidth={2} 
+          <ChevronDown
+            className={`h-4 w-4 text-white transition-transform duration-300 relative z-10 ${isOpen ? 'rotate-180' : ''}`}
+            strokeWidth={2}
           />
         </button>
       </DropdownMenuTrigger>

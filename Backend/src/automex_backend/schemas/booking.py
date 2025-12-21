@@ -38,6 +38,7 @@ class ServiceBookingCreate(BaseModel):
     car_model: str = Field(..., min_length=1, max_length=100)
     fuel_type: str = Field(..., min_length=1, max_length=50)
     service_name: str = Field(..., min_length=1, max_length=255)
+    booking_group_id: Optional[str] = Field(None, max_length=100)
 
 
 class BookingStatusUpdate(BaseModel):
@@ -92,6 +93,8 @@ class BookingRead(BookingBase):
     car_model: Optional[str] = None
     fuel_type: Optional[str] = None
     service_name: Optional[str] = None
+    # Booking group ID for multi-service bookings
+    booking_group_id: Optional[str] = None
     # User email (for admin view)
     user_email: Optional[str] = None
     # Employee assignment

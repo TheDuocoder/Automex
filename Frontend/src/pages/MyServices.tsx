@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/componen
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, Car, Clock, CheckCircle2, XCircle, Loader2, AlertCircle, MapPin, Wrench, Search, Mail, User } from "lucide-react";
+import { Calendar, Car, Clock, CheckCircle2, XCircle, Loader2, AlertCircle, MapPin, Wrench, Search, Mail, User, ChevronRight, LayoutGrid } from "lucide-react";
 import { getUserBookings, cancelBooking, updateBookingStatus, type Booking, BookingStatus } from "@/services/bookingService";
 import { getBookingCosts } from "@/services/costService";
 import { useToast } from "@/hooks/use-toast";
@@ -24,67 +24,41 @@ const MyServices = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [cancellingId, setCancellingId] = useState<number | null>(null);
-  const [updatingStatusId, setUpdatingStatusId] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState<string>("all");
-  const [bookingCosts, setBookingCosts] = useState<Record<number, number>>({}); // booking_id -> total cost
+  const [bookingCosts, setBookingCosts] = useState<Record<number, number>>({});
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  // Check if user is Admin or Super Admin
   const isAdmin = user?.role?.name?.toLowerCase() === "admin" || user?.role?.name?.toLowerCase() === "super" || user?.is_superuser;
+  const isSuperAdmin = user?.role?.name?.toLowerCase() === "super" || user?.is_superuser;
 
   const loadBookings = async () => {
     try {
       setIsLoading(true);
-
-      // Check if token exists before making API call
       const token = localStorage.getItem('auth_token');
       if (!token) {
-        console.log('[MyServices] No auth token found, redirecting to home');
-        // Clear auth state silently and redirect to show welcome card
         await logout();
         navigate('/');
         return;
       }
 
       const data = await getUserBookings();
-      // Sort bookings by date (newest first)
       const sortedData = data.sort((a, b) => new Date(b.booking_date).getTime() - new Date(a.booking_date).getTime());
-      // Debug: Log assigned employee data
-      console.log('[MyServices] Bookings with assigned employees:', sortedData.filter(b => b.assigned_employee_name));
       setBookings(sortedData);
 
-      // Load costs for all bookings
       const costsMap: Record<number, number> = {};
       await Promise.all(
         sortedData.map(async (booking) => {
           try {
             const costsResponse = await getBookingCosts(booking.id);
             costsMap[booking.id] = costsResponse.total;
-          } catch (error) {
-            // If costs don't exist yet, set to 0
+          } catch {
             costsMap[booking.id] = 0;
           }
         })
       );
       setBookingCosts(costsMap);
     } catch (error) {
-      console.error('[MyServices] Error loading bookings:', error);
-      const errorMessage = error instanceof Error ? error.message : "Failed to load bookings";
-
-      // If unauthorized or session expired, silently clear auth and redirect to welcome card
-      if (errorMessage.includes('Unauthorized') || errorMessage.includes('401') || errorMessage.includes('Session')) {
-        console.log('[MyServices] Session expired, redirecting to home');
-        // Clear auth state silently and redirect to show welcome card
-        await logout();
-        navigate('/');
-        return;
-      }
-
-      toast({
-        title: "Error",
-        description: errorMessage,
-        variant: "destructive",
-      });
+      console.error(error);
     } finally {
       setIsLoading(false);
     }
@@ -100,570 +74,245 @@ const MyServices = () => {
     if (state?.bookingSuccess) {
       toast({
         title: "Booking Successful!",
-        description: `${state.serviceName || 'Service'} has been booked successfully.`,
+        description: state.serviceName ? `${state.serviceName} booked successfully.` : "Service booked successfully.",
         duration: 5000,
       });
       window.history.replaceState({}, document.title);
     }
 
     loadBookings();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, navigate, location.state]);
 
-  const handleCancel = async (bookingId: number) => {
-    if (!confirm("Are you sure you want to cancel this booking?")) {
-      return;
-    }
+  const handleCancel = async (e: React.MouseEvent, bookingId: number) => {
+    e.stopPropagation(); // Prevent card navigation
+    if (!confirm("Are you sure you want to cancel this booking?")) return;
 
     try {
       setCancellingId(bookingId);
       await cancelBooking(bookingId);
       toast({
-        title: "Booking Cancelled",
-        description: "Your booking has been cancelled successfully.",
+        title: "Booking Deleted",
+        description: "Your booking has been deleted successfully.",
       });
       await loadBookings();
     } catch (error) {
-      toast({
-        title: "Cancellation Failed",
-        description: error instanceof Error ? error.message : "Failed to cancel booking",
-        variant: "destructive",
-      });
+      if (error instanceof Error && (error.message.includes('404') || error.message.toLowerCase().includes('not found'))) {
+        // Booking already deleted
+        toast({
+          title: "Booking Already Deleted",
+          description: "The booking was already deleted.",
+        });
+        await loadBookings();
+      } else {
+        toast({
+          title: "Delete Failed",
+          description: "Failed to delete booking",
+          variant: "destructive",
+        });
+      }
     } finally {
       setCancellingId(null);
     }
   };
 
-  const handleStatusChange = async (bookingId: number, newStatus: BookingStatus) => {
-    if (!isAdmin) {
-      toast({
-        title: "Permission Denied",
-        description: "Only Admin and Super Admin can change booking status",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    try {
-      setUpdatingStatusId(bookingId);
-      const updatedBooking = await updateBookingStatus(bookingId, newStatus);
-
-      // Show success notification
-      if (updatedBooking.user_email && updatedBooking.email_sent) {
-        sonnerToast.success("Status Updated Successfully", {
-          description: `Notification sent to ${updatedBooking.user_email}`,
-          duration: 5000,
-          icon: <Mail className="h-4 w-4" />,
-          position: "top-right",
-          className: "bg-green-50 border-green-200",
-        });
-      } else {
-        toast({
-          title: "Status Updated Successfully",
-          description: `Booking #${bookingId} moved to ${getStatusLabel(newStatus)}`,
-          duration: 3000,
-        });
-      }
-
-      await loadBookings();
-    } catch (error) {
-      console.error("Failed to update booking status:", error);
-      toast({
-        title: "Update Failed",
-        description: error instanceof Error ? error.message : "Failed to update booking status. Please try again.",
-        variant: "destructive",
-        duration: 5000,
-      });
-    } finally {
-      setUpdatingStatusId(null);
-    }
-  };
-
-  const getStatusLabel = (status: BookingStatus): string => {
-    const labels: Record<BookingStatus, string> = {
-      [BookingStatus.PENDING]: "Pending",
-      [BookingStatus.ANALYSE]: "Analyse",
-      [BookingStatus.IN_PROGRESS]: "In Progress",
-      [BookingStatus.COMPLETED]: "Done",
-      [BookingStatus.CANCELLED]: "Cancelled",
-    };
-    return labels[status] || status;
-  };
-
-  const getStatusColor = (status: BookingStatus): string => {
+  const getStatusColor = (status: BookingStatus) => {
     const colors: Record<BookingStatus, string> = {
-      [BookingStatus.PENDING]: "bg-white text-yellow-800 border-yellow-200",
-      [BookingStatus.ANALYSE]: "bg-white text-blue-800 border-blue-200",
-      [BookingStatus.IN_PROGRESS]: "bg-white text-purple-800 border-purple-200",
-      [BookingStatus.COMPLETED]: "bg-white text-green-800 border-green-200",
-      [BookingStatus.CANCELLED]: "bg-white text-red-800 border-red-200",
+      [BookingStatus.PENDING]: "bg-yellow-100 text-yellow-800 border-yellow-200",
+      [BookingStatus.ANALYSE]: "bg-blue-100 text-blue-800 border-blue-200",
+      [BookingStatus.IN_PROGRESS]: "bg-purple-100 text-purple-800 border-purple-200",
+      [BookingStatus.COMPLETED]: "bg-green-100 text-green-800 border-green-200",
+      [BookingStatus.CANCELLED]: "bg-red-100 text-red-800 border-red-200",
     };
     return colors[status] || colors[BookingStatus.PENDING];
   };
 
-  const getStatusIcon = (status: BookingStatus) => {
-    switch (status) {
-      case BookingStatus.COMPLETED:
-        return <CheckCircle2 className="h-4 w-4" />;
-      case BookingStatus.CANCELLED:
-        return <XCircle className="h-4 w-4" />;
-      case BookingStatus.IN_PROGRESS:
-        return <Loader2 className="h-4 w-4 animate-spin" />;
-      case BookingStatus.ANALYSE:
-        return <Search className="h-4 w-4" />; // Using Search icon locally defined or imported
-      default:
-        return <Clock className="h-4 w-4" />;
-    }
-  };
-
-  // Helper for Search icon since it wasn't imported in the original file but used in my switch
-  const Search = ({ className }: { className?: string }) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <circle cx="11" cy="11" r="8" />
-      <path d="m21 21-4.3-4.3" />
-    </svg>
-  );
-
-  const getNextStatus = (currentStatus: BookingStatus): BookingStatus | null => {
-    switch (currentStatus) {
-      case BookingStatus.PENDING:
-        return BookingStatus.ANALYSE;
-      case BookingStatus.ANALYSE:
-        return BookingStatus.IN_PROGRESS;
-      case BookingStatus.IN_PROGRESS:
-        return BookingStatus.COMPLETED;
-      default:
-        return null;
-    }
-  };
-
   const filterBookings = (status: string) => {
     let filtered = status === "all" ? bookings : bookings.filter((b) => b.status === status);
-
-    // Apply search filter
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter((booking) => {
-        const serviceName = booking.service_name?.toLowerCase() || "";
-        const carBrand = booking.car_brand?.toLowerCase() || "";
-        const carModel = booking.car_model?.toLowerCase() || "";
-        const status = booking.status?.toLowerCase() || "";
-        const bookingId = booking.id.toString();
-
-        return (
-          serviceName.includes(query) ||
-          carBrand.includes(query) ||
-          carModel.includes(query) ||
-          status.includes(query) ||
-          bookingId.includes(query)
-        );
-      });
+      filtered = filtered.filter(b =>
+        (b.service_name?.toLowerCase() || "").includes(query) ||
+        (b.car_brand?.toLowerCase() || "").includes(query)
+      );
     }
-
     return filtered;
   };
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
+  // Group bookings by booking_group_id
+  const groupBookingsByGroupId = (bookingsList: Booking[]) => {
+    const groups: { [key: string]: Booking[] } = {};
+    const ungrouped: Booking[] = [];
+
+    bookingsList.forEach(booking => {
+      if (booking.booking_group_id) {
+        if (!groups[booking.booking_group_id]) {
+          groups[booking.booking_group_id] = [];
+        }
+        groups[booking.booking_group_id].push(booking);
+      } else {
+        ungrouped.push(booking);
       }
-    }
+    });
+
+    // Return array of groups (each containing one or more bookings)
+    return [
+      ...Object.values(groups),
+      ...ungrouped.map(b => [b])
+    ];
   };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 12
-      }
-    }
-  };
-
-  const BookingCard = ({ booking }: { booking: Booking }) => (
-    <motion.div
-      variants={itemVariants}
-      layout
-      initial="hidden"
-      animate="visible"
-      exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
-      whileHover={{ y: -5, transition: { duration: 0.2 } }}
-    >
-      <Card
-        className="h-full hover:shadow-xl transition-all duration-300 border-l-4 overflow-hidden group cursor-pointer relative"
-        style={{
-          borderLeftColor:
-            booking.status === BookingStatus.COMPLETED ? '#22c55e' :
-              booking.status === BookingStatus.CANCELLED ? '#ef4444' :
-                booking.status === BookingStatus.IN_PROGRESS ? '#a855f7' :
-                  booking.status === BookingStatus.ANALYSE ? '#3b82f6' :
-                    '#eab308',
-          backgroundColor:
-            booking.status === BookingStatus.PENDING ? '#EFDFBB' :
-              booking.status === BookingStatus.IN_PROGRESS ? '#F0FF00' :
-                booking.status === BookingStatus.ANALYSE ? '#FFB5E1' :
-                  booking.status === BookingStatus.CANCELLED ? '#FF4D4D' :
-                    booking.status === BookingStatus.COMPLETED ? '#B6F37A' : undefined
-        }}
-        onClick={() => navigate(`/booking/${booking.id}`)}
-      >
-        <CardHeader className="pb-3 border-b border-gray-100">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <CardTitle className="text-lg font-bold line-clamp-1 group-hover:text-primary transition-colors" style={{ color: '#000000' }}>
-                {booking.service_name || "Service Booking"}
-              </CardTitle>
-              <div className="flex items-center gap-2 mt-1.5">
-                <Badge variant="outline" className={cn("font-bold flex items-center gap-1.5", getStatusColor(booking.status))}>
-                  {getStatusIcon(booking.status)}
-                  {getStatusLabel(booking.status)}
-                </Badge>
-                <span className="text-xs font-mono" style={{ color: '#000000' }}>#{booking.id}</span>
-              </div>
-            </div>
-            {booking.created_at && (
-              <div className="text-right flex-shrink-0">
-                <div className="text-xs font-medium" style={{ color: '#000000' }}>Created:</div>
-                <div className="text-xs mt-0.5" style={{ color: '#000000' }}>
-                  {(() => {
-                    let dateStr = booking.created_at;
-                    if (typeof dateStr === 'string' && !dateStr.endsWith('Z') && !dateStr.includes('+')) {
-                      dateStr = dateStr + 'Z';
-                    }
-                    const date = new Date(dateStr);
-                    return format(date, "MMM d, yyyy");
-                  })()}
-                </div>
-                <div className="text-xs font-bold mt-0.5" style={{ color: '#000000' }}>
-                  {(() => {
-                    let dateStr = booking.created_at;
-                    if (typeof dateStr === 'string' && !dateStr.endsWith('Z') && !dateStr.includes('+')) {
-                      dateStr = dateStr + 'Z';
-                    }
-                    const date = new Date(dateStr);
-                    const hours = date.getHours();
-                    const minutes = String(date.getMinutes()).padStart(2, '0');
-                    const ampm = hours >= 12 ? 'PM' : 'AM';
-                    const displayHours = hours % 12 || 12;
-                    return `${String(displayHours).padStart(2, '0')}:${minutes} ${ampm}`;
-                  })()}
-                </div>
-              </div>
-            )}
-          </div>
-        </CardHeader>
-
-        <CardContent className="pt-4 pb-2 space-y-4">
-          {/* Vehicle Info */}
-          <div className="flex items-start gap-3">
-            <div className="p-2 bg-gray-100 rounded-lg text-gray-600 group-hover:bg-white group-hover:shadow-sm transition-all">
-              <Car className="h-5 w-5" />
-            </div>
-            <div className="flex-1 flex items-start justify-between gap-4">
-              <div className="flex-1">
-                <p className="text-xs font-medium uppercase tracking-wider" style={{ color: '#000000' }}>Vehicle</p>
-                <p className="text-sm font-semibold" style={{ color: '#000000' }}>
-                  {booking.car_brand || booking.vehicle_make} {booking.car_model || booking.vehicle_model}
-                </p>
-                {booking.fuel_type && (
-                  <p className="text-xs" style={{ color: '#000000' }}>{booking.fuel_type}</p>
-                )}
-              </div>
-              {/* Assigned Employee aligned with Vehicle on the right */}
-              {booking.assigned_employee_name && (
-                <div className="text-right">
-                  <p className="text-xs font-medium uppercase tracking-wider" style={{ color: '#000000' }}>Assigned To</p>
-                  <p className="text-sm font-semibold" style={{ color: '#000000' }}>
-                    {booking.assigned_employee_name}
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Date Info */}
-          <div className="flex items-start gap-3">
-            <div className="p-2 bg-gray-100 rounded-lg text-gray-600 group-hover:bg-white group-hover:shadow-sm transition-all">
-              <Calendar className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="text-xs font-medium uppercase tracking-wider" style={{ color: '#000000' }}>Scheduled For</p>
-              <p className="text-sm font-semibold" style={{ color: '#000000' }}>
-                {format(new Date(booking.booking_date), "EEE, MMM d, yyyy")}
-              </p>
-            </div>
-          </div>
-
-          {/* Cost Info (show total cost from Payment Summary if available, otherwise estimated cost) */}
-          {(bookingCosts[booking.id] > 0 || booking.estimated_cost) && (
-            <div className="flex items-start gap-3">
-              <div className="p-2 bg-gray-100 rounded-lg text-gray-600 group-hover:bg-white group-hover:shadow-sm transition-all">
-                <span className="h-5 w-5 flex items-center justify-center font-bold text-sm">₹</span>
-              </div>
-              <div>
-                <p className="text-xs font-medium uppercase tracking-wider" style={{ color: '#000000' }}>
-                  {bookingCosts[booking.id] > 0 ? "Total Cost" : "Est. Cost"}
-                </p>
-                <p className="text-sm font-semibold" style={{ color: '#000000' }}>
-                  ₹{(bookingCosts[booking.id] > 0 ? bookingCosts[booking.id] : booking.estimated_cost || 0).toLocaleString()}
-                </p>
-              </div>
-            </div>
-          )}
-        </CardContent>
-
-        <CardFooter className="pt-2 pb-4 px-4 md:px-6 border-t border-gray-100 mt-2">
-          <div className="w-full flex flex-col sm:flex-row gap-2" onClick={(e) => e.stopPropagation()}>
-            {isAdmin && (() => {
-              const nextStatus = getNextStatus(booking.status);
-              if (nextStatus) {
-                // Only enable button if employee is assigned
-                if (booking.assigned_employee_id) {
-                  return (
-                    <Button
-                      size="sm"
-                      onClick={() => handleStatusChange(booking.id, nextStatus)}
-                      disabled={updatingStatusId === booking.id}
-                      className="flex-1 text-white hover:bg-purple-700 w-full sm:w-auto"
-                      style={{ backgroundColor: '#a855f7' }}
-                    >
-                      {updatingStatusId === booking.id ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        `Move to ${getStatusLabel(nextStatus)}`
-                      )}
-                    </Button>
-                  );
-                } else {
-                  // Show disabled button with message
-                  return (
-                    <Button
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toast({
-                          title: "Employee Assignment Required",
-                          description: "Please assign an employee to this booking before changing status.",
-                          variant: "destructive",
-                        });
-                      }}
-                      disabled={true}
-                      className="flex-1 text-white w-full sm:w-auto cursor-not-allowed"
-                      style={{ backgroundColor: '#9ca3af' }}
-                    >
-                      Assign Employee First
-                    </Button>
-                  );
-                }
-              }
-              return null;
-            })()}
-
-            {booking.status !== BookingStatus.COMPLETED &&
-              booking.status !== BookingStatus.CANCELLED && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleCancel(booking.id)}
-                  disabled={cancellingId === booking.id}
-                  className="flex-1 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 hover:border-red-300 w-full sm:w-auto"
-                >
-                  {cancellingId === booking.id ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    "Cancel"
-                  )}
-                </Button>
-              )}
-
-            {(booking.status === BookingStatus.COMPLETED || booking.status === BookingStatus.CANCELLED) && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate(`/booking/${booking.id}`)}
-                className="w-full hover:bg-white/50"
-                style={{ backgroundColor: '#FFFFFF', color: '#000000' }}
-              >
-                View Details
-              </Button>
-            )}
-          </div>
-        </CardFooter>
-      </Card>
-    </motion.div>
-  );
 
   if (!isAuthenticated) return null;
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header />
-
-      <main className="flex-grow container mx-auto px-4 md:px-6 lg:px-8 py-8 md:py-12">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 md:gap-4 mb-8">
+      <main className="flex-grow container mx-auto px-4 md:px-6 py-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
             <div>
-              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight">My Services</h1>
-              <p className="text-gray-500 mt-2 text-sm md:text-lg">Track and manage your vehicle service history</p>
-            </div>
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
-              <div className="relative flex items-center flex-1 sm:flex-initial">
-                <input
-                  type="text"
-                  placeholder="Search bookings..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full sm:w-64 px-4 py-2 pr-12 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
-                />
-                <Button
-                  variant="outline"
-                  className="absolute right-0 top-0 rounded-full px-4 text-white border-[#FF0000] shadow-md transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(255,0,0,0.5)] active:scale-95 active:shadow-[0_0_30px_rgba(255,0,0,0.7)]"
-                  style={{
-                    background: '#FF0000',
-                    animation: 'none'
-                  }}
-                  disabled
-                >
-                  <Search className="h-4 w-4" />
-                </Button>
-              </div>
-              <Button
-                onClick={() => navigate('/services')}
-                className="bg-black text-white hover:bg-gray-800 rounded-full px-6 shadow-lg hover:shadow-xl transition-all w-full sm:w-auto"
-              >
-                <Wrench className="mr-2 h-4 w-4" />
-                Book New Service
-              </Button>
+              <h1 className="text-3xl font-bold mb-2">My Services</h1>
+              <p className="text-gray-500">Manage your active and past service bookings</p>
             </div>
           </div>
 
-          {isLoading ? (
-            <div className="flex flex-col items-center justify-center py-32">
-              <Loader2 className="h-10 w-10 animate-spin text-primary mb-4" />
-              <p className="text-gray-500 animate-pulse">Loading your bookings...</p>
-            </div>
-          ) : bookings.length === 0 ? (
-            <Card className="p-8 md:p-16 text-center border-dashed border-2 bg-white/50">
-              <div className="w-16 h-16 md:w-20 md:h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Car className="h-8 w-8 md:h-10 md:w-10 text-gray-400" />
-              </div>
-              <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-3">No Bookings Yet</h2>
-              <p className="text-gray-500 mb-8 max-w-md mx-auto text-sm md:text-base">
-                You haven't booked any services with us yet. Schedule your first service today to keep your vehicle in top condition.
-              </p>
-              <Button
-                onClick={() => navigate('/services')}
-                size="lg"
-                className="bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white rounded-full px-8 w-full sm:w-auto"
-              >
-                Explore Services
-              </Button>
-            </Card>
-          ) : (
-            <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="w-full justify-start overflow-x-auto bg-white p-1 border border-gray-200 rounded-xl mb-8 h-auto flex-nowrap gap-1 scrollbar-hide">
-                <TabsTrigger value="all" className="rounded-lg px-4 py-2 whitespace-nowrap flex-shrink-0 data-[state=active]:bg-black data-[state=active]:text-white">
-                  All <Badge variant="secondary" className="ml-2 bg-gray-100 text-gray-600">{bookings.length}</Badge>
-                </TabsTrigger>
+          <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="mb-8 w-full justify-start overflow-x-auto h-auto p-1 bg-white border rounded-xl">
+              {["all", BookingStatus.PENDING, BookingStatus.ANALYSE, BookingStatus.IN_PROGRESS, BookingStatus.COMPLETED, BookingStatus.CANCELLED].map(status => (
                 <TabsTrigger
-                  value={BookingStatus.PENDING}
-                  className="rounded-lg px-4 py-2 whitespace-nowrap flex-shrink-0 data-[state=active]:text-black"
-                  style={{
-                    backgroundColor: activeTab === BookingStatus.PENDING ? '#EFDFBB' : undefined
-                  }}
+                  key={status}
+                  value={status}
+                  className="capitalize px-4 py-2 min-w-[100px] data-[state=active]:bg-red-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all"
                 >
-                  Pending <Badge variant="secondary" className="ml-2 bg-gray-100 text-gray-600">{bookings.filter(b => b.status === BookingStatus.PENDING).length}</Badge>
+                  {status === "all" ? "All" : status.replace('_', ' ')}
                 </TabsTrigger>
-                <TabsTrigger
-                  value={BookingStatus.ANALYSE}
-                  className="rounded-lg px-4 py-2 whitespace-nowrap flex-shrink-0 data-[state=active]:text-black"
-                  style={{
-                    backgroundColor: activeTab === BookingStatus.ANALYSE ? '#FFB5E1' : undefined
-                  }}
-                >
-                  Analyse <Badge variant="secondary" className="ml-2 bg-gray-100 text-gray-600">{bookings.filter(b => b.status === BookingStatus.ANALYSE).length}</Badge>
-                </TabsTrigger>
-                <TabsTrigger
-                  value={BookingStatus.IN_PROGRESS}
-                  className="rounded-lg px-4 py-2 whitespace-nowrap flex-shrink-0 data-[state=active]:text-black"
-                  style={{
-                    backgroundColor: activeTab === BookingStatus.IN_PROGRESS ? '#F0FF00' : undefined
-                  }}
-                >
-                  In Progress <Badge variant="secondary" className="ml-2 bg-gray-100 text-gray-600">{bookings.filter(b => b.status === BookingStatus.IN_PROGRESS).length}</Badge>
-                </TabsTrigger>
-                <TabsTrigger
-                  value={BookingStatus.COMPLETED}
-                  className="rounded-lg px-4 py-2 whitespace-nowrap flex-shrink-0 data-[state=active]:text-black"
-                  style={{
-                    backgroundColor: activeTab === BookingStatus.COMPLETED ? '#B6F37A' : undefined
-                  }}
-                >
-                  Done <Badge variant="secondary" className="ml-2 bg-gray-100 text-gray-600">{bookings.filter(b => b.status === BookingStatus.COMPLETED).length}</Badge>
-                </TabsTrigger>
-                <TabsTrigger
-                  value={BookingStatus.CANCELLED}
-                  className="rounded-lg px-4 py-2 whitespace-nowrap flex-shrink-0 data-[state=active]:text-black"
-                  style={{
-                    backgroundColor: activeTab === BookingStatus.CANCELLED ? '#FF4D4D' : undefined
-                  }}
-                >
-                  Cancelled <Badge variant="secondary" className="ml-2 bg-gray-100 text-gray-600">{bookings.filter(b => b.status === BookingStatus.CANCELLED).length}</Badge>
-                </TabsTrigger>
-              </TabsList>
-              <AnimatePresence mode="wait">
-                {["all", BookingStatus.PENDING, BookingStatus.ANALYSE, BookingStatus.IN_PROGRESS, BookingStatus.COMPLETED, BookingStatus.CANCELLED].map((tabValue) => (
-                  <TabsContent key={tabValue} value={tabValue} className="mt-0 focus-visible:outline-none">
-                    {filterBookings(tabValue).length === 0 ? (
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        className="text-center py-20 bg-white rounded-2xl border border-dashed border-gray-200"
-                      >
-                        <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                          <AlertCircle className="h-8 w-8 text-gray-300" />
-                        </div>
-                        <h3 className="text-lg font-medium text-gray-900">No bookings found</h3>
-                        <p className="text-gray-500 mt-1">There are no bookings in this category.</p>
-                      </motion.div>
-                    ) : (
-                      <motion.div
-                        variants={containerVariants}
-                        initial="hidden"
-                        animate="visible"
-                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                      >
-                        {filterBookings(tabValue).map((booking) => (
-                          <BookingCard key={booking.id} booking={booking} />
-                        ))}
-                      </motion.div>
-                    )}
-                  </TabsContent>
-                ))}
-              </AnimatePresence>
-            </Tabs>
-          )}
+              ))}
+            </TabsList>
+
+            {["all", BookingStatus.PENDING, BookingStatus.ANALYSE, BookingStatus.IN_PROGRESS, BookingStatus.COMPLETED, BookingStatus.CANCELLED].map(status => {
+              const filteredBookings = filterBookings(status);
+              const groupedBookings = groupBookingsByGroupId(filteredBookings);
+
+              return (
+                <TabsContent key={status} value={status}>
+                  {groupedBookings.length === 0 ? (
+                    <div className="text-center py-20 bg-white rounded-xl border-dashed border-2">
+                      <Car className="h-12 w-12 text-gray-300 mx-auto mb-3" />
+                      <p className="text-gray-500">No bookings found</p>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {groupedBookings.map((bookingGroup, groupIndex) => {
+                        // Use the first booking in group for common metadata
+                        const primaryBooking = bookingGroup[0];
+                        const isGroup = bookingGroup.length > 1;
+                        const totalCost = bookingGroup.reduce((sum, b) => sum + (bookingCosts[b.id] || b.estimated_cost || 0), 0);
+
+                        return (
+                          <motion.div
+                            key={isGroup ? `group-${groupIndex}` : `single-${primaryBooking.id}`}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            whileHover={{ y: -5 }}
+                            transition={{ duration: 0.2 }}
+                            onClick={() => navigate(`/booking/${primaryBooking.id}`)}
+                            className="cursor-pointer"
+                          >
+                            <Card className="h-full hover:shadow-lg transition-shadow border-t-4 overflow-hidden relative flex flex-col"
+                              style={{
+                                borderTopColor: primaryBooking.status === BookingStatus.COMPLETED ? '#22c55e' :
+                                  primaryBooking.status === BookingStatus.CANCELLED ? '#ef4444' :
+                                    primaryBooking.status === BookingStatus.IN_PROGRESS ? '#a855f7' :
+                                      primaryBooking.status === BookingStatus.ANALYSE ? '#3b82f6' : '#eab308'
+                              }}>
+                              <CardHeader className="bg-gray-50/50 pb-3">
+                                <div className="flex justify-between items-start">
+                                  <div className="flex flex-wrap gap-2">
+                                    <Badge variant="secondary" className={cn("mb-2", getStatusColor(primaryBooking.status))}>
+                                      {primaryBooking.status.replace('_', ' ')}
+                                    </Badge>
+                                    {isGroup && (
+                                      <Badge variant="outline" className="mb-2">
+                                        {bookingGroup.length} Services
+                                      </Badge>
+                                    )}
+                                  </div>
+                                  <span className="text-xs text-gray-400 font-medium whitespace-nowrap">
+                                    {format(new Date(primaryBooking.booking_date), "MMM d, yyyy")}
+                                  </span>
+                                </div>
+                                <CardTitle className="text-lg font-bold flex flex-col gap-1">
+                                  <span className="flex items-center gap-2">
+                                    <Car className="h-5 w-5 text-gray-500" />
+                                    {primaryBooking.car_brand || primaryBooking.vehicle_make} {primaryBooking.car_model || primaryBooking.vehicle_model}
+                                  </span>
+                                </CardTitle>
+                              </CardHeader>
+                              <CardContent className="pt-4 flex-grow">
+                                <div className="space-y-3">
+                                  <div className="flex items-start gap-2 text-sm">
+                                    <Wrench className="h-4 w-4 text-gray-500 mt-0.5 shrink-0" />
+                                    <div className="flex-1">
+                                      {isGroup ? (
+                                        <div className="space-y-1">
+                                          {bookingGroup.map((booking, idx) => (
+                                            <div key={booking.id} className="text-gray-800 font-medium line-clamp-1">
+                                              • {booking.service_name || "Service Booking"}
+                                            </div>
+                                          ))}
+                                        </div>
+                                      ) : (
+                                        <span className="text-gray-800 font-medium line-clamp-1">
+                                          {primaryBooking.service_name || "Service Booking"}
+                                        </span>
+                                      )}
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                                    <Clock className="h-4 w-4" />
+                                    <span>{format(new Date(primaryBooking.booking_date), "h:mm a")}</span>
+                                  </div>
+                                  {totalCost > 0 && (
+                                    <div className="font-bold text-lg text-gray-900 pt-2">
+                                      ₹ {totalCost.toLocaleString()}
+                                    </div>
+                                  )}
+                                </div>
+                              </CardContent>
+                              <CardFooter className="pt-0 flex justify-between items-center border-t bg-gray-50/30 p-4 mt-auto">
+                                {primaryBooking.status !== BookingStatus.COMPLETED && primaryBooking.status !== BookingStatus.CANCELLED ? (
+                                  isSuperAdmin ? (
+                                    <Button
+                                      variant="destructive"
+                                      size="sm"
+                                      onClick={(e) => handleCancel(e, primaryBooking.id)}
+                                      disabled={cancellingId === primaryBooking.id}
+                                      className="h-8 px-3 text-xs"
+                                    >
+                                      {cancellingId === primaryBooking.id ? <Loader2 className="h-3 w-3 animate-spin" /> : "Delete"}
+                                    </Button>
+                                  ) : <div />
+                                ) : (
+                                  <span className="text-xs text-gray-400 italic">
+                                    {primaryBooking.status === BookingStatus.COMPLETED ? "Completed" : "Cancelled"}
+                                  </span>
+                                )}
+
+                                <div className="flex items-center text-sm font-medium text-gray-500 ml-auto">
+                                  View Details <ChevronRight className="h-4 w-4 ml-1" />
+                                </div>
+                              </CardFooter>
+                            </Card>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </TabsContent>
+              );
+            })}
+          </Tabs>
         </div>
       </main>
-
       <Footer />
     </div>
   );

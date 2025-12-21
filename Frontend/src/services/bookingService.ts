@@ -25,6 +25,7 @@ export interface ServiceBookingCreate {
   car_model: string;
   fuel_type: string;
   service_name: string;
+  booking_group_id?: string; // Group ID for multi-service bookings
 }
 
 /**
@@ -44,6 +45,7 @@ export interface Booking {
   car_model?: string;
   fuel_type?: string;
   service_name?: string;
+  booking_group_id?: string; // Group ID for multi-service bookings
   contact_name?: string;
   contact_phone?: string;
   pickup_address?: string;
@@ -102,7 +104,7 @@ export interface DailyWorkLog {
  */
 export async function createServiceBooking(bookingData: ServiceBookingCreate): Promise<Booking> {
   console.log('[Booking Service] Sending booking request:', bookingData);
-  
+
   const response = await apiCall<Booking>('/api/v1/bookings/service-booking', {
     method: 'POST',
     body: JSON.stringify(bookingData),
@@ -260,7 +262,7 @@ export async function uploadDailyWorkMedia(bookingId: number, logDate: string, f
     throw new Error('Not authenticated');
   }
 
-  const url = import.meta.env.VITE_API_BASE_URL 
+  const url = import.meta.env.VITE_API_BASE_URL
     ? `${import.meta.env.VITE_API_BASE_URL}/api/v1/bookings/${bookingId}/daily-work-logs/${logDate}/media`
     : `/api/v1/bookings/${bookingId}/daily-work-logs/${logDate}/media`;
 
@@ -338,15 +340,15 @@ export async function assignEmployeeToBooking(
     method: 'PATCH',
     body: JSON.stringify(request),
   });
-  
+
   if (response.error) {
     throw new Error(response.error);
   }
-  
+
   if (!response.data) {
     throw new Error('No data returned from server');
   }
-  
+
   return response.data;
 }
 

@@ -43,6 +43,9 @@ export async function apiCall<T>(
     // Build headers - ensure auth header is included
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0',
       ...authHeader, // This includes Authorization: Bearer <token> if token exists
     };
 

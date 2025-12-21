@@ -558,7 +558,7 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
                       <CarouselItem className="carousel-item md:basis-1/2 lg:basis-1/3">
                         <div className="relative group aspect-[16/9] overflow-hidden rounded-xl">
                           <img
-                            src="https://images.unsplash.com/photo-1580274455191-1c62238fa333?auto=format&fit=crop&q=80"
+                            src="/images/Landing_page_images/Jaguar_car.png"
                             alt="Jaguar"
                             className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
                           />
