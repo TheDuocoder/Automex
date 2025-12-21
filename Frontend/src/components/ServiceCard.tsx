@@ -305,20 +305,6 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
             )}
           </CardContent>
         </Card>
-
-        {offer && (
-          <div className="bg-white border border-gray-200 rounded-xl px-6 py-4 flex items-center justify-between">
-            <div className="flex items-center gap-4 text-sm font-semibold text-gray-800">
-              <div className="flex items-center justify-center w-14 h-10 bg-gradient-to-r from-orange-400 to-red-500 text-white rounded-md text-[10px] leading-tight text-center shadow-sm uppercase tracking-wide">
-                Summer<br />Sale
-              </div>
-              <span>Get at ₹{offer.price.toLocaleString()}</span>
-            </div>
-            <Badge className="bg-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
-              {offer.discount}
-            </Badge>
-          </div>
-        )}
       </div>
     </>
   );
