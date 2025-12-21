@@ -293,33 +293,27 @@ const BrandSelectorModal = ({
           imagePath = `/images/Car_images/Land rover/${landRoverFileName}.png`;
         } else if (brandName === 'audi') {
           // Audi images are in "Audi_car" folder
-          // Files are mixed case: "A3" -> "a3.png", "A8 L" -> "A8 L.png"
+          // Files are mixed case: "A3" -> "A3.png", "A8 L" -> "A8 L.png"
 
           const modelName = model.name;
 
-          // Heuristic: models with spaces defined in store have corresponding capitalized files
-          // simple models are lowercase in file system
-          if (modelName.includes(' ') || modelName.includes('e-tron')) {
-            imagePath = `/images/Car_images/Audi_car/${modelName}.png`;
-          } else {
-            imagePath = `/images/Car_images/Audi_car/${modelName.toLowerCase()}.png`;
-          }
+          // All Audi model images use the exact model name as-is (e.g., A3.png, A4.png, A8.png, A8 L.png)
+          imagePath = `/images/Car_images/Audi_car/${modelName}.png`;
         } else if (brandName === 'volkswagen') {
           // Volkswagen images are in "volkswagen" folder
-          // Most files are capitalized: Ameo.png, Vento.png, Jetta.png, Passat.png, etc.
-          // Exceptions: "polo.png" is lowercase, "cross_polo.png" is lowercase with underscore
-
+          // Files: polo.png, cross_polo.png (lowercase), rest are capitalized with exact name
           const vwModelName = model.name;
-          const cleanName = vwModelName.toLowerCase().replace(/\s+/g, ' ');
-
-          if (cleanName === 'cross polo') {
-            imagePath = `/images/Car_images/volkswagen/cross_polo.png`;
-          } else if (cleanName === 'polo') {
+          
+          if (vwModelName === 'Polo') {
             imagePath = `/images/Car_images/volkswagen/polo.png`;
+          } else if (vwModelName === 'Cross Polo') {
+            imagePath = `/images/Car_images/volkswagen/cross_polo.png`;
           } else {
-            // Use lowercase model name as most files are lowercase
-            imagePath = `/images/Car_images/volkswagen/${vwModelName.toLowerCase()}.png`;
+            // All other models: Ameo, Vento, Jetta, Passat, Taigun, T-Roc, Tiguan, Beetle, Virtus, Phaeton
+            imagePath = `/images/Car_images/volkswagen/${vwModelName}.png`;
           }
+          
+          console.log('VW Model:', vwModelName, 'Path:', imagePath);
         } else if (brandName === 'bmw') {
           // BMW images are in "BMW" folder with spaces in filenames
           // Convert model name to have proper spacing and capitalization

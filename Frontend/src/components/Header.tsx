@@ -106,7 +106,7 @@ const Header = ({ onLoginClick }: HeaderProps) => {
           </div>
 
           {/* Navigation Links - Center (hidden when authenticated on mobile, and hidden on my-services and extra-services pages) */}
-          {location.pathname !== '/my-services' && location.pathname !== '/extra-services' && (
+          {location.pathname !== '/my-services' && location.pathname !== '/extra-services' && !isAuthenticated && (
             <motion.div
               ref={navLinksRef}
               initial={{ opacity: 0, x: 40 }}

@@ -19,7 +19,7 @@ const Reviews = () => {
     {
       title: "Impressed by Their Professionalism",
       text: "Booked my service and the experience was smoother than I imagined. They arrived on time for pickup, kept me updated all day, and returned the car spotless.",
-      author: "Tapas Parida",
+      author: "Anjan Kumar",
       platform: "Twitter",
       workshop: "AUTOMEX, Hanspal, Balianta market road",
     },
