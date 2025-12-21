@@ -496,7 +496,7 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
                     setApi={setCarouselApi}>
                     <CarouselContent>
                       <CarouselItem className="carousel-item md:basis-1/2 lg:basis-1/3">
-                        <div className="relative group aspect-[16/9] overflow-hidden rounded-xl">
+                        <div className="relative group aspect-[16/9] overflow-hidden rounded-xl cursor-pointer" onClick={() => navigate('/services')}>
                           <img
                             src="https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&q=80"
                             alt="BMW"
@@ -511,7 +511,7 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
                         </div>
                       </CarouselItem>
                       <CarouselItem className="carousel-item md:basis-1/2 lg:basis-1/3">
-                        <div className="relative group aspect-[16/9] overflow-hidden rounded-xl">
+                        <div className="relative group aspect-[16/9] overflow-hidden rounded-xl cursor-pointer" onClick={() => navigate('/services')}>
                           <img
                             src="https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?auto=format&fit=crop&q=80"
                             alt="Audi"
@@ -526,7 +526,7 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
                         </div>
                       </CarouselItem>
                       <CarouselItem className="carousel-item md:basis-1/2 lg:basis-1/3">
-                        <div className="relative group aspect-[16/9] overflow-hidden rounded-xl">
+                        <div className="relative group aspect-[16/9] overflow-hidden rounded-xl cursor-pointer" onClick={() => navigate('/services')}>
                           <img
                             src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80"
                             alt="Porsche"
@@ -541,7 +541,7 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
                         </div>
                       </CarouselItem>
                       <CarouselItem className="carousel-item md:basis-1/2 lg:basis-1/3">
-                        <div className="relative group aspect-[16/9] overflow-hidden rounded-xl">
+                        <div className="relative group aspect-[16/9] overflow-hidden rounded-xl cursor-pointer" onClick={() => navigate('/services')}>
                           <img
                             src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&q=80"
                             alt="Mercedes"
@@ -556,7 +556,7 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
                         </div>
                       </CarouselItem>
                       <CarouselItem className="carousel-item md:basis-1/2 lg:basis-1/3">
-                        <div className="relative group aspect-[16/9] overflow-hidden rounded-xl">
+                        <div className="relative group aspect-[16/9] overflow-hidden rounded-xl cursor-pointer" onClick={() => navigate('/services')}>
                           <img
                             src="/images/Landing_page_images/Jaguar_car.png"
                             alt="Jaguar"
@@ -571,7 +571,7 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
                         </div>
                       </CarouselItem>
                       <CarouselItem className="carousel-item md:basis-1/2 lg:basis-1/3">
-                        <div className="relative group aspect-[16/9] overflow-hidden rounded-xl">
+                        <div className="relative group aspect-[16/9] overflow-hidden rounded-xl cursor-pointer" onClick={() => navigate('/services')}>
                           <img
                             src="/images/Landing_page_images/Volve car.png"
                             alt="Volvo"
@@ -586,7 +586,7 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
                         </div>
                       </CarouselItem>
                       <CarouselItem className="carousel-item md:basis-1/2 lg:basis-1/3">
-                        <div className="relative group aspect-[16/9] overflow-hidden rounded-xl">
+                        <div className="relative group aspect-[16/9] overflow-hidden rounded-xl cursor-pointer" onClick={() => navigate('/services')}>
                           <img
                             src="/images/Landing_page_images/Skoda car.png"
                             alt="Skoda Octavia"
@@ -607,7 +607,7 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
                         </div>
                       </CarouselItem>
                       <CarouselItem className="carousel-item md:basis-1/2 lg:basis-1/3">
-                        <div className="relative group aspect-[16/9] overflow-hidden rounded-xl">
+                        <div className="relative group aspect-[16/9] overflow-hidden rounded-xl cursor-pointer" onClick={() => navigate('/services')}>
                           <img
                             src="/images/Landing_page_images/Vw car.png"
                             alt="Volkswagen"
