@@ -16,6 +16,31 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 
+// Helper to format DB date strings exactly as they appear, ignoring timezone
+const formatDbDate = (dateStr: string, formatStr: string) => {
+  if (!dateStr) return "";
+  try {
+    // Attempt to parse ISO string parts directly to avoid timezone conversion
+    // Expected format: YYYY-MM-DDTHH:mm:ss...
+    const match = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(dateStr);
+    if (match) {
+      // Construct local date with exact components
+      const date = new Date(
+        parseInt(match[1]),
+        parseInt(match[2]) - 1,
+        parseInt(match[3]),
+        parseInt(match[4]),
+        parseInt(match[5])
+      );
+      return format(date, formatStr);
+    }
+    // Fallback to standard parsing if regex fails
+    return format(new Date(dateStr), formatStr);
+  } catch (e) {
+    return dateStr;
+  }
+};
+
 const MyServices = () => {
   const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
@@ -264,7 +289,7 @@ const MyServices = () => {
                                     )}
                                   </div>
                                   <span className="text-xs text-gray-400 font-medium whitespace-nowrap">
-                                    {format(new Date(primaryBooking.booking_date), "MMM d, yyyy")}
+                                    {formatDbDate(primaryBooking.booking_date, "MMM d, yyyy")}
                                   </span>
                                 </div>
                                 <CardTitle className="text-lg font-bold flex flex-col gap-1">
@@ -296,7 +321,7 @@ const MyServices = () => {
                                   </div>
                                   <div className="flex items-center gap-2 text-sm text-gray-600">
                                     <Clock className="h-4 w-4" />
-                                    <span>{format(new Date(primaryBooking.booking_date), "h:mm a")}</span>
+                                    <span>{formatDbDate(primaryBooking.booking_date, "h:mm a")}</span>
                                   </div>
                                   {totalCost > 0 && (
                                     <div className="font-bold text-lg text-gray-900 pt-2">

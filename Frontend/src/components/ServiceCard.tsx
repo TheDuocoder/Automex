@@ -225,17 +225,17 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
                   <h3 className="text-lg md:text-xl font-semibold text-[#212121] leading-tight">{name}</h3>
 
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 text-xs md:text-sm text-[#757575]">
-                    <span>• {warranty}</span>
-                    <span>• {recommended}</span>
+                    {warranty && <span>• {warranty}</span>}
+                    {recommended && <span>• {recommended}</span>}
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4 text-xs md:text-sm text-[#212121]">
                     {visibleFeatures.map((feature, index) => (
-                      <div key={index} className="flex items-center gap-2">
-                        <div className="w-4 h-4 bg-[#4CAF50] rounded-full flex items-center justify-center text-white text-xs font-bold">
+                      <div key={index} className="flex items-start gap-2">
+                        <div className="w-4 h-4 bg-[#4CAF50] rounded-full flex-shrink-0 flex items-center justify-center text-white text-xs font-bold mt-0.5">
                           ✓
                         </div>
-                        <span>{feature.name}</span>
+                        <span className="leading-snug">{feature.name}</span>
                       </div>
                     ))}
                   </div>
@@ -286,17 +286,17 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
                   <h3 className={`${variant === "gom" ? "text-[17px]" : "text-[20px]"} font-bold text-gray-900 leading-tight`}>{name}</h3>
 
                   <div className={`flex flex-wrap items-center gap-4 ${variant === "gom" ? "text-[13px]" : "text-[14px]"} text-gray-700`}>
-                    <span className="whitespace-nowrap">• {warranty}</span>
-                    <span className="whitespace-nowrap">• {recommended}</span>
+                    {warranty && <span>• {warranty}</span>}
+                    {recommended && <span>• {recommended}</span>}
                   </div>
 
                   <div className={`grid grid-cols-1 md:grid-cols-2 gap-1 ${variant === "gom" ? "text-[13px]" : "text-[14px]"} text-gray-700`}>
                     {visibleFeatures.map((feature, index) => (
-                      <div key={index} className="flex items-center gap-1.5 whitespace-nowrap">
-                        <div className="w-4 h-4 bg-[#4CAF50] rounded-full flex items-center justify-center text-white text-xs font-bold">
+                      <div key={index} className="flex items-start gap-1.5">
+                        <div className="w-4 h-4 bg-[#4CAF50] rounded-full flex-shrink-0 flex items-center justify-center text-white text-xs font-bold mt-0.5">
                           ✓
                         </div>
-                        {feature.name}
+                        <span className="leading-snug">{feature.name}</span>
                       </div>
                     ))}
                   </div>

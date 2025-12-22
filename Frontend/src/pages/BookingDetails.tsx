@@ -10,7 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import {
   User, Calendar as CalendarIcon, MapPin, Phone, FileText, ChevronLeft,
   CheckCircle2, AlertCircle, Clock, ShieldCheck, Download, FolderOpen, Plus, Trash2, X,
-  Loader2, XCircle, Wrench, Car, Mail
+  Loader2, XCircle, Wrench, Car, Mail, UploadCloud, Image as ImageIcon, Video
 } from "lucide-react";
 import { getBooking, cancelBooking, getUserBookings, type Booking, BookingStatus } from "@/services/bookingService";
 import { getBookingCosts, type Cost } from "@/services/costService";
@@ -44,6 +44,31 @@ const getStatusConfig = (status: BookingStatus) => {
       return { color: "bg-blue-100 text-blue-700 border-blue-200", icon: FileText, label: "Analyzing" };
     default:
       return { color: "bg-yellow-100 text-yellow-700 border-yellow-200", icon: Clock, label: "Pending" };
+  }
+};
+
+// Helper to format DB date strings exactly as they appear, ignoring timezone
+const formatDbDate = (dateStr: string, formatStr: string) => {
+  if (!dateStr) return "";
+  try {
+    // Attempt to parse ISO string parts directly to avoid timezone conversion
+    // Expected format: YYYY-MM-DDTHH:mm:ss...
+    const match = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(dateStr);
+    if (match) {
+      // Construct local date with exact components
+      const date = new Date(
+        parseInt(match[1]),
+        parseInt(match[2]) - 1,
+        parseInt(match[3]),
+        parseInt(match[4]),
+        parseInt(match[5])
+      );
+      return format(date, formatStr);
+    }
+    // Fallback to standard parsing if regex fails
+    return format(new Date(dateStr), formatStr);
+  } catch (e) {
+    return dateStr;
   }
 };
 
@@ -317,7 +342,7 @@ const BookingDetails = () => {
                   {statusConfig.label}
                 </Badge>
               </h1>
-              <p className="text-xs text-gray-500 mt-1 sm:mt-0">Created on {format(new Date(booking.created_at), "MMM d, yyyy 'at' h:mm a")}</p>
+              <p className="text-xs text-gray-500 mt-1 sm:mt-0">Created on {format(new Date(booking.created_at.endsWith("Z") ? booking.created_at : booking.created_at + "Z"), "MMM d, yyyy 'at' h:mm a")}</p>
             </div>
           </div>
           {/* Admin Actions could go here, for now empty for User */}
@@ -355,7 +380,7 @@ const BookingDetails = () => {
                     <h2 className="text-xl font-bold text-gray-900">{booking.service_name}</h2>
                   )}
                   <p className="text-gray-600 mt-1">
-                    Scheduled for <span className="font-medium">{format(new Date(booking.booking_date), "EEEE, MMMM d, yyyy")}</span>
+                    Scheduled for <span className="font-medium">{formatDbDate(booking.booking_date, "EEEE, MMMM d, yyyy 'at' h:mm a")}</span>
                   </p>
                   {booking.technician_notes && (
                     <p className="text-sm text-gray-500 mt-2 bg-white/50 p-2 rounded">
@@ -483,36 +508,7 @@ const BookingDetails = () => {
                     </div>
                   )}
 
-                  {/* Assignment History - Super Admin Only */}
-                  {isSuperAdmin && booking.employee_assignment_history && booking.employee_assignment_history.length > 0 && (
-                    <div className="mt-4 pt-4 border-t">
-                      <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Assignment History</h4>
-                      <div className="space-y-3">
-                        {booking.employee_assignment_history.map(history => (
-                          <div key={history.id} className="text-sm">
-                            <div className="flex items-center gap-2">
-                              <div className="h-6 w-6 rounded-full bg-gray-100 flex items-center justify-center text-xs font-bold text-gray-500">
-                                {history.employee_name ? history.employee_name.charAt(0) : "?"}
-                              </div>
-                              <div>
-                                <p className="font-medium text-gray-900">
-                                  {history.employee_name ? `Assigned to ${history.employee_name}` : "Unassigned"}
-                                </p>
-                                <p className="text-xs text-gray-500">
-                                  by {history.assigned_by_name || "Admin"} • {format(new Date(history.created_at), "MMM d, h:mm a")}
-                                </p>
-                              </div>
-                            </div>
-                            {history.notes && (
-                              <p className="text-xs text-gray-600 bg-gray-50 p-2 rounded mt-1 ml-8 italic">
-                                "{history.notes}"
-                              </p>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+
                 </div>
 
                 {/* Pickup & Address */}
@@ -543,74 +539,130 @@ const BookingDetails = () => {
                           <Plus className="mr-1 h-3 w-3" /> Add Log
                         </Button>
                       </DialogTrigger>
-                      <DialogContent className="max-w-md">
-                        <DialogHeader>
-                          <DialogTitle>Add Daily Work Log</DialogTitle>
-                          <DialogDescription>Add a progress update for this booking.</DialogDescription>
+                      <DialogContent className="max-w-lg w-full sm:rounded-2xl p-0 overflow-hidden">
+                        <DialogHeader className="p-6 pb-2">
+                          <DialogTitle className="text-xl font-bold flex items-center gap-2">
+                            <div className="bg-red-50 p-2 rounded-lg">
+                              <FileText className="h-5 w-5 text-red-600" />
+                            </div>
+                            Add Work Log
+                          </DialogTitle>
+                          <DialogDescription className="text-gray-500">
+                            Log progress with photos or videos for the customer.
+                          </DialogDescription>
                         </DialogHeader>
-                        <div className="grid gap-4 py-4">
-                          <div className="grid gap-2">
-                            <Label htmlFor="logDate">Date</Label>
-                            <Input
-                              id="logDate"
-                              type="date"
-                              value={logDate}
-                              onChange={(e) => setLogDate(e.target.value)}
-                            />
+
+                        <div className="px-6 py-2 space-y-5">
+                          {/* Date & Description Group */}
+                          <div className="space-y-4">
+                            <div className="space-y-2">
+                              <Label htmlFor="logDate" className="text-sm font-semibold text-gray-700">Date</Label>
+                              <div className="relative">
+                                <CalendarIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                                <Input
+                                  id="logDate"
+                                  type="date"
+                                  value={logDate}
+                                  onChange={(e) => setLogDate(e.target.value)}
+                                  className="pl-9 bg-gray-50 border-gray-200 focus:bg-white transition-colors"
+                                />
+                              </div>
+                            </div>
+
+                            <div className="space-y-2">
+                              <Label htmlFor="logDesc" className="text-sm font-semibold text-gray-700">Description</Label>
+                              <Textarea
+                                id="logDesc"
+                                value={logDescription}
+                                onChange={(e) => setLogDescription(e.target.value)}
+                                placeholder="Describe the work done today..."
+                                className="min-h-[100px] bg-gray-50 border-gray-200 focus:bg-white transition-colors resize-none"
+                              />
+                            </div>
                           </div>
-                          <div className="grid gap-2">
-                            <Label htmlFor="logDesc">Description</Label>
-                            <Textarea
-                              id="logDesc"
-                              value={logDescription}
-                              onChange={(e) => setLogDescription(e.target.value)}
-                              placeholder="Describe the work done today..."
-                            />
-                          </div>
-                          <div className="grid gap-2">
-                            <Label>Photos</Label>
-                            <Input
-                              type="file"
-                              multiple
-                              accept="image/*"
-                              onChange={(e) => handleFileChange(e, 'photos')}
-                            />
-                            {logPhotos.length > 0 && (
-                              <div className="flex flex-wrap gap-2 mt-2">
+
+                          {/* Media Upload Section */}
+                          <div className="space-y-4">
+                            <Label className="text-sm font-semibold text-gray-700 flex items-center justify-between">
+                              <span>Media Attachments</span>
+                              <span className="text-xs font-normal text-gray-400">Optional</span>
+                            </Label>
+
+                            <div className="grid grid-cols-2 gap-3">
+                              {/* Photo Upload */}
+                              <div className="relative group">
+                                <input
+                                  type="file"
+                                  multiple
+                                  accept="image/*"
+                                  onChange={(e) => handleFileChange(e, 'photos')}
+                                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                                />
+                                <div className="border border-dashed border-gray-300 bg-gray-50 rounded-xl p-4 flex flex-col items-center justify-center text-center gap-2 group-hover:bg-red-50 group-hover:border-red-200 transition-colors h-full">
+                                  <div className="bg-white p-2 rounded-full shadow-sm">
+                                    <ImageIcon className="h-5 w-5 text-gray-500 group-hover:text-red-500" />
+                                  </div>
+                                  <div>
+                                    <p className="text-xs font-semibold text-gray-700">Add Photos</p>
+                                    <p className="text-[10px] text-gray-400">JPG, PNG</p>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Video Upload */}
+                              <div className="relative group">
+                                <input
+                                  type="file"
+                                  multiple
+                                  accept="video/*"
+                                  onChange={(e) => handleFileChange(e, 'videos')}
+                                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                                />
+                                <div className="border border-dashed border-gray-300 bg-gray-50 rounded-xl p-4 flex flex-col items-center justify-center text-center gap-2 group-hover:bg-red-50 group-hover:border-red-200 transition-colors h-full">
+                                  <div className="bg-white p-2 rounded-full shadow-sm">
+                                    <Video className="h-5 w-5 text-gray-500 group-hover:text-red-500" />
+                                  </div>
+                                  <div>
+                                    <p className="text-xs font-semibold text-gray-700">Add Videos</p>
+                                    <p className="text-[10px] text-gray-400">MP4, MOV</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Selected Files List */}
+                            {(logPhotos.length > 0 || logVideos.length > 0) && (
+                              <div className="flex flex-wrap gap-2 pt-2">
                                 {logPhotos.map((file, i) => (
-                                  <div key={i} className="text-xs bg-gray-100 p-1 px-2 rounded flex items-center gap-1">
-                                    {file.name.substring(0, 15)}...
-                                    <button onClick={() => removeFile(i, 'photos')} className="text-red-500 hover:text-red-700 ml-1">×</button>
+                                  <div key={`p-${i}`} className="text-xs bg-blue-50 text-blue-700 border border-blue-100 pl-2 pr-1 py-1 rounded-md flex items-center gap-1">
+                                    <ImageIcon className="h-3 w-3" />
+                                    <span className="max-w-[100px] truncate">{file.name}</span>
+                                    <button onClick={() => removeFile(i, 'photos')} className="hover:bg-blue-100 rounded text-blue-500 p-0.5">
+                                      <X className="h-3 w-3" />
+                                    </button>
                                   </div>
                                 ))}
-                              </div>
-                            )}
-                          </div>
-                          <div className="grid gap-2">
-                            <Label>Videos</Label>
-                            <Input
-                              type="file"
-                              multiple
-                              accept="video/*"
-                              onChange={(e) => handleFileChange(e, 'videos')}
-                            />
-                            {logVideos.length > 0 && (
-                              <div className="flex flex-wrap gap-2 mt-2">
                                 {logVideos.map((file, i) => (
-                                  <div key={i} className="text-xs bg-gray-100 p-1 px-2 rounded flex items-center gap-1">
-                                    {file.name.substring(0, 15)}...
-                                    <button onClick={() => removeFile(i, 'videos')} className="text-red-500 hover:text-red-700 ml-1">×</button>
+                                  <div key={`v-${i}`} className="text-xs bg-purple-50 text-purple-700 border border-purple-100 pl-2 pr-1 py-1 rounded-md flex items-center gap-1">
+                                    <Video className="h-3 w-3" />
+                                    <span className="max-w-[100px] truncate">{file.name}</span>
+                                    <button onClick={() => removeFile(i, 'videos')} className="hover:bg-purple-100 rounded text-purple-500 p-0.5">
+                                      <X className="h-3 w-3" />
+                                    </button>
                                   </div>
                                 ))}
                               </div>
                             )}
                           </div>
                         </div>
-                        <DialogFooter>
-                          <Button variant="outline" onClick={() => setIsWorkLogDialogOpen(false)}>Cancel</Button>
-                          <Button onClick={handleAddWorkLog} disabled={isAddingLog}>
+
+                        <DialogFooter className="p-6 bg-gray-50/50 gap-2 sm:gap-0">
+                          <Button variant="ghost" onClick={() => setIsWorkLogDialogOpen(false)} className="bg-white/50 border border-transparent hover:bg-white hover:border-gray-200">
+                            Cancel
+                          </Button>
+                          <Button onClick={handleAddWorkLog} disabled={isAddingLog} className="bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-100">
                             {isAddingLog && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            Add Log
+                            Save Work Log
                           </Button>
                         </DialogFooter>
                       </DialogContent>
@@ -808,6 +860,41 @@ const BookingDetails = () => {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Assignment History - Super Admin Only */}
+            {isSuperAdmin && booking.employee_assignment_history && booking.employee_assignment_history.length > 0 && (
+              <Card className="border-none shadow-md">
+                <CardHeader className="border-b bg-gray-50/50 pb-4">
+                  <CardTitle className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                    Assignment History
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-4 sm:p-6">
+                  <div className="space-y-4">
+                    {booking.employee_assignment_history.map((history) => (
+                      <div key={history.id} className="flex gap-3">
+                        <div className="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-xs font-bold text-gray-500 shrink-0">
+                          {history.employee_name ? history.employee_name.charAt(0) : "?"}
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-gray-900">
+                            {history.employee_name ? `Assigned to ${history.employee_name}` : "Unassigned"}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            by {history.assigned_by_name || "Admin"} • {format(new Date(history.created_at.endsWith("Z") ? history.created_at : history.created_at + "Z"), "MMM d, h:mm a")}
+                          </p>
+                          {history.notes && (
+                            <p className="text-xs text-gray-600 bg-gray-50 p-2 rounded mt-1 italic">
+                              "{history.notes}"
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Actions */}
             {booking.status !== BookingStatus.CANCELLED && booking.status !== BookingStatus.COMPLETED && isSuperAdmin && (

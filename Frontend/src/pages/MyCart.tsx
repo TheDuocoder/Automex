@@ -51,13 +51,24 @@ const MyCart = () => {
                     continue;
                 }
 
-                const year = selectedDate.getUTCFullYear();
-                const month = selectedDate.getUTCMonth();
-                const day = selectedDate.getUTCDate();
-                const bookingDate = new Date(Date.UTC(year, month, day, 12, 0, 0, 0));
+                // Combine selected date with CURRENT time to capture exact booking moment
+                const now = new Date();
+                const year = selectedDate.getFullYear();
+                const month = selectedDate.getMonth();
+                const day = selectedDate.getDate();
+                const hours = now.getHours();
+                const minutes = now.getMinutes();
+
+                // Construct local date object
+                const combinedDate = new Date(year, month, day, hours, minutes);
+
+                // Format manually to YYYY-MM-DDTHH:mm:ss to preserve local time values exactly
+                // This avoids timezone shifting when sent to backend
+                const pad = (n: number) => n.toString().padStart(2, '0');
+                const bookingDateString = `${year}-${pad(month + 1)}-${pad(day)}T${pad(hours)}:${pad(minutes)}:00`;
 
                 const bookingData = {
-                    booking_date: bookingDate.toISOString(),
+                    booking_date: bookingDateString,
                     car_brand: item.brand,
                     car_model: item.model,
                     fuel_type: item.fuelType,
@@ -99,13 +110,7 @@ const MyCart = () => {
     };
 
     const handleDateSelect = (date: Date | undefined) => {
-        if (date) {
-            const year = date.getFullYear();
-            const month = date.getMonth();
-            const day = date.getDate();
-            const normalizedDate = new Date(Date.UTC(year, month, day, 12, 0, 0, 0));
-            setSelectedDate(normalizedDate);
-        }
+        setSelectedDate(date);
     };
 
     if (!isAuthenticated) return null;
