@@ -5,7 +5,7 @@ import { useCartStore, CartItem } from "@/stores/cartStore";
 import { createServiceBooking } from "@/services/bookingService";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Trash2, Calendar as CalendarIcon, Loader2, ShoppingCart, Car } from "lucide-react";
+import { Trash2, Calendar as CalendarIcon, Loader2, ShoppingCart, Car, ChevronLeft } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useToast } from "@/hooks/use-toast";
@@ -119,7 +119,39 @@ const MyCart = () => {
         <div className="min-h-screen bg-gray-50 flex flex-col">
             <Header />
             <main className="flex-grow container mx-auto px-4 md:px-6 py-8">
-                <h1 className="text-3xl font-bold mb-6">My Cart</h1>
+                <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-3">
+                        <h1 className="text-3xl" style={{ fontFamily: 'Super Roman, sans-serif', fontWeight: 900 }}>Booking Cart</h1>
+                        <img 
+                            src="/images/Services/shopping-cart.png" 
+                            alt="Shopping Cart" 
+                            className="w-8 h-8 object-contain"
+                        />
+                    </div>
+                    <Button 
+                        onClick={() => {
+                            if (items.length > 0) {
+                                const firstItem = items[0];
+                                navigate("/services", { 
+                                    state: { 
+                                        preselectedCar: {
+                                            brand: firstItem.brand,
+                                            model: firstItem.model,
+                                            fuelType: firstItem.fuelType
+                                        }
+                                    }
+                                });
+                            } else {
+                                navigate("/services");
+                            }
+                        }}
+                        variant="ghost"
+                        className="text-gray-700 hover:text-gray-900 hover:bg-transparent font-medium px-0 flex items-center gap-1"
+                    >
+                        <ChevronLeft className="h-5 w-5" />
+                        Back
+                    </Button>
+                </div>
 
                 {items.length === 0 ? (
                     <div className="text-center py-20 bg-white rounded-xl shadow-sm border">
@@ -129,41 +161,61 @@ const MyCart = () => {
                         <Button onClick={() => navigate("/services")}>Browse Services</Button>
                     </div>
                 ) : (
-                    <div className="space-y-8">
+                    <div className="space-y-6">
                         {Object.entries(groupedItems).map(([carInfo, groupItems]) => (
-                            <Card key={carInfo} className="overflow-hidden border-2 border-gray-100">
-                                <CardHeader className="bg-gray-50 border-b border-gray-100 py-4">
-                                    <div className="flex items-center gap-2">
-                                        <Car className="h-5 w-5 text-gray-600" />
-                                        <CardTitle className="text-lg">{carInfo}</CardTitle>
-                                        <Badge variant="secondary" className="ml-2">{groupItems.length} Services</Badge>
+                            <Card key={carInfo} className="overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+                                <CardHeader 
+                                    className="border-b border-gray-200 py-3.5 px-5"
+                                    style={{
+                                        background: 'linear-gradient(90deg, #631683 0.000%, #7f237e 14.286%, #9e3980 28.571%, #bc5588 42.857%, #d57496 57.143%, #e494a8 71.429%, #e7b1be 85.714%, #dec8d6 100.000%)'
+                                    }}
+                                >
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-9 h-9 rounded-full bg-white flex items-center justify-center shadow-sm">
+                                                <Car className="h-4 w-4 text-purple-600" />
+                                            </div>
+                                            <CardTitle className="text-base text-white" style={{ fontFamily: 'Moranga, sans-serif', fontWeight: 700 }}>{carInfo}</CardTitle>
+                                        </div>
+                                        <Badge variant="secondary" className="text-white hover:opacity-90 px-3 py-1 text-xs font-medium" style={{ backgroundColor: '#631683' }}>{groupItems.length} Service{groupItems.length > 1 ? 's' : ''}</Badge>
                                     </div>
                                 </CardHeader>
                                 <CardContent className="p-0">
-                                    {groupItems.map((item) => (
-                                        <div key={item.id} className="flex flex-col sm:flex-row items-center p-4 gap-4 border-b last:border-0 hover:bg-gray-50/50 transition-colors">
+                                    {groupItems.map((item, index) => (
+                                        <div key={item.id} className={`flex items-center px-5 py-4 gap-4 ${index !== groupItems.length - 1 ? 'border-b border-gray-100' : ''} hover:bg-gray-50/70 transition-colors group`}>
                                             {item.image && (
-                                                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100">
+                                                <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 ring-1 ring-gray-200">
                                                     <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                                                 </div>
                                             )}
-                                            <div className="flex-grow text-center sm:text-left">
-                                                <h3 className="font-bold text-base sm:text-lg">{item.name}</h3>
-
+                                            <div className="flex-grow min-w-0">
+                                                <h3 className="font-semibold text-base text-gray-900 truncate">{item.name}</h3>
                                             </div>
-                                            <Button variant="ghost" size="icon" onClick={() => removeFromCart(item.id)} className="text-gray-400 hover:text-red-500 hover:bg-red-50 shrink-0">
-                                                <Trash2 className="h-5 w-5" />
+                                            <Button 
+                                                variant="ghost" 
+                                                size="icon" 
+                                                onClick={() => removeFromCart(item.id)} 
+                                                className="text-red-500 hover:text-red-700 hover:bg-red-50 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity w-11 h-11"
+                                            >
+                                                <Trash2 className="h-5.5 w-5.5" />
                                             </Button>
                                         </div>
                                     ))}
                                 </CardContent>
-                                <CardFooter className="bg-gray-50/50 p-4 sm:px-6 flex flex-col sm:flex-row justify-end items-center gap-4">
-
+                                <CardFooter className="bg-gray-50/70 border-t border-gray-100 px-5 py-4 flex justify-between items-center">
+                                    <Button
+                                        onClick={() => navigate("/services")}
+                                        variant="ghost"
+                                        className="text-gray-700 hover:text-gray-900 hover:bg-transparent font-medium px-0 flex items-center gap-1"
+                                    >
+                                        <ChevronLeft className="h-5 w-5" />
+                                        Continue adding
+                                    </Button>
                                     <Button
                                         onClick={() => handleCheckoutClick(groupItems)}
-                                        className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white"
+                                        className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 shadow-sm hover:shadow transition-all"
                                     >
-                                        Book These Services
+                                        Click to Book
                                     </Button>
                                 </CardFooter>
                             </Card>
@@ -195,7 +247,7 @@ const MyCart = () => {
                                 <Button
                                     onClick={handleConfirmBooking}
                                     disabled={!selectedDate || isSubmitting}
-                                    className="bg-red-600 hover:bg-red-700 text-white"
+                                    className="bg-green-600 hover:bg-green-700 text-white"
                                 >
                                     {isSubmitting ? (
                                         <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Booking...</>
