@@ -8,8 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
-  Calendar, Car, Clock, CheckCircle2, XCircle, Loader2, ArrowLeft, MapPin,
-  User, Wrench, AlertCircle, FileText, Phone, Mail, ShieldCheck, ChevronRight, FolderOpen
+  User, Calendar as CalendarIcon, MapPin, Phone, FileText, ChevronLeft,
+  CheckCircle2, AlertCircle, Clock, ShieldCheck, Download, FolderOpen, Plus, Trash2, X,
+  Loader2, XCircle, Wrench, Car, Mail
 } from "lucide-react";
 import { getBooking, cancelBooking, getUserBookings, type Booking, BookingStatus } from "@/services/bookingService";
 import { getBookingCosts, type Cost } from "@/services/costService";
@@ -17,6 +18,18 @@ import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import {
+  Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { employeeService, type Employee } from "@/services/api";
+import { assignEmployeeToBooking, updateBookingStatus, createDailyWorkLog, uploadDailyWorkMedia } from "@/services/bookingService";
+import { createCost } from "@/services/costService";
 
 // Helper for status colors/icons
 const getStatusConfig = (status: BookingStatus) => {
@@ -46,6 +59,34 @@ const BookingDetails = () => {
   const [costs, setCosts] = useState<Cost[]>([]);
   const [totalCost, setTotalCost] = useState<number>(0);
 
+  // RBAC State
+  const [employees, setEmployees] = useState<Employee[]>([]);
+
+  // Assignment Dialog State
+  const [isAssignDialogOpen, setIsAssignDialogOpen] = useState(false);
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>("");
+  const [assignmentNotes, setAssignmentNotes] = useState("");
+  const [isAssigning, setIsAssigning] = useState(false);
+
+  // Status Dialog State
+  const [isStatusDialogOpen, setIsStatusDialogOpen] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState<BookingStatus | "">("");
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
+
+  // Payment Dialog State
+  const [isPaymentDialogOpen, setIsPaymentDialogOpen] = useState(false);
+  const [newCostItem, setNewCostItem] = useState("");
+  const [newCostAmount, setNewCostAmount] = useState("");
+  const [isAddingCost, setIsAddingCost] = useState(false);
+
+  // Daily Work Log Dialog State
+  const [isWorkLogDialogOpen, setIsWorkLogDialogOpen] = useState(false);
+  const [logDate, setLogDate] = useState(format(new Date(), "yyyy-MM-dd"));
+  const [logDescription, setLogDescription] = useState("");
+  const [logPhotos, setLogPhotos] = useState<File[]>([]);
+  const [logVideos, setLogVideos] = useState<File[]>([]);
+  const [isAddingLog, setIsAddingLog] = useState(false);
+
   const isAdmin = user?.role?.name?.toLowerCase() === "admin" || user?.role?.name?.toLowerCase() === "super" || user?.is_superuser;
   const isSuperAdmin = user?.role?.name?.toLowerCase() === "super" || user?.is_superuser;
 
@@ -57,6 +98,145 @@ const BookingDetails = () => {
   useEffect(() => {
     if (booking?.id) { loadCosts(); }
   }, [booking?.id]);
+
+  useEffect(() => {
+    if (isSuperAdmin && isAuthenticated) {
+      loadEmployees();
+    }
+  }, [isSuperAdmin, isAuthenticated]);
+
+  const loadEmployees = async () => {
+    try {
+      const response = await employeeService.getAll();
+      if (response.data) {
+        setEmployees(response.data.filter(e => e.is_active));
+      }
+    } catch (error) {
+      console.error("Failed to load employees", error);
+    }
+  };
+
+  const handleAssignEmployee = async () => {
+    if (!booking) return;
+    try {
+      setIsAssigning(true);
+      const empId = selectedEmployeeId ? parseInt(selectedEmployeeId) : undefined;
+
+      await assignEmployeeToBooking(booking.id, {
+        employee_id: empId,
+        notes: assignmentNotes
+      });
+
+      toast({ title: "Success", description: "Employee assigned successfully" });
+      setIsAssignDialogOpen(false);
+      setAssignmentNotes("");
+      loadBooking(); // Reload to show updated assignment
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to assign employee",
+        variant: "destructive"
+      });
+    } finally {
+      setIsAssigning(false);
+    }
+  };
+
+  const handleStatusChange = async () => {
+    if (!booking || !selectedStatus) return;
+    try {
+      setIsUpdatingStatus(true);
+      await updateBookingStatus(booking.id, selectedStatus as BookingStatus);
+      toast({ title: "Success", description: "Status updated successfully" });
+      setIsStatusDialogOpen(false);
+      loadBooking();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to update status",
+        variant: "destructive"
+      });
+    } finally {
+      setIsUpdatingStatus(false);
+    }
+  };
+
+  const handleAddCost = async () => {
+    if (!booking || !newCostItem || !newCostAmount) return;
+    try {
+      setIsAddingCost(true);
+      await createCost({
+        booking_id: booking.id,
+        item_name: newCostItem,
+        amount: parseFloat(newCostAmount)
+      });
+
+      toast({ title: "Success", description: "Cost added successfully" });
+      setIsPaymentDialogOpen(false);
+      setNewCostItem("");
+      setNewCostAmount("");
+      loadCosts();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to add cost",
+        variant: "destructive"
+      });
+    } finally {
+      setIsAddingCost(false);
+    }
+  };
+
+  const handleAddWorkLog = async () => {
+    if (!booking || !logDate) return;
+    try {
+      setIsAddingLog(true);
+
+      // 1. Create the log entry
+      const log = await createDailyWorkLog(booking.id, logDate, logDescription);
+
+      // 2. Upload media if any
+      const allFiles = [...logPhotos, ...logVideos];
+      if (allFiles.length > 0) {
+        await uploadDailyWorkMedia(booking.id, logDate, allFiles);
+      }
+
+      toast({ title: "Success", description: "Daily work log added successfully" });
+      setIsWorkLogDialogOpen(false);
+      setLogDescription("");
+      setLogPhotos([]);
+      setLogVideos([]);
+      setLogDate(format(new Date(), "yyyy-MM-dd"));
+      loadBooking(); // Reload to show new log
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to add work log",
+        variant: "destructive"
+      });
+    } finally {
+      setIsAddingLog(false);
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'photos' | 'videos') => {
+    if (e.target.files && e.target.files.length > 0) {
+      const filesArray = Array.from(e.target.files);
+      if (type === 'photos') {
+        setLogPhotos(prev => [...prev, ...filesArray]);
+      } else {
+        setLogVideos(prev => [...prev, ...filesArray]);
+      }
+    }
+  };
+
+  const removeFile = (index: number, type: 'photos' | 'videos') => {
+    if (type === 'photos') {
+      setLogPhotos(prev => prev.filter((_, i) => i !== index));
+    } else {
+      setLogVideos(prev => prev.filter((_, i) => i !== index));
+    }
+  };
 
   const loadBooking = async () => {
     try {
@@ -124,20 +304,20 @@ const BookingDetails = () => {
       <Header />
 
       {/* Top Navigation Bar */}
-      <div className="bg-white border-b sticky top-16 z-10 px-4 py-4 shadow-sm">
-        <div className="container mx-auto max-w-6xl flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="sm" onClick={() => navigate('/my-services')}>
-              <ArrowLeft className="h-4 w-4 mr-2" /> Back
+      <div className="bg-white border-b sticky top-16 z-10 px-4 py-3 sm:py-4 shadow-sm">
+        <div className="container mx-auto max-w-6xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+            <Button variant="ghost" size="sm" onClick={() => navigate('/my-services')} className="-ml-2 sm:ml-0 self-start sm:self-auto">
+              <ChevronLeft className="h-4 w-4 mr-2" /> Back
             </Button>
             <div>
-              <h1 className="text-xl font-bold flex items-center gap-2">
+              <h1 className="text-lg sm:text-xl font-bold flex flex-wrap items-center gap-2">
                 Booking #{booking.id}
-                <Badge className={cn("ml-2", statusConfig.color)}>
+                <Badge className={cn("ml-0 sm:ml-2", statusConfig.color)}>
                   {statusConfig.label}
                 </Badge>
               </h1>
-              <p className="text-xs text-gray-500">Created on {format(new Date(booking.created_at), "MMM d, yyyy 'at' h:mm a")}</p>
+              <p className="text-xs text-gray-500 mt-1 sm:mt-0">Created on {format(new Date(booking.created_at), "MMM d, yyyy 'at' h:mm a")}</p>
             </div>
           </div>
           {/* Admin Actions could go here, for now empty for User */}
@@ -188,7 +368,7 @@ const BookingDetails = () => {
               <CardContent className="p-0">
                 <div className="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x border-b">
                   {/* Vehicle Details */}
-                  <div className="p-6 space-y-4">
+                  <div className="p-4 sm:p-6 space-y-4">
                     <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Vehicle Details</h3>
                     <div className="flex items-start gap-3">
                       <div className="p-2 bg-gray-100 rounded-lg shrink-0">
@@ -205,7 +385,7 @@ const BookingDetails = () => {
                   </div>
 
                   {/* Contact Person */}
-                  <div className="p-6 space-y-4">
+                  <div className="p-4 sm:p-6 space-y-4">
                     <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Contact Person</h3>
                     <div className="flex items-start gap-3">
                       <div className="p-2 bg-gray-100 rounded-lg shrink-0">
@@ -228,8 +408,65 @@ const BookingDetails = () => {
                   </div>
                 </div>
 
-                <div className="p-6 border-b">
-                  <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Assigned Employee</h3>
+                <div className="p-4 sm:p-6 border-b">
+                  <div className="flex flex-wrap justify-between items-center mb-4 gap-2">
+                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Assigned Employee</h3>
+                    {isSuperAdmin && (
+                      <Dialog open={isAssignDialogOpen} onOpenChange={setIsAssignDialogOpen}>
+                        <DialogTrigger asChild>
+                          <Button variant="outline" size="sm" className="h-7 text-xs">
+                            {booking.assigned_employee_id ? "Change" : "Assign"}
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Assign Employee</DialogTitle>
+                            <DialogDescription>
+                              Select an employee to assign to this booking.
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="grid gap-4 py-4">
+                            <div className="grid gap-2">
+                              <Label htmlFor="employee">Employee</Label>
+                              <Select
+                                onValueChange={setSelectedEmployeeId}
+                                defaultValue={booking.assigned_employee_id?.toString()}
+                              >
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select an employee" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="unassigned">Unassigned (None)</SelectItem>
+                                  {employees.map((emp) => (
+                                    <SelectItem key={emp.id} value={emp.id.toString()}>
+                                      {emp.full_name} ({emp.position || "Staff"})
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div className="grid gap-2">
+                              <Label htmlFor="notes">Notes (Optional)</Label>
+                              <Textarea
+                                id="notes"
+                                value={assignmentNotes}
+                                onChange={(e) => setAssignmentNotes(e.target.value)}
+                                placeholder="Instructions for employee..."
+                              />
+                            </div>
+                          </div>
+                          <DialogFooter>
+                            <Button variant="outline" onClick={() => setIsAssignDialogOpen(false)}>Cancel</Button>
+                            <Button onClick={handleAssignEmployee} disabled={isAssigning}>
+                              {isAssigning && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                              Save Assignment
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                    )}
+                  </div>
+
                   {booking.assigned_employee_name ? (
                     <div className="flex items-center gap-3 bg-blue-50 p-3 rounded-lg border border-blue-100">
                       <div className="h-8 w-8 rounded-full bg-blue-200 flex items-center justify-center text-blue-700 font-bold">
@@ -245,11 +482,42 @@ const BookingDetails = () => {
                       <AlertCircle className="h-4 w-4" /> Not assigned yet
                     </div>
                   )}
+
+                  {/* Assignment History - Super Admin Only */}
+                  {isSuperAdmin && booking.employee_assignment_history && booking.employee_assignment_history.length > 0 && (
+                    <div className="mt-4 pt-4 border-t">
+                      <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Assignment History</h4>
+                      <div className="space-y-3">
+                        {booking.employee_assignment_history.map(history => (
+                          <div key={history.id} className="text-sm">
+                            <div className="flex items-center gap-2">
+                              <div className="h-6 w-6 rounded-full bg-gray-100 flex items-center justify-center text-xs font-bold text-gray-500">
+                                {history.employee_name ? history.employee_name.charAt(0) : "?"}
+                              </div>
+                              <div>
+                                <p className="font-medium text-gray-900">
+                                  {history.employee_name ? `Assigned to ${history.employee_name}` : "Unassigned"}
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                  by {history.assigned_by_name || "Admin"} • {format(new Date(history.created_at), "MMM d, h:mm a")}
+                                </p>
+                              </div>
+                            </div>
+                            {history.notes && (
+                              <p className="text-xs text-gray-600 bg-gray-50 p-2 rounded mt-1 ml-8 italic">
+                                "{history.notes}"
+                              </p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Pickup & Address */}
                 {booking.pickup_address && (
-                  <div className="p-6">
+                  <div className="p-4 sm:p-6">
                     <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Pickup Location</h3>
                     <div className="flex items-start gap-3 text-gray-700">
                       <MapPin className="h-5 w-5 text-red-500 shrink-0" />
@@ -264,14 +532,93 @@ const BookingDetails = () => {
             {/* Daily Work Logs - Simplified for User View */}
             <Card className="border-none shadow-md">
               <CardHeader className="border-b bg-gray-50/50 pb-4">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <FileText className="h-5 w-5" /> Daily Work Logs
+                <div className="flex justify-between items-center">
+                  <CardTitle className="text-base font-bold flex items-center gap-2">
+                    <FileText className="h-4 w-4" /> Daily Work Logs
                   </CardTitle>
-                  {/* Admin "Create New Log" button would go here */}
+                  {isAdmin && (
+                    <Dialog open={isWorkLogDialogOpen} onOpenChange={setIsWorkLogDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" size="sm" className="h-7 text-xs">
+                          <Plus className="mr-1 h-3 w-3" /> Add Log
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-md">
+                        <DialogHeader>
+                          <DialogTitle>Add Daily Work Log</DialogTitle>
+                          <DialogDescription>Add a progress update for this booking.</DialogDescription>
+                        </DialogHeader>
+                        <div className="grid gap-4 py-4">
+                          <div className="grid gap-2">
+                            <Label htmlFor="logDate">Date</Label>
+                            <Input
+                              id="logDate"
+                              type="date"
+                              value={logDate}
+                              onChange={(e) => setLogDate(e.target.value)}
+                            />
+                          </div>
+                          <div className="grid gap-2">
+                            <Label htmlFor="logDesc">Description</Label>
+                            <Textarea
+                              id="logDesc"
+                              value={logDescription}
+                              onChange={(e) => setLogDescription(e.target.value)}
+                              placeholder="Describe the work done today..."
+                            />
+                          </div>
+                          <div className="grid gap-2">
+                            <Label>Photos</Label>
+                            <Input
+                              type="file"
+                              multiple
+                              accept="image/*"
+                              onChange={(e) => handleFileChange(e, 'photos')}
+                            />
+                            {logPhotos.length > 0 && (
+                              <div className="flex flex-wrap gap-2 mt-2">
+                                {logPhotos.map((file, i) => (
+                                  <div key={i} className="text-xs bg-gray-100 p-1 px-2 rounded flex items-center gap-1">
+                                    {file.name.substring(0, 15)}...
+                                    <button onClick={() => removeFile(i, 'photos')} className="text-red-500 hover:text-red-700 ml-1">×</button>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                          <div className="grid gap-2">
+                            <Label>Videos</Label>
+                            <Input
+                              type="file"
+                              multiple
+                              accept="video/*"
+                              onChange={(e) => handleFileChange(e, 'videos')}
+                            />
+                            {logVideos.length > 0 && (
+                              <div className="flex flex-wrap gap-2 mt-2">
+                                {logVideos.map((file, i) => (
+                                  <div key={i} className="text-xs bg-gray-100 p-1 px-2 rounded flex items-center gap-1">
+                                    {file.name.substring(0, 15)}...
+                                    <button onClick={() => removeFile(i, 'videos')} className="text-red-500 hover:text-red-700 ml-1">×</button>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        <DialogFooter>
+                          <Button variant="outline" onClick={() => setIsWorkLogDialogOpen(false)}>Cancel</Button>
+                          <Button onClick={handleAddWorkLog} disabled={isAddingLog}>
+                            {isAddingLog && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            Add Log
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                  )}
                 </div>
               </CardHeader>
-              <CardContent className="p-6">
+              <CardContent className="p-4 sm:p-6">
                 {booking.daily_work_logs && booking.daily_work_logs.length > 0 ? (
                   <div className="space-y-6">
                     {booking.daily_work_logs.map((log) => (
@@ -284,16 +631,22 @@ const BookingDetails = () => {
 
                         {((log.photos && log.photos.length > 0) || (log.videos && log.videos.length > 0)) && (
                           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3">
-                            {(log.photos || []).map((url, idx) => (
-                              <div key={`photo-${idx}`} className="aspect-square rounded-lg overflow-hidden bg-gray-100 border relative group">
-                                <img src={url} alt="Work log" className="w-full h-full object-cover cursor-pointer hover:scale-110 transition-transform" onClick={() => window.open(url, '_blank')} />
-                              </div>
-                            ))}
-                            {(log.videos || []).map((url, idx) => (
-                              <div key={`video-${idx}`} className="aspect-square rounded-lg overflow-hidden bg-gray-100 border relative group">
-                                <video src={url} className="w-full h-full object-cover" controls />
-                              </div>
-                            ))}
+                            {(log.photos || []).map((item, idx) => {
+                              const url = typeof item === 'string' ? item : item.url;
+                              return (
+                                <div key={`photo-${idx}`} className="aspect-square rounded-lg overflow-hidden bg-gray-100 border relative group">
+                                  <img src={url} alt="Work log" className="w-full h-full object-cover cursor-pointer hover:scale-110 transition-transform" onClick={() => window.open(url, '_blank')} />
+                                </div>
+                              );
+                            })}
+                            {(log.videos || []).map((item, idx) => {
+                              const url = typeof item === 'string' ? item : item.url;
+                              return (
+                                <div key={`video-${idx}`} className="aspect-square rounded-lg overflow-hidden bg-gray-100 border relative group">
+                                  <video src={url} className="w-full h-full object-cover" controls />
+                                </div>
+                              );
+                            })}
                           </div>
                         )}
                       </div>
@@ -317,9 +670,53 @@ const BookingDetails = () => {
             {/* Payment Summary */}
             <Card className="border-none shadow-md">
               <CardHeader className="border-b bg-gray-50/50 pb-4">
-                <CardTitle className="text-base font-bold flex items-center gap-2">
-                  ₹ Payment Summary
-                </CardTitle>
+                <div className="flex justify-between items-center">
+                  <CardTitle className="text-base font-bold flex items-center gap-2">
+                    ₹ Payment Summary
+                  </CardTitle>
+                  {isAdmin && (
+                    <Dialog open={isPaymentDialogOpen} onOpenChange={setIsPaymentDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button variant="ghost" size="sm" className="h-7 w-7 p-0 rounded-full">
+                          <span className="text-xl leading-none">+</span>
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Add Cost Item</DialogTitle>
+                        </DialogHeader>
+                        <div className="grid gap-4 py-4">
+                          <div className="grid gap-2">
+                            <Label htmlFor="item">Item Name</Label>
+                            <Input
+                              id="item"
+                              value={newCostItem}
+                              onChange={(e) => setNewCostItem(e.target.value)}
+                              placeholder="e.g., Oil Filter"
+                            />
+                          </div>
+                          <div className="grid gap-2">
+                            <Label htmlFor="amount">Amount (₹)</Label>
+                            <Input
+                              id="amount"
+                              type="number"
+                              value={newCostAmount}
+                              onChange={(e) => setNewCostAmount(e.target.value)}
+                              placeholder="0.00"
+                            />
+                          </div>
+                        </div>
+                        <DialogFooter>
+                          <Button variant="outline" onClick={() => setIsPaymentDialogOpen(false)}>Cancel</Button>
+                          <Button onClick={handleAddCost} disabled={isAddingCost}>
+                            {isAddingCost && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            Add Cost
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                  )}
+                </div>
               </CardHeader>
               <CardContent className="p-6">
                 {costs.length === 0 ? (
@@ -349,11 +746,54 @@ const BookingDetails = () => {
             {/* Timeline / Status */}
             <Card className="border-none shadow-md">
               <CardHeader className="border-b bg-gray-50/50 pb-4">
-                <CardTitle className="text-base font-bold flex items-center gap-2">
-                  <Clock className="h-4 w-4" /> Timeline
-                </CardTitle>
+                <div className="flex justify-between items-center">
+                  <CardTitle className="text-base font-bold flex items-center gap-2">
+                    <Clock className="h-4 w-4" /> Timeline
+                  </CardTitle>
+                  {isAdmin && booking.assigned_employee_id && (
+                    <Dialog open={isStatusDialogOpen} onOpenChange={setIsStatusDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" size="sm" className="h-7 text-xs">
+                          Update Status
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Update Booking Status</DialogTitle>
+                        </DialogHeader>
+                        <div className="grid gap-4 py-4">
+                          <div className="grid gap-2">
+                            <Label htmlFor="status">Status</Label>
+                            <Select
+                              onValueChange={(val) => setSelectedStatus(val as BookingStatus)}
+                              defaultValue={booking.status}
+                            >
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value={BookingStatus.PENDING}>Pending</SelectItem>
+                                <SelectItem value={BookingStatus.ANALYSE}>Analyzing</SelectItem>
+                                <SelectItem value={BookingStatus.IN_PROGRESS}>In Progress</SelectItem>
+                                <SelectItem value={BookingStatus.COMPLETED}>Completed</SelectItem>
+                                <SelectItem value={BookingStatus.CANCELLED}>Cancelled</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                        <DialogFooter>
+                          <Button variant="outline" onClick={() => setIsStatusDialogOpen(false)}>Cancel</Button>
+                          <Button onClick={handleStatusChange} disabled={isUpdatingStatus}>
+                            {isUpdatingStatus && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            Update Status
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                  )}
+                </div>
               </CardHeader>
-              <CardContent className="p-6">
+              <CardContent className="p-4 sm:p-6">
                 <div className="relative pl-4 border-l-2 border-gray-100 space-y-6">
                   <div className="relative">
                     <div className="absolute -left-[21px] top-1 h-3 w-3 rounded-full bg-red-500 ring-2 ring-white" />

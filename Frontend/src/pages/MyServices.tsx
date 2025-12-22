@@ -123,7 +123,31 @@ const MyServices = () => {
       [BookingStatus.COMPLETED]: "bg-green-100 text-green-800 border-green-200",
       [BookingStatus.CANCELLED]: "bg-red-100 text-red-800 border-red-200",
     };
+
     return colors[status] || colors[BookingStatus.PENDING];
+  };
+
+  const getSubtleBgColor = (status: BookingStatus) => {
+    const colors: Record<BookingStatus, string> = {
+      [BookingStatus.PENDING]: "bg-yellow-50",
+      [BookingStatus.ANALYSE]: "bg-blue-50",
+      [BookingStatus.IN_PROGRESS]: "bg-purple-50",
+      [BookingStatus.COMPLETED]: "bg-green-50",
+      [BookingStatus.CANCELLED]: "bg-red-50",
+    };
+    return colors[status] || "bg-white";
+  };
+
+  const getTabActiveColor = (status: string) => {
+    if (status === "all") return "data-[state=active]:bg-gray-800";
+    const colors: Record<string, string> = {
+      [BookingStatus.PENDING]: "data-[state=active]:bg-yellow-500",
+      [BookingStatus.ANALYSE]: "data-[state=active]:bg-blue-600",
+      [BookingStatus.IN_PROGRESS]: "data-[state=active]:bg-purple-600",
+      [BookingStatus.COMPLETED]: "data-[state=active]:bg-green-600",
+      [BookingStatus.CANCELLED]: "data-[state=active]:bg-red-600",
+    };
+    return colors[status] || "data-[state=active]:bg-gray-800";
   };
 
   const filterBookings = (status: string) => {
@@ -181,7 +205,10 @@ const MyServices = () => {
                 <TabsTrigger
                   key={status}
                   value={status}
-                  className="capitalize px-4 py-2 min-w-[100px] data-[state=active]:bg-red-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all"
+                  className={cn(
+                    "capitalize px-4 py-2 min-w-[100px] data-[state=active]:text-white data-[state=active]:shadow-md transition-all",
+                    getTabActiveColor(status)
+                  )}
                 >
                   {status === "all" ? "All" : status.replace('_', ' ')}
                 </TabsTrigger>
@@ -217,14 +244,14 @@ const MyServices = () => {
                             onClick={() => navigate(`/booking/${primaryBooking.id}`)}
                             className="cursor-pointer"
                           >
-                            <Card className="h-full hover:shadow-lg transition-shadow border-t-4 overflow-hidden relative flex flex-col"
+                            <Card className={cn("h-full hover:shadow-lg transition-shadow border-t-4 overflow-hidden relative flex flex-col", getSubtleBgColor(primaryBooking.status))}
                               style={{
                                 borderTopColor: primaryBooking.status === BookingStatus.COMPLETED ? '#22c55e' :
                                   primaryBooking.status === BookingStatus.CANCELLED ? '#ef4444' :
                                     primaryBooking.status === BookingStatus.IN_PROGRESS ? '#a855f7' :
                                       primaryBooking.status === BookingStatus.ANALYSE ? '#3b82f6' : '#eab308'
                               }}>
-                              <CardHeader className="bg-gray-50/50 pb-3">
+                              <CardHeader className="bg-transparent pb-3">
                                 <div className="flex justify-between items-start">
                                   <div className="flex flex-wrap gap-2">
                                     <Badge variant="secondary" className={cn("mb-2", getStatusColor(primaryBooking.status))}>
@@ -277,8 +304,9 @@ const MyServices = () => {
                                     </div>
                                   )}
                                 </div>
+
                               </CardContent>
-                              <CardFooter className="pt-0 flex justify-between items-center border-t bg-gray-50/30 p-4 mt-auto">
+                              <CardFooter className="pt-0 flex justify-between items-center border-t border-gray-200/60 bg-white/40 p-4 mt-auto">
                                 {primaryBooking.status !== BookingStatus.COMPLETED && primaryBooking.status !== BookingStatus.CANCELLED ? (
                                   isSuperAdmin ? (
                                     <Button
@@ -306,7 +334,8 @@ const MyServices = () => {
                         );
                       })}
                     </div>
-                  )}
+                  )
+                  }
                 </TabsContent>
               );
             })}

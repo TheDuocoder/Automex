@@ -93,8 +93,8 @@ export interface DailyWorkLog {
   booking_id: number;
   log_date: string; // YYYY-MM-DD format
   description?: string;
-  photos?: string[];
-  videos?: string[];
+  photos?: (string | { url: string; date: string })[];
+  videos?: (string | { url: string; date: string })[];
   created_at: string;
   updated_at: string;
 }
