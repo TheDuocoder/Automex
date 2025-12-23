@@ -128,7 +128,7 @@ const MyCart = () => {
                             className="w-8 h-8 object-contain"
                         />
                     </div>
-                    <Button
+                    <button
                         onClick={() => {
                             if (items.length > 0) {
                                 const firstItem = items[0];
@@ -145,12 +145,15 @@ const MyCart = () => {
                                 navigate("/services");
                             }
                         }}
-                        variant="ghost"
-                        className="text-gray-700 hover:text-gray-900 hover:bg-transparent font-medium px-0 flex items-center gap-1"
+                        className="relative inline-block text-center font-bold py-2.5 px-6 border-3 border-[#FF0072] rounded-sm text-[#FF0072] no-underline transition-all duration-300 z-10 text-sm tracking-wider uppercase shrink-0 hover:text-white active:scale-90 before:content-[''] before:absolute before:top-0 before:left-1/2 before:right-1/2 before:bottom-0 before:opacity-0 before:bg-[#FF0072] before:-z-10 before:transition-all before:duration-500 hover:before:left-0 hover:before:right-0 hover:before:opacity-100 bg-transparent"
+                        style={{
+                            boxShadow: '0 2px 10px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.1)',
+                            borderWidth: '3px'
+                        }}
                     >
-                        <ChevronLeft className="h-5 w-5" />
+                        <ChevronLeft className="h-4 w-4 mr-2 inline-block" />
                         Back
-                    </Button>
+                    </button>
                 </div>
 
                 {items.length === 0 ? (
@@ -173,7 +176,7 @@ const MyCart = () => {
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-3">
                                             <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm p-2 overflow-hidden transition-transform duration-300 hover:scale-110 cursor-pointer">
-                                                <img 
+                                                <img
                                                     src={`/images/Car_brands/${groupItems[0].brand}.png`}
                                                     alt={groupItems[0].brand}
                                                     className="w-full h-full object-contain"
@@ -182,7 +185,7 @@ const MyCart = () => {
                                                         const brand = groupItems[0].brand || '';
                                                         const firstWord = brand.split(/[\s\-]/)[0];
                                                         const capitalizedBrand = firstWord.charAt(0).toUpperCase() + firstWord.slice(1).toLowerCase();
-                                                        
+
                                                         // Special handling for specific brands
                                                         if (brand.toLowerCase().includes('volkswagen')) {
                                                             e.currentTarget.src = `/images/Car_brands/Volkswagancarlogo.png`;
@@ -197,7 +200,7 @@ const MyCart = () => {
                                                         } else {
                                                             e.currentTarget.src = `/images/Car_brands/${capitalizedBrand}carlogo.png`;
                                                         }
-                                                        
+
                                                         e.currentTarget.onerror = () => {
                                                             // Final fallback - hide image and show car icon
                                                             e.currentTarget.style.display = 'none';

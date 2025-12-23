@@ -390,9 +390,16 @@ const BookingDetails = () => {
               <p className="text-xs text-gray-500 mt-1 sm:mt-0">Created on {format(new Date(booking.created_at.endsWith("Z") ? booking.created_at : booking.created_at + "Z"), "MMM d, yyyy 'at' h:mm a")}</p>
             </div>
           </div>
-          <Button variant="ghost" size="sm" onClick={() => navigate('/my-services')} className="shrink-0">
-            <ChevronLeft className="h-4 w-4 mr-2" /> Back
-          </Button>
+          <button 
+            onClick={() => navigate('/my-services')} 
+            className="relative inline-block text-center font-bold py-2.5 px-6 border-3 border-[#FF0072] rounded-sm text-[#FF0072] no-underline transition-all duration-300 z-10 text-sm tracking-wider uppercase shrink-0 hover:text-white active:scale-90 before:content-[''] before:absolute before:top-0 before:left-1/2 before:right-1/2 before:bottom-0 before:opacity-0 before:bg-[#FF0072] before:-z-10 before:transition-all before:duration-500 hover:before:left-0 hover:before:right-0 hover:before:opacity-100"
+            style={{ 
+              boxShadow: '0 2px 10px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.1)',
+              borderWidth: '3px'
+            }}
+          >
+            <ChevronLeft className="h-4 w-4 mr-2 inline-block" /> Back
+          </button>
         </div>
       </div>
 
@@ -411,24 +418,31 @@ const BookingDetails = () => {
                 <div className="text-center sm:text-left flex-1">
                   {groupedBookings.length > 1 ? (
                     <>
-                      <h2 className="text-xl font-bold text-gray-900 mb-2">Multiple Services Booking</h2>
-                      <div className="space-y-1 mb-2">
+                      <div className="flex items-center justify-between mb-2">
+                        <h2 className="text-xl font-bold text-gray-900">Multiple Services Booking</h2>
+                        <Badge variant="outline" className="shrink-0">
+                          {groupedBookings.length} Services
+                        </Badge>
+                      </div>
+                      <p className="text-gray-600 mb-2">
+                        Scheduled for <span className="font-medium">{formatDbDate(booking.booking_date, "EEEE, MMMM d, yyyy 'at' h:mm a")}</span>
+                      </p>
+                      <div className="space-y-1">
                         {groupedBookings.map((b, idx) => (
                           <div key={b.id} className="text-gray-800 font-medium">
                             • {b.service_name}
                           </div>
                         ))}
                       </div>
-                      <Badge variant="outline" className="mb-2">
-                        {groupedBookings.length} Services
-                      </Badge>
                     </>
                   ) : (
-                    <h2 className="text-xl font-bold text-gray-900">{booking.service_name}</h2>
+                    <>
+                      <h2 className="text-xl font-bold text-gray-900">{booking.service_name}</h2>
+                      <p className="text-gray-600 mt-1">
+                        Scheduled for <span className="font-medium">{formatDbDate(booking.booking_date, "EEEE, MMMM d, yyyy 'at' h:mm a")}</span>
+                      </p>
+                    </>
                   )}
-                  <p className="text-gray-600 mt-1">
-                    Scheduled for <span className="font-medium">{formatDbDate(booking.booking_date, "EEEE, MMMM d, yyyy 'at' h:mm a")}</span>
-                  </p>
                   {booking.technician_notes && (
                     <p className="text-sm text-gray-500 mt-2 bg-white/50 p-2 rounded">
                       Note: {booking.technician_notes}

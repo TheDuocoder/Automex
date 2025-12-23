@@ -744,13 +744,18 @@ const Profile = () => {
             </div>
 
             <div className="text-white">
-              <h2 className="text-xl font-bold mb-0.5">
-                {currentUser?.full_name
-                  ? currentUser.full_name.split(' ').map(word =>
-                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-                  ).join(' ')
-                  : 'User'}
-              </h2>
+              <div className="flex items-center gap-2 mb-0.5">
+                <h2 className="text-xl font-bold">
+                  {currentUser?.full_name
+                    ? currentUser.full_name.split(' ').map(word =>
+                      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                    ).join(' ')
+                    : 'User'}
+                </h2>
+                <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-green-500/30 border border-green-400/30 text-white backdrop-blur-md">
+                  Active Account
+                </span>
+              </div>
               <p className="text-white/90 flex items-center gap-1.5 mb-0.5 text-xs">
                 <Mail className="h-3 w-3" />
                 {currentUser?.email}
@@ -760,9 +765,6 @@ const Profile = () => {
                 {currentUser?.phone_number || 'No phone number'}
               </p>
               <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-green-500/30 border border-green-400/30 text-white backdrop-blur-md">
-                  Active Account
-                </span>
                 <span className="text-xs text-white/80">Member Since: 2021</span>
               </div>
             </div>
