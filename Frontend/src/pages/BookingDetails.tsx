@@ -10,7 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import {
   User, Calendar as CalendarIcon, MapPin, Phone, FileText, ChevronLeft,
   CheckCircle2, AlertCircle, Clock, ShieldCheck, Download, FolderOpen, Plus, Trash2, X,
-  Loader2, XCircle, Wrench, Car, Mail, UploadCloud, Image as ImageIcon, Video
+  Loader2, XCircle, Wrench, Car, Mail, UploadCloud, Image as ImageIcon, Video, ArrowRight
 } from "lucide-react";
 import { getBooking, cancelBooking, getUserBookings, type Booking, BookingStatus } from "@/services/bookingService";
 import { getBookingCosts, type Cost } from "@/services/costService";
@@ -21,6 +21,16 @@ import { motion } from "framer-motion";
 import {
   Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
@@ -81,6 +91,7 @@ const BookingDetails = () => {
   const [groupedBookings, setGroupedBookings] = useState<Booking[]>([]); // All bookings in the same group
   const [isLoading, setIsLoading] = useState(true);
   const [cancellingId, setCancellingId] = useState<number | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [costs, setCosts] = useState<Cost[]>([]);
   const [totalCost, setTotalCost] = useState<number>(0);
 
@@ -304,17 +315,54 @@ const BookingDetails = () => {
     }
   };
 
+
+
+  const getNextStatus = (currentStatus: BookingStatus): BookingStatus | null => {
+    switch (currentStatus) {
+      case BookingStatus.PENDING: return BookingStatus.ANALYSE;
+      case BookingStatus.ANALYSE: return BookingStatus.IN_PROGRESS;
+      case BookingStatus.IN_PROGRESS: return BookingStatus.COMPLETED;
+      default: return null;
+    }
+  };
+
+  const handleMoveToNextStage = async () => {
+    if (!booking) return;
+    const nextStatus = getNextStatus(booking.status);
+    if (!nextStatus) return;
+
+    try {
+      setIsUpdatingStatus(true);
+      await updateBookingStatus(booking.id, nextStatus);
+      toast({ title: "Status Updated", description: `Booking moved to ${nextStatus.replace('_', ' ')}` });
+      loadBooking();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to update status",
+        variant: "destructive"
+      });
+    } finally {
+      setIsUpdatingStatus(false);
+    }
+  };
+
+  const confirmCancel = () => {
+    setDeleteDialogOpen(true);
+  };
+
   const handleCancel = async () => {
-    if (!booking || !confirm("Are you sure you want to permanently delete this booking?")) return;
+    if (!booking) return;
     try {
       setCancellingId(booking.id);
       await cancelBooking(booking.id);
       toast({ title: "Cancelled", description: "Booking cancelled successfully" });
-      await loadBooking();
+      navigate('/my-services');
     } catch {
       toast({ title: "Failed", description: "Could not cancel booking", variant: "destructive" });
     } finally {
       setCancellingId(null);
+      setDeleteDialogOpen(false);
     }
   };
 
@@ -897,7 +945,7 @@ const BookingDetails = () => {
             )}
 
             {/* Actions */}
-            {booking.status !== BookingStatus.CANCELLED && booking.status !== BookingStatus.COMPLETED && isSuperAdmin && (
+            {((booking.status !== BookingStatus.CANCELLED && booking.status !== BookingStatus.COMPLETED) || isSuperAdmin) && (
               <Card className="border-none shadow-md overflow-hidden">
                 <div className="p-4 bg-gray-50 flex items-center gap-3">
                   <div className="flex-1">
@@ -906,16 +954,32 @@ const BookingDetails = () => {
                   </div>
                   <ShieldCheck className="h-8 w-8 text-gray-200" />
                 </div>
-                <div className="p-4">
-                  <Button
-                    variant="destructive"
-                    className="w-full"
-                    onClick={handleCancel}
-                    disabled={cancellingId === booking.id}
-                  >
-                    {cancellingId === booking.id ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                    Delete Booking
-                  </Button>
+                <div className="p-4 space-y-3">
+                  {/* Next Stage Button */}
+                  {(isAdmin || isSuperAdmin) && booking.assigned_employee_id && getNextStatus(booking.status) && (
+                    <Button
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                      onClick={handleMoveToNextStage}
+                      disabled={isUpdatingStatus}
+                    >
+                      {isUpdatingStatus ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                      Move to {getNextStatus(booking.status)?.replace('_', ' ')}
+                      <ArrowRight className="h-4 w-4 ml-2" />
+                    </Button>
+                  )}
+
+                  {/* Delete Button */}
+                  {isSuperAdmin && (
+                    <Button
+                      variant="destructive"
+                      className="w-full"
+                      onClick={confirmCancel}
+                      disabled={cancellingId === booking.id}
+                    >
+                      {cancellingId === booking.id ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                      Delete Booking
+                    </Button>
+                  )}
                 </div>
               </Card>
             )}
@@ -923,6 +987,24 @@ const BookingDetails = () => {
           </div>
         </div>
       </main>
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the booking and remove it from our servers.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleCancel} className="bg-red-600 hover:bg-red-700">
+              Delete Booking
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <Footer />
     </div>
   );

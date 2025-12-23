@@ -7,7 +7,17 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/componen
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, Car, Clock, CheckCircle2, XCircle, Loader2, AlertCircle, MapPin, Wrench, Search, Mail, User, ChevronRight, LayoutGrid } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Calendar, Car, Clock, CheckCircle2, XCircle, Loader2, AlertCircle, MapPin, Wrench, Search, Mail, User, ChevronRight, LayoutGrid, ArrowRight, Trash2 } from "lucide-react";
 import { getUserBookings, cancelBooking, updateBookingStatus, type Booking, BookingStatus } from "@/services/bookingService";
 import { getBookingCosts } from "@/services/costService";
 import { useToast } from "@/hooks/use-toast";
@@ -52,9 +62,45 @@ const MyServices = () => {
   const [activeTab, setActiveTab] = useState<string>("all");
   const [bookingCosts, setBookingCosts] = useState<Record<number, number>>({});
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [bookingToDelete, setBookingToDelete] = useState<number | null>(null);
+  const [updatingId, setUpdatingId] = useState<number | null>(null);
 
   const isAdmin = user?.role?.name?.toLowerCase() === "admin" || user?.role?.name?.toLowerCase() === "super" || user?.is_superuser;
   const isSuperAdmin = user?.role?.name?.toLowerCase() === "super" || user?.is_superuser;
+
+  const getNextStatus = (currentStatus: BookingStatus): BookingStatus | null => {
+    switch (currentStatus) {
+      case BookingStatus.PENDING: return BookingStatus.ANALYSE;
+      case BookingStatus.ANALYSE: return BookingStatus.IN_PROGRESS;
+      case BookingStatus.IN_PROGRESS: return BookingStatus.COMPLETED;
+      default: return null;
+    }
+  };
+
+  const handleMoveToNextStage = async (e: React.MouseEvent, booking: Booking) => {
+    e.stopPropagation();
+    const nextStatus = getNextStatus(booking.status);
+    if (!nextStatus) return;
+
+    try {
+      setUpdatingId(booking.id);
+      await updateBookingStatus(booking.id, nextStatus);
+      toast({
+        title: "Status Updated",
+        description: `Booking moved to ${nextStatus.replace('_', ' ')}`,
+      });
+      await loadBookings();
+    } catch (error) {
+      toast({
+        title: "Update Failed",
+        description: "Failed to update booking status",
+        variant: "destructive",
+      });
+    } finally {
+      setUpdatingId(null);
+    }
+  };
 
   const loadBookings = async () => {
     try {
@@ -108,21 +154,25 @@ const MyServices = () => {
     loadBookings();
   }, [isAuthenticated, navigate, location.state]);
 
-  const handleCancel = async (e: React.MouseEvent, bookingId: number) => {
-    e.stopPropagation(); // Prevent card navigation
-    if (!confirm("Are you sure you want to cancel this booking?")) return;
+  const confirmDelete = (e: React.MouseEvent, bookingId: number) => {
+    e.stopPropagation();
+    setBookingToDelete(bookingId);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteBooking = async () => {
+    if (!bookingToDelete) return;
 
     try {
-      setCancellingId(bookingId);
-      await cancelBooking(bookingId);
+      setCancellingId(bookingToDelete);
+      await cancelBooking(bookingToDelete);
       toast({
         title: "Booking Deleted",
-        description: "Your booking has been deleted successfully.",
+        description: "The booking has been deleted successfully.",
       });
       await loadBookings();
     } catch (error) {
       if (error instanceof Error && (error.message.includes('404') || error.message.toLowerCase().includes('not found'))) {
-        // Booking already deleted
         toast({
           title: "Booking Already Deleted",
           description: "The booking was already deleted.",
@@ -137,6 +187,8 @@ const MyServices = () => {
       }
     } finally {
       setCancellingId(null);
+      setBookingToDelete(null);
+      setDeleteDialogOpen(false);
     }
   };
 
@@ -333,25 +385,59 @@ const MyServices = () => {
                               </CardContent>
                               <CardFooter className="pt-0 flex justify-between items-center border-t border-gray-200/60 bg-white/40 p-4 mt-auto">
                                 {primaryBooking.status !== BookingStatus.COMPLETED && primaryBooking.status !== BookingStatus.CANCELLED ? (
-                                  isSuperAdmin ? (
-                                    <Button
-                                      variant="destructive"
-                                      size="sm"
-                                      onClick={(e) => handleCancel(e, primaryBooking.id)}
-                                      disabled={cancellingId === primaryBooking.id}
-                                      className="h-8 px-3 text-xs"
-                                    >
-                                      {cancellingId === primaryBooking.id ? <Loader2 className="h-3 w-3 animate-spin" /> : "Delete"}
-                                    </Button>
-                                  ) : <div />
+                                  <span className="text-xs font-medium px-2 py-1 rounded bg-gray-100/50 text-gray-500">
+                                    {primaryBooking.status === BookingStatus.ANALYSE ? "Being Analyzed" :
+                                      primaryBooking.status === BookingStatus.IN_PROGRESS ? "Work in Progress" : "Waiting for action"}
+                                  </span>
                                 ) : (
                                   <span className="text-xs text-gray-400 italic">
                                     {primaryBooking.status === BookingStatus.COMPLETED ? "Completed" : "Cancelled"}
                                   </span>
                                 )}
 
-                                <div className="flex items-center text-sm font-medium text-gray-500 ml-auto">
-                                  View Details <ChevronRight className="h-4 w-4 ml-1" />
+                                {/* Admin Actions */}
+                                <div className="flex items-center gap-2 ml-auto">
+                                  {/* Next Stage Button */}
+                                  {(isAdmin || isSuperAdmin) && primaryBooking.assigned_employee_id && getNextStatus(primaryBooking.status) && (
+                                    <Button
+                                      size="sm"
+                                      className="h-8 text-xs bg-blue-600 hover:bg-blue-700 text-white gap-1"
+                                      onClick={(e) => handleMoveToNextStage(e, primaryBooking)}
+                                      disabled={updatingId === primaryBooking.id}
+                                    >
+                                      {updatingId === primaryBooking.id ? (
+                                        <Loader2 className="h-3 w-3 animate-spin" />
+                                      ) : (
+                                        <>
+                                          Move to {getNextStatus(primaryBooking.status)?.replace('_', ' ')}
+                                          <ArrowRight className="h-3 w-3" />
+                                        </>
+                                      )}
+                                    </Button>
+                                  )}
+
+                                  {/* Delete Button - Super Admin Only */}
+                                  {isSuperAdmin && (
+                                    <Button
+                                      variant="destructive"
+                                      size="sm"
+                                      onClick={(e) => confirmDelete(e, primaryBooking.id)}
+                                      disabled={cancellingId === primaryBooking.id}
+                                      className="h-8 w-8 p-0"
+                                      title="Delete Booking"
+                                    >
+                                      {cancellingId === primaryBooking.id ? (
+                                        <Loader2 className="h-3 w-3 animate-spin" />
+                                      ) : (
+                                        <Trash2 className="h-3.5 w-3.5" />
+                                      )}
+                                    </Button>
+                                  )}
+
+                                  <div className="flex items-center text-sm font-medium text-gray-500 hover:text-red-500 transition-colors">
+                                    <span className="sr-only">Details</span>
+                                    <ChevronRight className="h-5 w-5" />
+                                  </div>
                                 </div>
                               </CardFooter>
                             </Card>
@@ -368,6 +454,23 @@ const MyServices = () => {
         </div>
       </main>
       <Footer />
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the booking and remove it from our servers.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteBooking} className="bg-red-600 hover:bg-red-700">
+              Delete Booking
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

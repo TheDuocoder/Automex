@@ -78,7 +78,7 @@ const MyCart = () => {
 
                 await createServiceBooking(bookingData);
                 // Remove booked item from cart
-                removeFromCart(item.id);
+                removeFromCart(item.id, item.model);
             }
 
             toast({
@@ -122,18 +122,18 @@ const MyCart = () => {
                 <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-3">
                         <h1 className="text-3xl" style={{ fontFamily: 'Super Roman, sans-serif', fontWeight: 900 }}>Booking Cart</h1>
-                        <img 
-                            src="/images/Services/shopping-cart.png" 
-                            alt="Shopping Cart" 
+                        <img
+                            src="/images/Services/shopping-cart.png"
+                            alt="Shopping Cart"
                             className="w-8 h-8 object-contain"
                         />
                     </div>
-                    <Button 
+                    <Button
                         onClick={() => {
                             if (items.length > 0) {
                                 const firstItem = items[0];
-                                navigate("/services", { 
-                                    state: { 
+                                navigate("/services", {
+                                    state: {
                                         preselectedCar: {
                                             brand: firstItem.brand,
                                             model: firstItem.model,
@@ -164,7 +164,7 @@ const MyCart = () => {
                     <div className="space-y-6">
                         {Object.entries(groupedItems).map(([carInfo, groupItems]) => (
                             <Card key={carInfo} className="overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
-                                <CardHeader 
+                                <CardHeader
                                     className="border-b border-gray-200 py-3.5 px-5"
                                     style={{
                                         background: 'linear-gradient(90deg, #631683 0.000%, #7f237e 14.286%, #9e3980 28.571%, #bc5588 42.857%, #d57496 57.143%, #e494a8 71.429%, #e7b1be 85.714%, #dec8d6 100.000%)'
@@ -191,10 +191,10 @@ const MyCart = () => {
                                             <div className="flex-grow min-w-0">
                                                 <h3 className="font-semibold text-base text-gray-900 truncate">{item.name}</h3>
                                             </div>
-                                            <Button 
-                                                variant="ghost" 
-                                                size="icon" 
-                                                onClick={() => removeFromCart(item.id)} 
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                onClick={() => removeFromCart(item.id, item.model)}
                                                 className="text-red-500 hover:text-red-700 hover:bg-red-50 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity w-11 h-11"
                                             >
                                                 <Trash2 className="h-5.5 w-5.5" />

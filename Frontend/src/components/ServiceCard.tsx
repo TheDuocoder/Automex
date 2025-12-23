@@ -62,6 +62,8 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   variant = "default",
 }) => {
   const { isCarSelected, selectPart, triggerHighlight, selectedBrandId, selectedModelId, selectedFuelType, catalog } = useCarSelectionStore();
+  const brand = catalog.find(b => b.id === selectedBrandId);
+  const modelObj = brand?.models.find(m => m.id === selectedModelId);
   const { addToCart, isInCart } = useCartStore();
   const { toast } = useToast();
   const { isAuthenticated } = useAuth();
@@ -74,7 +76,8 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   const remainingCount = Math.max(features.length - DEFAULT_VISIBLE, 0);
   const shouldShowButton = hasMoreFeatures;
   const showPrice = discountedPrice > 0;
-  const isAdded = isInCart(id || name);
+  // Check if added SPECIFICALLY for the current model
+  const isAdded = isCarSelected() ? isInCart(id || name, modelObj?.name) : false;
 
   const handleBookClick = () => {
     // Check if user is authenticated
@@ -120,9 +123,6 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
     }
 
     // If validation passes, add to cart
-    const brand = catalog.find(b => b.id === selectedBrandId);
-    const modelObj = brand?.models.find(m => m.id === selectedModelId);
-
     addToCart({
       id: id || name, // Use Name as ID fallback? Ideally ID.
       name: name,

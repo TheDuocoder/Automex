@@ -14,9 +14,9 @@ export interface CartItem {
 interface CartState {
     items: CartItem[];
     addToCart: (item: CartItem) => void;
-    removeFromCart: (itemId: string) => void;
+    removeFromCart: (itemId: string, model?: string) => void;
     clearCart: () => void;
-    isInCart: (itemId: string) => boolean;
+    isInCart: (itemId: string, model?: string) => boolean;
 }
 
 export const useCartStore = create<CartState>()(
@@ -25,15 +25,23 @@ export const useCartStore = create<CartState>()(
             items: [],
             addToCart: (item) => {
                 const { items } = get();
-                if (!items.some((i) => i.id === item.id)) {
+                const exists = items.some((i) => i.id === item.id && i.model === item.model && i.brand === item.brand);
+                if (!exists) {
                     set({ items: [...items, item] });
                 }
             },
-            removeFromCart: (itemId) => {
-                set({ items: get().items.filter((i) => i.id !== itemId) });
+            removeFromCart: (itemId, model) => {
+                set({
+                    items: get().items.filter((i) => {
+                        if (model) {
+                            return !(i.id === itemId && i.model === model);
+                        }
+                        return i.id !== itemId;
+                    })
+                });
             },
             clearCart: () => set({ items: [] }),
-            isInCart: (itemId) => get().items.some((i) => i.id === itemId),
+            isInCart: (itemId, model) => get().items.some((i) => i.id === itemId && (model ? i.model === model : true)),
         }),
         {
             name: 'cart-storage',
