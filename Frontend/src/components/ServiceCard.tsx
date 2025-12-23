@@ -118,7 +118,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 
 
 
-    if (isInCart(id || name)) {
+    if (isInCart(id || name, modelObj?.name)) {
       return;
     }
 
