@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   AlertDialog,
@@ -194,11 +195,11 @@ const MyServices = () => {
 
   const getStatusColor = (status: BookingStatus) => {
     const colors: Record<BookingStatus, string> = {
-      [BookingStatus.PENDING]: "bg-yellow-100 text-yellow-800 border-yellow-200",
-      [BookingStatus.ANALYSE]: "bg-blue-100 text-blue-800 border-blue-200",
-      [BookingStatus.IN_PROGRESS]: "bg-purple-100 text-purple-800 border-purple-200",
-      [BookingStatus.COMPLETED]: "bg-green-100 text-green-800 border-green-200",
-      [BookingStatus.CANCELLED]: "bg-red-100 text-red-800 border-red-200",
+      [BookingStatus.PENDING]: "bg-white text-yellow-800 border-yellow-200",
+      [BookingStatus.ANALYSE]: "bg-white text-blue-800 border-blue-200",
+      [BookingStatus.IN_PROGRESS]: "bg-white text-purple-800 border-purple-200",
+      [BookingStatus.COMPLETED]: "bg-white text-green-800 border-green-200",
+      [BookingStatus.CANCELLED]: "bg-white text-red-800 border-red-200",
     };
 
     return colors[status] || colors[BookingStatus.PENDING];
@@ -206,11 +207,11 @@ const MyServices = () => {
 
   const getSubtleBgColor = (status: BookingStatus) => {
     const colors: Record<BookingStatus, string> = {
-      [BookingStatus.PENDING]: "bg-yellow-50",
-      [BookingStatus.ANALYSE]: "bg-blue-50",
-      [BookingStatus.IN_PROGRESS]: "bg-purple-50",
-      [BookingStatus.COMPLETED]: "bg-green-50",
-      [BookingStatus.CANCELLED]: "bg-red-50",
+      [BookingStatus.PENDING]: "bg-[#F5E6D3]",
+      [BookingStatus.ANALYSE]: "bg-[#DBEAFE]",
+      [BookingStatus.IN_PROGRESS]: "bg-[#F3E8FF]",
+      [BookingStatus.COMPLETED]: "bg-[#DCFCE7]",
+      [BookingStatus.CANCELLED]: "bg-[#FEE2E2]",
     };
     return colors[status] || "bg-white";
   };
@@ -272,7 +273,26 @@ const MyServices = () => {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
             <div>
               <h1 className="text-3xl font-bold mb-2">My Services</h1>
-              <p className="text-gray-500">Manage your active and past service bookings</p>
+              <p className="text-gray-500">Track and manage your vehicle service history</p>
+            </div>
+            <div className="flex items-center gap-3 w-full md:w-auto">
+              <div className="relative flex-1 md:flex-initial">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Input
+                  type="text"
+                  placeholder="Search bookings..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 w-full md:w-[280px] bg-white"
+                />
+              </div>
+              <Button 
+                onClick={() => navigate("/services")}
+                className="bg-black hover:bg-gray-800 text-white whitespace-nowrap"
+              >
+                <Wrench className="h-4 w-4 mr-2" />
+                Book New Service
+              </Button>
             </div>
           </div>
 
@@ -321,9 +341,9 @@ const MyServices = () => {
                             onClick={() => navigate(`/booking/${primaryBooking.id}`)}
                             className="cursor-pointer"
                           >
-                            <Card className={cn("h-full hover:shadow-lg transition-shadow border-t-4 overflow-hidden relative flex flex-col", getSubtleBgColor(primaryBooking.status))}
+                            <Card className={cn("h-full hover:shadow-lg transition-shadow border-l-4 overflow-hidden relative flex flex-col", getSubtleBgColor(primaryBooking.status))}
                               style={{
-                                borderTopColor: primaryBooking.status === BookingStatus.COMPLETED ? '#22c55e' :
+                                borderLeftColor: primaryBooking.status === BookingStatus.COMPLETED ? '#22c55e' :
                                   primaryBooking.status === BookingStatus.CANCELLED ? '#ef4444' :
                                     primaryBooking.status === BookingStatus.IN_PROGRESS ? '#a855f7' :
                                       primaryBooking.status === BookingStatus.ANALYSE ? '#3b82f6' : '#eab308'

@@ -158,7 +158,7 @@ const MyCart = () => {
                         <ShoppingCart className="h-16 w-16 mx-auto text-gray-300 mb-4" />
                         <h2 className="text-xl font-semibold text-gray-700">Your cart is empty</h2>
                         <p className="text-gray-500 mb-6">Add services to your cart to book them.</p>
-                        <Button onClick={() => navigate("/services")}>Browse Services</Button>
+                        <Button className="bg-blue-600 hover:bg-blue-700" onClick={() => navigate("/services")}>Browse Services</Button>
                     </div>
                 ) : (
                     <div className="space-y-6">
@@ -172,8 +172,41 @@ const MyCart = () => {
                                 >
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-3">
-                                            <div className="w-9 h-9 rounded-full bg-white flex items-center justify-center shadow-sm">
-                                                <Car className="h-4 w-4 text-purple-600" />
+                                            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm p-2 overflow-hidden transition-transform duration-300 hover:scale-110 cursor-pointer">
+                                                <img 
+                                                    src={`/images/Car_brands/${groupItems[0].brand}.png`}
+                                                    alt={groupItems[0].brand}
+                                                    className="w-full h-full object-contain"
+                                                    style={{ objectFit: 'contain' }}
+                                                    onError={(e) => {
+                                                        const brand = groupItems[0].brand || '';
+                                                        const firstWord = brand.split(/[\s\-]/)[0];
+                                                        const capitalizedBrand = firstWord.charAt(0).toUpperCase() + firstWord.slice(1).toLowerCase();
+                                                        
+                                                        // Special handling for specific brands
+                                                        if (brand.toLowerCase().includes('volkswagen')) {
+                                                            e.currentTarget.src = `/images/Car_brands/Volkswagancarlogo.png`;
+                                                        } else if (brand.toLowerCase().includes('maruti') && brand.toLowerCase().includes('suzuki')) {
+                                                            e.currentTarget.src = `/images/Car_brands/Marutisuzukicarlogo.png`;
+                                                        } else if (brand.toLowerCase().includes('toyota')) {
+                                                            e.currentTarget.src = `/images/Car_brands/Toyotacarlogo.png`;
+                                                        } else if (brand.toLowerCase().includes('hyundai')) {
+                                                            e.currentTarget.src = `/images/Car_brands/Hyundaicarlogo.png`;
+                                                        } else if (brand.toLowerCase() === 'mg' || brand.toLowerCase().includes('mg ')) {
+                                                            e.currentTarget.src = `/images/Car_brands/Mgcarlogo.png`;
+                                                        } else {
+                                                            e.currentTarget.src = `/images/Car_brands/${capitalizedBrand}carlogo.png`;
+                                                        }
+                                                        
+                                                        e.currentTarget.onerror = () => {
+                                                            // Final fallback - hide image and show car icon
+                                                            e.currentTarget.style.display = 'none';
+                                                            const carIcon = e.currentTarget.nextElementSibling;
+                                                            if (carIcon) carIcon.classList.remove('hidden');
+                                                        };
+                                                    }}
+                                                />
+                                                <Car className="h-5 w-5 text-purple-600 hidden" />
                                             </div>
                                             <CardTitle className="text-base text-white" style={{ fontFamily: 'Moranga, sans-serif', fontWeight: 700 }}>{carInfo}</CardTitle>
                                         </div>

@@ -378,11 +378,8 @@ const BookingDetails = () => {
 
       {/* Top Navigation Bar */}
       <div className="bg-white border-b sticky top-16 z-10 px-4 py-3 sm:py-4 shadow-sm">
-        <div className="container mx-auto max-w-6xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-            <Button variant="ghost" size="sm" onClick={() => navigate('/my-services')} className="-ml-2 sm:ml-0 self-start sm:self-auto">
-              <ChevronLeft className="h-4 w-4 mr-2" /> Back
-            </Button>
+        <div className="container mx-auto max-w-6xl flex items-center justify-between">
+          <div className="flex items-center gap-4">
             <div>
               <h1 className="text-lg sm:text-xl font-bold flex flex-wrap items-center gap-2">
                 Booking #{booking.id}
@@ -393,7 +390,9 @@ const BookingDetails = () => {
               <p className="text-xs text-gray-500 mt-1 sm:mt-0">Created on {format(new Date(booking.created_at.endsWith("Z") ? booking.created_at : booking.created_at + "Z"), "MMM d, yyyy 'at' h:mm a")}</p>
             </div>
           </div>
-          {/* Admin Actions could go here, for now empty for User */}
+          <Button variant="ghost" size="sm" onClick={() => navigate('/my-services')} className="shrink-0">
+            <ChevronLeft className="h-4 w-4 mr-2" /> Back
+          </Button>
         </div>
       </div>
 
