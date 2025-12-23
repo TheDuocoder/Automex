@@ -45,15 +45,15 @@ import { createCost } from "@/services/costService";
 const getStatusConfig = (status: BookingStatus) => {
   switch (status) {
     case BookingStatus.COMPLETED:
-      return { color: "bg-green-100 text-green-700 border-green-200", icon: CheckCircle2, label: "Completed" };
+      return { color: "bg-green-50 text-green-700 border-green-200", icon: CheckCircle2, label: "Completed" };
     case BookingStatus.CANCELLED:
-      return { color: "bg-red-100 text-red-700 border-red-200", icon: XCircle, label: "Cancelled" };
+      return { color: "bg-red-50 text-red-700 border-red-200", icon: XCircle, label: "Cancelled" };
     case BookingStatus.IN_PROGRESS:
-      return { color: "bg-purple-100 text-purple-700 border-purple-200", icon: Loader2, label: "In Progress" };
+      return { color: "bg-purple-50 text-purple-700 border-purple-200", icon: Loader2, label: "In Progress" };
     case BookingStatus.ANALYSE:
-      return { color: "bg-blue-100 text-blue-700 border-blue-200", icon: FileText, label: "Analyzing" };
+      return { color: "bg-blue-50 text-blue-700 border-blue-200", icon: FileText, label: "Analyzing" };
     default:
-      return { color: "bg-yellow-100 text-yellow-700 border-yellow-200", icon: Clock, label: "Pending" };
+      return { color: "bg-amber-50 text-amber-700 border-amber-200", icon: Clock, label: "PENDING" };
   }
 };
 
@@ -373,21 +373,25 @@ const BookingDetails = () => {
   const statusConfig = getStatusConfig(booking.status);
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-12">
+  <div className="min-h-screen bg-gray-50 pb-12">
       <Header />
 
       {/* Top Navigation Bar */}
-      <div className="bg-white border-b sticky top-16 z-10 px-4 py-3 sm:py-4 shadow-sm">
+      <div className="bg-white border-b sticky top-16 z-10 px-6 py-5 shadow-[0_8px_24px_rgba(0,0,0,0.06)]">
         <div className="container mx-auto max-w-6xl flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div>
-              <h1 className="text-lg sm:text-xl font-bold flex flex-wrap items-center gap-2">
-                Booking #{booking.id}
-                <Badge className={cn("ml-0 sm:ml-2", statusConfig.color)}>
+              <div className="flex flex-wrap items-center gap-2 mb-1">
+                <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
+                  Booking #{booking.id}
+                </h1>
+                <Badge className={cn("rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide", statusConfig.color)}>
                   {statusConfig.label}
                 </Badge>
-              </h1>
-              <p className="text-xs text-gray-500 mt-1 sm:mt-0">Created on {format(new Date(booking.created_at.endsWith("Z") ? booking.created_at : booking.created_at + "Z"), "MMM d, yyyy 'at' h:mm a")}</p>
+              </div>
+              <p className="text-xs text-gray-400">
+                Created on {format(new Date(booking.created_at.endsWith("Z") ? booking.created_at : booking.created_at + "Z"), "MMM d, yyyy")} · {format(new Date(booking.created_at.endsWith("Z") ? booking.created_at : booking.created_at + "Z"), "h:mm a")}
+              </p>
             </div>
           </div>
           <button 
@@ -404,35 +408,38 @@ const BookingDetails = () => {
       </div>
 
       <main className="container mx-auto max-w-6xl px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
           {/* Left Column: Details */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-8">
 
             {/* Service Card */}
-            <Card className="border-none shadow-md overflow-hidden">
-              <div className="bg-red-50 p-6 flex flex-col sm:flex-row items-center sm:items-start gap-4">
+            <Card className="border-none shadow-[0_8px_24px_rgba(0,0,0,0.06)] rounded-2xl overflow-hidden">
+              <div className="bg-red-50/40 p-6 flex flex-col sm:flex-row items-center sm:items-start gap-4 rounded-t-2xl">
                 <div className="h-16 w-16 bg-white rounded-xl flex items-center justify-center shadow-sm text-red-600">
                   <Wrench className="h-8 w-8" />
                 </div>
                 <div className="text-center sm:text-left flex-1">
                   {groupedBookings.length > 1 ? (
                     <>
-                      <div className="flex items-center justify-between mb-2">
-                        <h2 className="text-xl font-bold text-gray-900">Multiple Services Booking</h2>
-                        <Badge variant="outline" className="shrink-0">
+                      <div className="flex items-center justify-between mb-3">
+                        <h2 className="text-xl font-bold text-gray-900">🛠 Multiple Services Booking</h2>
+                        <Badge variant="outline" className="shrink-0 rounded-full px-3 py-1">
                           {groupedBookings.length} Services
                         </Badge>
                       </div>
-                      <p className="text-gray-600 mb-2">
-                        Scheduled for <span className="font-medium">{formatDbDate(booking.booking_date, "EEEE, MMMM d, yyyy 'at' h:mm a")}</span>
+                      <p className="text-gray-600 mb-4">
+                        Scheduled for <span className="font-medium">{formatDbDate(booking.booking_date, "EEE, MMM d")} · {formatDbDate(booking.booking_date, "h:mm a")}</span>
                       </p>
-                      <div className="space-y-1">
-                        {groupedBookings.map((b, idx) => (
-                          <div key={b.id} className="text-gray-800 font-medium">
-                            • {b.service_name}
-                          </div>
-                        ))}
+                      <div className="border-t border-gray-200 pt-4">
+                        <div className="space-y-2">
+                          {groupedBookings.map((b, idx) => (
+                            <div key={b.id} className="text-gray-800 font-medium flex items-start gap-2">
+                              <span className="text-lg leading-none">•</span>
+                              <span>{b.service_name}</span>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </>
                   ) : (
@@ -452,41 +459,50 @@ const BookingDetails = () => {
               </div>
 
               <CardContent className="p-0">
-                <div className="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x border-b">
+                <div className="grid md:grid-cols-2 gap-8 divide-y md:divide-y-0 border-b relative">
+                  {/* Vertical Divider (desktop only) */}
+                  <div className="hidden md:block absolute left-1/2 top-6 bottom-6 w-px bg-gray-200 -translate-x-1/2"></div>
+                  
                   {/* Vehicle Details */}
-                  <div className="p-4 sm:p-6 space-y-4">
-                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Vehicle Details</h3>
-                    <div className="flex items-start gap-3">
-                      <div className="p-2 bg-gray-100 rounded-lg shrink-0">
-                        <Car className="h-5 w-5 text-gray-600" />
-                      </div>
-                      <div>
-                        <p className="font-bold text-gray-900">{booking.car_brand} {booking.car_model}</p>
-                        <div className="flex flex-wrap gap-2 mt-2">
-                          {booking.fuel_type && <Badge variant="outline" className="text-xs">{booking.fuel_type}</Badge>}
-                          {booking.vehicle_registration && <Badge variant="secondary" className="text-xs">{booking.vehicle_registration}</Badge>}
-                        </div>
+                  <div className="p-6 space-y-4">
+                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
+                      <Car className="h-4 w-4 text-gray-400" />
+                      Vehicle Details
+                    </h3>
+                    <div className="space-y-3">
+                      <p className="font-bold text-lg text-gray-900">{booking.car_brand} {booking.car_model}</p>
+                      <div className="flex flex-wrap gap-2">
+                        {booking.fuel_type && (
+                          <Badge variant="outline" className="rounded-full px-3 py-1 text-xs font-medium bg-blue-50 text-blue-700 border-blue-200">
+                            {booking.fuel_type}
+                          </Badge>
+                        )}
+                        {booking.vehicle_registration && (
+                          <Badge variant="secondary" className="text-xs">
+                            {booking.vehicle_registration}
+                          </Badge>
+                        )}
                       </div>
                     </div>
                   </div>
 
                   {/* Contact Person */}
-                  <div className="p-4 sm:p-6 space-y-4">
-                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Contact Person</h3>
-                    <div className="flex items-start gap-3">
-                      <div className="p-2 bg-gray-100 rounded-lg shrink-0">
-                        <User className="h-5 w-5 text-gray-600" />
-                      </div>
-                      <div>
-                        <p className="font-bold text-gray-900">{booking.contact_name || user?.full_name || "N/A"}</p>
+                  <div className="p-6 space-y-4">
+                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
+                      <User className="h-4 w-4 text-gray-400" />
+                      Contact Person
+                    </h3>
+                    <div className="space-y-3">
+                      <p className="font-bold text-lg text-gray-900">{booking.contact_name || user?.full_name || "N/A"}</p>
+                      <div className="space-y-2">
                         {booking.contact_phone && (
-                          <div className="flex items-center gap-1.5 text-sm text-gray-500 mt-1">
-                            <Phone className="h-3 w-3" /> {booking.contact_phone}
+                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <Phone className="h-4 w-4 text-gray-400" /> {booking.contact_phone}
                           </div>
                         )}
                         {(booking.user_email || user?.email) && (
-                          <div className="flex items-center gap-1.5 text-sm text-gray-500 mt-0.5">
-                            <Mail className="h-3 w-3" /> {booking.user_email || user?.email}
+                          <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <Mail className="h-4 w-4 text-gray-400" /> {booking.user_email || user?.email}
                           </div>
                         )}
                       </div>
@@ -494,15 +510,32 @@ const BookingDetails = () => {
                   </div>
                 </div>
 
-                <div className="p-4 sm:p-6 border-b">
-                  <div className="flex flex-wrap justify-between items-center mb-4 gap-2">
-                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Assigned Employee</h3>
+                <div className="p-6 border-b rounded-b-2xl">
+                  <div className="flex justify-between items-start mb-4">
+                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Assigned Technician</h3>
                     {isSuperAdmin && (
                       <Dialog open={isAssignDialogOpen} onOpenChange={setIsAssignDialogOpen}>
                         <DialogTrigger asChild>
-                          <Button variant="outline" size="sm" className="h-7 text-xs">
-                            {booking.assigned_employee_id ? "Change" : "Assign"}
-                          </Button>
+                          <button
+                            className="group flex items-center gap-1.5 px-4 py-2 bg-[#645bff] text-white font-bold rounded-[20px] border-0 transition-all duration-200 hover:bg-[#111] text-xs"
+                            style={{
+                              boxSizing: 'border-box'
+                            }}
+                          >
+                            <span>{booking.assigned_employee_id ? "Change" : "Assign"}</span>
+                            <div className="flex justify-center items-center">
+                              <div 
+                                className="relative mt-[1px] w-[10px] h-[2px] bg-[#645bff] transition-all duration-200 group-hover:bg-white"
+                              >
+                                <span
+                                  className="absolute border-white border-r-2 border-b-2 inline-block p-[3px] -top-[3px] right-[3px] transition-all duration-200 group-hover:right-0"
+                                  style={{
+                                    transform: 'rotate(-45deg)'
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          </button>
                         </DialogTrigger>
                         <DialogContent>
                           <DialogHeader>
@@ -554,17 +587,17 @@ const BookingDetails = () => {
                   </div>
 
                   {booking.assigned_employee_name ? (
-                    <div className="flex items-center gap-3 bg-blue-50 p-3 rounded-lg border border-blue-100">
-                      <div className="h-8 w-8 rounded-full bg-blue-200 flex items-center justify-center text-blue-700 font-bold">
+                    <div className="flex items-center gap-4 bg-blue-50/70 p-4 rounded-xl border border-blue-100 shadow-sm">
+                      <div className="h-12 w-12 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-lg shadow-md">
                         {booking.assigned_employee_name.charAt(0)}
                       </div>
-                      <div>
-                        <p className="font-medium text-blue-900">{booking.assigned_employee_name}</p>
-                        <p className="text-xs text-blue-600">Technician</p>
+                      <div className="flex-1">
+                        <p className="font-bold text-blue-900 text-base">{booking.assigned_employee_name}</p>
+                        <p className="text-sm text-blue-600/70 mt-0.5">Technician</p>
                       </div>
                     </div>
                   ) : (
-                    <div className="text-sm text-gray-500 italic flex items-center gap-2">
+                    <div className="text-sm text-gray-500 italic flex items-center gap-2 p-3 bg-gray-50 rounded-lg border border-gray-200">
                       <AlertCircle className="h-4 w-4" /> Not assigned yet
                     </div>
                   )}
@@ -587,8 +620,8 @@ const BookingDetails = () => {
             </Card>
 
             {/* Daily Work Logs - Simplified for User View */}
-            <Card className="border-none shadow-md">
-              <CardHeader className="border-b bg-gray-50/50 pb-4">
+            <Card className="border-none shadow-[0_8px_24px_rgba(0,0,0,0.06)] rounded-2xl mt-8">
+              <CardHeader className="border-b bg-gray-50/50 pb-6 rounded-t-2xl">
                 <div className="flex justify-between items-center">
                   <CardTitle className="text-base font-bold flex items-center gap-2">
                     <FileText className="h-4 w-4" /> Daily Work Logs
@@ -596,9 +629,14 @@ const BookingDetails = () => {
                   {isAdmin && (
                     <Dialog open={isWorkLogDialogOpen} onOpenChange={setIsWorkLogDialogOpen}>
                       <DialogTrigger asChild>
-                        <Button variant="outline" size="sm" className="h-7 text-xs">
-                          <Plus className="mr-1 h-3 w-3" /> Add Log
-                        </Button>
+                        <button className="group relative w-[150px] h-[40px] cursor-pointer flex items-center border border-[#34974d] bg-[#3aa856] transition-all duration-300 hover:bg-[#34974d] active:border-[#2e8644]">
+                          <span className="button__text transform translate-x-[30px] text-white font-semibold transition-all duration-300 group-hover:text-transparent text-sm">
+                            Add Log
+                          </span>
+                          <div className="button__icon absolute right-0 h-full w-[39px] bg-[#34974d] flex items-center justify-center transition-all duration-300 group-hover:w-[148px] group-hover:translate-x-0 group-active:bg-[#2e8644]">
+                            <Plus className="w-[20px] h-[20px] stroke-white stroke-[2.5]" />
+                          </div>
+                        </button>
                       </DialogTrigger>
                       <DialogContent className="max-w-lg w-full sm:rounded-2xl p-0 overflow-hidden">
                         <DialogHeader className="p-6 pb-2">
@@ -781,8 +819,8 @@ const BookingDetails = () => {
           <div className="space-y-6">
 
             {/* Payment Summary */}
-            <Card className="border-none shadow-md">
-              <CardHeader className="border-b bg-gray-50/50 pb-4">
+            <Card className="border-none shadow-[0_8px_24px_rgba(0,0,0,0.06)] rounded-2xl mt-8">
+              <CardHeader className="border-b bg-gray-50/50 pb-6 rounded-t-2xl">
                 <div className="flex justify-between items-center">
                   <CardTitle className="text-base font-bold flex items-center gap-2">
                     ₹ Payment Summary
@@ -790,7 +828,7 @@ const BookingDetails = () => {
                   {isAdmin && (
                     <Dialog open={isPaymentDialogOpen} onOpenChange={setIsPaymentDialogOpen}>
                       <DialogTrigger asChild>
-                        <Button variant="ghost" size="sm" className="h-7 w-7 p-0 rounded-full">
+                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-md hover:bg-gray-100 hover:text-gray-900 transition-colors">
                           <span className="text-xl leading-none">+</span>
                         </Button>
                       </DialogTrigger>
@@ -857,8 +895,8 @@ const BookingDetails = () => {
             </Card>
 
             {/* Timeline / Status */}
-            <Card className="border-none shadow-md">
-              <CardHeader className="border-b bg-gray-50/50 pb-4">
+            <Card className="border-none shadow-[0_8px_24px_rgba(0,0,0,0.06)] rounded-2xl mt-8">
+              <CardHeader className="border-b bg-gray-50/50 pb-6 rounded-t-2xl">
                 <div className="flex justify-between items-center">
                   <CardTitle className="text-base font-bold flex items-center gap-2">
                     <Clock className="h-4 w-4" /> Timeline
@@ -866,7 +904,7 @@ const BookingDetails = () => {
                   {isAdmin && booking.assigned_employee_id && (
                     <Dialog open={isStatusDialogOpen} onOpenChange={setIsStatusDialogOpen}>
                       <DialogTrigger asChild>
-                        <Button variant="outline" size="sm" className="h-7 text-xs">
+                        <Button variant="ghost" size="sm" className="h-8 text-xs px-3 rounded-md hover:bg-gray-100 hover:text-gray-900 transition-colors">
                           Update Status
                         </Button>
                       </DialogTrigger>
