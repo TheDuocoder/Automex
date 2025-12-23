@@ -280,11 +280,11 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
       {/* Logo/Icon */}
       <div className="flex justify-center mb-4">
         <img
-          src="/images/Automex_icon/AUTOMEX_logo.png"
+          src="https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Automex_icon/AUTOMEX_logo.png"
           alt="AutoMex Logo"
           className="h-32 w-auto object-contain drop-shadow-2xl"
           onError={(e) => {
-            e.currentTarget.src = "/images/Landing_page_images/Red_Automex.png";
+            e.currentTarget.src = "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Landing_page_images/Red_Automex.png";
           }}
         />
       </div>

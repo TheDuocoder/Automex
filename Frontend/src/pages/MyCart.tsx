@@ -123,7 +123,7 @@ const MyCart = () => {
                     <div className="flex items-center gap-3">
                         <h1 className="text-3xl" style={{ fontFamily: 'Super Roman, sans-serif', fontWeight: 900 }}>Booking Cart</h1>
                         <img
-                            src="/images/Services/shopping-cart.png"
+                            src="https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Services/shopping-cart.png"
                             alt="Shopping Cart"
                             className="w-8 h-8 object-contain"
                         />
@@ -177,7 +177,7 @@ const MyCart = () => {
                                         <div className="flex items-center gap-3">
                                             <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm p-2 overflow-hidden transition-transform duration-300 hover:scale-110 cursor-pointer">
                                                 <img
-                                                    src={`/images/Car_brands/${groupItems[0].brand}.png`}
+                                                    src={`https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_brands/${groupItems[0].brand}.png`}
                                                     alt={groupItems[0].brand}
                                                     className="w-full h-full object-contain"
                                                     style={{ objectFit: 'contain' }}
@@ -188,17 +188,17 @@ const MyCart = () => {
 
                                                         // Special handling for specific brands
                                                         if (brand.toLowerCase().includes('volkswagen')) {
-                                                            e.currentTarget.src = `/images/Car_brands/Volkswagancarlogo.png`;
+                                                            e.currentTarget.src = `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_brands/Volkswagancarlogo.png`;
                                                         } else if (brand.toLowerCase().includes('maruti') && brand.toLowerCase().includes('suzuki')) {
-                                                            e.currentTarget.src = `/images/Car_brands/Marutisuzukicarlogo.png`;
+                                                            e.currentTarget.src = `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_brands/Marutisuzukicarlogo.png`;
                                                         } else if (brand.toLowerCase().includes('toyota')) {
-                                                            e.currentTarget.src = `/images/Car_brands/Toyotacarlogo.png`;
+                                                            e.currentTarget.src = `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_brands/Toyotacarlogo.png`;
                                                         } else if (brand.toLowerCase().includes('hyundai')) {
-                                                            e.currentTarget.src = `/images/Car_brands/Hyundaicarlogo.png`;
+                                                            e.currentTarget.src = `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_brands/Hyundaicarlogo.png`;
                                                         } else if (brand.toLowerCase() === 'mg' || brand.toLowerCase().includes('mg ')) {
-                                                            e.currentTarget.src = `/images/Car_brands/Mgcarlogo.png`;
+                                                            e.currentTarget.src = `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_brands/Mgcarlogo.png`;
                                                         } else {
-                                                            e.currentTarget.src = `/images/Car_brands/${capitalizedBrand}carlogo.png`;
+                                                            e.currentTarget.src = `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_brands/${capitalizedBrand}carlogo.png`;
                                                         }
 
                                                         e.currentTarget.onerror = () => {

@@ -29,9 +29,9 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
 
   // Array of car service background images
   const backgroundImages = [
-    "/images/Landing_page_images/frontpage1.jpg", // Professional luxury car service center
-    "/images/Landing_page_images/frontpage2.jpg", // Professional luxury car service center
-    "/images/Landing_page_images/automexfrontpage3.jpg" // Professional luxury car service center
+    "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Landing_page_images/frontpage1.jpg", // Professional luxury car service center
+    "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Landing_page_images/frontpage2.jpg", // Professional luxury car service center
+    "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Landing_page_images/automexfrontpage3.jpg" // Professional luxury car service center
   ];
 
   // Auto-rotate images every 5 seconds
@@ -295,7 +295,7 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
       </div>
 
       {/* Image Indicators */}
-      <div className="absolute bottom-8 md:bottom-12 left-1/2 transform -translate-x-1/2 z-[3] flex gap-2">
+      <div className="absolute bottom-8 md:bottom-12 left-1/2 transform -translate-x-1/2 z-[3] hidden md:flex gap-2">
         {backgroundImages.map((_, index) => (
           <button
             key={index}
@@ -311,7 +311,7 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
 
       {/* Minimal Premium Scroll Indicator - Lower Right - Only visible when not authenticated and login form not open */}
       {!isAuthenticated && !localShowLoginForm && !showRegisterForm && (
-        <div className="absolute bottom-8 md:bottom-12 right-8 md:right-16 lg:right-20 z-[5] flex flex-col items-center gap-2 cursor-pointer group">
+        <div className="absolute bottom-8 md:bottom-12 right-8 md:right-16 lg:right-20 z-[5] hidden md:flex flex-col items-center gap-2 cursor-pointer group">
           {/* Arrow with Glow */}
           <div className="relative animate-bounce">
             {/* Neon Red Glow */}
@@ -424,14 +424,14 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
                           {/* Fallback to logo if profile picture fails */}
                           <div className="hidden relative">
                             <img
-                              src="/images/Automex_icon/AUTOMEX_logo.png"
+                              src="https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Automex_icon/AUTOMEX_logo.png"
                               alt="AutoMex"
                               className="relative h-40 w-auto object-contain drop-shadow-[0_8px_32px_rgba(255,255,255,0.3)]"
                               style={{
                                 filter: 'drop-shadow(0 8px 32px rgba(255,255,255,0.3))',
                               }}
                               onError={(e) => {
-                                e.currentTarget.src = "/images/Landing_page_images/Red_Automex.png";
+                                e.currentTarget.src = "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Landing_page_images/Red_Automex.png";
                               }}
                             />
                           </div>
@@ -454,14 +454,14 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
 
                           {/* Logo */}
                           <img
-                            src="/images/Automex_icon/AUTOMEX_logo.png"
+                            src="https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Automex_icon/AUTOMEX_logo.png"
                             alt="AutoMex"
                             className="relative h-40 w-auto object-contain drop-shadow-[0_8px_32px_rgba(255,255,255,0.3)]"
                             style={{
                               filter: 'drop-shadow(0 8px 32px rgba(255,255,255,0.3))',
                             }}
                             onError={(e) => {
-                              e.currentTarget.src = "/images/Landing_page_images/Red_Automex.png";
+                              e.currentTarget.src = "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Landing_page_images/Red_Automex.png";
                             }}
                           />
 

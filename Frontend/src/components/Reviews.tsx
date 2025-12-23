@@ -33,9 +33,9 @@ const Reviews = () => {
   ];
 
   return (
-    <section 
-      id="reviews" 
-      className="py-20 md:py-24" 
+    <section
+      id="reviews"
+      className="py-20 md:py-24"
       style={{ backgroundColor: '#F5F7FA' }}
     >
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
@@ -43,33 +43,33 @@ const Reviews = () => {
           What Car Owners In Bhubaneswar Say
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+        <div className="grid grid-cols-2 gap-3 md:gap-8">
           {reviews.map((review, index) => (
-            <div key={index} className="testimonial-card">
+            <div key={index} className="testimonial-card !p-4 md:!p-8 !min-h-[200px] md:!min-h-[360px]">
               <div className="testimonial-content">
-                <Quote className="quotes text-[#DC143C]" strokeWidth={1.5} />
-                
-                <div className="flex flex-col gap-4">
-                  <h3 className="text-xl font-bold text-black">
+                <Quote className="quotes text-[#DC143C] w-6 h-6 md:w-12 md:h-12" strokeWidth={1.5} />
+
+                <div className="flex flex-col gap-2 md:gap-4">
+                  <h3 className="text-xs md:text-xl font-bold text-black leading-tight">
                     {review.title}
                   </h3>
-                  
-                  <p className="para text-black/80">
+
+                  <p className="para text-black/80 !text-[10px] md:!text-base leading-relaxed">
                     {review.text}
                   </p>
                 </div>
 
-                <div className="footer">
+                <div className="footer mt-2 md:mt-0">
                   <div className="flex flex-col gap-1">
-                    <button className="testimonial-button">
+                    <button className="testimonial-button !text-xs md:!text-base text-left">
                       <span>{review.author}</span>
                     </button>
-                    <p className="text-sm text-black/60">
+                    <p className="text-[10px] md:text-sm text-black/60">
                       {review.platform}
                     </p>
                   </div>
-                  
-                  <p className="text-xs text-black/50">
+
+                  <p className="text-[9px] md:text-xs text-black/50">
                     Workshop: {review.workshop}
                   </p>
                 </div>

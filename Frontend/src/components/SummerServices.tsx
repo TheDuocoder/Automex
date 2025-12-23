@@ -16,25 +16,25 @@ const SummerServices = () => {
     {
       title: "Front Bumper Paint",
       description: "Restore your bumper to a factory-fresh look with precision prep, priming, and multi‑stage paint matching.",
-      image: "/images/Services/front bomper paint service.png",
+      image: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Services/front bomper paint service.png",
       features: ["Color matching", "Premium coating", "UV protection"]
     },
     {
       title: "Rubbing & Polishing",
       description: "Remove oxidation, swirl marks, and light scratches to reveal a deep, glossy finish.",
-      image: "/images/Services/rubbing and polish service.png",
+      image: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Services/rubbing and polish service.png",
       features: ["Machine polishing", "Swirl reduction", "Mirror finish"]
     },
     {
       title: "Deep All Round Spa",
       description: "Thorough interior and exterior spa that sanitizes the cabin and restores the exterior sheen.",
-      image: "/images/Services/deep all round spa service.png",
+      image: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Services/deep all round spa service.png",
       features: ["Steam sanitization", "Deep cleaning", "Wax protection"]
     },
     {
       title: "Periodic Service",
       description: "Seasonal maintenance package covering fluids, filters, and safety systems for summer reliability.",
-      image: "/images/Services/Premium car service.png",
+      image: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Services/Premium car service.png",
       features: ["AC check", "Coolant top-up", "Battery health"]
     }
   ];
@@ -54,7 +54,7 @@ const SummerServices = () => {
       originalPrice: "₹5,999",
       discount: "42%",
       buttonText: "Save 42% - Book Now",
-      image: "/images/Services/detailing service.png",
+      image: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Services/detailing service.png",
       gradient: "from-blue-900 via-blue-800 to-slate-900"
     },
     {
@@ -71,7 +71,7 @@ const SummerServices = () => {
       originalPrice: "₹2,999",
       discount: "40%",
       buttonText: "Save 40% - Book Now",
-      image: "/images/Services/Tyre service.png",
+      image: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Services/Tyre service.png",
       gradient: "from-purple-900 via-purple-800 to-slate-900"
     },
     {
@@ -88,7 +88,7 @@ const SummerServices = () => {
       originalPrice: "₹3,499",
       discount: "37%",
       buttonText: "Save 37% - Book Now",
-      image: "/images/Services/Premium car service.png",
+      image: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Services/Premium car service.png",
       gradient: "from-orange-900 via-red-800 to-slate-900"
     }
   ];

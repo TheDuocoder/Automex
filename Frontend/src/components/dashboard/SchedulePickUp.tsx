@@ -59,6 +59,7 @@ const SchedulePickUp = ({ userId }: SchedulePickUpProps = {}) => {
 
     // Check if user is admin or super admin
     const isAdmin = role?.name?.toLowerCase() === "admin" || role?.name?.toLowerCase() === "super";
+    const isSuperAdmin = role?.name?.toLowerCase() === "super" || (user?.is_superuser && role?.name?.toLowerCase() !== "admin");
     const isCreator = selectedRequest?.user_id === user?.id;
 
     const fetchData = async () => {
@@ -268,7 +269,7 @@ const SchedulePickUp = ({ userId }: SchedulePickUpProps = {}) => {
         if (dataToSend.pickup_time !== undefined) {
             if (dataToSend.pickup_time === '') {
                 dataToSend.pickup_time = null;
-            } else if (isAdmin && typeof dataToSend.pickup_time === 'string' && dataToSend.pickup_time.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/)) {
+            } else if (isSuperAdmin && typeof dataToSend.pickup_time === 'string' && dataToSend.pickup_time.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/)) {
                 // Parse local time from input only if admin (who can edit it)
                 try {
                     const [datePart, timePart] = dataToSend.pickup_time.split('T');
@@ -292,7 +293,7 @@ const SchedulePickUp = ({ userId }: SchedulePickUpProps = {}) => {
         if (dataToSend.drop_time !== undefined) {
             if (dataToSend.drop_time === '') {
                 dataToSend.drop_time = null;
-            } else if (isAdmin && typeof dataToSend.drop_time === 'string' && dataToSend.drop_time.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/)) {
+            } else if (isSuperAdmin && typeof dataToSend.drop_time === 'string' && dataToSend.drop_time.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/)) {
                 try {
                     const [datePart, timePart] = dataToSend.drop_time.split('T');
                     const [year, month, day] = datePart.split('-').map(Number);
@@ -853,7 +854,7 @@ const SchedulePickUp = ({ userId }: SchedulePickUpProps = {}) => {
                             </div>
 
                             {/* Admin Controls */}
-                            {isAdmin && (
+                            {isSuperAdmin && (
                                 <div className="border-t pt-4 space-y-4">
                                     <div>
                                         <Label htmlFor="status" className="text-sm font-medium">
@@ -905,7 +906,7 @@ const SchedulePickUp = ({ userId }: SchedulePickUpProps = {}) => {
                     ) : null}
 
                     <DialogFooter className="gap-2 sm:gap-0">
-                        {(isAdmin || isCreator) && (
+                        {(isSuperAdmin || isCreator) && (
                             <button
                                 onClick={handleUpdateRequest}
                                 disabled={isUpdating || isDeleting}
@@ -923,7 +924,7 @@ const SchedulePickUp = ({ userId }: SchedulePickUpProps = {}) => {
                                 </span>
                             </button>
                         )}
-                        {(isAdmin || isCreator) && (
+                        {(isSuperAdmin || isCreator) && (
                             <button
                                 onClick={handleDeleteRequest}
                                 disabled={isDeleting || isUpdating}

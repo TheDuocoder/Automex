@@ -1,8 +1,6 @@
 import { ChevronLeft, ChevronRight, Star, Shield, Clock, CheckCircle, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import batteryIcon from "@/assets/service-battery.png";
-import tyreIcon from "@/assets/service-tyres.png";
 import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { gsap } from "gsap";
@@ -22,7 +20,7 @@ gsap.registerPlugin(ScrollTrigger);
 const imageFallbacks: Record<string, string[]> = {
   Batteries: [
     // Prefer local vector as immediate fallback if provided photo is missing
-    "/images/car-battery.svg",
+    "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/car-battery.svg",
     // Multiple brand-neutral car battery photos (try in order)
     "https://images.pexels.com/photos/6873329/pexels-photo-6873329.jpeg?auto=compress&cs=tinysrgb&w=1200",
     "https://images.pexels.com/photos/6873330/pexels-photo-6873330.jpeg?auto=compress&cs=tinysrgb&w=1200",
@@ -42,44 +40,44 @@ const tabs = [
 const carServices = [
   {
     title: "Premium Car Services",
-    image: "/images/Services/Premium car service.png",
+    image: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Services/Premium car service.png",
     description: "Specialized maintenance for luxury vehicles including BMW, Mercedes-Benz, and Audi. Our certified technicians use advanced diagnostic tools and genuine parts to ensure premium performance. Services include engine diagnostics, transmission service, brake systems, and electronic systems calibration."
   },
   {
     title: "AC Service & Repair",
-    image: "/images/Landing_page_images/Ac repair.png",
+    image: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Landing_page_images/Ac repair.png",
     description: "Expert AC system diagnosis, repair, and maintenance. We handle gas refilling, component replacement, and ensure optimal cooling performance for your comfort."
   },
   {
     title: "Batteries",
-    image: "/images/Services/Battery service.png",
+    image: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Services/Battery service.png",
     isIcon: false,
     description: "Complete battery solutions including health check, charging system diagnosis, replacement with genuine batteries, and warranty support for all car models."
   },
   {
     title: "Tyres & Wheel Care",
-    image: "/images/Services/Tyre service.png",
+    image: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Services/Tyre service.png",
     isIcon: false,
     description: "Professional wheel alignment, balancing, rotation, and tyre replacement services. We ensure optimal tyre pressure and tread life for safe driving."
   },
   {
     title: "Denting & Painting",
-    image: "/images/Services/denting and painting service.png",
+    image: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Services/denting and painting service.png",
     description: "Expert dent removal, scratch repair, and premium paint jobs. Our skilled technicians use advanced techniques and quality materials for a factory-like finish."
   },
   {
     title: "Detailing Services",
-    image: "/images/Services/detailing service.png",
+    image: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Services/detailing service.png",
     description: "Premium car detailing including paint correction, ceramic coating, interior deep cleaning, and exterior protection for that showroom-like appearance."
   },
   {
     title: "Car Spa & Cleaning",
-    image: "/images/Services/Car spa.png",
+    image: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Services/Car spa.png",
     description: "Thorough interior and exterior cleaning, steam wash, upholstery care, and protective coating. We restore your car's shine and freshness."
   },
   {
     title: "Car Inspections",
-    image: "/images/Services/inspection service.png",
+    image: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Services/inspection service.png",
     description: "Detailed 50-point inspection covering safety, performance, and compliance checks. Get a comprehensive report of your vehicle's condition.",
     isNew: true
   }
@@ -96,7 +94,7 @@ const summerServices: SummerService[] = [
   {
     title: "Front Bumper Paint",
     description: "Restore your bumper to a factory-fresh look with precision prep, priming, and multi‑stage paint matching. We remove scuffs and micro-dents for a seamless finish that blends perfectly with the body color.",
-    image: "/images/Services/front bomper paint service.png",
+    image: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Services/front bomper paint service.png",
     features: [
       "Computerized color matching",
       "Premium base + clear coat system",
@@ -107,7 +105,7 @@ const summerServices: SummerService[] = [
   {
     title: "Rubbing & Polishing",
     description: "Two-stage cut and refine process that removes oxidation, swirl marks, and light scratches to reveal a deep, glossy finish with added protection.",
-    image: "/images/Services/rubbing and polish service.png",
+    image: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Services/rubbing and polish service.png",
     features: [
       "Dual-action machine polishing",
       "Swirl and haze reduction",
@@ -118,7 +116,7 @@ const summerServices: SummerService[] = [
   {
     title: "Deep All Round Spa",
     description: "Thorough interior and exterior spa that sanitizes the cabin, rejuvenates upholstery, and restores the exterior sheen for a showroom-ready appearance.",
-    image: "/images/Services/deep all round spa service.png",
+    image: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Services/deep all round spa service.png",
     features: [
       "Steam sanitization of touchpoints",
       "Upholstery shampoo and vacuum",
@@ -129,7 +127,7 @@ const summerServices: SummerService[] = [
   {
     title: "Periodic Service",
     description: "Seasonal maintenance package covering fluids, filters, and safety systems to keep your car reliable through the heat.",
-    image: "/images/Services/Premium car service.png",
+    image: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Services/Premium car service.png",
     features: [
       "AC performance check",
       "Coolant top-up",
@@ -558,7 +556,7 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
                       <CarouselItem className="carousel-item md:basis-1/2 lg:basis-1/3">
                         <div className="relative group aspect-[16/9] overflow-hidden rounded-xl cursor-pointer" onClick={() => navigate('/services')}>
                           <img
-                            src="/images/Landing_page_images/Jaguar_car.png"
+                            src="https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Landing_page_images/Jaguar_car.png"
                             alt="Jaguar"
                             className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
                           />
@@ -573,7 +571,7 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
                       <CarouselItem className="carousel-item md:basis-1/2 lg:basis-1/3">
                         <div className="relative group aspect-[16/9] overflow-hidden rounded-xl cursor-pointer" onClick={() => navigate('/services')}>
                           <img
-                            src="/images/Landing_page_images/Volve car.png"
+                            src="https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Landing_page_images/Volve car.png"
                             alt="Volvo"
                             className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
                           />
@@ -588,7 +586,7 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
                       <CarouselItem className="carousel-item md:basis-1/2 lg:basis-1/3">
                         <div className="relative group aspect-[16/9] overflow-hidden rounded-xl cursor-pointer" onClick={() => navigate('/services')}>
                           <img
-                            src="/images/Landing_page_images/Skoda car.png"
+                            src="https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Landing_page_images/Skoda car.png"
                             alt="Skoda Octavia"
                             className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
                             onError={(e) => {
@@ -609,7 +607,7 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
                       <CarouselItem className="carousel-item md:basis-1/2 lg:basis-1/3">
                         <div className="relative group aspect-[16/9] overflow-hidden rounded-xl cursor-pointer" onClick={() => navigate('/services')}>
                           <img
-                            src="/images/Landing_page_images/Vw car.png"
+                            src="https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Landing_page_images/Vw car.png"
                             alt="Volkswagen"
                             className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
                             onError={(e) => {
@@ -692,27 +690,27 @@ const Navigation = ({ activeTab, onTabChange }: { activeTab: string; onTabChange
             </div>
 
             {/* Value Propositions */}
-            <div className="value-props mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="value-card text-center p-6 bg-blue-50 rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 cursor-pointer">
-                <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4 transition-transform duration-300 hover:scale-110 hover:rotate-12">
-                  <Shield className="h-6 w-6 text-white" />
+            <div className="value-props mt-8 md:mt-16 grid grid-cols-3 gap-2 md:gap-8">
+              <div className="value-card text-center p-2 md:p-6 bg-blue-50 rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 cursor-pointer">
+                <div className="w-8 h-8 md:w-12 md:h-12 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-2 md:mb-4 transition-transform duration-300 hover:scale-110 hover:rotate-12">
+                  <Shield className="h-4 w-4 md:h-6 md:w-6 text-white" />
                 </div>
-                <h3 className="font-semibold mb-2 transition-colors duration-300 hover:text-blue-600">Quality Assurance</h3>
-                <p className="text-gray-600 text-sm">Certified mechanics and genuine spare parts</p>
+                <h3 className="font-semibold text-xs md:text-base mb-1 md:mb-2 transition-colors duration-300 hover:text-blue-600">Quality Assurance</h3>
+                <p className="text-gray-600 text-[10px] md:text-sm">Certified mechanics and genuine spare parts</p>
               </div>
-              <div className="value-card text-center p-6 bg-green-50 rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 cursor-pointer">
-                <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4 transition-transform duration-300 hover:scale-110 hover:rotate-12">
-                  <Clock className="h-6 w-6 text-white" />
+              <div className="value-card text-center p-2 md:p-6 bg-green-50 rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 cursor-pointer">
+                <div className="w-8 h-8 md:w-12 md:h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-2 md:mb-4 transition-transform duration-300 hover:scale-110 hover:rotate-12">
+                  <Clock className="h-4 w-4 md:h-6 md:w-6 text-white" />
                 </div>
-                <h3 className="font-semibold mb-2 transition-colors duration-300 hover:text-green-600">Timely Service</h3>
-                <p className="text-gray-600 text-sm">On-time service delivery with live updates</p>
+                <h3 className="font-semibold text-xs md:text-base mb-1 md:mb-2 transition-colors duration-300 hover:text-green-600">Timely Service</h3>
+                <p className="text-gray-600 text-[10px] md:text-sm">On-time service delivery with live updates</p>
               </div>
-              <div className="value-card text-center p-6 bg-purple-50 rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 cursor-pointer">
-                <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4 transition-transform duration-300 hover:scale-110 hover:rotate-12">
-                  <Star className="h-6 w-6 text-white" />
+              <div className="value-card text-center p-2 md:p-6 bg-purple-50 rounded-xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 cursor-pointer">
+                <div className="w-8 h-8 md:w-12 md:h-12 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-2 md:mb-4 transition-transform duration-300 hover:scale-110 hover:rotate-12">
+                  <Star className="h-4 w-4 md:h-6 md:w-6 text-white" />
                 </div>
-                <h3 className="font-semibold mb-2 transition-colors duration-300 hover:text-purple-600">Best Pricing</h3>
-                <p className="text-gray-600 text-sm">Competitive prices with no hidden charges</p>
+                <h3 className="font-semibold text-xs md:text-base mb-1 md:mb-2 transition-colors duration-300 hover:text-purple-600">Best Pricing</h3>
+                <p className="text-gray-600 text-[10px] md:text-sm">Competitive prices with no hidden charges</p>
               </div>
             </div>
           </div>

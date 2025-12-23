@@ -19,7 +19,7 @@ const carCatalog: CarBrand[] = [
   {
     id: "audi",
     name: "Audi",
-    logo: "/images/Car_brands/Audicarlogo.png",
+    logo: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/car_brands/Audicarlogo.png",
     models: [
       { id: "audi-a3", name: "A3", fuelTypes: ["Petrol", "Diesel"] },
       { id: "audi-a4", name: "A4", fuelTypes: ["Petrol", "Diesel"] },
@@ -49,7 +49,7 @@ const carCatalog: CarBrand[] = [
   {
     id: "bmw",
     name: "BMW",
-    logo: "/images/Car_brands/Bmwcarlogo.png",
+    logo: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/car_brands/Bmwcarlogo.png",
     models: [
       { id: "bmw-1-series", name: "1 Series", fuelTypes: ["Petrol", "Diesel"] },
       { id: "bmw-2-series", name: "2 Series", fuelTypes: ["Petrol", "Diesel"] },
@@ -82,7 +82,7 @@ const carCatalog: CarBrand[] = [
   {
     id: "mercedes",
     name: "Mercedes-Benz",
-    logo: "/images/Car_brands/Mercedescarlogo.png",
+    logo: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/car_brands/Mercedescarlogo.png",
     models: [
       { id: "mercedes-a-class", name: "A-Class", fuelTypes: ["Petrol", "Diesel"] },
       { id: "mercedes-a-180", name: "A 180", fuelTypes: ["Petrol"] },
@@ -131,7 +131,7 @@ const carCatalog: CarBrand[] = [
   {
     id: "skoda",
     name: "Skoda",
-    logo: "/images/Car_brands/Skoda.png",
+    logo: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/car_brands/skoda.png",
     models: [
       { id: "skoda-rapid", name: "Rapid", fuelTypes: ["Petrol", "Diesel"] },
       { id: "skoda-fabia", name: "Fabia", fuelTypes: ["Petrol", "Diesel"] },
@@ -148,7 +148,7 @@ const carCatalog: CarBrand[] = [
   {
     id: "jaguar",
     name: "Jaguar",
-    logo: "/images/Car_brands/Jaguarcarlogo.png",
+    logo: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/car_brands/jaguarcarlogo.png",
     models: [
       { id: "jaguar-xe", name: "XE", fuelTypes: ["Petrol", "Diesel"] },
       { id: "jaguar-xf", name: "XF", fuelTypes: ["Petrol", "Diesel"] },
@@ -172,7 +172,7 @@ const carCatalog: CarBrand[] = [
   {
     id: "volkswagen",
     name: "Volkswagen",
-    logo: "/images/Car_brands/Volkswagancarlogo.png",
+    logo: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/car_brands/volkswagancarlogo.png",
     models: [
       { id: "vw-polo", name: "Polo", fuelTypes: ["Petrol", "Diesel"] },
       { id: "vw-vento", name: "Vento", fuelTypes: ["Petrol", "Diesel"] },
@@ -191,7 +191,7 @@ const carCatalog: CarBrand[] = [
   {
     id: "maruti-suzuki",
     name: "Maruti Suzuki",
-    logo: "/images/Car_brands/Marutisuzukicarlogo.png",
+    logo: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/car_brands/Marutisuzukicarlogo.png",
     models: [
       { id: "maruti-800", name: "800", fuelTypes: ["Petrol"] },
       { id: "maruti-alto", name: "Alto", fuelTypes: ["Petrol", "CNG"] },
@@ -230,7 +230,7 @@ const carCatalog: CarBrand[] = [
   {
     id: "mahindra",
     name: "Mahindra",
-    logo: "/images/Car_brands/Mahindracarlogo.png",
+    logo: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/car_brands/Mahindracarlogo.png",
     models: [
       { id: "mahindra-xuv700", name: "XUV700", fuelTypes: ["Petrol", "Diesel"] },
       { id: "mahindra-xuv500", name: "XUV 500", fuelTypes: ["Diesel"] },
@@ -267,7 +267,7 @@ const carCatalog: CarBrand[] = [
   {
     id: "volvo",
     name: "Volvo",
-    logo: "/images/Car_brands/Volvo.png",
+    logo: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/car_brands/Volvo.png",
     models: [
       { id: "volvo-s60", name: "S60", fuelTypes: ["Petrol", "Hybrid"] },
       { id: "volvo-s80", name: "S80", fuelTypes: ["Petrol", "Diesel"] },
@@ -286,7 +286,7 @@ const carCatalog: CarBrand[] = [
   {
     id: "land-rover",
     name: "Land Rover",
-    logo: "/images/Car_brands/Land Rover.png",
+    logo: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/car_brands/Land Rover.png",
     models: [
       { id: "landrover-range-rover-sport", name: "Range Rover Sport", fuelTypes: ["Petrol", "Diesel", "Hybrid"] },
       { id: "landrover-range-rover-sport-se", name: "Range Rover Sport – SE", fuelTypes: ["Petrol", "Diesel"] },
@@ -316,7 +316,7 @@ const carCatalog: CarBrand[] = [
   {
     id: "toyota",
     name: "Toyota",
-    logo: "/images/Car_brands/Toyotacarlogo.png",
+    logo: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/car_brands/toyotacarlogo.png",
     models: [
       { id: "toyota-fortuner", name: "Fortuner", fuelTypes: ["Petrol", "Diesel"] },
       { id: "toyota-hilux", name: "Hilux", fuelTypes: ["Diesel"] },
@@ -344,7 +344,7 @@ const carCatalog: CarBrand[] = [
   {
     id: "kia",
     name: "Kia",
-    logo: "/images/Car_brands/Kiacarlogo.png",
+    logo: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/car_brands/kiacarlogo.png",
     models: [
       { id: "kia-seltos", name: "Seltos", fuelTypes: ["Petrol", "Diesel"] },
       { id: "kia-sonet", name: "Sonet", fuelTypes: ["Petrol", "Diesel"] },
@@ -357,7 +357,7 @@ const carCatalog: CarBrand[] = [
   {
     id: "mg",
     name: "MG",
-    logo: "/images/Car_brands/Mgcarlogo.png",
+    logo: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/car_brands/mgcarlogo.png",
     models: [
       { id: "mg-hector", name: "Hector", fuelTypes: ["Petrol", "Diesel"] },
       { id: "mg-hector-plus", name: "Hector Plus", fuelTypes: ["Petrol", "Diesel"] },
@@ -371,7 +371,7 @@ const carCatalog: CarBrand[] = [
   {
     id: "mini",
     name: "Mini",
-    logo: "/images/Car_brands/Minicarlogo.png",
+    logo: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/car_brands/minicarlogo.png",
     models: [
       { id: "mini-cooper", name: "Cooper", fuelTypes: ["Petrol"] },
       { id: "mini-cooper-s", name: "Cooper S", fuelTypes: ["Petrol"] },
@@ -384,7 +384,7 @@ const carCatalog: CarBrand[] = [
   {
     id: "lexus",
     name: "Lexus",
-    logo: "/images/Car_brands/Lexuscarlogo.png",
+    logo: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/car_brands/lexuscarlogo.png",
     models: [
       { id: "lexus-es", name: "ES", fuelTypes: ["Hybrid"] },
       { id: "lexus-ls", name: "LS", fuelTypes: ["Petrol", "Hybrid"] },
@@ -398,7 +398,7 @@ const carCatalog: CarBrand[] = [
   {
     id: "hyundai",
     name: "Hyundai",
-    logo: "/images/Car_brands/Hyundaicarlogo.png",
+    logo: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/car_brands/Hyundaicarlogo.png",
     models: [
       { id: "hyundai-i10", name: "i10", fuelTypes: ["Petrol", "CNG"] },
       { id: "hyundai-i20", name: "i20", fuelTypes: ["Petrol", "Diesel"] },
@@ -436,7 +436,7 @@ const carCatalog: CarBrand[] = [
   {
     id: "jeep",
     name: "Jeep",
-    logo: "/images/Car_brands/Jeepcarlogo.png",
+    logo: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/car_brands/jeepcarlogo.png",
     models: [
       { id: "jeep-compass", name: "Compass", fuelTypes: ["Petrol", "Diesel"] },
       { id: "jeep-wrangler", name: "Wrangler", fuelTypes: ["Petrol", "Diesel"] },
@@ -447,7 +447,7 @@ const carCatalog: CarBrand[] = [
   {
     id: "nissan",
     name: "Nissan",
-    logo: "/images/Car_brands/Nissancarlogo.png",
+    logo: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/car_brands/nissancarlogo.png",
     models: [
       { id: "nissan-magnite", name: "Magnite", fuelTypes: ["Petrol"] },
       { id: "nissan-kicks", name: "Kicks", fuelTypes: ["Petrol", "Diesel"] },

@@ -78,11 +78,11 @@ const VehicleDetails = () => {
                     <div className="md:flex">
                         <div className="md:w-1/3 bg-gray-100 h-64 md:h-auto relative">
                             <img
-                                src={car.image_url || "/images/Car_images/default-car.jpg"}
+                                src={car.image_url || "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_images/default-car.jpg"}
                                 alt={`${car.make} ${car.model}`}
                                 className="w-full h-full object-cover"
                                 onError={(e) => {
-                                    e.currentTarget.src = "/images/Car_images/default-car.jpg";
+                                    e.currentTarget.src = "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_images/default-car.jpg";
                                 }}
                             />
                         </div>
@@ -158,8 +158,8 @@ const VehicleDetails = () => {
                                             <div className="flex justify-between items-start">
                                                 <h3 className="font-bold text-lg">{item.service_name}</h3>
                                                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${item.status === 'Completed' ? 'bg-green-100 text-green-700' :
-                                                        item.status === 'In Progress' ? 'bg-blue-100 text-blue-700' :
-                                                            'bg-gray-100 text-gray-700'
+                                                    item.status === 'In Progress' ? 'bg-blue-100 text-blue-700' :
+                                                        'bg-gray-100 text-gray-700'
                                                     }`}>
                                                     {item.status}
                                                 </span>

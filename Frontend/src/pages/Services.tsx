@@ -93,62 +93,62 @@ const Services = () => {
     {
       id: "car-services",
       name: "Car Services",
-      icon: <img src="/images/service_icons/car_service.png" alt="Car Services" className="h-10 w-10 object-contain" />
+      icon: <img src="https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/service_icons/car_service.png" alt="Car Services" className="h-10 w-10 object-contain" />
     },
     {
       id: "ac-service",
       name: "AC Service & Repair",
-      icon: <img src="/images/service_icons/car_ac_services.png" alt="AC Service & Repair" className="h-10 w-10 object-contain" />
+      icon: <img src="https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/service_icons/car_ac_services.png" alt="AC Service & Repair" className="h-10 w-10 object-contain" />
     },
     {
       id: "batteries",
       name: "Batteries",
-      icon: <img src="/images/service_icons/battery.png" alt="Batteries" className="h-10 w-10 object-contain" />
+      icon: <img src="https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/service_icons/battery.png" alt="Batteries" className="h-10 w-10 object-contain" />
     },
     {
       id: "tyres",
       name: "Tyres & Wheel Care",
-      icon: <img src="/images/service_icons/car_tyre and wheels_care.png" alt="Tyres & Wheel Care" className="h-10 w-10 object-contain" />
+      icon: <img src="https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/service_icons/car_tyre and wheels_care.png" alt="Tyres & Wheel Care" className="h-10 w-10 object-contain" />
     },
     {
       id: "denting",
       name: "Denting & Painting",
-      icon: <img src="/images/service_icons/car_denting and painting1.png" alt="Denting & Painting" className="h-10 w-10 object-contain" />
+      icon: <img src="https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/service_icons/car_denting and painting1.png" alt="Denting & Painting" className="h-10 w-10 object-contain" />
     },
     {
       id: "detailing",
       name: "Detailing Services",
-      icon: <img src="/images/service_icons/car_detailing_services.png" alt="Detailing Services" className="h-10 w-10 object-contain" />
+      icon: <img src="https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/service_icons/car_detailing_services.png" alt="Detailing Services" className="h-10 w-10 object-contain" />
     },
     {
       id: "suspension-fitting",
       name: "Suspension & Fitting",
-      icon: <img src="/images/service_icons/car_suspensions and fitments.png" alt="Suspension & Fitting" className="h-10 w-10 object-contain" />
+      icon: <img src="https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/service_icons/car_suspensions and fitments.png" alt="Suspension & Fitting" className="h-10 w-10 object-contain" />
     },
     {
       id: "car-spa",
       name: "Spa",
-      icon: <img src="/images/service_icons/car_spa and cleaning.png" alt="Spa" className="h-10 w-10 object-contain" />
+      icon: <img src="https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/service_icons/car_spa and cleaning.png" alt="Spa" className="h-10 w-10 object-contain" />
     },
     {
       id: "clutch-body-parts",
       name: "Clutch & Body Parts",
-      icon: <img src="/images/service_icons/car_clutch and body_parts.png" alt="Clutch & Body Parts" className="h-10 w-10 object-contain" />
+      icon: <img src="https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/service_icons/car_clutch and body_parts.png" alt="Clutch & Body Parts" className="h-10 w-10 object-contain" />
     },
     {
       id: "windshield-lights",
       name: "Windshields & Lights",
-      icon: <img src="/images/service_icons/car_windshiled and lights2.png" alt="Windshields & Lights" className="h-10 w-10 object-contain" />
+      icon: <img src="https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/service_icons/car_windshiled and lights2.png" alt="Windshields & Lights" className="h-10 w-10 object-contain" />
     },
     {
       id: "car-inspections",
       name: "Inspection",
-      icon: <img src="/images/service_icons/car-inspection.png" alt="Inspection" className="h-10 w-10 object-contain" />
+      icon: <img src="https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/service_icons/car-inspection.png" alt="Inspection" className="h-10 w-10 object-contain" />
     },
     {
       id: "car-insurance",
       name: "Insurance",
-      icon: <img src="/images/service_icons/car_insurance1.png" alt="Insurance" className="h-10 w-10 object-contain" />
+      icon: <img src="https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/service_icons/car_insurance1.png" alt="Insurance" className="h-10 w-10 object-contain" />
     },
   ];
 
@@ -158,7 +158,7 @@ const Services = () => {
       {
         id: "basic-service",
         name: "General Service",
-        thumbnail: "/images/product_images/Car services/Basic Service.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Car services/Basic Service.png",
         warranty: "1000 Kms or 3 Months Warranty",
         recommended: "Every 5000 Kms or 6 Months (Recommended)",
         features: [
@@ -184,7 +184,7 @@ const Services = () => {
       {
         id: "comprehensive-service",
         name: "Premium Service",
-        thumbnail: "/images/product_images/Car services/Comprehensive Service.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Car services/Comprehensive Service.png",
         warranty: "1000 Kms or 1 Month Warranty",
         recommended: "Every 20,000 Kms or 12 Months (Recommended)",
         features: [
@@ -230,7 +230,7 @@ const Services = () => {
       {
         id: "front-brake-pads",
         name: "Front Brake Pads",
-        thumbnail: "/images/product_images/Car services/frontbrakes.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Car services/frontbrakes.png",
         warranty: "1 Month Warranty",
         recommended: "Every 20,000 Kms or 12 Months (Recommended)",
         features: [
@@ -254,7 +254,7 @@ const Services = () => {
       {
         id: "rear-brake-shoes",
         name: "Rear Brake Shoes",
-        thumbnail: "/images/product_images/Car services/rearbreak_shoes.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Car services/rearbreak_shoes.png",
         warranty: "1 Month Warranty",
         recommended: "Every 20,000 Kms or 12 Months (Recommended)",
         features: [
@@ -278,7 +278,7 @@ const Services = () => {
       {
         id: "front-brake-discs",
         name: "Front Brake Discs",
-        thumbnail: "/images/product_images/Car services/frontbrake_disk.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Car services/frontbrake_disk.png",
         warranty: "1 Month Warranty • Corrosion Resistance",
         recommended: "Best Performance (Single OE Unit)",
         features: [
@@ -301,7 +301,7 @@ const Services = () => {
       {
         id: "caliper-pin-replacement",
         name: "Caliper Pin Replacement",
-        thumbnail: "/images/product_images/Car services/caliperpin_replacement.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Car services/caliperpin_replacement.png",
         warranty: "Recommended in case of noise from brakes",
         recommended: "Caliper Pin Replacement (OES) • Caliper Assembly Cost Additional",
         features: [
@@ -323,7 +323,7 @@ const Services = () => {
       {
         id: "brake-drums-turning",
         name: "Brake Drums Turning",
-        thumbnail: "/images/product_images/Car services/break_drums_turning.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Car services/break_drums_turning.png",
         warranty: "1 Month Warranty",
         recommended: "Recommended : In Case of Screeching Noise from Brakes",
         features: [
@@ -347,7 +347,7 @@ const Services = () => {
       {
         id: "handbrake-wire-replacement",
         name: "Handbrake Wire Replacement",
-        thumbnail: "/images/product_images/Car services/handbrack_wire.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Car services/handbrack_wire.png",
         warranty: "1 Month Warranty",
         recommended: "Restores handbrake bite & safety",
         features: [
@@ -370,7 +370,7 @@ const Services = () => {
       {
         id: "wheel-cylinder-replacement",
         name: "Wheel Cylinder Replacement",
-        thumbnail: "/images/product_images/Car services/wheel_cylinder_replacement.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Car services/wheel_cylinder_replacement.png",
         warranty: "Recommended : In case of Poor Braking",
         recommended: "Wheel Cylinder Replacement (OES)",
         features: [
@@ -394,7 +394,7 @@ const Services = () => {
       {
         id: "caliper-pin-greasing",
         name: "Caliper Pin Greasing",
-        thumbnail: "/images/product_images/Car services/cliper_pin_greasing.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Car services/cliper_pin_greasing.png",
         warranty: "",
         recommended: "Recommended: In case of Brake Noise or Sticking",
         features: [
@@ -409,7 +409,7 @@ const Services = () => {
       {
         id: "front-brake-pads-cleaning",
         name: "Front Brake Pads Cleaning",
-        thumbnail: "/images/product_images/Car services/front_breakpad_cleaning.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Car services/front_breakpad_cleaning.png",
         warranty: "",
         recommended: "Recommended: In case of Brake Vibration or Noise",
         features: [
@@ -424,7 +424,7 @@ const Services = () => {
       {
         id: "rear-brake-pads-shoes-cleaning",
         name: "Rear Brake Pads / Shoes Cleaning",
-        thumbnail: "/images/product_images/Car services/ Rear Brake Pads.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Car services/ Rear Brake Pads.png",
         warranty: "",
         recommended: "Recommended: In case of Brake Noise or Reduced Performance",
         features: [
@@ -439,7 +439,7 @@ const Services = () => {
       {
         id: "wiper-fluid-replacement",
         name: "Wiper Fluid Replacement",
-        thumbnail: "/images/product_images/Car services/wiper_fluid.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Car services/wiper_fluid.png",
         warranty: "",
         recommended: "Every 1 Month Recommended • Applicable on Walk-ins Only",
         features: [
@@ -455,7 +455,7 @@ const Services = () => {
       {
         id: "headlight-adjustment",
         name: "Headlight Adjustment",
-        thumbnail: "/images/product_images/Car services/headlight_adustment.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Car services/headlight_adustment.png",
         warranty: "",
         recommended: "Recommended: In Case of Poor Road Visibility • Applicable on Walk-ins Only",
         features: [
@@ -487,7 +487,7 @@ const Services = () => {
       {
         id: "eps-motor-repair",
         name: "EPS Module Repair",
-        thumbnail: "/images/product_images/Suspension & Fittings/eps_module.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Suspension & Fittings/eps_module.png",
         warranty: "1 Month Warranty",
         recommended: "Heavy/jerky steering • EPS warning",
         features: [
@@ -504,7 +504,7 @@ const Services = () => {
       {
         id: "steering-rack-repair",
         name: "Steering Rack Repair",
-        thumbnail: "/images/product_images/Suspension & Fittings/Steering Rack Repair.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Suspension & Fittings/Steering Rack Repair.png",
         warranty: "1 Month Warranty",
         recommended: "Oil leak/knocking from rack",
         features: [
@@ -536,7 +536,7 @@ const Services = () => {
       {
         id: "front-shock-absorber",
         name: "Front Shock Absorber Replacement",
-        thumbnail: "/images/product_images/Suspension & Fittings/Front Shock Absorber Replacement.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Suspension & Fittings/Front Shock Absorber Replacement.png",
         warranty: "1 Month Warranty",
         recommended: "Bouncy ride • Oil leak on strut",
         features: [
@@ -553,7 +553,7 @@ const Services = () => {
       {
         id: "rear-shock-absorber",
         name: "Rear Shock Absorber Replacement",
-        thumbnail: "/images/Landing_page_images/rear shock abserber .png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Landing_page_images/rear shock abserber .png",
         warranty: "1 Month Warranty",
         recommended: "Bouncy ride • Oil leak on damper",
         features: [
@@ -570,7 +570,7 @@ const Services = () => {
       {
         id: "lower-arm-replacement",
         name: "Suspension Lower Arm Replacement",
-        thumbnail: "/images/product_images/Suspension & Fittings/Suspension Lower Arm Replacement.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Suspension & Fittings/Suspension Lower Arm Replacement.png",
         warranty: "1 Month Warranty",
         recommended: "Knocking • Drifting while driving",
         features: [
@@ -587,7 +587,7 @@ const Services = () => {
       {
         id: "link-rod-replacement",
         name: "Link Rod Replacement",
-        thumbnail: "/images/product_images/Suspension & Fittings/Link Rod Replacement.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Suspension & Fittings/Link Rod Replacement.png",
         warranty: "1 Month Warranty",
         recommended: "Rattling from rough roads",
         features: [
@@ -604,7 +604,7 @@ const Services = () => {
       {
         id: "tie-rod-end-replacement",
         name: "Tie Rod End Replacement",
-        thumbnail: "/images/product_images/Suspension & Fittings/Tie Rod End Replacement.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Suspension & Fittings/Tie Rod End Replacement.png",
         warranty: "1 Month Warranty",
         recommended: "Vibration • Uneven tyre wear",
         features: [
@@ -621,7 +621,7 @@ const Services = () => {
       {
         id: "front-axle-repair",
         name: "Front Axle Repair",
-        thumbnail: "/images/product_images/Suspension & Fittings/Front Axle Repair.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Suspension & Fittings/Front Axle Repair.png",
         warranty: "1 Month Warranty",
         recommended: "Vibration while accelerating • Clicking while turning",
         features: [
@@ -653,7 +653,7 @@ const Services = () => {
       {
         id: "engine-mount-replacement",
         name: "Engine Mount Replacement",
-        thumbnail: "/images/product_images/Suspension & Fittings/engine_mounting.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Suspension & Fittings/engine_mounting.png",
         warranty: "1 Month Warranty",
         recommended: "Vibration in cabin • Broken mount",
         features: [
@@ -670,7 +670,7 @@ const Services = () => {
       {
         id: "gearbox-mount-replacement",
         name: "Gearbox Mount Replacement",
-        thumbnail: "/images/product_images/Suspension & Fittings/Gearbox Mount Replacement.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Suspension & Fittings/Gearbox Mount Replacement.png",
         warranty: "1 Month Warranty",
         recommended: "Clunk when shifting • Excess movement",
         features: [
@@ -687,7 +687,7 @@ const Services = () => {
       {
         id: "fuel-pump-replacement",
         name: "Fuel Pump Replacement",
-        thumbnail: "/images/product_images/Suspension & Fittings/Fuel Pump Replacement.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Suspension & Fittings/Fuel Pump Replacement.png",
         warranty: "1 Month Warranty",
         recommended: "In Case of Car Jerking while Accelerating",
         features: [
@@ -707,7 +707,7 @@ const Services = () => {
       {
         id: "ecm-repair",
         name: "ECM Repair",
-        thumbnail: "/images/product_images/Suspension & Fittings/ecm_repair.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Suspension & Fittings/ecm_repair.png",
         warranty: "1 Month Warranty",
         recommended: "In case of Car Not Starting",
         features: [
@@ -727,7 +727,7 @@ const Services = () => {
       {
         id: "water-pump-replacement",
         name: "Water Pump Replacement",
-        thumbnail: "/images/product_images/Suspension & Fittings/Water Pump Replacement.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Suspension & Fittings/Water Pump Replacement.png",
         warranty: "1 Month Warranty",
         recommended: "In case of Engine Overheating",
         features: [
@@ -746,7 +746,7 @@ const Services = () => {
       {
         id: "mud-flaps",
         name: "Mud Flaps",
-        thumbnail: "/images/product_images/Suspension & Fittings/Mud Flaps.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Suspension & Fittings/Mud Flaps.png",
         warranty: "1 Month Warranty on Fitting",
         recommended: "Excellent Durability",
         features: [
@@ -765,7 +765,7 @@ const Services = () => {
       {
         id: "door-latch-repair",
         name: "Door Latch Repair",
-        thumbnail: "/images/product_images/Suspension & Fittings/Door Latch Repair.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Suspension & Fittings/Door Latch Repair.png",
         warranty: "1 Month Warranty",
         recommended: "Door not locking/closing properly",
         features: [
@@ -782,7 +782,7 @@ const Services = () => {
       {
         id: "power-window-repair",
         name: "Power Window Repair",
-        thumbnail: "/images/product_images/Suspension & Fittings/Power Window Repair.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Suspension & Fittings/Power Window Repair.png",
         warranty: "1 Month Warranty",
         recommended: "In Case of Window Not Working • In Case of Hard Window Functioning",
         features: [
@@ -816,7 +816,7 @@ const Services = () => {
       {
         id: "noises-suspension-steering",
         name: "Noises with Car Suspension & Steering",
-        thumbnail: "/images/product_images/Suspension & Fittings/Noises with Car Suspension & Steering.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Suspension & Fittings/Noises with Car Suspension & Steering.png",
         warranty: "",
         recommended: "In Case of Noise Coming from Suspension • In Case of Loose Steering Wheel",
         features: [
@@ -835,7 +835,7 @@ const Services = () => {
       {
         id: "faulty-electricals",
         name: "Faulty Electricals",
-        thumbnail: "/images/product_images/Suspension & Fittings/Faulty Electricals.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Suspension & Fittings/Faulty Electricals.png",
         warranty: "",
         recommended: "In Case of Electrical Malfunctioning • In Case of Dead Battery",
         features: [
@@ -870,7 +870,7 @@ const Services = () => {
       {
         id: "clutch-set-replacement",
         name: "Clutch Set Replacement",
-        thumbnail: "/images/product_images/Clutch and Body parts/Clutch Set Replacement.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Clutch and Body parts/Clutch Set Replacement.png",
         warranty: "1 Month Warranty",
         recommended: "Juddering, slipping or hard clutch pedal",
         features: [
@@ -888,7 +888,7 @@ const Services = () => {
       {
         id: "flywheel-replacement",
         name: "Flywheel Replacement",
-        thumbnail: "/images/product_images/Clutch and Body parts/Flywheel Replacement.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Clutch and Body parts/Flywheel Replacement.png",
         warranty: "1 Month Warranty",
         recommended: "Chatter, vibration or damaged flywheel",
         features: [
@@ -905,7 +905,7 @@ const Services = () => {
       {
         id: "clutch-bearing-replacement",
         name: "Clutch Bearing Replacement",
-        thumbnail: "/images/product_images/Clutch and Body parts/Clutch Bearing Replacement.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Clutch and Body parts/Clutch Bearing Replacement.png",
         warranty: "1 Month Warranty",
         recommended: "Whining/humming noise while pressing clutch",
         features: [
@@ -922,7 +922,7 @@ const Services = () => {
       {
         id: "flywheel-turning",
         name: "Flywheel Turning",
-        thumbnail: "/images/product_images/Clutch and Body parts/Flywheel Turning.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Clutch and Body parts/Flywheel Turning.png",
         warranty: "Smooth surface finish",
         recommended: "Recommended with new clutch set (if required)",
         features: [
@@ -939,7 +939,7 @@ const Services = () => {
       {
         id: "clutch-overhaul",
         name: "Clutch Overhaul",
-        thumbnail: "/images/product_images/Clutch and Body parts/Clutch Overhaul.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Clutch and Body parts/Clutch Overhaul.png",
         warranty: "1 Month Warranty",
         recommended: "Complete clutch refresh",
         features: [
@@ -971,7 +971,7 @@ const Services = () => {
       {
         id: "front-bumper-replacement",
         name: "Front Bumper Replacement",
-        thumbnail: "/images/product_images/Clutch and Body parts/Front Bumper Replacement.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Clutch and Body parts/Front Bumper Replacement.png",
         warranty: "Fitment Warranty",
         recommended: "Damaged or cracked bumper",
         features: [
@@ -988,7 +988,7 @@ const Services = () => {
       {
         id: "rear-bumper-replacement",
         name: "Rear Bumper Replacement",
-        thumbnail: "/images/product_images/Clutch and Body parts/Rear Bumper Replacement.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Clutch and Body parts/Rear Bumper Replacement.png",
         warranty: "Fitment Warranty",
         recommended: "Damaged or cracked bumper",
         features: [
@@ -1005,7 +1005,7 @@ const Services = () => {
       {
         id: "right-front-door-handle",
         name: "Right Front Door Replacement",
-        thumbnail: "/images/product_images/Clutch and Body parts/Right Front Door Replacement.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Clutch and Body parts/Right Front Door Replacement.png",
         warranty: "Fitment Warranty",
         recommended: "Damaged door shell",
         features: [
@@ -1022,7 +1022,7 @@ const Services = () => {
       {
         id: "right-rear-door-handle",
         name: "Right Rear Door Replacement",
-        thumbnail: "/images/product_images/Clutch and Body parts/Right Rear Door Replacement.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Clutch and Body parts/Right Rear Door Replacement.png",
         warranty: "Fitment Warranty",
         recommended: "Damaged door shell",
         features: [
@@ -1039,7 +1039,7 @@ const Services = () => {
       {
         id: "right-fender-replacement",
         name: "Right Fender Replacement",
-        thumbnail: "/images/product_images/Clutch and Body parts/fender.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Clutch and Body parts/fender.png",
         warranty: "Fitment Warranty",
         recommended: "Damaged fender panel",
         features: [
@@ -1056,7 +1056,7 @@ const Services = () => {
       {
         id: "boot-replacement",
         name: "Boot Replacement",
-        thumbnail: "/images/product_images/Clutch and Body parts/Boot Replacement.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Clutch and Body parts/Boot Replacement.png",
         warranty: "Fitment Warranty",
         recommended: "In Case Corroded Boot • In Case Broken / Damaged Boot",
         features: [
@@ -1076,7 +1076,7 @@ const Services = () => {
       {
         id: "bonnet-replacement",
         name: "Bonnet Replacement",
-        thumbnail: "/images/product_images/Clutch and Body parts/Bonnet Replacement.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Clutch and Body parts/Bonnet Replacement.png",
         warranty: "Fitment Warranty",
         recommended: "Damaged bonnet",
         features: [
@@ -1093,7 +1093,7 @@ const Services = () => {
       {
         id: "left-front-door-replacement",
         name: "Left Front Door Replacement",
-        thumbnail: "/images/product_images/Clutch and Body parts/Left Front Door Replacement.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Clutch and Body parts/Left Front Door Replacement.png",
         warranty: "Fitment Warranty",
         recommended: "In Case Corroded Door • In Case Broken / Damaged Door",
         features: [
@@ -1114,7 +1114,7 @@ const Services = () => {
       {
         id: "rear-door-replacement-left",
         name: "Left Rear Door Replacement",
-        thumbnail: "/images/product_images/Clutch and Body parts/Left Rear Door Replacement.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Clutch and Body parts/Left Rear Door Replacement.png",
         warranty: "Fitment Warranty",
         recommended: "Damaged door shell",
         features: [
@@ -1146,7 +1146,7 @@ const Services = () => {
       {
         id: "clutch-transmission-trouble",
         name: "Clutch & Transmission Trouble",
-        thumbnail: "/images/product_images/Clutch and Body parts/Clutch & Transmission Trouble.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Clutch and Body parts/Clutch & Transmission Trouble.png",
         warranty: "Diagnosis Report",
         recommended: "Grinding gears, slipping clutch, hard shifts",
         features: [
@@ -1163,7 +1163,7 @@ const Services = () => {
       {
         id: "all-doors-adjustment",
         name: "All Doors Adjustment",
-        thumbnail: "/images/product_images/Clutch and Body parts/All Doors Adjustment2.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Clutch and Body parts/All Doors Adjustment2.png",
         warranty: "",
         recommended: "In case of Door Alignment Issues",
         features: [
@@ -1199,7 +1199,7 @@ const Services = () => {
       {
         id: "front-windshield-replacement",
         name: "Front Windshield Replacement",
-        thumbnail: "/images/product_images/Windshield & lights/Front Windshield Replacement.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Windshield & lights/Front Windshield Replacement.png",
         warranty: "1 Year Sealant Warranty",
         recommended: "OEM Spec Glass • Cashless Support Available",
         features: [
@@ -1217,7 +1217,7 @@ const Services = () => {
       {
         id: "rear-windshield-replacement",
         name: "Rear Windshield Replacement",
-        thumbnail: "/images/product_images/Windshield & lights/Rear Windshield Replacement.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Windshield & lights/Rear Windshield Replacement.png",
         warranty: "1 Year Sealant Warranty",
         recommended: "OEM Spec Glass • Defogger Compatible",
         features: [
@@ -1250,7 +1250,7 @@ const Services = () => {
       {
         id: "door-glass-replacement",
         name: "Door Glass Replacement",
-        thumbnail: "/images/product_images/Windshield & lights/Door Glass Replacement.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Windshield & lights/Door Glass Replacement.png",
         warranty: "1 Month Fitment Warranty",
         recommended: "OEM Door Glass",
         features: [
@@ -1267,7 +1267,7 @@ const Services = () => {
       {
         id: "rear-quarter-glass-replacement",
         name: "Rear Quarter Glass Replacement",
-        thumbnail: "/images/product_images/Windshield & lights/Rear Quarter Glass Replacement.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Windshield & lights/Rear Quarter Glass Replacement.png",
         warranty: "1 Month Fitment Warranty",
         recommended: "OEM Quarter Glass",
         features: [
@@ -1299,7 +1299,7 @@ const Services = () => {
       {
         id: "front-headlight",
         name: "Front Headlight",
-        thumbnail: "/images/product_images/Windshield & lights/Front Headlight.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Windshield & lights/Front Headlight.png",
         warranty: "1 Month Fitment Warranty",
         recommended: "Headlamp Assembly Replacement",
         features: [
@@ -1316,7 +1316,7 @@ const Services = () => {
       {
         id: "rear-taillight",
         name: "Rear Taillight",
-        thumbnail: "/images/product_images/Windshield & lights/Rear Taillight.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Windshield & lights/Rear Taillight.png",
         warranty: "1 Month Fitment Warranty",
         recommended: "Tail Lamp Assembly Replacement",
         features: [
@@ -1333,7 +1333,7 @@ const Services = () => {
       {
         id: "fog-light",
         name: "Fog Light",
-        thumbnail: "/images/product_images/Windshield & lights/For light.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Windshield & lights/For light.png",
         warranty: "1 Month Fitment Warranty",
         recommended: "Fog Lamp Assembly Replacement",
         features: [
@@ -1365,7 +1365,7 @@ const Services = () => {
       {
         id: "side-mirror-replacement",
         name: "Side Mirror Replacement",
-        thumbnail: "/images/product_images/Windshield & lights/Side Mirror Replacement.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Windshield & lights/Side Mirror Replacement.png",
         warranty: "1 Month Fitment Warranty",
         recommended: "ORVM Assembly/Glass Replacement",
         features: [
@@ -1384,7 +1384,7 @@ const Services = () => {
       {
         id: "premium-top-wash",
         name: "Premium Top Wash",
-        thumbnail: "/images/product_images/Spa & Cleaning/Premium Top Wash.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Spa & Cleaning/Premium Top Wash.png",
         warranty: "Pickup Charges Additional in Invoice",
         recommended: "Applicable on Walk-in Only",
         features: [
@@ -1403,7 +1403,7 @@ const Services = () => {
       {
         id: "deep-all-round-spa",
         name: "Deep All Round Spa",
-        thumbnail: "/images/product_images/Spa & Cleaning/Deep All Round Spa.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Spa & Cleaning/Deep All Round Spa.png",
         warranty: "",
         recommended: "Every 6 Months (Recommended)",
         features: [
@@ -1423,7 +1423,7 @@ const Services = () => {
       {
         id: "car-rubbing-polishing",
         name: "Car Rubbing & Polishing",
-        thumbnail: "/images/product_images/Spa & Cleaning/Car Rubbing & Polishing.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Spa & Cleaning/Car Rubbing & Polishing.png",
         warranty: "",
         recommended: "Every 6 Months Recommended",
         features: [
@@ -1443,7 +1443,7 @@ const Services = () => {
       {
         id: "car-interior-spa",
         name: "Car Interior Spa",
-        thumbnail: "/images/product_images/Spa & Cleaning/Car Interior Spa.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Spa & Cleaning/Car Interior Spa.png",
         warranty: "",
         recommended: "Every 3 Months (Recommended)",
         features: [
@@ -1478,7 +1478,7 @@ const Services = () => {
       {
         id: "car-wash-wax",
         name: "Car Wash & Wax",
-        thumbnail: "/images/product_images/Spa & Cleaning/car wash & wax copy.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Spa & Cleaning/car wash & wax copy.png",
         warranty: "",
         recommended: "Wash + wax protection",
         features: [
@@ -1511,7 +1511,7 @@ const Services = () => {
       {
         id: "sunroof-service",
         name: "Sunroof Service",
-        thumbnail: "/images/product_images/Spa & Cleaning/Sunroof Service.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Spa & Cleaning/Sunroof Service.png",
         warranty: "",
         recommended: "Smooth operation & leak prevention",
         features: [
@@ -1545,7 +1545,7 @@ const Services = () => {
       {
         id: "ceramic-coating-standard",
         name: "Ceramic Coating",
-        thumbnail: "/images/product_images/Detailing Services/Ceramic Coating.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Detailing Services/Ceramic Coating.png",
         warranty: "Up to 2 Years Protection (Depending on Package)",
         recommended: "High gloss, hydrophobic protection",
         features: [
@@ -1563,7 +1563,7 @@ const Services = () => {
       {
         id: "meguiars-ceramic-coating",
         name: "Graphene Coating - 10H",
-        thumbnail: "/images/product_images/Detailing Services/Graphene Coating - 10H.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Detailing Services/Graphene Coating - 10H.png",
         warranty: "2 Years Warranty",
         recommended: "Free Pickup & Drop",
         features: [
@@ -1598,7 +1598,7 @@ const Services = () => {
       {
         id: "meguiars-teflon-coating",
         name: "Meguiar's Teflon Coating",
-        thumbnail: "/images/product_images/Detailing Services/Meguiar's Teflon Coating.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Detailing Services/Meguiar's Teflon Coating.png",
         warranty: "Up to 6 Months Protection",
         recommended: "Shine and basic paint protection",
         features: [
@@ -1616,7 +1616,7 @@ const Services = () => {
       {
         id: "3m-teflon-coating",
         name: "3M Teflon Coating",
-        thumbnail: "/images/product_images/Detailing Services/3M Teflon Coating.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Detailing Services/3M Teflon Coating.png",
         warranty: "Up to 6 Months Protection",
         recommended: "Paint sealant and shine",
         features: [
@@ -1648,7 +1648,7 @@ const Services = () => {
       {
         id: "ppf-paint-protection-film",
         name: "PPF - Paint Protection Film",
-        thumbnail: "/images/product_images/Detailing Services/PPF - Paint Protection Film.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Detailing Services/PPF - Paint Protection Film.png",
         warranty: "Self-healing top coat",
         recommended: "Scratch and chip protection",
         features: [
@@ -1681,7 +1681,7 @@ const Services = () => {
       {
         id: "anti-rust-underbody",
         name: "Anti Rust Underbody Coating",
-        thumbnail: "/images/product_images/Detailing Services/Anti Rust Underbody Coating.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Detailing Services/Anti Rust Underbody Coating.png",
         warranty: "Prevents corrosion • Long lasting protection",
         recommended: "Recommended for monsoon & coastal areas",
         features: [
@@ -1700,7 +1700,7 @@ const Services = () => {
       {
         id: "silencer-coating",
         name: "Silencer Coating",
-        thumbnail: "/images/product_images/Detailing Services/Silencer Coating.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Detailing Services/Silencer Coating.png",
         warranty: "Rust prevention for exhaust system",
         recommended: "Protects silencer from corrosion",
         features: [
@@ -1733,7 +1733,7 @@ const Services = () => {
       {
         id: "front-bumper-paint",
         name: "Front Bumper Paint",
-        thumbnail: "/images/product_images/Denting & Painting/front_bumper.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Denting & Painting/front_bumper.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -1752,7 +1752,7 @@ const Services = () => {
       {
         id: "bonnet-paint",
         name: "Bonnet Paint",
-        thumbnail: "/images/product_images/Denting & Painting/ Bonnet Paint.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Denting & Painting/ Bonnet Paint.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -1786,7 +1786,7 @@ const Services = () => {
       {
         id: "rear-bumper-paint",
         name: "Rear Bumper Paint",
-        thumbnail: "/images/product_images/Denting & Painting/rear_bumper.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Denting & Painting/rear_bumper.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -1805,7 +1805,7 @@ const Services = () => {
       {
         id: "boot-paint",
         name: "Boot Paint",
-        thumbnail: "/images/product_images/Denting & Painting/Boot Paint.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Denting & Painting/Boot Paint.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -1839,7 +1839,7 @@ const Services = () => {
       {
         id: "full-body-dent-paint",
         name: "Full Body Dent Paint",
-        thumbnail: "/images/product_images/Denting & Painting/Full Body Dent Paint.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Denting & Painting/Full Body Dent Paint.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -1858,7 +1858,7 @@ const Services = () => {
       {
         id: "alloy-paint",
         name: "Alloy Paint",
-        thumbnail: "/images/product_images/Denting & Painting/Alloy Paint.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Denting & Painting/Alloy Paint.png",
         warranty: "1 Year Warranty",
         recommended: "Every 1 Year (Recommended)",
         features: [
@@ -1891,7 +1891,7 @@ const Services = () => {
       {
         id: "left-fender-paint",
         name: "Left Fender Paint",
-        thumbnail: "/images/product_images/Denting & Painting/Left Fender Paint.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Denting & Painting/Left Fender Paint.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -1910,7 +1910,7 @@ const Services = () => {
       {
         id: "left-front-door-paint",
         name: "Left Front Door Paint",
-        thumbnail: "/images/product_images/Denting & Painting/Left Front Door Paint.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Denting & Painting/Left Front Door Paint.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -1929,7 +1929,7 @@ const Services = () => {
       {
         id: "left-rear-door-paint",
         name: "Left Rear Door Paint",
-        thumbnail: "/images/product_images/Denting & Painting/Left Rear Door Paint.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Denting & Painting/Left Rear Door Paint.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -1948,7 +1948,7 @@ const Services = () => {
       {
         id: "left-quarter-panel-paint",
         name: "Left Quarter Panel Paint",
-        thumbnail: "/images/product_images/Denting & Painting/Left Quarter Panel Paint.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Denting & Painting/Left Quarter Panel Paint.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -1967,7 +1967,7 @@ const Services = () => {
       {
         id: "left-running-board-paint",
         name: "Left Running Board Paint",
-        thumbnail: "/images/product_images/Denting & Painting/Left Running Board Paint.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Denting & Painting/Left Running Board Paint.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -2001,7 +2001,7 @@ const Services = () => {
       {
         id: "right-fender-paint",
         name: "Right Fender Paint",
-        thumbnail: "/images/product_images/Denting & Painting/Right Fender Paint.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Denting & Painting/Right Fender Paint.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -2020,7 +2020,7 @@ const Services = () => {
       {
         id: "right-front-door-paint",
         name: "Right Front Door Paint",
-        thumbnail: "/images/product_images/Denting & Painting/Right Front Door Paint.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Denting & Painting/Right Front Door Paint.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -2039,7 +2039,7 @@ const Services = () => {
       {
         id: "right-rear-door-paint",
         name: "Right Rear Door Paint",
-        thumbnail: "/images/product_images/Denting & Painting/Right Rear Door Paint.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Denting & Painting/Right Rear Door Paint.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -2058,7 +2058,7 @@ const Services = () => {
       {
         id: "right-quarter-panel-paint",
         name: "Right Quarter Panel Paint",
-        thumbnail: "/images/product_images/Denting & Painting/Right Quarter Panel Paint.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Denting & Painting/Right Quarter Panel Paint.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -2077,7 +2077,7 @@ const Services = () => {
       {
         id: "right-running-board-paint",
         name: "Right Running Board Paint",
-        thumbnail: "/images/product_images/Denting & Painting/Right Running Board Paint.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Denting & Painting/Right Running Board Paint.png",
         warranty: "2 Years Warranty on Paint",
         recommended: "Removal of Minor Dents & Scratches",
         features: [
@@ -2098,7 +2098,7 @@ const Services = () => {
       {
         id: "regular-ac-service",
         name: "Regular AC Service",
-        thumbnail: "/images/product_images/Ac service & Repair/ac_service.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Ac service & Repair/ac_service.png",
         warranty: "500 Kms or 1 Month Warranty",
         recommended: "Every 5,000 Kms or 3 Months (Recommended)",
         features: [
@@ -2131,7 +2131,7 @@ const Services = () => {
       {
         id: "high-performance-ac-service",
         name: "High Performance AC Service",
-        thumbnail: "/images/product_images/Ac service & Repair/high_perform_ac_service.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Ac service & Repair/high_perform_ac_service.png",
         warranty: "1,000 kms or 1 Month Warranty",
         recommended: "Every 10,000 Kms or 1 Year (Recommended)",
         features: [
@@ -2175,7 +2175,7 @@ const Services = () => {
       {
         id: "cooling-coil-replacement",
         name: "Cooling Coil Replacement",
-        thumbnail: "/images/product_images/Ac service & Repair/Cooling Coil Replacement.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Ac service & Repair/Cooling Coil Replacement.png",
         warranty: "3 Months Warranty",
         recommended: "In Case of No / Less Cooling",
         features: [
@@ -2205,7 +2205,7 @@ const Services = () => {
       {
         id: "ac-compressor-replacement",
         name: "Compressor Replacement",
-        thumbnail: "/images/product_images/Ac service & Repair/compressor.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Ac service & Repair/compressor.png",
         warranty: "3 Months Warranty",
         recommended: "Recommended in case of compressor leakage or less cooling",
         features: [
@@ -2229,7 +2229,7 @@ const Services = () => {
       {
         id: "ac-heating-coil-replacement",
         name: "Heating Coil Replacement",
-        thumbnail: "/images/product_images/Ac service & Repair/heating_coil.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Ac service & Repair/heating_coil.png",
         warranty: "3 Months Warranty",
         recommended: "Recommended in case of heater not working",
         features: [
@@ -2254,7 +2254,7 @@ const Services = () => {
       {
         id: "ac-vbelt-replacement",
         name: "V Belt Replacement",
-        thumbnail: "/images/product_images/Ac service & Repair/v_belt_replacement.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Ac service & Repair/v_belt_replacement.png",
         warranty: "1 Month Warranty",
         recommended: "Recommended in case of whining noise from engine",
         features: [
@@ -2279,7 +2279,7 @@ const Services = () => {
       {
         id: "ac-blower-motor-replacement",
         name: "AC Blower Motor Replacement",
-        thumbnail: "/images/product_images/Ac service & Repair/ac_blower_motor.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Ac service & Repair/ac_blower_motor.png",
         warranty: "1 Month Warranty",
         recommended: "Recommended in case of rattling, humming noise from AC blower",
         features: [
@@ -2318,7 +2318,7 @@ const Services = () => {
       {
         id: "radiator-replacement",
         name: "Radiator Replacement",
-        thumbnail: "/images/product_images/Ac service & Repair/radiator_replacement.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Ac service & Repair/radiator_replacement.png",
         warranty: "1 Month Warranty",
         recommended: "Recommended in case of blockage in the radiator vessels",
         features: [
@@ -2343,7 +2343,7 @@ const Services = () => {
       {
         id: "radiator-fan-motor",
         name: "Radiator Fan Motor Replacement",
-        thumbnail: "/images/product_images/Inspection/Radiator Fan Motor Replacement.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Inspection/Radiator Fan Motor Replacement.png",
         warranty: "1 Month Warranty",
         recommended: "Recommended in case of radiator fan not working",
         features: [
@@ -2366,7 +2366,7 @@ const Services = () => {
       {
         id: "radiator-flush-clean",
         name: "Radiator Flush & Clean",
-        thumbnail: "/images/product_images/Ac service & Repair/Radiator Flush & Clean.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Ac service & Repair/Radiator Flush & Clean.png",
         warranty: "Protects Radiator from Corrosion",
         recommended: "Free Pickup and Drop",
         features: [
@@ -2405,7 +2405,7 @@ const Services = () => {
       {
         id: "amaron-55-35ah",
         name: "Amaron Go 35 Amp",
-        thumbnail: "/images/product_images/Batteries/amazon_go.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Batteries/amazon_go.png",
         warranty: "55 Months Warranty",
         recommended: "35 Amp Hour • 55 Months Warranty • Free of Cost Installation",
         features: [
@@ -2426,7 +2426,7 @@ const Services = () => {
       {
         id: "amaron-72-35ah",
         name: "Amaron Flo 35 Amp",
-        thumbnail: "/images/product_images/Batteries/amazon_flo.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Batteries/amazon_flo.png",
         warranty: "72 Months Warranty",
         recommended: "35 Amp Hour • 72 Months Warranty • Free of Cost Installation",
         features: [
@@ -2462,7 +2462,7 @@ const Services = () => {
       {
         id: "exide-55-35ah",
         name: "Exide Mileage 35 Amp",
-        thumbnail: "/images/product_images/Batteries/excide_millage_35.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Batteries/excide_millage_35.png",
         warranty: "55 Months Warranty",
         recommended: "35 Amp Hour • Free of Cost Installation",
         features: [
@@ -2483,7 +2483,7 @@ const Services = () => {
       {
         id: "exide-66-35ah",
         name: "Exide Epiq 35 Amp",
-        thumbnail: "/images/product_images/Batteries/excide_epiq_35.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Batteries/excide_epiq_35.png",
         warranty: "66 Months Warranty",
         recommended: "35 Amp Hour • Free of Cost Installation",
         features: [
@@ -2518,7 +2518,7 @@ const Services = () => {
       {
         id: "livguard-60-35ah",
         name: "Livguard Zing Aterna 35 Amp",
-        thumbnail: "/images/product_images/Batteries/livegurd_zing.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Batteries/livegurd_zing.png",
         warranty: "60 Months Warranty",
         recommended: "35 Amp Hour • Free of Cost Installation",
         features: [
@@ -2553,7 +2553,7 @@ const Services = () => {
       {
         id: "alternator-replacement",
         name: "Alternator Replacement",
-        thumbnail: "/images/product_images/Batteries/alternator.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Batteries/alternator.png",
         warranty: "1 Month Warranty",
         recommended: "Recommended in case of frequently discharging battery",
         features: [
@@ -2572,7 +2572,7 @@ const Services = () => {
       {
         id: "alternator-repair",
         name: "Alternator Repair",
-        thumbnail: "/images/product_images/Batteries/alternator_repair.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Batteries/alternator_repair.png",
         warranty: "3 Months Warranty",
         recommended: "Recommended in case of frequently discharging battery",
         features: [
@@ -2607,7 +2607,7 @@ const Services = () => {
       {
         id: "apollo-amazer-4g",
         name: "Apollo Amazer 4G",
-        thumbnail: "/images/product_images/Tyres & wheel cares/applo_amazer.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Tyres & wheel cares/applo_amazer.png",
         warranty: "5 years warranty",
         recommended: "Size - 185/65 R15 • 5 years warranty • Tubeless • Fitting Cost Included",
         features: [
@@ -2628,7 +2628,7 @@ const Services = () => {
       {
         id: "apollo-alnac-4g",
         name: "Apollo Alnac 4G",
-        thumbnail: "/images/product_images/Tyres & wheel cares/applo__alnac.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Tyres & wheel cares/applo__alnac.png",
         warranty: "Premium Quality",
         recommended: "55,000 Kms Warranty • Professional Installation",
         features: [
@@ -2663,7 +2663,7 @@ const Services = () => {
       {
         id: "mrf-ecotred",
         name: "MRF Ecotred",
-        thumbnail: "/images/product_images/Tyres & wheel cares/mrf__ecotread.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Tyres & wheel cares/mrf__ecotread.png",
         warranty: "5 years warranty",
         recommended: "Size - 165/80 R14 • 5 years warranty • Tubeless • Fitting Cost Included",
         features: [
@@ -2683,7 +2683,7 @@ const Services = () => {
       {
         id: "mrf-zvtv",
         name: "MRF Zvtv-A1",
-        thumbnail: "/images/product_images/Tyres & wheel cares/mrf_zvtv_a1.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Tyres & wheel cares/mrf_zvtv_a1.png",
         warranty: "Premium Quality",
         recommended: "6 years warranty • Tubeless",
         features: [
@@ -2703,7 +2703,7 @@ const Services = () => {
       {
         id: "mrf-zlx",
         name: "MRF ZIX",
-        thumbnail: "/images/product_images/Tyres & wheel cares/mrf__zlx.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Tyres & wheel cares/mrf__zlx.png",
         warranty: "",
         recommended: "Tubeless",
         features: [
@@ -2738,7 +2738,7 @@ const Services = () => {
       {
         id: "ceat-secura-drive",
         name: "CEAT SecuraDrive",
-        thumbnail: "/images/product_images/Tyres & wheel cares/ceat_sucuredrive.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Tyres & wheel cares/ceat_sucuredrive.png",
         warranty: "Premium Quality",
         recommended: "50,000 Kms Warranty • Professional Installation",
         features: [
@@ -2758,7 +2758,7 @@ const Services = () => {
       {
         id: "ceat-milaze",
         name: "Ceat Milaze",
-        thumbnail: "/images/product_images/Tyres & wheel cares/ceat_milage.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Tyres & wheel cares/ceat_milage.png",
         warranty: "Premium Quality",
         recommended: "Tubeless",
         features: [
@@ -2778,7 +2778,7 @@ const Services = () => {
       {
         id: "ceat-milaze-x3",
         name: "Ceat Milaze X3",
-        thumbnail: "/images/product_images/Tyres & wheel cares/ceat_milage_x3.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Tyres & wheel cares/ceat_milage_x3.png",
         warranty: "Premium Quality",
         recommended: "Tubeless",
         features: [
@@ -2813,7 +2813,7 @@ const Services = () => {
       {
         id: "goodyear-assurance-triplemax",
         name: "Goodyear Assurance TripleMax",
-        thumbnail: "/images/product_images/Tyres & wheel cares/goodyear_assurance_triplemax.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Tyres & wheel cares/goodyear_assurance_triplemax.png",
         warranty: "Premium Quality",
         recommended: "50,000 Kms Warranty • Professional Installation",
         features: [
@@ -2833,7 +2833,7 @@ const Services = () => {
       {
         id: "goodyear-duraplus",
         name: "Goodyear Duraplus",
-        thumbnail: "/images/product_images/Tyres & wheel cares/goodyear_duraplus.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Tyres & wheel cares/goodyear_duraplus.png",
         warranty: "Premium Quality",
         recommended: "Tubeless",
         features: [
@@ -2868,7 +2868,7 @@ const Services = () => {
       {
         id: "jk-ux-royale",
         name: "JK UX Royale",
-        thumbnail: "/images/product_images/Tyres & wheel cares/jk_ux_royale.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Tyres & wheel cares/jk_ux_royale.png",
         warranty: "Premium Quality",
         recommended: "45,000 Kms Warranty • Professional Installation",
         features: [
@@ -2888,7 +2888,7 @@ const Services = () => {
       {
         id: "jk-ux",
         name: "JK UX",
-        thumbnail: "/images/product_images/Tyres & wheel cares/jk_ux.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Tyres & wheel cares/jk_ux.png",
         warranty: "Premium Quality",
         recommended: "Tubeless",
         features: [
@@ -2908,7 +2908,7 @@ const Services = () => {
       {
         id: "jk-taximax",
         name: "JK Taximax",
-        thumbnail: "/images/product_images/Tyres & wheel cares/jk__taximax.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Tyres & wheel cares/jk__taximax.png",
         warranty: "5 years warranty",
         recommended: "Size - 165/80 R14 • 5 years warranty • Tubeless • Fitting Cost Included",
         features: [
@@ -2943,7 +2943,7 @@ const Services = () => {
       {
         id: "continental-ultracontact",
         name: "Continental Ultracontact",
-        thumbnail: "/images/product_images/Tyres & wheel cares/continetal.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Tyres & wheel cares/continetal.png",
         warranty: "Premium Quality",
         recommended: "55,000 Kms Warranty • Professional Installation",
         features: [
@@ -2978,7 +2978,7 @@ const Services = () => {
       {
         id: "yokohama-earth-1",
         name: "Yokohama Earth-1",
-        thumbnail: "/images/product_images/Tyres & wheel cares/yokohma_earth_1.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Tyres & wheel cares/yokohma_earth_1.png",
         warranty: "Premium Quality",
         recommended: "50,000 Kms Warranty • Professional Installation",
         features: [
@@ -3014,7 +3014,7 @@ const Services = () => {
       {
         id: "second-hand-car-inspection",
         name: "Second Hand Car Inspection",
-        thumbnail: "/images/product_images/Inspection/Second Hand Car Inspection.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Inspection/Second Hand Car Inspection.png",
         warranty: "Detailed Buyer Report",
         recommended: "Comprehensive used car evaluation",
         features: [
@@ -3047,7 +3047,7 @@ const Services = () => {
       {
         id: "road-trip-inspection",
         name: "Road Trip Inspection",
-        thumbnail: "/images/product_images/Inspection/Road Trip Inspection.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Inspection/Road Trip Inspection.png",
         warranty: "Travel Readiness Checklist",
         recommended: "Before long outstation drives",
         features: [
@@ -3065,7 +3065,7 @@ const Services = () => {
       {
         id: "engine-scanning",
         name: "Engine Scanning",
-        thumbnail: "/images/product_images/Inspection/Engine Scanning.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Inspection/Engine Scanning.png",
         warranty: "Scan Report Included",
         recommended: "Diagnose engine warning lights",
         features: [
@@ -3083,7 +3083,7 @@ const Services = () => {
       {
         id: "insurance-claim-inspection",
         name: "Insurance Claim Inspection",
-        thumbnail: "/images/product_images/Inspection/Insurance Claim Inspection.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Inspection/Insurance Claim Inspection.png",
         warranty: "Photos & Estimate Support",
         recommended: "For insurance damage claims",
         features: [
@@ -3101,7 +3101,7 @@ const Services = () => {
       {
         id: "car-fluid-check",
         name: "Car Fluids Check",
-        thumbnail: "/images/product_images/Inspection/Car Fluids Check.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Inspection/Car Fluids Check.png",
         warranty: "Top-up recommendations",
         recommended: "Engine oil, coolant, brake, PS, washer",
         features: [
@@ -3118,7 +3118,7 @@ const Services = () => {
       {
         id: "complete-suspension-inspection",
         name: "Complete Suspension Inspection",
-        thumbnail: "/images/product_images/Inspection/Complete Suspension Inspection.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Inspection/Complete Suspension Inspection.png",
         warranty: "Noise/Vibration Root-cause Report",
         recommended: "If you hear rattles, thuds or feel vibrations",
         features: [
@@ -3150,7 +3150,7 @@ const Services = () => {
       {
         id: "radiator-replacement",
         name: "Radiator Replacement",
-        thumbnail: "/images/product_images/Inspection/Radiator Replacement.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Inspection/Radiator Replacement.png",
         warranty: "1 Month Warranty",
         recommended: "Overheating or coolant leakage",
         features: [
@@ -3167,7 +3167,7 @@ const Services = () => {
       {
         id: "radiator-fan-motor-replacement",
         name: "Radiator Fan Motor Replacement",
-        thumbnail: "/images/product_images/Inspection/Radiator Fan Motor Replacement.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Inspection/Radiator Fan Motor Replacement.png",
         warranty: "1 Month Warranty",
         recommended: "Fan not working / overheating in traffic",
         features: [
@@ -3184,7 +3184,7 @@ const Services = () => {
       {
         id: "radiator-flush-clean",
         name: "Radiator Flush & Clean",
-        thumbnail: "/images/product_images/Ac service & Repair/Radiator Flush & Clean.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Ac service & Repair/Radiator Flush & Clean.png",
         warranty: "Rust protection",
         recommended: "Overheating / coolant degradation",
         features: [
@@ -3216,7 +3216,7 @@ const Services = () => {
       {
         id: "car-warning-assistance",
         name: "Car Waterlog Assistance",
-        thumbnail: "/images/product_images/Inspection/Car Waterlog Assistance.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Inspection/Car Waterlog Assistance.png",
         warranty: "Resolution Guidance",
         recommended: "Dashboard warning lights / alerts",
         features: [
@@ -3233,7 +3233,7 @@ const Services = () => {
       {
         id: "car-engine-issues",
         name: "Car Engine Issues",
-        thumbnail: "/images/product_images/Inspection/Car Engine Issues.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Inspection/Car Engine Issues.png",
         warranty: "Technician Diagnosis",
         recommended: "Misfire, power loss, stalling, smoke",
         features: [
@@ -3250,7 +3250,7 @@ const Services = () => {
       {
         id: "brakes-wheels-issues",
         name: "Problem with Car Brakes & Wheels",
-        thumbnail: "/images/product_images/Inspection/Problem with Car Brakes & Wheels.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Inspection/Problem with Car Brakes & Wheels.png",
         warranty: "Safety Checklist",
         recommended: "Noise, vibration or wobble while driving",
         features: [
@@ -3267,7 +3267,7 @@ const Services = () => {
       {
         id: "damaged-body-or-interiors",
         name: "Damaged Car Body or Interiors",
-        thumbnail: "/images/product_images/Inspection/Damaged Car Body or Interiors.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Inspection/Damaged Car Body or Interiors.png",
         warranty: "Repair Estimate",
         recommended: "Dents, scratches or interior damage",
         features: [
@@ -3300,7 +3300,7 @@ const Services = () => {
       {
         id: "know-your-policy",
         name: "Know Your Policy",
-        thumbnail: "/images/product_images/Inurance/know_ur_polices.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Inurance/know_ur_polices.png",
         warranty: "Coverage & Claim Guidance",
         recommended: "Understand inclusions, exclusions and claim steps",
         features: [
@@ -3333,7 +3333,7 @@ const Services = () => {
       {
         id: "accidental-denting-painting-insured",
         name: "Accidental Denting & Painting (For Insured Vehicles)",
-        thumbnail: "/images/product_images/Inurance/Accidental Denting & Painting.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Inurance/Accidental Denting & Painting.png",
         warranty: "As per insurer",
         recommended: "Cashless repairs at network garages",
         features: [
@@ -3351,7 +3351,7 @@ const Services = () => {
       {
         id: "fire-damage-assistance",
         name: "Fire Damage Assistance (For Insured Vehicles)",
-        thumbnail: "/images/product_images/Inurance/Fire Damage Assistance  copy.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Inurance/Fire Damage Assistance  copy.png",
         warranty: "As per insurer",
         recommended: "Claim assistance for fire related damage",
         features: [
@@ -3369,7 +3369,7 @@ const Services = () => {
       {
         id: "car-flood-damage",
         name: "Car Flood Damage (For Insured Vehicles)",
-        thumbnail: "/images/product_images/Inurance/Car Flood Damage.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Inurance/Car Flood Damage.png",
         warranty: "As per insurer",
         recommended: "Assistance for water ingress damage",
         features: [
@@ -3387,7 +3387,7 @@ const Services = () => {
       {
         id: "windshield-replacement-insured",
         name: "Windshield Replacement (For Insured Vehicles)",
-        thumbnail: "/images/product_images/Inurance/Windshield Replacement .png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Inurance/Windshield Replacement .png",
         warranty: "As per insurer",
         recommended: "Cashless OEM glass replacement",
         features: [
@@ -3420,7 +3420,7 @@ const Services = () => {
       {
         id: "car-theft-claim-insured",
         name: "Car Theft Claim (For Insured Vehicles)",
-        thumbnail: "/images/product_images/Inurance/Car Theft Claim (For Insured Vehicles).png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Inurance/Car Theft Claim (For Insured Vehicles).png",
         warranty: "As per insurer",
         recommended: "End-to-end theft claim support",
         features: [
@@ -3452,7 +3452,7 @@ const Services = () => {
       {
         id: "doorstep-accidental-inspection-insured",
         name: "Doorstep Accidental Inspection",
-        thumbnail: "/images/product_images/Inurance/Doorstep Accidental Inspection.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Inurance/Doorstep Accidental Inspection.png",
         warranty: "Photo Checklist Provided",
         recommended: "Initial inspection before claim",
         features: [
@@ -3469,7 +3469,7 @@ const Services = () => {
       {
         id: "towing-for-insured-vehicle",
         name: "Towing (For Insured Vehicle)",
-        thumbnail: "/images/product_images/Inurance/Towing (For Insured Vehicle).png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Inurance/Towing (For Insured Vehicle).png",
         warranty: "As per insurer",
         recommended: "Breakdown/accident towing assistance",
         features: [
@@ -3486,7 +3486,7 @@ const Services = () => {
       {
         id: "insurance-claim-inspection-insured",
         name: "Insurance Claim Inspection",
-        thumbnail: "/images/product_images/Inurance/Insurance Claim Inspection1.png",
+        thumbnail: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/product_images/Inurance/Insurance Claim Inspection1.png",
         warranty: "Photos & Estimate Support",
         recommended: "For insurance damage claims",
         features: [

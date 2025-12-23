@@ -165,7 +165,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         />
       ) : (
         <img
-          src="/images/service_icons/car_service.png"
+          src="https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/service_icons/car_service.png"
           alt="Service"
           className={`${variant === "gom"
             ? "h-[60px] w-[60px]"

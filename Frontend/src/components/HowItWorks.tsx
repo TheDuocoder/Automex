@@ -5,21 +5,21 @@ const HowItWorks = () => {
       title: "Select The Perfect Car Service",
       description: "From AutoMex's broad portfolio of services",
       icon: "🚗",
-      image: "/images/Landing_page_images/selecttheperfectcarservice.png",
+      image: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Landing_page_images/selecttheperfectcarservice.png",
     },
     {
       number: "2",
       title: "Schedule Free Doorstep Pick-up",
       description: "We offer free pick up and drop for all services booked",
       icon: "🚙",
-      image: "/images/Landing_page_images/schedulefreedoorsteppick-up.png",
+      image: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Landing_page_images/schedulefreedoorsteppick-up.png",
     },
     {
       number: "3",
       title: "Track Your Car Service Real-Time",
       description: "We will take care of everything from here!",
       icon: "⚙️",
-      image: "/images/Landing_page_images/tackyourcarservicereal-time.png",
+      image: "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Landing_page_images/tackyourcarservicereal-time.png",
     },
   ];
 
@@ -37,7 +37,7 @@ const HowItWorks = () => {
               {index < steps.length - 1 && (
                 <div className="absolute left-5 top-10 w-0.5 h-full bg-gray-300 hidden md:block" style={{ height: 'calc(100% + 0.5rem)' }}></div>
               )}
-              
+
               <div className="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4 pb-5 md:pb-6">
                 {/* Number badge */}
                 <div className="flex-shrink-0">

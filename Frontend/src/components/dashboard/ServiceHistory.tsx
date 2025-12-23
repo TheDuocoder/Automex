@@ -32,6 +32,7 @@ const ServiceHistory = ({ userId }: ServiceHistoryProps = {}) => {
     const navigate = useNavigate();
     const { user } = useAuth();
     const isAdmin = user?.role?.name?.toLowerCase() === 'admin' || user?.role?.name?.toLowerCase() === 'super' || user?.is_superuser;
+    const isSuperAdmin = user?.role?.name?.toLowerCase() === 'super' || (user?.is_superuser && user?.role?.name?.toLowerCase() !== 'admin');
 
     const [cars, setCars] = useState<Car[]>([]);
     const [selectedCarId, setSelectedCarId] = useState<string>("");
@@ -291,7 +292,7 @@ const ServiceHistory = ({ userId }: ServiceHistoryProps = {}) => {
                     <div className="overflow-x-auto">
                         <table className="w-full border-collapse">
                             <thead>
-                                <tr style={{ 
+                                <tr style={{
                                     background: 'linear-gradient(to bottom, #f9fafb 0%, #f3f4f6 100%)',
                                     borderBottom: '2px solid #e5e7eb'
                                 }}>
@@ -307,7 +308,7 @@ const ServiceHistory = ({ userId }: ServiceHistoryProps = {}) => {
                                     <th className="px-6 py-4 text-center font-bold text-gray-700 text-sm">
                                         Vehicle Name
                                     </th>
-                                    {isAdmin && (
+                                    {isSuperAdmin && (
                                         <th className="px-6 py-4 text-center font-bold text-gray-700 text-sm">
                                             Actions
                                         </th>
@@ -316,7 +317,7 @@ const ServiceHistory = ({ userId }: ServiceHistoryProps = {}) => {
                             </thead>
                             <tbody>
                                 {allHistory.map((record, index) => (
-                                    <tr 
+                                    <tr
                                         key={record.id}
                                         className="border-b border-gray-200 hover:bg-gray-50 transition-colors"
                                     >
@@ -347,7 +348,7 @@ const ServiceHistory = ({ userId }: ServiceHistoryProps = {}) => {
                                                                 </div>
                                                             </div>
                                                             <DialogTrigger asChild>
-                                                                <button 
+                                                                <button
                                                                     className="ml-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
                                                                     aria-label="Close"
                                                                 >
@@ -356,11 +357,11 @@ const ServiceHistory = ({ userId }: ServiceHistoryProps = {}) => {
                                                             </DialogTrigger>
                                                         </div>
                                                     </div>
-                                                    
+
                                                     {/* Content Container */}
                                                     <div className="px-8 py-6 space-y-6">
                                                         {/* Vehicle Details Card */}
-                                                        <div 
+                                                        <div
                                                             className="bg-white rounded-2xl p-6 border border-gray-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
                                                             style={{ boxShadow: '0 4px 12px rgba(0,0,0,0.06)' }}
                                                         >
@@ -389,7 +390,7 @@ const ServiceHistory = ({ userId }: ServiceHistoryProps = {}) => {
                                                         </div>
 
                                                         {/* Service Date Card */}
-                                                        <div 
+                                                        <div
                                                             className="bg-white rounded-2xl p-6 border border-gray-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
                                                             style={{ boxShadow: '0 4px 12px rgba(0,0,0,0.06)' }}
                                                         >
@@ -408,7 +409,7 @@ const ServiceHistory = ({ userId }: ServiceHistoryProps = {}) => {
                                                         </div>
 
                                                         {/* Service Details Card */}
-                                                        <div 
+                                                        <div
                                                             className="bg-white rounded-2xl p-6 border border-gray-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
                                                             style={{ boxShadow: '0 4px 12px rgba(0,0,0,0.06)' }}
                                                         >
@@ -419,7 +420,7 @@ const ServiceHistory = ({ userId }: ServiceHistoryProps = {}) => {
                                                             {record.description ? (
                                                                 <div className="flex flex-wrap gap-2">
                                                                     {record.description.split(',').map((service, idx) => (
-                                                                        <span 
+                                                                        <span
                                                                             key={idx}
                                                                             className="inline-flex items-center px-4 py-2 bg-slate-100 text-slate-700 text-sm font-medium rounded-full"
                                                                         >
@@ -436,7 +437,7 @@ const ServiceHistory = ({ userId }: ServiceHistoryProps = {}) => {
 
                                                         {/* Owner Info Card (Admin only) */}
                                                         {isAdmin && record.car?.user && (
-                                                            <div 
+                                                            <div
                                                                 className="bg-blue-50 rounded-2xl p-6 border border-blue-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
                                                                 style={{ boxShadow: '0 4px 12px rgba(59, 130, 246, 0.1)' }}
                                                             >
@@ -447,7 +448,7 @@ const ServiceHistory = ({ userId }: ServiceHistoryProps = {}) => {
 
                                                         {/* Status Banner - Sticky at Bottom */}
                                                         <div className="sticky bottom-0 left-0 right-0 mt-6">
-                                                            <div 
+                                                            <div
                                                                 className="bg-emerald-50 rounded-xl p-5 border border-emerald-200 flex items-center justify-center gap-3"
                                                                 style={{ boxShadow: '0 -2px 10px rgba(16, 185, 129, 0.1)' }}
                                                             >
@@ -476,8 +477,8 @@ const ServiceHistory = ({ userId }: ServiceHistoryProps = {}) => {
                                             </div>
                                         </td>
 
-                                        {/* Actions (Admin only) */}
-                                        {isAdmin && (
+                                        {/* Actions (Super Admin only) */}
+                                        {isSuperAdmin && (
                                             <td className="px-6 py-4 text-center">
                                                 <div className="flex items-center justify-center gap-2">
                                                     <button

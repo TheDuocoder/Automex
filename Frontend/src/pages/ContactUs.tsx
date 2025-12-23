@@ -40,7 +40,7 @@ const ContactUs = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validate phone number before submission
     if (!validatePhone(formData.phone)) {
       toast({
@@ -71,11 +71,11 @@ const ContactUs = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    
+
     // For phone field, only allow numbers and limit to 10 digits
     if (name === "phone") {
       const numericValue = value.replace(/\D/g, "").slice(0, 10);
-      
+
       // If there's a first digit, it must be 6, 7, 8, or 9
       if (numericValue.length > 0 && !['6', '7', '8', '9'].includes(numericValue[0])) {
         // Don't update the field if first digit is invalid
@@ -84,7 +84,7 @@ const ContactUs = () => {
         }
         return;
       }
-      
+
       setFormData({
         ...formData,
         [name]: numericValue,
@@ -108,14 +108,14 @@ const ContactUs = () => {
   const handlePhoneInput = (e: React.FormEvent<HTMLInputElement>) => {
     const input = e.currentTarget;
     const value = input.value.replace(/\D/g, "");
-    
+
     // Prevent entering anything that doesn't start with 6, 7, 8, or 9
     if (value.length > 0 && !['6', '7', '8', '9'].includes(value[0])) {
       e.preventDefault();
       input.value = formData.phone;
       return;
     }
-    
+
     // Limit to 10 digits
     if (value.length > 10) {
       e.preventDefault();
@@ -133,40 +133,40 @@ const ContactUs = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+
       {/* Hero Section */}
       <section className="relative text-white pt-32 pb-12 overflow-hidden">
         {/* Dark Workshop Gradient Background - Deep Black & Charcoal */}
-        <div 
+        <div
           className="absolute inset-0 z-0"
           style={{
             background: 'radial-gradient(ellipse at 50% 50%, #1a1a1a 0%, #0d0d0d 35%, #000000 100%)',
           }}
         />
-        
+
         {/* Blurred Workshop Background with Enhanced Cinematic Depth */}
-        <div 
+        <div
           className="absolute inset-0 z-[1]"
           style={{
-            backgroundImage: 'url("/images/Landing_page_images/automexfrontpage3.jpg")',
+            backgroundImage: 'url("https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Landing_page_images/automexfrontpage3.jpg")',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             filter: 'blur(100px) brightness(0.18) contrast(0.65)',
             opacity: 0.25,
           }}
         />
-        
+
         {/* Soft Diffused Red Ambient Lighting */}
-        <div 
+        <div
           className="absolute inset-0 z-[2]"
           style={{
             background: 'radial-gradient(ellipse 1000px 700px at 45% 35%, rgba(139, 0, 0, 0.15) 0%, transparent 55%), radial-gradient(ellipse 800px 900px at 55% 65%, rgba(80, 0, 0, 0.12) 0%, transparent 50%)',
             filter: 'blur(120px)',
           }}
         />
-        
+
         {/* PREMIUM METALLIC GRADIENT LAYER - Car Showroom Aesthetic */}
-        <div 
+        <div
           className="absolute z-[2.5]"
           style={{
             top: '50%',
@@ -189,7 +189,7 @@ const ContactUs = () => {
               mixBlendMode: 'screen',
             }}
           />
-          
+
           {/* Secondary Gradient Layer - Depth & Warmth */}
           <div
             className="absolute"
@@ -207,7 +207,7 @@ const ContactUs = () => {
               mixBlendMode: 'multiply',
             }}
           />
-          
+
           {/* Tertiary Highlight Layer - Bright Red Center */}
           <div
             className="absolute"
@@ -225,7 +225,7 @@ const ContactUs = () => {
               mixBlendMode: 'screen',
             }}
           />
-          
+
           {/* Premium Depth Layer - Dark Automotive Base */}
           <div
             className="absolute"
@@ -244,9 +244,9 @@ const ContactUs = () => {
             }}
           />
         </div>
-        
+
         {/* Premium Animated Liquid Glass Orb - Physics-Based Floating with Collision Detection */}
-        <div 
+        <div
           className="absolute z-[3]"
           style={{
             top: '50%',
@@ -268,281 +268,281 @@ const ContactUs = () => {
                 animation: 'physicsFloat 32s cubic-bezier(0.42, 0, 0.58, 1) infinite',
               }}
             >
-          {/* Main Glassy Liquid Bulb with Surface Tension */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background: 'radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.18) 15%, rgba(205, 0, 0, 0.12) 35%, rgba(139, 0, 0, 0.08) 55%, transparent 85%)',
-              borderRadius: '50%',
-              filter: 'blur(45px)',
-              animation: 'liquidBulbMorph 10s ease-in-out infinite',
-              boxShadow: '0 0 120px rgba(205, 0, 0, 0.4), 0 0 80px rgba(255, 255, 255, 0.15), inset 0 0 60px rgba(255, 255, 255, 0.12)',
-            }}
-          />
-          
-          {/* Ultra-Glossy Inner Core */}
-          <div
-            className="absolute"
-            style={{
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: '280px',
-              height: '280px',
-              background: 'radial-gradient(circle at 38% 32%, rgba(255, 255, 255, 0.5) 0%, rgba(255, 200, 200, 0.3) 18%, rgba(255, 81, 47, 0.2) 40%, rgba(221, 36, 118, 0.12) 65%, transparent 100%)',
-              borderRadius: '50%',
-              filter: 'blur(25px)',
-              animation: 'liquidWobble 7s ease-in-out infinite',
-              boxShadow: '0 0 70px rgba(255, 81, 47, 0.5), inset 0 0 50px rgba(255, 255, 255, 0.25)',
-            }}
-          />
-          
-          {/* Molten Glass Gel Layer - Translucent Effect */}
-          <div
-            className="absolute"
-            style={{
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: '350px',
-              height: '350px',
-              background: 'radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.22) 0%, rgba(220, 220, 255, 0.15) 25%, rgba(205, 0, 0, 0.1) 50%, transparent 80%)',
-              borderRadius: '50%',
-              filter: 'blur(35px)',
-              animation: 'gelBreathe 9s ease-in-out infinite',
-              mixBlendMode: 'screen',
-            }}
-          />
-          
-          {/* Iridescent Light Refraction - Top Highlight */}
-          <div
-            className="absolute"
-            style={{
-              top: '22%',
-              left: '28%',
-              width: '130px',
-              height: '130px',
-              background: 'radial-gradient(circle, rgba(255, 255, 255, 0.7) 0%, rgba(200, 230, 255, 0.4) 25%, rgba(255, 255, 255, 0.15) 50%, transparent 75%)',
-              borderRadius: '50%',
-              filter: 'blur(18px)',
-              animation: 'iridescentShift 11s ease-in-out infinite',
-              mixBlendMode: 'overlay',
-            }}
-          />
-          
-          {/* Secondary Iridescent Reflection */}
-          <div
-            className="absolute"
-            style={{
-              bottom: '28%',
-              right: '25%',
-              width: '90px',
-              height: '90px',
-              background: 'radial-gradient(circle, rgba(255, 230, 230, 0.4) 0%, rgba(255, 200, 200, 0.2) 40%, transparent 70%)',
-              borderRadius: '50%',
-              filter: 'blur(22px)',
-              animation: 'secondaryRefraction 13s ease-in-out infinite',
-              mixBlendMode: 'screen',
-            }}
-          />
-          
-          {/* Crimson Neon Glow - Red to Deep Red Gradient */}
-          <div
-            className="absolute"
-            style={{
-              bottom: '20%',
-              right: '28%',
-              width: '140px',
-              height: '140px',
-              background: 'radial-gradient(circle, rgba(220, 20, 60, 0.3) 0%, rgba(205, 0, 0, 0.2) 30%, rgba(139, 0, 0, 0.12) 60%, transparent 100%)',
-              borderRadius: '50%',
-              filter: 'blur(40px)',
-              animation: 'crimsonPulse 8s ease-in-out infinite',
-            }}
-          />
-          
-          {/* Faint Red Neon Accent - Automotive Theme */}
-          <div
-            className="absolute"
-            style={{
-              top: '35%',
-              right: '20%',
-              width: '100px',
-              height: '100px',
-              background: 'radial-gradient(circle, rgba(255, 0, 0, 0.25) 0%, rgba(205, 0, 0, 0.15) 40%, transparent 75%)',
-              borderRadius: '50%',
-              filter: 'blur(30px)',
-              animation: 'neonAccent 12s ease-in-out infinite',
-            }}
-          />
-          
-          {/* Ultra-Glossy Edge with Light Refraction */}
-          <div
-            className="absolute inset-0"
-            style={{
-              borderRadius: '50%',
-              border: '1.5px solid rgba(255, 255, 255, 0.25)',
-              filter: 'blur(2px)',
-              animation: 'glossyEdge 6s ease-in-out infinite',
-              boxShadow: '0 0 50px rgba(205, 0, 0, 0.6), 0 0 30px rgba(255, 255, 255, 0.3), inset 0 0 40px rgba(255, 255, 255, 0.2)',
-            }}
-          />
-          
-          {/* Surface Tension Shimmer */}
-          <div
-            className="absolute"
-            style={{
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: '320px',
-              height: '320px',
-              borderRadius: '50%',
-              background: 'conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(255, 255, 255, 0.08) 90deg, transparent 180deg, rgba(255, 255, 255, 0.08) 270deg, transparent 360deg)',
-              filter: 'blur(15px)',
-              animation: 'surfaceShimmer 15s linear infinite',
-              mixBlendMode: 'overlay',
-            }}
-          />
-          
-          {/* PREMIUM NEON RED HALO - Sharp Outer Ring */}
-          <div
-            className="absolute"
-            style={{
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: '460px',
-              height: '460px',
-              borderRadius: '50%',
-              border: '2px solid rgba(255, 0, 0, 0.6)',
-              filter: 'blur(1px)',
-              animation: 'neonHaloPulse 5s ease-in-out infinite',
-              boxShadow: `
+              {/* Main Glassy Liquid Bulb with Surface Tension */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  background: 'radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.18) 15%, rgba(205, 0, 0, 0.12) 35%, rgba(139, 0, 0, 0.08) 55%, transparent 85%)',
+                  borderRadius: '50%',
+                  filter: 'blur(45px)',
+                  animation: 'liquidBulbMorph 10s ease-in-out infinite',
+                  boxShadow: '0 0 120px rgba(205, 0, 0, 0.4), 0 0 80px rgba(255, 255, 255, 0.15), inset 0 0 60px rgba(255, 255, 255, 0.12)',
+                }}
+              />
+
+              {/* Ultra-Glossy Inner Core */}
+              <div
+                className="absolute"
+                style={{
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: '280px',
+                  height: '280px',
+                  background: 'radial-gradient(circle at 38% 32%, rgba(255, 255, 255, 0.5) 0%, rgba(255, 200, 200, 0.3) 18%, rgba(255, 81, 47, 0.2) 40%, rgba(221, 36, 118, 0.12) 65%, transparent 100%)',
+                  borderRadius: '50%',
+                  filter: 'blur(25px)',
+                  animation: 'liquidWobble 7s ease-in-out infinite',
+                  boxShadow: '0 0 70px rgba(255, 81, 47, 0.5), inset 0 0 50px rgba(255, 255, 255, 0.25)',
+                }}
+              />
+
+              {/* Molten Glass Gel Layer - Translucent Effect */}
+              <div
+                className="absolute"
+                style={{
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: '350px',
+                  height: '350px',
+                  background: 'radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.22) 0%, rgba(220, 220, 255, 0.15) 25%, rgba(205, 0, 0, 0.1) 50%, transparent 80%)',
+                  borderRadius: '50%',
+                  filter: 'blur(35px)',
+                  animation: 'gelBreathe 9s ease-in-out infinite',
+                  mixBlendMode: 'screen',
+                }}
+              />
+
+              {/* Iridescent Light Refraction - Top Highlight */}
+              <div
+                className="absolute"
+                style={{
+                  top: '22%',
+                  left: '28%',
+                  width: '130px',
+                  height: '130px',
+                  background: 'radial-gradient(circle, rgba(255, 255, 255, 0.7) 0%, rgba(200, 230, 255, 0.4) 25%, rgba(255, 255, 255, 0.15) 50%, transparent 75%)',
+                  borderRadius: '50%',
+                  filter: 'blur(18px)',
+                  animation: 'iridescentShift 11s ease-in-out infinite',
+                  mixBlendMode: 'overlay',
+                }}
+              />
+
+              {/* Secondary Iridescent Reflection */}
+              <div
+                className="absolute"
+                style={{
+                  bottom: '28%',
+                  right: '25%',
+                  width: '90px',
+                  height: '90px',
+                  background: 'radial-gradient(circle, rgba(255, 230, 230, 0.4) 0%, rgba(255, 200, 200, 0.2) 40%, transparent 70%)',
+                  borderRadius: '50%',
+                  filter: 'blur(22px)',
+                  animation: 'secondaryRefraction 13s ease-in-out infinite',
+                  mixBlendMode: 'screen',
+                }}
+              />
+
+              {/* Crimson Neon Glow - Red to Deep Red Gradient */}
+              <div
+                className="absolute"
+                style={{
+                  bottom: '20%',
+                  right: '28%',
+                  width: '140px',
+                  height: '140px',
+                  background: 'radial-gradient(circle, rgba(220, 20, 60, 0.3) 0%, rgba(205, 0, 0, 0.2) 30%, rgba(139, 0, 0, 0.12) 60%, transparent 100%)',
+                  borderRadius: '50%',
+                  filter: 'blur(40px)',
+                  animation: 'crimsonPulse 8s ease-in-out infinite',
+                }}
+              />
+
+              {/* Faint Red Neon Accent - Automotive Theme */}
+              <div
+                className="absolute"
+                style={{
+                  top: '35%',
+                  right: '20%',
+                  width: '100px',
+                  height: '100px',
+                  background: 'radial-gradient(circle, rgba(255, 0, 0, 0.25) 0%, rgba(205, 0, 0, 0.15) 40%, transparent 75%)',
+                  borderRadius: '50%',
+                  filter: 'blur(30px)',
+                  animation: 'neonAccent 12s ease-in-out infinite',
+                }}
+              />
+
+              {/* Ultra-Glossy Edge with Light Refraction */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  borderRadius: '50%',
+                  border: '1.5px solid rgba(255, 255, 255, 0.25)',
+                  filter: 'blur(2px)',
+                  animation: 'glossyEdge 6s ease-in-out infinite',
+                  boxShadow: '0 0 50px rgba(205, 0, 0, 0.6), 0 0 30px rgba(255, 255, 255, 0.3), inset 0 0 40px rgba(255, 255, 255, 0.2)',
+                }}
+              />
+
+              {/* Surface Tension Shimmer */}
+              <div
+                className="absolute"
+                style={{
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: '320px',
+                  height: '320px',
+                  borderRadius: '50%',
+                  background: 'conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(255, 255, 255, 0.08) 90deg, transparent 180deg, rgba(255, 255, 255, 0.08) 270deg, transparent 360deg)',
+                  filter: 'blur(15px)',
+                  animation: 'surfaceShimmer 15s linear infinite',
+                  mixBlendMode: 'overlay',
+                }}
+              />
+
+              {/* PREMIUM NEON RED HALO - Sharp Outer Ring */}
+              <div
+                className="absolute"
+                style={{
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: '460px',
+                  height: '460px',
+                  borderRadius: '50%',
+                  border: '2px solid rgba(255, 0, 0, 0.6)',
+                  filter: 'blur(1px)',
+                  animation: 'neonHaloPulse 5s ease-in-out infinite',
+                  boxShadow: `
                 0 0 20px rgba(255, 0, 0, 0.8),
                 0 0 40px rgba(220, 20, 60, 0.6),
                 0 0 60px rgba(205, 0, 0, 0.4),
                 inset 0 0 20px rgba(255, 0, 0, 0.3)
               `,
-            }}
-          />
-          
-          {/* NEON RED HALO - Secondary Glow Layer */}
-          <div
-            className="absolute"
-            style={{
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: '470px',
-              height: '470px',
-              borderRadius: '50%',
-              background: 'radial-gradient(circle, transparent 48%, rgba(255, 0, 0, 0.15) 49%, rgba(220, 20, 60, 0.25) 50%, rgba(205, 0, 0, 0.1) 52%, transparent 54%)',
-              filter: 'blur(3px)',
-              animation: 'neonHaloPulse 5s ease-in-out infinite 0.5s',
-            }}
-          />
-          
-          {/* METALLIC SPECULAR HIGHLIGHTS - Top Right */}
-          <div
-            className="absolute"
-            style={{
-              top: '12%',
-              right: '18%',
-              width: '50px',
-              height: '50px',
-              background: 'radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(192, 192, 192, 0.6) 30%, transparent 70%)',
-              borderRadius: '50%',
-              filter: 'blur(4px)',
-              animation: 'metallicSpecular1 7s ease-in-out infinite',
-              mixBlendMode: 'overlay',
-            }}
-          />
-          
-          {/* METALLIC SPECULAR HIGHLIGHTS - Left Edge */}
-          <div
-            className="absolute"
-            style={{
-              top: '40%',
-              left: '8%',
-              width: '35px',
-              height: '35px',
-              background: 'radial-gradient(circle, rgba(192, 192, 192, 0.8) 0%, rgba(255, 255, 255, 0.5) 40%, transparent 75%)',
-              borderRadius: '50%',
-              filter: 'blur(3px)',
-              animation: 'metallicSpecular2 8s ease-in-out infinite',
-              mixBlendMode: 'screen',
-            }}
-          />
-          
-          {/* METALLIC SPECULAR HIGHLIGHTS - Bottom Right Arc */}
-          <div
-            className="absolute"
-            style={{
-              bottom: '15%',
-              right: '12%',
-              width: '60px',
-              height: '30px',
-              background: 'linear-gradient(90deg, transparent 0%, rgba(192, 192, 192, 0.7) 50%, rgba(255, 255, 255, 0.5) 70%, transparent 100%)',
-              borderRadius: '50%',
-              filter: 'blur(5px)',
-              animation: 'metallicSpecular3 9s ease-in-out infinite',
-              mixBlendMode: 'overlay',
-              transform: 'rotate(-25deg)',
-            }}
-          />
-          
-          {/* SHARP NEON RED ACCENT - AMG Style */}
-          <div
-            className="absolute"
-            style={{
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: '455px',
-              height: '455px',
-              borderRadius: '50%',
-              border: '1px solid rgba(255, 0, 0, 0.4)',
-              filter: 'blur(0.5px)',
-              animation: 'sharpNeonEdge 4s ease-in-out infinite',
-              boxShadow: `
+                }}
+              />
+
+              {/* NEON RED HALO - Secondary Glow Layer */}
+              <div
+                className="absolute"
+                style={{
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: '470px',
+                  height: '470px',
+                  borderRadius: '50%',
+                  background: 'radial-gradient(circle, transparent 48%, rgba(255, 0, 0, 0.15) 49%, rgba(220, 20, 60, 0.25) 50%, rgba(205, 0, 0, 0.1) 52%, transparent 54%)',
+                  filter: 'blur(3px)',
+                  animation: 'neonHaloPulse 5s ease-in-out infinite 0.5s',
+                }}
+              />
+
+              {/* METALLIC SPECULAR HIGHLIGHTS - Top Right */}
+              <div
+                className="absolute"
+                style={{
+                  top: '12%',
+                  right: '18%',
+                  width: '50px',
+                  height: '50px',
+                  background: 'radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(192, 192, 192, 0.6) 30%, transparent 70%)',
+                  borderRadius: '50%',
+                  filter: 'blur(4px)',
+                  animation: 'metallicSpecular1 7s ease-in-out infinite',
+                  mixBlendMode: 'overlay',
+                }}
+              />
+
+              {/* METALLIC SPECULAR HIGHLIGHTS - Left Edge */}
+              <div
+                className="absolute"
+                style={{
+                  top: '40%',
+                  left: '8%',
+                  width: '35px',
+                  height: '35px',
+                  background: 'radial-gradient(circle, rgba(192, 192, 192, 0.8) 0%, rgba(255, 255, 255, 0.5) 40%, transparent 75%)',
+                  borderRadius: '50%',
+                  filter: 'blur(3px)',
+                  animation: 'metallicSpecular2 8s ease-in-out infinite',
+                  mixBlendMode: 'screen',
+                }}
+              />
+
+              {/* METALLIC SPECULAR HIGHLIGHTS - Bottom Right Arc */}
+              <div
+                className="absolute"
+                style={{
+                  bottom: '15%',
+                  right: '12%',
+                  width: '60px',
+                  height: '30px',
+                  background: 'linear-gradient(90deg, transparent 0%, rgba(192, 192, 192, 0.7) 50%, rgba(255, 255, 255, 0.5) 70%, transparent 100%)',
+                  borderRadius: '50%',
+                  filter: 'blur(5px)',
+                  animation: 'metallicSpecular3 9s ease-in-out infinite',
+                  mixBlendMode: 'overlay',
+                  transform: 'rotate(-25deg)',
+                }}
+              />
+
+              {/* SHARP NEON RED ACCENT - AMG Style */}
+              <div
+                className="absolute"
+                style={{
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: '455px',
+                  height: '455px',
+                  borderRadius: '50%',
+                  border: '1px solid rgba(255, 0, 0, 0.4)',
+                  filter: 'blur(0.5px)',
+                  animation: 'sharpNeonEdge 4s ease-in-out infinite',
+                  boxShadow: `
                 0 0 10px rgba(255, 0, 0, 0.9),
                 0 0 20px rgba(220, 20, 60, 0.7),
                 0 0 30px rgba(205, 0, 0, 0.5)
               `,
-            }}
-          />
-          
-          {/* METALLIC CHROME REFLECTION - Top Arc */}
-          <div
-            className="absolute"
-            style={{
-              top: '8%',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              width: '180px',
-              height: '40px',
-              background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.15) 20%, rgba(192, 192, 192, 0.35) 50%, rgba(255, 255, 255, 0.15) 80%, transparent 100%)',
-              borderRadius: '50%',
-              filter: 'blur(8px)',
-              animation: 'chromeReflection 10s ease-in-out infinite',
-              mixBlendMode: 'overlay',
-            }}
-          />
-          
-          {/* Collision Deformation Layer - Squash & Stretch Effect */}
-          <div
-            className="absolute inset-0"
-            style={{
-              animation: 'collisionDeform 32s ease-in-out infinite',
-            }}
-          />
+                }}
+              />
+
+              {/* METALLIC CHROME REFLECTION - Top Arc */}
+              <div
+                className="absolute"
+                style={{
+                  top: '8%',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  width: '180px',
+                  height: '40px',
+                  background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.15) 20%, rgba(192, 192, 192, 0.35) 50%, rgba(255, 255, 255, 0.15) 80%, transparent 100%)',
+                  borderRadius: '50%',
+                  filter: 'blur(8px)',
+                  animation: 'chromeReflection 10s ease-in-out infinite',
+                  mixBlendMode: 'overlay',
+                }}
+              />
+
+              {/* Collision Deformation Layer - Squash & Stretch Effect */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  animation: 'collisionDeform 32s ease-in-out infinite',
+                }}
+              />
             </div>
           </div>
         </div>
-        
+
         {/* RED NEBULA FOG - Atmospheric Volume Around Orb */}
-        <div 
+        <div
           className="absolute z-[3.5]"
           style={{
             top: '50%',
@@ -564,7 +564,7 @@ const ContactUs = () => {
               mixBlendMode: 'screen',
             }}
           />
-          
+
           {/* Secondary Nebula Layer - Offset */}
           <div
             className="absolute"
@@ -581,7 +581,7 @@ const ContactUs = () => {
               mixBlendMode: 'screen',
             }}
           />
-          
+
           {/* Tertiary Depth Fog */}
           <div
             className="absolute"
@@ -599,9 +599,9 @@ const ContactUs = () => {
             }}
           />
         </div>
-        
+
         {/* CINEMATIC LIGHT SWEEP - Glossy Car Hood Reflection */}
-        <div 
+        <div
           className="absolute inset-0 z-[4] overflow-hidden"
           style={{
             pointerEvents: 'none',
@@ -619,7 +619,7 @@ const ContactUs = () => {
               opacity: 0.8,
             }}
           />
-          
+
           {/* Secondary Light Sweep - Offset for Depth */}
           <div
             className="absolute top-0 left-0 h-full"
@@ -632,7 +632,7 @@ const ContactUs = () => {
               opacity: 0.6,
             }}
           />
-          
+
           {/* Tertiary Subtle Sweep - Additional Motion Layer */}
           <div
             className="absolute top-0 left-0 h-full"
@@ -646,36 +646,36 @@ const ContactUs = () => {
             }}
           />
         </div>
-        
+
         {/* Cinematic Shallow Depth of Field - Top Blur */}
-        <div 
+        <div
           className="absolute inset-x-0 top-0 h-56 z-[4]"
           style={{
             background: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%)',
             filter: 'blur(15px)',
           }}
         />
-        
+
         {/* Cinematic Shallow Depth of Field - Bottom Blur */}
-        <div 
+        <div
           className="absolute inset-x-0 bottom-0 h-56 z-[4]"
           style={{
             background: 'linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%)',
             filter: 'blur(15px)',
           }}
         />
-        
+
         {/* Premium Vignette for Depth */}
-        <div 
+        <div
           className="absolute inset-0 z-[5]"
           style={{
             background: 'radial-gradient(ellipse at center, transparent 0%, transparent 40%, rgba(0, 0, 0, 0.4) 80%, rgba(0, 0, 0, 0.7) 100%)',
             pointerEvents: 'none',
           }}
         />
-        
+
         {/* METALLIC PARTICLE SPARKS - Ultra Subtle Apple/Tesla Detail */}
-        <div 
+        <div
           className="absolute inset-0 z-[6] overflow-hidden"
           style={{
             pointerEvents: 'none',
@@ -712,7 +712,7 @@ const ContactUs = () => {
               boxShadow: '0 0 3px rgba(192, 192, 192, 0.2)',
             }}
           />
-          
+
           {/* Particle Group 2 - Top Right Quadrant */}
           <div
             className="absolute"
@@ -744,7 +744,7 @@ const ContactUs = () => {
               boxShadow: '0 0 2px rgba(255, 255, 255, 0.2)',
             }}
           />
-          
+
           {/* Particle Group 3 - Center Area */}
           <div
             className="absolute"
@@ -776,7 +776,7 @@ const ContactUs = () => {
               boxShadow: '0 0 4px rgba(255, 255, 255, 0.25)',
             }}
           />
-          
+
           {/* Particle Group 4 - Bottom Left Quadrant */}
           <div
             className="absolute"
@@ -808,7 +808,7 @@ const ContactUs = () => {
               boxShadow: '0 0 3px rgba(255, 255, 255, 0.2)',
             }}
           />
-          
+
           {/* Particle Group 5 - Bottom Right Quadrant */}
           <div
             className="absolute"
@@ -841,10 +841,10 @@ const ContactUs = () => {
             }}
           />
         </div>
-        
+
         {/* Content */}
         <div className="container mx-auto px-4 sm:px-6 md:px-8 max-w-4xl relative z-[10] flex flex-col justify-center items-center text-center">
-          <h1 
+          <h1
             className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-3"
             style={{
               animation: 'fadeInUp 0.8s ease-out forwards',
@@ -854,19 +854,19 @@ const ContactUs = () => {
           >
             Get In Touch
           </h1>
-          
+
           {/* White Line Under Title */}
-          <div 
+          <div
             className="w-32 h-1 bg-white mb-6"
             style={{
               animation: 'fadeInUp 0.8s ease-out 0.2s forwards',
               opacity: 0,
             }}
           />
-          
-          <p 
+
+          <p
             className="text-base sm:text-lg text-gray-300 max-w-2xl leading-relaxed"
-            style={{ 
+            style={{
               animation: 'fadeInUp 0.8s ease-out 0.4s forwards',
               opacity: 0,
               fontWeight: '300'
@@ -874,9 +874,9 @@ const ContactUs = () => {
           >
             Have questions about our services? We're here to help.
           </p>
-          <p 
+          <p
             className="text-base sm:text-lg text-gray-300 max-w-2xl mt-2"
-            style={{ 
+            style={{
               animation: 'fadeInUp 0.8s ease-out 0.5s forwards',
               opacity: 0,
               fontWeight: '300'
@@ -885,7 +885,7 @@ const ContactUs = () => {
             Reach out to us, and our team will get back to you as soon as possible.
           </p>
         </div>
-        
+
         {/* CSS Keyframes */}
         <style>{`
           @keyframes fadeInUp {
@@ -1499,17 +1499,17 @@ const ContactUs = () => {
             animation: iconBounce 0.6s ease-in-out infinite;
           }
         `}</style>
-        
+
         {/* Minimal Wave Transition */}
         <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none" style={{ height: '40px' }}>
-          <svg 
-            className="relative block w-full" 
+          <svg
+            className="relative block w-full"
             style={{ height: '40px' }}
-            viewBox="0 0 1200 120" 
+            viewBox="0 0 1200 120"
             preserveAspectRatio="none"
           >
-            <path 
-              d="M0,60 C300,100 900,20 1200,60 L1200,120 L0,120 Z" 
+            <path
+              d="M0,60 C300,100 900,20 1200,60 L1200,120 L0,120 Z"
               style={{ fill: '#ffffff' }}
             />
           </svg>
@@ -1522,7 +1522,7 @@ const ContactUs = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-12">
             {/* Contact Information Cards */}
             {/* Phone Card */}
-            <Card 
+            <Card
               className="transition-all duration-500 cursor-pointer group border-0 bg-white hover:bg-gray-50/50"
               style={{
                 boxShadow: '0 4px 20px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04)',
@@ -1540,7 +1540,7 @@ const ContactUs = () => {
             >
               <CardContent className="p-8">
                 <div className="flex flex-col items-start">
-                  <div 
+                  <div
                     className="w-16 h-16 rounded-full flex items-center justify-center transition-all duration-500 group-hover:scale-110 relative"
                     style={{
                       background: 'linear-gradient(135deg, #E53935 0%, #D81B60 50%, #8E24AA 100%)',
@@ -1548,7 +1548,7 @@ const ContactUs = () => {
                     }}
                   >
                     {/* Glow effect */}
-                    <div 
+                    <div
                       className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                       style={{
                         background: 'linear-gradient(135deg, #E53935 0%, #D81B60 50%, #8E24AA 100%)',
@@ -1566,16 +1566,16 @@ const ContactUs = () => {
                     Call us for immediate assistance
                   </p>
                   <div className="space-y-2.5 mt-6">
-                    <a 
-                      href="tel:+918249614004" 
-                      className="font-semibold block transition-all duration-300 hover:translate-x-1 text-gray-900 hover:text-[#E53935]" 
+                    <a
+                      href="tel:+918249614004"
+                      className="font-semibold block transition-all duration-300 hover:translate-x-1 text-gray-900 hover:text-[#E53935]"
                       style={{ fontSize: '16px', fontWeight: 600, letterSpacing: '-0.01em' }}
                     >
                       +91 8249614004
                     </a>
-                    <a 
-                      href="tel:+919776433334" 
-                      className="font-semibold block transition-all duration-300 hover:translate-x-1 text-gray-900 hover:text-[#E53935]" 
+                    <a
+                      href="tel:+919776433334"
+                      className="font-semibold block transition-all duration-300 hover:translate-x-1 text-gray-900 hover:text-[#E53935]"
                       style={{ fontSize: '16px', fontWeight: 600, letterSpacing: '-0.01em' }}
                     >
                       +91 9776433334
@@ -1586,7 +1586,7 @@ const ContactUs = () => {
             </Card>
 
             {/* Email Card */}
-            <Card 
+            <Card
               className="transition-all duration-500 cursor-pointer group border-0 bg-white hover:bg-gray-50/50"
               style={{
                 boxShadow: '0 4px 20px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04)',
@@ -1604,7 +1604,7 @@ const ContactUs = () => {
             >
               <CardContent className="p-8">
                 <div className="flex flex-col items-start">
-                  <div 
+                  <div
                     className="w-16 h-16 rounded-full flex items-center justify-center transition-all duration-500 group-hover:scale-110 relative"
                     style={{
                       background: 'linear-gradient(135deg, #E53935 0%, #D81B60 50%, #8E24AA 100%)',
@@ -1612,7 +1612,7 @@ const ContactUs = () => {
                     }}
                   >
                     {/* Glow effect */}
-                    <div 
+                    <div
                       className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                       style={{
                         background: 'linear-gradient(135deg, #E53935 0%, #D81B60 50%, #8E24AA 100%)',
@@ -1629,9 +1629,9 @@ const ContactUs = () => {
                   <p className="mt-2 text-gray-500" style={{ fontSize: '14px', lineHeight: '1.6', fontWeight: 400 }}>
                     Send us an email anytime
                   </p>
-                  <a 
-                    href="mailto:sales@automex.in" 
-                    className="font-semibold transition-all duration-300 hover:translate-x-1 mt-6 text-gray-900 hover:text-[#E53935] break-all" 
+                  <a
+                    href="mailto:sales@automex.in"
+                    className="font-semibold transition-all duration-300 hover:translate-x-1 mt-6 text-gray-900 hover:text-[#E53935] break-all"
                     style={{ fontSize: '16px', fontWeight: 600, letterSpacing: '-0.01em' }}
                   >
                     sales@automex.in
@@ -1641,7 +1641,7 @@ const ContactUs = () => {
             </Card>
 
             {/* Location Card */}
-            <Card 
+            <Card
               className="transition-all duration-500 cursor-pointer group border-0 bg-white hover:bg-gray-50/50"
               style={{
                 boxShadow: '0 4px 20px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04)',
@@ -1659,7 +1659,7 @@ const ContactUs = () => {
             >
               <CardContent className="p-8">
                 <div className="flex flex-col items-start">
-                  <div 
+                  <div
                     className="w-16 h-16 rounded-full flex items-center justify-center transition-all duration-500 group-hover:scale-110 relative"
                     style={{
                       background: 'linear-gradient(135deg, #E53935 0%, #D81B60 50%, #8E24AA 100%)',
@@ -1667,7 +1667,7 @@ const ContactUs = () => {
                     }}
                   >
                     {/* Glow effect */}
-                    <div 
+                    <div
                       className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                       style={{
                         background: 'linear-gradient(135deg, #E53935 0%, #D81B60 50%, #8E24AA 100%)',
@@ -1702,7 +1702,7 @@ const ContactUs = () => {
           {/* Contact Form and Additional Info */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12">
             {/* Contact Form */}
-            <div 
+            <div
               className="p-10 rounded-3xl"
               style={{
                 background: 'linear-gradient(to bottom, #ffffff, #fafafa)',
@@ -1719,8 +1719,8 @@ const ContactUs = () => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="relative">
                   <div className="relative group">
-                    <User 
-                      className="absolute left-5 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-300" 
+                    <User
+                      className="absolute left-5 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-300"
                       style={{ color: focusedField === 'name' ? '#E53935' : '#9CA3AF' }}
                     />
                     <Input
@@ -1738,8 +1738,8 @@ const ContactUs = () => {
                         borderWidth: '1.5px',
                         borderColor: focusedField === 'name' ? '#E53935' : '#E5E7EB',
                         borderRadius: '16px',
-                        boxShadow: focusedField === 'name' 
-                          ? '0 0 0 4px rgba(229, 57, 53, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05)' 
+                        boxShadow: focusedField === 'name'
+                          ? '0 0 0 4px rgba(229, 57, 53, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05)'
                           : '0 2px 8px rgba(0, 0, 0, 0.04)',
                         fontSize: '15px',
                         fontWeight: 500
@@ -1751,8 +1751,8 @@ const ContactUs = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div className="relative">
                     <div className="relative group">
-                      <Mail 
-                        className="absolute left-5 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-300" 
+                      <Mail
+                        className="absolute left-5 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-300"
                         style={{ color: focusedField === 'email' ? '#E53935' : '#9CA3AF' }}
                       />
                       <Input
@@ -1770,8 +1770,8 @@ const ContactUs = () => {
                           borderWidth: '1.5px',
                           borderColor: focusedField === 'email' ? '#E53935' : '#E5E7EB',
                           borderRadius: '16px',
-                          boxShadow: focusedField === 'email' 
-                            ? '0 0 0 4px rgba(229, 57, 53, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05)' 
+                          boxShadow: focusedField === 'email'
+                            ? '0 0 0 4px rgba(229, 57, 53, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05)'
                             : '0 2px 8px rgba(0, 0, 0, 0.04)',
                           fontSize: '15px',
                           fontWeight: 500
@@ -1781,8 +1781,8 @@ const ContactUs = () => {
                   </div>
                   <div className="relative">
                     <div className="relative group">
-                      <Phone 
-                        className="absolute left-5 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-300" 
+                      <Phone
+                        className="absolute left-5 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-300"
                         style={{ color: phoneError ? '#EF4444' : focusedField === 'phone' ? '#E53935' : '#9CA3AF' }}
                       />
                       <Input
@@ -1808,8 +1808,8 @@ const ContactUs = () => {
                           borderRadius: '16px',
                           boxShadow: phoneError
                             ? '0 0 0 4px rgba(239, 68, 68, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05)'
-                            : focusedField === 'phone' 
-                              ? '0 0 0 4px rgba(229, 57, 53, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05)' 
+                            : focusedField === 'phone'
+                              ? '0 0 0 4px rgba(229, 57, 53, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05)'
                               : '0 2px 8px rgba(0, 0, 0, 0.04)',
                           fontSize: '15px',
                           fontWeight: 500
@@ -1826,8 +1826,8 @@ const ContactUs = () => {
 
                 <div className="relative">
                   <div className="relative group">
-                    <MessageSquare 
-                      className="absolute left-5 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-300" 
+                    <MessageSquare
+                      className="absolute left-5 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors duration-300"
                       style={{ color: focusedField === 'subject' ? '#E53935' : '#9CA3AF' }}
                     />
                     <Input
@@ -1845,8 +1845,8 @@ const ContactUs = () => {
                         borderWidth: '1.5px',
                         borderColor: focusedField === 'subject' ? '#E53935' : '#E5E7EB',
                         borderRadius: '16px',
-                        boxShadow: focusedField === 'subject' 
-                          ? '0 0 0 4px rgba(229, 57, 53, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05)' 
+                        boxShadow: focusedField === 'subject'
+                          ? '0 0 0 4px rgba(229, 57, 53, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05)'
                           : '0 2px 8px rgba(0, 0, 0, 0.04)',
                         fontSize: '15px',
                         fontWeight: 500
@@ -1870,8 +1870,8 @@ const ContactUs = () => {
                       borderWidth: '1.5px',
                       borderColor: focusedField === 'message' ? '#E53935' : '#E5E7EB',
                       borderRadius: '16px',
-                      boxShadow: focusedField === 'message' 
-                        ? '0 0 0 4px rgba(229, 57, 53, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05)' 
+                      boxShadow: focusedField === 'message'
+                        ? '0 0 0 4px rgba(229, 57, 53, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05)'
                         : '0 2px 8px rgba(0, 0, 0, 0.04)',
                       fontSize: '15px',
                       fontWeight: 500,
@@ -1880,8 +1880,8 @@ const ContactUs = () => {
                   />
                 </div>
 
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   className="send-message-btn"
                 >
                   <div className="svg-wrapper">
@@ -1893,7 +1893,7 @@ const ContactUs = () => {
             </div>
 
             {/* Additional Information */}
-            <div 
+            <div
               className="p-10 sm:p-12 rounded-3xl"
               style={{
                 backgroundColor: '#1a1a1a',
@@ -1904,12 +1904,12 @@ const ContactUs = () => {
               <h2 className="text-3xl sm:text-4xl font-bold mb-12 text-white" style={{ fontSize: '2.25rem', letterSpacing: '-0.03em', fontWeight: 700 }}>
                 Why Choose AutoMex?
               </h2>
-              
+
               {/* Three Column Layout */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
                 {/* Business Hours */}
                 <div className="flex flex-col items-start">
-                  <div 
+                  <div
                     className="w-16 h-16 rounded-full flex items-center justify-center mb-6 transition-all duration-500 hover:scale-110 relative group"
                     style={{
                       background: 'linear-gradient(135deg, #E53935 0%, #D81B60 50%, #8E24AA 100%)',
@@ -1917,7 +1917,7 @@ const ContactUs = () => {
                     }}
                   >
                     {/* Glow effect */}
-                    <div 
+                    <div
                       className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                       style={{
                         background: 'linear-gradient(135deg, #E53935 0%, #D81B60 50%, #8E24AA 100%)',
@@ -1942,7 +1942,7 @@ const ContactUs = () => {
 
                 {/* Expertise */}
                 <div className="flex flex-col items-start">
-                  <div 
+                  <div
                     className="w-16 h-16 rounded-full flex items-center justify-center mb-6 transition-all duration-500 hover:scale-110 relative group"
                     style={{
                       background: 'linear-gradient(135deg, #E53935 0%, #D81B60 50%, #8E24AA 100%)',
@@ -1950,7 +1950,7 @@ const ContactUs = () => {
                     }}
                   >
                     {/* Glow effect */}
-                    <div 
+                    <div
                       className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                       style={{
                         background: 'linear-gradient(135deg, #E53935 0%, #D81B60 50%, #8E24AA 100%)',
@@ -1975,7 +1975,7 @@ const ContactUs = () => {
 
                 {/* Service Guarantee */}
                 <div className="flex flex-col items-start">
-                  <div 
+                  <div
                     className="w-16 h-16 rounded-full flex items-center justify-center mb-6 transition-all duration-500 hover:scale-110 relative group"
                     style={{
                       background: 'linear-gradient(135deg, #E53935 0%, #D81B60 50%, #8E24AA 100%)',
@@ -1983,7 +1983,7 @@ const ContactUs = () => {
                     }}
                   >
                     {/* Glow effect */}
-                    <div 
+                    <div
                       className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                       style={{
                         background: 'linear-gradient(135deg, #E53935 0%, #D81B60 50%, #8E24AA 100%)',
@@ -2008,7 +2008,7 @@ const ContactUs = () => {
               </div>
 
               {/* Services Card */}
-              <Card 
+              <Card
                 className="bg-white border-0"
                 style={{
                   boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
@@ -2084,7 +2084,7 @@ const ContactUs = () => {
       </section>
 
       <Footer />
-      
+
       {/* CSS Animations */}
       <style>{`
         @keyframes fadeInUp {

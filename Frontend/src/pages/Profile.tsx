@@ -520,7 +520,7 @@ const Profile = () => {
             className="focus:outline-none focus:ring-2 focus:ring-white/20 rounded-lg"
           >
             <img
-              src="/images/Automex_icon/AUTOMEX_logo.png"
+              src="https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Automex_icon/AUTOMEX_logo.png"
               alt="Automex"
               className="h-36 w-auto transform hover:scale-105 transition-transform duration-300 cursor-pointer"
             />
@@ -828,7 +828,7 @@ const Profile = () => {
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
                 <Card className="shadow-lg border-none h-full">
-                  <CardHeader 
+                  <CardHeader
                     className="border-b pb-2 pt-3"
                     style={{
                       background: 'linear-gradient(90deg, #a67ba9 0%, #c8a2c8 50%, #e6b8c0 100%)',
@@ -886,7 +886,7 @@ const Profile = () => {
                 transition={{ duration: 0.6, delay: 0.3 }}
               >
                 <Card className="shadow-lg border-none h-full">
-                  <CardHeader 
+                  <CardHeader
                     className="border-b pb-2 pt-3"
                     style={{
                       background: 'linear-gradient(90deg, #a67ba9 0%, #c8a2c8 50%, #e6b8c0 100%)',

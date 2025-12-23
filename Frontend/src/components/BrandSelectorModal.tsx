@@ -263,7 +263,7 @@ const BrandSelectorModal = ({
         let imagePath;
         if (brandName === 'skoda') {
           // Skoda images are in "Skoda" folder (capitalized) but files are lowercase
-          imagePath = `/images/Car_images/skoda/${model.name.toLowerCase()}.png`;
+          imagePath = `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_images/skoda/${model.name.toLowerCase()}.png`;
         } else if (brandName === 'land_rover') {
           // Land Rover images are in "Land rover" folder with proper naming
           let landRoverFileName = model.name; // Use original name with proper capitalization
@@ -290,7 +290,7 @@ const BrandSelectorModal = ({
             landRoverFileName = 'Discovery Sport';
           }
 
-          imagePath = `/images/Car_images/Land rover/${landRoverFileName}.png`;
+          imagePath = `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_images/Land rover/${landRoverFileName}.png`;
         } else if (brandName === 'audi') {
           // Audi images are in "Audi_car" folder
           // Files are mixed case: "A3" -> "A3.png", "A8 L" -> "A8 L.png"
@@ -298,27 +298,19 @@ const BrandSelectorModal = ({
           const modelName = model.name;
 
           // All Audi model images use the exact model name as-is (e.g., A3.png, A4.png, A8.png, A8 L.png)
-          imagePath = `/images/Car_images/Audi_car/${modelName}.png`;
+          imagePath = `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_images/Audi_car/${modelName}.png`;
         } else if (brandName === 'volkswagen') {
           // Volkswagen images are in "volkswagen" folder
-          // Files: polo.png, cross_polo.png (lowercase), rest are capitalized with exact name
-          const vwModelName = model.name;
-          
-          if (vwModelName === 'Polo') {
-            imagePath = `/images/Car_images/volkswagen/polo.png`;
-          } else if (vwModelName === 'Cross Polo') {
-            imagePath = `/images/Car_images/volkswagen/cross_polo.png`;
-          } else {
-            // All other models: Ameo, Vento, Jetta, Passat, Taigun, T-Roc, Tiguan, Beetle, Virtus, Phaeton
-            imagePath = `/images/Car_images/volkswagen/${vwModelName}.png`;
-          }
-          
-          console.log('VW Model:', vwModelName, 'Path:', imagePath);
+          // Files are lowercase with spaces replaced by underscores (e.g., "cross_polo.png", "jetta.png")
+          const formattedModelName = model.name.toLowerCase().replace(/\s+/g, '_');
+          imagePath = `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_images/volkswagen/${formattedModelName}.png`;
+
+          console.log('VW Model:', model.name, 'Path:', imagePath);
         } else if (brandName === 'bmw') {
           // BMW images are in "BMW" folder with spaces in filenames
           // Convert model name to have proper spacing and capitalization
           let bmwFileName = model.name; // Use original name with spaces
-          imagePath = `/images/Car_images/BMW/${bmwFileName}.png`;
+          imagePath = `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_images/BMW/${bmwFileName}.png`;
         } else if (brandName === 'mercedes-benz' || brandName === 'mercedes_benz') {
           // Mercedes-Benz images are in "Mercedes-Benz" folder with spaces and hyphens
           let mercedesFileName = model.name; // Use original name with spaces and hyphens
@@ -342,7 +334,7 @@ const BrandSelectorModal = ({
           if (modelName === 'gle_class' || model.name === 'GLE Class' || model.name === 'GLE-Class') {
             mercedesFileName = 'GLE Class';
           }
-          imagePath = `/images/Car_images/Mercedes-Benz/${mercedesFileName}.png`;
+          imagePath = `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_images/Mercedes-Benz/${mercedesFileName}.png`;
         } else if (brandName === 'volvo') {
           // Volvo images are in "Volvo" folder with spaces in filenames
           let volvoFileName = model.name; // Use original name with spaces
@@ -350,47 +342,47 @@ const BrandSelectorModal = ({
           if (modelName === 'xc_40' || modelName === 'xc40' || model.name === 'XC40') {
             volvoFileName = 'XC 40';
           }
-          imagePath = `/images/Car_images/Volvo/${volvoFileName}.png`;
+          imagePath = `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_images/Volvo/${volvoFileName}.png`;
         } else if (brandName === 'kia') {
           // Kia images are in "Kia" folder with proper capitalization
           let kiaFileName = model.name; // Use original name with proper capitalization
-          imagePath = `/images/Car_images/Kia/${kiaFileName}.png`;
+          imagePath = `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_images/Kia/${kiaFileName}.png`;
         } else if (brandName === 'mg') {
           // MG images are in "MG" folder with proper capitalization
           let mgFileName = model.name; // Use original name with proper capitalization
-          imagePath = `/images/Car_images/MG/${mgFileName}.png`;
+          imagePath = `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_images/MG/${mgFileName}.png`;
         } else if (brandName === 'mini') {
           // Mini images are in "Mini" folder with proper capitalization
           let miniFileName = model.name; // Use original name with proper capitalization
-          imagePath = `/images/Car_images/Mini/${miniFileName}.png`;
+          imagePath = `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_images/Mini/${miniFileName}.png`;
         } else if (brandName === 'jaguar') {
           // Jaguar images are in "Jaguar" folder with proper capitalization and hyphens
           let jaguarFileName = model.name; // Use original name with proper capitalization
-          imagePath = `/images/Car_images/Jaguar/${jaguarFileName}.png`;
+          imagePath = `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_images/Jaguar/${jaguarFileName}.png`;
         } else if (brandName === 'jeep') {
           // Jeep images are in "Jeep" folder with proper capitalization
           let jeepFileName = model.name; // Use original name with proper capitalization
-          imagePath = `/images/Car_images/Jeep/${jeepFileName}.png`;
+          imagePath = `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_images/Jeep/${jeepFileName}.png`;
         } else if (brandName === 'nissan') {
           // Nissan images are in "Nissan" folder with proper capitalization
           let nissanFileName = model.name; // Use original name with proper capitalization
-          imagePath = `/images/Car_images/Nissan/${nissanFileName}.png`;
+          imagePath = `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_images/Nissan/${nissanFileName}.png`;
         } else if (brandName === 'maruti_suzuki' || brandName === 'maruti-suzuki') {
           // Maruti Suzuki images are in "Maruti Suzuki" folder with proper capitalization
           let marutiFileName = model.name; // Use original name with proper capitalization
-          imagePath = `/images/Car_images/Maruti Suzuki/${marutiFileName}.png`;
+          imagePath = `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_images/Maruti Suzuki/${marutiFileName}.png`;
         } else if (brandName === 'hyundai') {
           // Hyundai images are in "Hyundai" folder with proper capitalization
           let hyundaiFileName = model.name; // Use original name with proper capitalization (matches image filenames exactly)
-          imagePath = `/images/Car_images/Hyundai/${hyundaiFileName}.png`;
+          imagePath = `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_images/Hyundai/${hyundaiFileName}.png`;
         } else if (brandName === 'lexus') {
           // Lexus images are in "Lexus" folder with proper capitalization
           let lexusFileName = model.name; // Use original name with proper capitalization
-          imagePath = `/images/Car_images/Lexus/${lexusFileName}.png`;
+          imagePath = `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_images/Lexus/${lexusFileName}.png`;
         } else if (brandName === 'mahindra') {
           // Mahindra images are in "Mahindra" folder with proper capitalization
           let mahindraFileName = model.name; // Use original name with proper capitalization
-          imagePath = `/images/Car_images/Mahindra/${mahindraFileName}.png`;
+          imagePath = `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_images/Mahindra/${mahindraFileName}.png`;
         } else if (brandName === 'toyota') {
           // Toyota images are in "Toyota" folder with proper capitalization
           let toyotaFileName = model.name; // Use original name with proper capitalization
@@ -398,9 +390,9 @@ const BrandSelectorModal = ({
           if (modelName === 'innova_hycross' || model.name === 'Innova Hycross') {
             toyotaFileName = 'Innova Hycross';
           }
-          imagePath = `/images/Car_images/Toyota/${toyotaFileName}.png`;
+          imagePath = `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_images/Toyota/${toyotaFileName}.png`;
         } else {
-          imagePath = `/images/Car_images/${brandName}_car/${modelName}.png`;
+          imagePath = `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_images/${brandName}_car/${modelName}.png`;
         }
 
         return (
@@ -455,7 +447,7 @@ const BrandSelectorModal = ({
                     WebkitFontSmoothing: 'antialiased'
                   }}
                   onError={(e) => {
-                    e.currentTarget.src = "/images/car_images/default_car.png";
+                    e.currentTarget.src = "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_images/default_car.png";
                     e.currentTarget.style.filter = 'none';
                   }}
                   loading="lazy"
@@ -537,21 +529,21 @@ const BrandSelectorModal = ({
             >
               {fuel === 'Petrol' && (
                 <img
-                  src="/images/Car_images/Petrol_nozzle.png"
+                  src="https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_images/Petrol_nozzle.png"
                   alt="Petrol"
                   className="w-5 h-5 object-contain"
                 />
               )}
               {fuel === 'Diesel' && (
                 <img
-                  src="/images/Car_images/Diesel_nozzle.png"
+                  src="https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_images/Diesel_nozzle.png"
                   alt="Diesel"
                   className="w-5 h-5 object-contain"
                 />
               )}
               {fuel === 'Electric' && (
                 <img
-                  src="/images/Car_images/Electric.png"
+                  src="https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_images/Electric.png"
                   alt="Electric"
                   className="w-5 h-5 object-contain"
                 />

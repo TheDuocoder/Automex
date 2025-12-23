@@ -87,7 +87,7 @@ const Header = ({ onLoginClick }: HeaderProps) => {
             onClick={() => navigate('/')}
           >
             <img
-              src="/images/Automex_icon/AUTOMEX_logo.png"
+              src="https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Automex_icon/AUTOMEX_logo.png"
               alt="AutoMex Logo"
               className={cn(
                 "w-auto object-contain transition-all duration-300 ease-in-out",
@@ -100,7 +100,7 @@ const Header = ({ onLoginClick }: HeaderProps) => {
                 transition: 'all 0.3s ease-in-out'
               }}
               onError={(e) => {
-                e.currentTarget.src = "/images/Landing_page_images/AUTOMEX.png";
+                e.currentTarget.src = "https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Landing_page_images/AUTOMEX.png";
               }}
             />
           </div>

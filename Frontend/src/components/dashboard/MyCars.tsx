@@ -49,6 +49,7 @@ const MyCars = ({ userId }: MyCarsProps = {}) => {
     const navigate = useNavigate();
     const { user } = useAuth();
     const isAdmin = user?.role?.name === 'admin' || user?.role?.name === 'super' || user?.is_superuser;
+    const isSuperAdmin = user?.role?.name === 'super' || (user?.is_superuser && user?.role?.name !== 'admin');
 
     const [cars, setCars] = useState<Car[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -497,22 +498,26 @@ const MyCars = ({ userId }: MyCarsProps = {}) => {
                         >
                             {/* Edit & Delete Buttons - Top Right Corner - Circular */}
                             <div className="absolute top-4 right-4 flex items-center gap-2">
-                                <button
-                                    onClick={() => handleEditCar(car)}
-                                    className="edit-btn-animated"
-                                    title="Edit vehicle"
-                                >
-                                    Edit
-                                    <Pencil className="svg" strokeWidth={2.5} />
-                                </button>
-                                <button
-                                    onClick={() => handleDeleteCar(car.id)}
-                                    className="delete-btn-animated"
-                                    title="Delete vehicle"
-                                >
-                                    Delete
-                                    <Trash2 className="svg" strokeWidth={2.5} />
-                                </button>
+                                {(!userId || isSuperAdmin) && (
+                                    <>
+                                        <button
+                                            onClick={() => handleEditCar(car)}
+                                            className="edit-btn-animated"
+                                            title="Edit vehicle"
+                                        >
+                                            Edit
+                                            <Pencil className="svg" strokeWidth={2.5} />
+                                        </button>
+                                        <button
+                                            onClick={() => handleDeleteCar(car.id)}
+                                            className="delete-btn-animated"
+                                            title="Delete vehicle"
+                                        >
+                                            Delete
+                                            <Trash2 className="svg" strokeWidth={2.5} />
+                                        </button>
+                                    </>
+                                )}
                             </div>
 
                             {/* Main Content Section - Image on Left, Info on Right */}
@@ -570,48 +575,52 @@ const MyCars = ({ userId }: MyCarsProps = {}) => {
 
                                     {/* Action Buttons - Horizontal Row with Equal Width */}
                                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-                                        <button
-                                            className="group flex items-center justify-center gap-2 h-14 bg-white border-2 font-bold rounded-[14px] shadow-[0_4px_15px_rgba(95,75,139,0.12)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_6px_25px_rgba(95,75,139,0.3)]"
-                                            style={{
-                                                borderColor: '#5F4B8B',
-                                                color: '#5F4B8B',
-                                            }}
-                                            onMouseEnter={(e) => {
-                                                e.currentTarget.style.backgroundColor = '#5F4B8B';
-                                                e.currentTarget.style.borderColor = '#5F4B8B';
-                                                e.currentTarget.style.color = 'white';
-                                            }}
-                                            onMouseLeave={(e) => {
-                                                e.currentTarget.style.backgroundColor = 'white';
-                                                e.currentTarget.style.borderColor = '#5F4B8B';
-                                                e.currentTarget.style.color = '#5F4B8B';
-                                            }}
-                                            onClick={() => navigate('/profile', { state: { view: 'schedule-pickup' } })}
-                                        >
-                                            <Calendar className="h-5 w-5" strokeWidth={2.5} />
-                                            <span className="text-sm font-bold">Schedule Pick Up</span>
-                                        </button>
-                                        <button
-                                            className="group flex items-center justify-center gap-2 h-14 bg-white border-2 font-bold rounded-[14px] shadow-[0_4px_15px_rgba(188,38,73,0.12)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_6px_25px_rgba(188,38,73,0.3)]"
-                                            style={{
-                                                borderColor: '#BC2649',
-                                                color: '#BC2649',
-                                            }}
-                                            onMouseEnter={(e) => {
-                                                e.currentTarget.style.backgroundColor = '#BC2649';
-                                                e.currentTarget.style.borderColor = '#BC2649';
-                                                e.currentTarget.style.color = 'white';
-                                            }}
-                                            onMouseLeave={(e) => {
-                                                e.currentTarget.style.backgroundColor = 'white';
-                                                e.currentTarget.style.borderColor = '#BC2649';
-                                                e.currentTarget.style.color = '#BC2649';
-                                            }}
-                                            onClick={() => navigate('/services')}
-                                        >
-                                            <Wrench className="h-5 w-5" strokeWidth={2.5} />
-                                            <span className="text-sm font-bold">Book Service</span>
-                                        </button>
+                                        {(!userId || isSuperAdmin) && (
+                                            <>
+                                                <button
+                                                    className="group flex items-center justify-center gap-2 h-14 bg-white border-2 font-bold rounded-[14px] shadow-[0_4px_15px_rgba(95,75,139,0.12)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_6px_25px_rgba(95,75,139,0.3)]"
+                                                    style={{
+                                                        borderColor: '#5F4B8B',
+                                                        color: '#5F4B8B',
+                                                    }}
+                                                    onMouseEnter={(e) => {
+                                                        e.currentTarget.style.backgroundColor = '#5F4B8B';
+                                                        e.currentTarget.style.borderColor = '#5F4B8B';
+                                                        e.currentTarget.style.color = 'white';
+                                                    }}
+                                                    onMouseLeave={(e) => {
+                                                        e.currentTarget.style.backgroundColor = 'white';
+                                                        e.currentTarget.style.borderColor = '#5F4B8B';
+                                                        e.currentTarget.style.color = '#5F4B8B';
+                                                    }}
+                                                    onClick={() => navigate('/profile', { state: { view: 'schedule-pickup' } })}
+                                                >
+                                                    <Calendar className="h-5 w-5" strokeWidth={2.5} />
+                                                    <span className="text-sm font-bold">Schedule Pick Up</span>
+                                                </button>
+                                                <button
+                                                    className="group flex items-center justify-center gap-2 h-14 bg-white border-2 font-bold rounded-[14px] shadow-[0_4px_15px_rgba(188,38,73,0.12)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_6px_25px_rgba(188,38,73,0.3)]"
+                                                    style={{
+                                                        borderColor: '#BC2649',
+                                                        color: '#BC2649',
+                                                    }}
+                                                    onMouseEnter={(e) => {
+                                                        e.currentTarget.style.backgroundColor = '#BC2649';
+                                                        e.currentTarget.style.borderColor = '#BC2649';
+                                                        e.currentTarget.style.color = 'white';
+                                                    }}
+                                                    onMouseLeave={(e) => {
+                                                        e.currentTarget.style.backgroundColor = 'white';
+                                                        e.currentTarget.style.borderColor = '#BC2649';
+                                                        e.currentTarget.style.color = '#BC2649';
+                                                    }}
+                                                    onClick={() => navigate('/services')}
+                                                >
+                                                    <Wrench className="h-5 w-5" strokeWidth={2.5} />
+                                                    <span className="text-sm font-bold">Book Service</span>
+                                                </button>
+                                            </>
+                                        )}
                                         <button
                                             className="group flex items-center justify-center gap-2 h-14 bg-white border-2 font-bold rounded-[14px] shadow-[0_4px_15px_rgba(255,123,4,0.12)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_6px_25px_rgba(255,123,4,0.3)]"
                                             style={{
