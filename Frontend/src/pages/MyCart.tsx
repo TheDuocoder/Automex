@@ -128,7 +128,7 @@ const MyCart = () => {
                             className="w-8 h-8 object-contain"
                         />
                     </div>
-                    <Button 
+                    <button 
                         onClick={() => {
                             if (items.length > 0) {
                                 const firstItem = items[0];
@@ -145,12 +145,15 @@ const MyCart = () => {
                                 navigate("/services");
                             }
                         }}
-                        variant="ghost"
-                        className="text-gray-700 hover:text-gray-900 hover:bg-transparent font-medium px-0 flex items-center gap-1"
+                        className="relative inline-block text-center font-bold py-2.5 px-6 border-3 border-[#FF0072] rounded-sm text-[#FF0072] no-underline transition-all duration-300 z-10 text-sm tracking-wider uppercase shrink-0 hover:text-white active:scale-90 before:content-[''] before:absolute before:top-0 before:left-1/2 before:right-1/2 before:bottom-0 before:opacity-0 before:bg-[#FF0072] before:-z-10 before:transition-all before:duration-500 hover:before:left-0 hover:before:right-0 hover:before:opacity-100 bg-transparent"
+                        style={{ 
+                            boxShadow: '0 2px 10px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.1)',
+                            borderWidth: '3px'
+                        }}
                     >
-                        <ChevronLeft className="h-5 w-5" />
+                        <ChevronLeft className="h-4 w-4 mr-2 inline-block" />
                         Back
-                    </Button>
+                    </button>
                 </div>
 
                 {items.length === 0 ? (

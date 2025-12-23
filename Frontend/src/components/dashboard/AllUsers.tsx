@@ -173,8 +173,11 @@ const AllUsers = () => {
       className="space-y-4"
     >
       <style>{tableStyles}</style>
-      <Card className="shadow-lg border-none">
-        <CardHeader className="border-b" style={{ background: 'linear-gradient(90deg, #a67ba9 0%, #c8a2c8 50%, #e6b8c0 100%)' }}>
+      <Card className="shadow-sm border border-gray-200 rounded-2xl overflow-hidden">
+        <CardHeader 
+          className="border-b border-gray-100 px-8 py-6" 
+          style={{ background: 'linear-gradient(90deg, #a67ba9 0%, #c8a2c8 50%, #e6b8c0 100%)' }}
+        >
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <CardTitle className="flex items-center gap-2 text-xl text-white">
               <Users className="h-5 w-5 text-white" />
