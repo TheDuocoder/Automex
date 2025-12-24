@@ -234,7 +234,10 @@ const MyServices = () => {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(b =>
         (b.service_name?.toLowerCase() || "").includes(query) ||
-        (b.car_brand?.toLowerCase() || "").includes(query)
+        (b.car_brand?.toLowerCase() || "").includes(query) ||
+        (b.car_model?.toLowerCase() || "").includes(query) ||
+        (b.contact_name?.toLowerCase() || "").includes(query) ||
+        (b.user_email?.toLowerCase() || "").includes(query)
       );
     }
     return filtered;
@@ -286,7 +289,7 @@ const MyServices = () => {
                   className="pl-10 w-full md:w-[280px] bg-white"
                 />
               </div>
-              <Button 
+              <Button
                 onClick={() => navigate("/services")}
                 className="bg-black hover:bg-gray-800 text-white whitespace-nowrap"
               >

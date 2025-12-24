@@ -297,8 +297,11 @@ const BrandSelectorModal = ({
 
           const modelName = model.name;
 
-          // All Audi model images use the exact model name as-is (e.g., A3.png, A4.png, A8.png, A8 L.png)
-          imagePath = `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_images/Audi_car/${modelName}.png`;
+          // Audi images naming convention:
+          // - Single word models (e.g., A3, Q7) are lowercase (a3.png, q7.png)
+          // - Multi-word models (e.g., A8 L, Q3 Sportback) preserve case and spaces (A8 L.png, Q3 Sportback.png)
+          const fileName = modelName.includes(' ') ? modelName : modelName.toLowerCase();
+          imagePath = `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_images/Audi_car/${fileName}.png`;
         } else if (brandName === 'volkswagen') {
           // Volkswagen images are in "volkswagen" folder
           // Files are lowercase with spaces replaced by underscores (e.g., "cross_polo.png", "jetta.png")
