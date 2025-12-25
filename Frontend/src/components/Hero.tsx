@@ -401,32 +401,7 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
                     Login
                   </span>
 
-                  {/* Dancing Animation */}
-                  <div
-                    className="md:hidden relative w-12 h-12 flex items-center justify-center"
-                    style={{
-                      background: 'radial-gradient(circle, rgba(255,0,128,0.2) 0%, transparent 70%)',
-                    }}
-                  >
-                    <span
-                      className="text-3xl animate-bounce absolute"
-                      style={{
-                        animationDuration: '1s',
-                        filter: 'drop-shadow(0 0 8px rgba(255,105,180,0.8))'
-                      }}
-                    >
-                      💃
-                    </span>
-                    <span
-                      className="text-3xl animate-ping absolute opacity-30"
-                      style={{
-                        animationDuration: '1.5s',
-                        filter: 'drop-shadow(0 0 8px rgba(255,105,180,0.8))'
-                      }}
-                    >
-                      💃
-                    </span>
-                  </div>
+
                 </div>
               )}
             </div>
