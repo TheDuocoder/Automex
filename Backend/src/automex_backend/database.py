@@ -51,31 +51,9 @@ async def init_db():
             # Get all tables from metadata
             metadata = Base.metadata
             
-            # Helper function to convert SQLAlchemy type to MySQL type
-            def get_mysql_type(column_type):
-                type_str = str(column_type)
-                # Map common SQLAlchemy types to MySQL types
-                if 'INTEGER' in type_str or 'Integer' in type_str:
-                    return 'INT'
-                elif 'VARCHAR' in type_str:
-                    # Extract length if present
-                    import re
-                    match = re.search(r'VARCHAR\((\d+)\)', type_str)
-                    if match:
-                        return f"VARCHAR({match.group(1)})"
-                    return 'VARCHAR(255)'
-                elif 'TEXT' in type_str:
-                    return 'TEXT'
-                elif 'FLOAT' in type_str or 'Float' in type_str:
-                    return 'FLOAT'
-                elif 'DATETIME' in type_str or 'DateTime' in type_str:
-                    if 'timezone=True' in type_str:
-                        return 'DATETIME'
-                    return 'DATETIME'
-                elif 'BOOLEAN' in type_str or 'Boolean' in type_str:
-                    return 'BOOLEAN'
-                else:
-                    return type_str
+            # Helper function to compile SQLAlchemy type to MySQL type string
+            def get_mysql_type(type_obj):
+                return type_obj.compile(engine.dialect)
             
             # Check each table in metadata
             for table_name, table in metadata.tables.items():
@@ -93,8 +71,6 @@ async def init_db():
                     print(f"[INFO] Table '{table_name}' does not exist, will be created by SQLAlchemy...")
                 else:
                     # Table exists, check for missing columns
-                    print(f"[INFO] Table '{table_name}' exists, checking for missing columns...")
-                    
                     # Get existing columns
                     columns_check = text("""
                         SELECT column_name
@@ -117,18 +93,21 @@ async def init_db():
                                 default_clause = ""
                                 
                                 if column.server_default is not None:
-                                    default_value = str(column.server_default.arg)
-                                    if "CURRENT_TIMESTAMP" in default_value or "now()" in default_value.lower():
-                                        default_clause = "DEFAULT CURRENT_TIMESTAMP"
-                                    elif default_value:
-                                        # Remove quotes if present
-                                        default_value = default_value.strip("'\"")
-                                        default_clause = f"DEFAULT '{default_value}'"
+                                    # Handle server default
+                                    if hasattr(column.server_default, 'arg'):
+                                        default_value = str(column.server_default.arg)
+                                        if "CURRENT_TIMESTAMP" in default_value or "now()" in default_value.lower():
+                                            default_clause = "DEFAULT CURRENT_TIMESTAMP"
+                                        elif default_value:
+                                            # Clean up quotes
+                                            default_value = default_value.strip("'\"")
+                                            default_clause = f"DEFAULT '{default_value}'"
                                 
                                 alter_sql = f"ALTER TABLE `{table_name}` ADD COLUMN `{column.name}` {mysql_type} {nullable}"
                                 if default_clause:
                                     alter_sql += f" {default_clause}"
                                 
+                                print(f"[INFO] Executing: {alter_sql}")
                                 await conn.execute(text(alter_sql))
                                 print(f"[INFO] ✓ Column '{column.name}' added to '{table_name}' successfully")
                             except Exception as col_error:
