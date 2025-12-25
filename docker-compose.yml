@@ -33,6 +33,7 @@ services:
       - HOST=0.0.0.0
       - PORT=8000
       - DEBUG=False
+      - PYTHONUNBUFFERED=1
 
     depends_on:
       mysql:

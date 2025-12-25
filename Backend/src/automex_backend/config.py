@@ -64,12 +64,16 @@ class Settings(BaseSettings):
     AWS_S3_FOLDER: str = "Backend/my-cars/"  # Base folder - actual structure: Backend/my-cars/{username}/
 
     # EmailJS Configuration
-    EMAILJS_PUBLIC_KEY: str = ""
-    EMAILJS_PRIVATE_KEY: str = ""
-    EMAILJS_SERVICE_ID: str = ""
-    EMAILJS_TEMPLATE_ID: str = ""
+    # EmailJS Configuration
+    # Hardcoded as per user request for immediate fix on EC2
+    EMAILJS_PUBLIC_KEY: str = "QB9CD3fOj37cvnhsr"
+    EMAILJS_PRIVATE_KEY: str = "R5EWsV-5dXQeU6a2hvNhe"
+    EMAILJS_SERVICE_ID: str = "service_akqns69"
+    EMAILJS_TEMPLATE_ID: str = "template_5s20jdn"
     EMAILJS_BOOKING_TEMPLATE_ID: str = "template_iadqc7t"
 
 
 settings = Settings()
+
+
 

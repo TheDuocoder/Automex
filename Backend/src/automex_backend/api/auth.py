@@ -295,9 +295,11 @@ async def register(
         )
         user_with_role = result.scalar_one()
 
-        # Send welcome email in background
+        # Send welcome email synchronously for debugging
         user_name = user_with_role.full_name or user_with_role.email.split('@')[0]
-        background_tasks.add_task(email_service.send_welcome_email, user_with_role.email, user_name)
+        print(f"[DEBUG] Register route: attempting to send email to {user_with_role.email}")
+        await email_service.send_welcome_email(user_with_role.email, user_name)
+        # background_tasks.add_task(email_service.send_welcome_email, user_with_role.email, user_name)
 
         # Return UserRead model
         return UserRead.model_validate(user_with_role)

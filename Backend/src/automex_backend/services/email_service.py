@@ -17,8 +17,14 @@ class EmailService:
         """
         Send welcome email using EmailJS
         """
-        if not all([self.public_key, self.private_key, self.service_id, self.template_id]):
-            logger.warning("EmailJS configuration is incomplete. Skipping welcome email.")
+        missing_keys = []
+        if not self.public_key: missing_keys.append("EMAILJS_PUBLIC_KEY")
+        if not self.private_key: missing_keys.append("EMAILJS_PRIVATE_KEY")
+        if not self.service_id: missing_keys.append("EMAILJS_SERVICE_ID")
+        if not self.template_id: missing_keys.append("EMAILJS_TEMPLATE_ID")
+
+        if missing_keys:
+            print(f"[EMAIL ERROR] EmailJS configuration incomplete. Missing: {', '.join(missing_keys)}. Skipping welcome email.")
             return False
 
         payload = {
@@ -28,24 +34,30 @@ class EmailService:
             "accessToken": self.private_key,
             "template_params": {
                 "user_name": user_name,
+                "to_name": user_name,  # Add standard to_name
                 "user_email": user_email,
                 "email": user_email,
-                "to_email": user_email
+                "to_email": user_email,
+                "content": f"Welcome to AutoMex, {user_name}! We're thrilled to have you.",
+                "message": f"Welcome to AutoMex, {user_name}! We're thrilled to have you.",
+                "subject": "Welcome to AutoMex!"
             }
         }
+
+        print(f"[EMAIL DEBUG] Attempting to send welcome email to {user_email} using template {self.template_id}")
 
         try:
             async with httpx.AsyncClient() as client:
                 response = await client.post(self.api_url, json=payload, timeout=10.0)
                 
             if response.status_code == 200:
-                logger.info(f"Welcome email sent successfully to {user_email}")
+                print(f"[EMAIL SUCCESS] Welcome email sent successfully to {user_email}. Response: {response.text}")
                 return True
             else:
-                logger.error(f"Failed to send welcome email. Status: {response.status_code}, Response: {response.text}")
+                print(f"[EMAIL ERROR] Failed to send welcome email. Status: {response.status_code}, Response: {response.text}")
                 return False
         except Exception as e:
-            logger.error(f"Error sending welcome email: {str(e)}")
+            print(f"[EMAIL EXCEPTION] Error sending welcome email: {str(e)}")
             return False
 
     async def send_booking_email(
@@ -67,8 +79,14 @@ class EmailService:
         """
         Send booking notification email to sales team
         """
-        if not all([self.public_key, self.private_key, self.service_id, self.booking_template_id]):
-            logger.warning("EmailJS configuration for booking is incomplete. Skipping booking email.")
+        missing_keys = []
+        if not self.public_key: missing_keys.append("EMAILJS_PUBLIC_KEY")
+        if not self.private_key: missing_keys.append("EMAILJS_PRIVATE_KEY")
+        if not self.service_id: missing_keys.append("EMAILJS_SERVICE_ID")
+        if not self.booking_template_id: missing_keys.append("EMAILJS_BOOKING_TEMPLATE_ID")
+
+        if missing_keys:
+            print(f"[EMAIL ERROR] EmailJS configuration for booking incomplete. Missing: {', '.join(missing_keys)}. Skipping booking email.")
             return False
 
         # Format date if it's a datetime object
@@ -83,6 +101,7 @@ class EmailService:
             "accessToken": self.private_key,
             "template_params": {
                 "user_name": str(user_name or "Valued Customer"),
+                "to_name": str(user_name or "Valued Customer"), # Mapping for template
                 "user_email": str(user_email or ""),
                 "user_phone": str(user_phone or "Not provided"),
                 "booking_id": str(booking_id),
@@ -100,22 +119,26 @@ class EmailService:
                 "email": "sales@automex.in",
                 "to_email": "sales@automex.in",
                 "from_name": str(user_name or "Automex User"),
-                "reply_to": str(user_email or "")
+                "reply_to": str(user_email or ""),
+                "message": f"New booking received from {user_name} for {service_name}.",
+                "content": f"New booking received from {user_name} for {service_name}."
             }
         }
+        
+        print(f"[EMAIL DEBUG] Attempting to send booking email #{booking_id} to sales using template {self.booking_template_id}")
 
         try:
             async with httpx.AsyncClient() as client:
                 response = await client.post(self.api_url, json=payload, timeout=10.0)
                 
             if response.status_code == 200:
-                logger.info(f"Booking email sent successfully for booking #{booking_id}")
+                print(f"[EMAIL SUCCESS] Booking email sent successfully for booking #{booking_id}. Response: {response.text}")
                 return True
             else:
-                logger.error(f"Failed to send booking email. Status: {response.status_code}, Response: {response.text}")
+                print(f"[EMAIL ERROR] Failed to send booking email. Status: {response.status_code}, Response: {response.text}")
                 return False
         except Exception as e:
-            logger.error(f"Error sending booking email: {str(e)}")
+            print(f"[EMAIL EXCEPTION] Error sending booking email: {str(e)}")
             return False
 
     async def send_batch_booking_email(
@@ -128,8 +151,14 @@ class EmailService:
         """
         Send a single batch email for multiple bookings (part of the same order)
         """
-        if not all([self.public_key, self.private_key, self.service_id, self.booking_template_id]):
-            logger.warning("EmailJS configuration for booking is incomplete. Skipping batch booking email.")
+        missing_keys = []
+        if not self.public_key: missing_keys.append("EMAILJS_PUBLIC_KEY")
+        if not self.private_key: missing_keys.append("EMAILJS_PRIVATE_KEY")
+        if not self.service_id: missing_keys.append("EMAILJS_SERVICE_ID")
+        if not self.booking_template_id: missing_keys.append("EMAILJS_BOOKING_TEMPLATE_ID")
+
+        if missing_keys:
+            print(f"[EMAIL ERROR] EmailJS configuration for batch booking incomplete. Missing: {', '.join(missing_keys)}. Skipping batch email.")
             return False
             
         if not bookings:
@@ -181,6 +210,7 @@ class EmailService:
             "accessToken": self.private_key,
             "template_params": {
                 "user_name": str(user_name or "Valued Customer"),
+                "to_name": str(user_name or "Valued Customer"),
                 "user_email": str(user_email or ""),
                 "user_phone": str(user_phone or "Not provided"),
                 "booking_id": str(booking_group_id), # Use group ID as main ref
@@ -192,22 +222,26 @@ class EmailService:
                 "email": "sales@automex.in",
                 "to_email": "sales@automex.in",
                 "from_name": str(user_name or "Automex User"),
-                "reply_to": str(user_email or "")
+                "reply_to": str(user_email or ""),
+                "message": f"New batch booking received from {user_name}.",
+                "content": f"New batch booking received from {user_name}."
             }
         }
+        
+        print(f"[EMAIL DEBUG] Attempting to send batch booking email group {booking_group_id}")
 
         try:
             async with httpx.AsyncClient() as client:
                 response = await client.post(self.api_url, json=payload, timeout=10.0)
                 
             if response.status_code == 200:
-                logger.info(f"Batch booking email sent successfully for group {booking_group_id}")
+                print(f"[EMAIL SUCCESS] Batch booking email sent successfully for group {booking_group_id}. Response: {response.text}")
                 return True
             else:
-                logger.error(f"Failed to send batch booking email. Status: {response.status_code}, Response: {response.text}")
+                print(f"[EMAIL ERROR] Failed to send batch booking email. Status: {response.status_code}, Response: {response.text}")
                 return False
         except Exception as e:
-            logger.error(f"Error sending batch booking email: {str(e)}")
+            print(f"[EMAIL EXCEPTION] Error sending batch booking email: {str(e)}")
             return False
 
 email_service = EmailService()
