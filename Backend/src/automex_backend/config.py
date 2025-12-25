@@ -48,10 +48,7 @@ class Settings(BaseSettings):
             return [origin.strip() for origin in self.CORS_ORIGINS.split(",") if origin.strip()]
         return self.CORS_ORIGINS
     
-    # ImageKit Configuration
-    IMAGEKIT_PUBLIC_KEY: str = ""
-    IMAGEKIT_PRIVATE_KEY: str = ""
-    IMAGEKIT_URL_ENDPOINT: str = ""
+
     
     # Email Configuration (for future use)
     SMTP_HOST: str = "smtp.gmail.com"

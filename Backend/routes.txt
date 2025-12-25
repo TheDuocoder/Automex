@@ -46,12 +46,6 @@ GET                  /api/v1/costs/booking/{booking_id}
 POST                 /api/v1/costs/
 PUT                  /api/v1/costs/{cost_id}
 DELETE               /api/v1/costs/{cost_id}
-POST                 /api/v1/uploads/service-image
-POST                 /api/v1/uploads/vehicle-image
-POST                 /api/v1/uploads/promotional
-GET                  /api/v1/uploads/file/{file_id}
-DELETE               /api/v1/uploads/file/{file_id}
-GET                  /api/v1/uploads/list
 GET                  /api/v1/cars/
 POST                 /api/v1/cars/
 GET                  /api/v1/cars/{car_id}
