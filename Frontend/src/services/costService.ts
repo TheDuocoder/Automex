@@ -11,6 +11,7 @@ export interface Cost {
   item_name: string;
   amount: number;
   description?: string;
+  warranty_details?: string;
   created_at: string;
   updated_at: string;
 }
@@ -20,12 +21,14 @@ export interface CostCreate {
   item_name: string;
   amount: number;
   description?: string;
+  warranty_details?: string;
 }
 
 export interface CostUpdate {
   item_name?: string;
   amount?: number;
   description?: string;
+  warranty_details?: string;
 }
 
 export interface CostListResponse {

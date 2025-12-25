@@ -26,6 +26,7 @@ class Cost(Base):
     item_name: Mapped[str] = mapped_column(String(255), nullable=False)
     amount: Mapped[float] = mapped_column(Float, nullable=False)
     description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    warranty_details: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
     
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())

@@ -259,6 +259,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
                   <div className="flex items-center justify-end gap-4 pt-2">
                     {discountedPrice > 0 && (
                       <div className="flex flex-col items-end">
+                        <span className="text-[10px] text-gray-500 font-medium">Starting from</span>
                         {originalPrice > discountedPrice && (
                           <span className="text-xs text-gray-500 line-through">₹ {originalPrice.toLocaleString()}</span>
                         )}
@@ -320,6 +321,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
                   <div className="flex flex-col md:flex-row md:items-center md:justify-end gap-3 pt-1">
                     {discountedPrice > 0 && (
                       <div className="flex flex-col items-end justify-center">
+                        <span className="text-[10px] text-gray-500 font-medium">Starting from</span>
                         {originalPrice > discountedPrice && (
                           <span className="text-xs text-gray-500 line-through">₹ {originalPrice.toLocaleString()}</span>
                         )}

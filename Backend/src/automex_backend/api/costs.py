@@ -118,7 +118,8 @@ async def create_cost(
         booking_id=cost_data.booking_id,
         item_name=cost_data.item_name,
         amount=cost_data.amount,
-        description=cost_data.description
+        description=cost_data.description,
+        warranty_details=cost_data.warranty_details
     )
     
     session.add(cost)

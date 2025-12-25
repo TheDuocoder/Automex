@@ -10,10 +10,10 @@ import { Separator } from "@/components/ui/separator";
 import {
   User, Calendar as CalendarIcon, MapPin, Phone, FileText, ChevronLeft,
   CheckCircle2, AlertCircle, Clock, ShieldCheck, Download, FolderOpen, Plus, Trash2, X,
-  Loader2, XCircle, Wrench, Car, Mail, UploadCloud, Image as ImageIcon, Video, ArrowRight
+  Loader2, XCircle, Wrench, Car, Mail, UploadCloud, Image as ImageIcon, Video, ArrowRight, Pencil
 } from "lucide-react";
-import { getBooking, cancelBooking, getUserBookings, type Booking, BookingStatus } from "@/services/bookingService";
-import { getBookingCosts, type Cost } from "@/services/costService";
+import { getBooking, cancelBooking, getUserBookings, type Booking, BookingStatus, deleteDailyWorkByDate, updateDailyWorkLogDescription, type DailyWorkLog } from "@/services/bookingService";
+import { getBookingCosts, deleteCost, updateCost, type Cost } from "@/services/costService";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -113,7 +113,25 @@ const BookingDetails = () => {
   const [isPaymentDialogOpen, setIsPaymentDialogOpen] = useState(false);
   const [newCostItem, setNewCostItem] = useState("");
   const [newCostAmount, setNewCostAmount] = useState("");
+  const [newCostWarranty, setNewCostWarranty] = useState("");
   const [isAddingCost, setIsAddingCost] = useState(false);
+
+  // Edit Cost State
+  const [isEditCostDialogOpen, setIsEditCostDialogOpen] = useState(false);
+  const [editingCostId, setEditingCostId] = useState<number | null>(null);
+  const [editCostItem, setEditCostItem] = useState("");
+  const [editCostAmount, setEditCostAmount] = useState("");
+  const [editCostWarranty, setEditCostWarranty] = useState("");
+  const [isSavingCostEdit, setIsSavingCostEdit] = useState(false);
+
+  // Work Log Edit/Delete State
+  const [editingLogId, setEditingLogId] = useState<number | null>(null);
+  const [deletingLogId, setDeletingLogId] = useState<number | null>(null);
+  const [openEditLogDialog, setOpenEditLogDialog] = useState(false);
+  const [editLogDescription, setEditLogDescription] = useState("");
+  const [isUpdatingLog, setIsUpdatingLog] = useState(false);
+
+  const [deletingCostId, setDeletingCostId] = useState<number | null>(null);
 
   // Daily Work Log Dialog State
   const [isWorkLogDialogOpen, setIsWorkLogDialogOpen] = useState(false);
@@ -204,13 +222,15 @@ const BookingDetails = () => {
       await createCost({
         booking_id: booking.id,
         item_name: newCostItem,
-        amount: parseFloat(newCostAmount)
+        amount: parseFloat(newCostAmount),
+        warranty_details: newCostWarranty || undefined
       });
 
       toast({ title: "Success", description: "Cost added successfully" });
       setIsPaymentDialogOpen(false);
       setNewCostItem("");
       setNewCostAmount("");
+      setNewCostWarranty("");
       loadCosts();
     } catch (error: any) {
       toast({
@@ -220,6 +240,102 @@ const BookingDetails = () => {
       });
     } finally {
       setIsAddingCost(false);
+    }
+  };
+
+  const handleDeleteCost = async (costId: number) => {
+    try {
+      setDeletingCostId(costId);
+      await deleteCost(costId);
+      toast({ title: "Success", description: "Cost item deleted" });
+      loadCosts();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to delete cost",
+        variant: "destructive"
+      });
+    } finally {
+      setDeletingCostId(null);
+    }
+  };
+
+  const openEditCost = (cost: Cost) => {
+    setEditingCostId(cost.id);
+    setEditCostItem(cost.item_name);
+    setEditCostAmount(cost.amount.toString());
+    setEditCostWarranty(cost.warranty_details || "");
+    setIsEditCostDialogOpen(true);
+  };
+
+  const handleUpdateCost = async () => {
+    if (!editingCostId || !editCostItem || !editCostAmount) return;
+    try {
+      setIsSavingCostEdit(true);
+      await updateCost(editingCostId, {
+        item_name: editCostItem,
+        amount: parseFloat(editCostAmount),
+        warranty_details: editCostWarranty || undefined
+      });
+
+      toast({ title: "Success", description: "Cost item updated" });
+      setIsEditCostDialogOpen(false);
+      loadCosts();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to update cost",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSavingCostEdit(false);
+    }
+  };
+
+
+
+  const handleDeleteLog = async (logId: number, logDate: string) => {
+    if (!booking) return;
+    try {
+      setDeletingLogId(logId);
+      // logDate is typically ISO string, we need YYYY-MM-DD
+      const dateStr = logDate.split('T')[0];
+      await deleteDailyWorkByDate(booking.id, dateStr);
+      toast({ title: "Success", description: "Work log deleted" });
+      loadBooking(); // Reload to refresh list
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to delete work log",
+        variant: "destructive"
+      });
+    } finally {
+      setDeletingLogId(null);
+    }
+  };
+
+  const openEditLog = (log: any) => {
+    setEditingLogId(log.id);
+    setEditLogDescription(log.description || "");
+    setOpenEditLogDialog(true);
+  };
+
+  const handleUpdateLog = async () => {
+    if (!booking || !editingLogId) return;
+    try {
+      setIsUpdatingLog(true);
+      await updateDailyWorkLogDescription(booking.id, editingLogId, editLogDescription);
+      toast({ title: "Success", description: "Work log updated" });
+      setOpenEditLogDialog(false);
+      loadBooking();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to update work log",
+        variant: "destructive"
+      });
+    } finally {
+      setIsUpdatingLog(false);
     }
   };
 
@@ -373,7 +489,7 @@ const BookingDetails = () => {
   const statusConfig = getStatusConfig(booking.status);
 
   return (
-  <div className="min-h-screen bg-gray-50 pb-12">
+    <div className="min-h-screen bg-gray-50 pb-12">
       <Header />
 
       {/* Top Navigation Bar */}
@@ -394,10 +510,10 @@ const BookingDetails = () => {
               </p>
             </div>
           </div>
-          <button 
-            onClick={() => navigate('/my-services')} 
+          <button
+            onClick={() => navigate('/my-services')}
             className="relative inline-block text-center font-bold py-2.5 px-6 border-3 border-[#FF0072] rounded-sm text-[#FF0072] no-underline transition-all duration-300 z-10 text-sm tracking-wider uppercase shrink-0 hover:text-white active:scale-90 before:content-[''] before:absolute before:top-0 before:left-1/2 before:right-1/2 before:bottom-0 before:opacity-0 before:bg-[#FF0072] before:-z-10 before:transition-all before:duration-500 hover:before:left-0 hover:before:right-0 hover:before:opacity-100"
-            style={{ 
+            style={{
               boxShadow: '0 2px 10px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.1)',
               borderWidth: '3px'
             }}
@@ -462,7 +578,7 @@ const BookingDetails = () => {
                 <div className="grid md:grid-cols-2 gap-8 divide-y md:divide-y-0 border-b relative">
                   {/* Vertical Divider (desktop only) */}
                   <div className="hidden md:block absolute left-1/2 top-6 bottom-6 w-px bg-gray-200 -translate-x-1/2"></div>
-                  
+
                   {/* Vehicle Details */}
                   <div className="p-6 space-y-4">
                     <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
@@ -524,7 +640,7 @@ const BookingDetails = () => {
                           >
                             <span>{booking.assigned_employee_id ? "Change" : "Assign"}</span>
                             <div className="flex justify-center items-center">
-                              <div 
+                              <div
                                 className="relative mt-[1px] w-[10px] h-[2px] bg-[#645bff] transition-all duration-200 group-hover:bg-white"
                               >
                                 <span
@@ -767,6 +883,32 @@ const BookingDetails = () => {
                       </DialogContent>
                     </Dialog>
                   )}
+
+                  {/* Edit Work Log Dialog */}
+                  <Dialog open={openEditLogDialog} onOpenChange={setOpenEditLogDialog}>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Edit Work Log Description</DialogTitle>
+                      </DialogHeader>
+                      <div className="py-4">
+                        <Label htmlFor="edit-log-desc">Description</Label>
+                        <Textarea
+                          id="edit-log-desc"
+                          value={editLogDescription}
+                          onChange={(e) => setEditLogDescription(e.target.value)}
+                          placeholder="Describe the work done..."
+                          className="mt-2 h-32"
+                        />
+                      </div>
+                      <DialogFooter>
+                        <Button variant="outline" onClick={() => setOpenEditLogDialog(false)}>Cancel</Button>
+                        <Button onClick={handleUpdateLog} disabled={isUpdatingLog}>
+                          {isUpdatingLog && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                          Update Log
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </div>
               </CardHeader>
               <CardContent className="p-4 sm:p-6">
@@ -775,14 +917,35 @@ const BookingDetails = () => {
                     {booking.daily_work_logs.map((log) => (
                       <div key={log.id} className="relative pl-6 border-l-2 border-gray-200 pb-6 last:pb-0">
                         <div className="absolute -left-[9px] top-0 h-4 w-4 rounded-full bg-red-500 ring-4 ring-white" />
-                        <div className="mb-2">
+                        <div className="mb-2 flex justify-between items-start">
                           <span className="text-sm font-bold text-gray-900">{format(new Date(log.log_date), "MMMM d, yyyy")}</span>
+                          {(isAdmin || isSuperAdmin) && (
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => openEditLog(log)}
+                                className="text-gray-400 hover:text-blue-500 transition-colors"
+                              >
+                                <Pencil className="h-4 w-4" />
+                              </button>
+                              <button
+                                onClick={() => handleDeleteLog(log.id, log.log_date)}
+                                disabled={deletingLogId === log.id}
+                                className="text-gray-400 hover:text-red-500 transition-colors"
+                              >
+                                {deletingLogId === log.id ? (
+                                  <Loader2 className="h-4 w-4 animate-spin" />
+                                ) : (
+                                  <Trash2 className="h-4 w-4" />
+                                )}
+                              </button>
+                            </div>
+                          )}
                         </div>
                         {log.description && <p className="text-gray-600 text-sm mb-3 bg-gray-50 p-3 rounded-lg">{log.description}</p>}
 
                         {((log.photos && log.photos.length > 0) || (log.videos && log.videos.length > 0)) && (
                           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3">
-                            {(log.photos || []).map((item, idx) => {
+                            {(log.photos || []).map((item: any, idx: number) => {
                               const url = typeof item === 'string' ? item : item.url;
                               return (
                                 <div key={`photo-${idx}`} className="aspect-square rounded-lg overflow-hidden bg-gray-100 border relative group">
@@ -790,7 +953,7 @@ const BookingDetails = () => {
                                 </div>
                               );
                             })}
-                            {(log.videos || []).map((item, idx) => {
+                            {(log.videos || []).map((item: any, idx: number) => {
                               const url = typeof item === 'string' ? item : item.url;
                               return (
                                 <div key={`video-${idx}`} className="aspect-square rounded-lg overflow-hidden bg-gray-100 border relative group">
@@ -856,12 +1019,67 @@ const BookingDetails = () => {
                               placeholder="0.00"
                             />
                           </div>
+                          <div className="grid gap-2">
+                            <Label htmlFor="warranty">Warranty Details (Optional)</Label>
+                            <Input
+                              id="warranty"
+                              value={newCostWarranty}
+                              onChange={(e) => setNewCostWarranty(e.target.value)}
+                              placeholder="e.g., 6 months warranty"
+                            />
+                          </div>
                         </div>
                         <DialogFooter>
                           <Button variant="outline" onClick={() => setIsPaymentDialogOpen(false)}>Cancel</Button>
                           <Button onClick={handleAddCost} disabled={isAddingCost}>
                             {isAddingCost && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             Add Cost
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                  )}
+                  {isSuperAdmin && (
+                    <Dialog open={isEditCostDialogOpen} onOpenChange={setIsEditCostDialogOpen}>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Edit Cost Item</DialogTitle>
+                        </DialogHeader>
+                        <div className="grid gap-4 py-4">
+                          <div className="grid gap-2">
+                            <Label htmlFor="edit_item">Item Name</Label>
+                            <Input
+                              id="edit_item"
+                              value={editCostItem}
+                              onChange={(e) => setEditCostItem(e.target.value)}
+                              placeholder="e.g., Oil Filter"
+                            />
+                          </div>
+                          <div className="grid gap-2">
+                            <Label htmlFor="edit_amount">Amount (₹)</Label>
+                            <Input
+                              id="edit_amount"
+                              type="number"
+                              value={editCostAmount}
+                              onChange={(e) => setEditCostAmount(e.target.value)}
+                              placeholder="0.00"
+                            />
+                          </div>
+                          <div className="grid gap-2">
+                            <Label htmlFor="edit_warranty">Warranty Details (Optional)</Label>
+                            <Input
+                              id="edit_warranty"
+                              value={editCostWarranty}
+                              onChange={(e) => setEditCostWarranty(e.target.value)}
+                              placeholder="e.g., 6 months warranty"
+                            />
+                          </div>
+                        </div>
+                        <DialogFooter>
+                          <Button variant="outline" onClick={() => setIsEditCostDialogOpen(false)}>Cancel</Button>
+                          <Button onClick={handleUpdateCost} disabled={isSavingCostEdit}>
+                            {isSavingCostEdit && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            Update Cost
                           </Button>
                         </DialogFooter>
                       </DialogContent>
@@ -877,9 +1095,39 @@ const BookingDetails = () => {
                 ) : (
                   <div className="space-y-3">
                     {costs.map((cost) => (
-                      <div key={cost.id} className="flex justify-between items-center text-sm">
-                        <span className="text-gray-600">{cost.item_name}</span>
-                        <span className="font-medium">₹ {cost.amount.toLocaleString()}</span>
+                      <div key={cost.id} className="flex flex-col gap-0.5 text-sm border-b border-gray-100 last:border-0 pb-2 last:pb-0">
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-600">{cost.item_name}</span>
+                          <span className="font-medium">₹ {cost.amount.toLocaleString()}</span>
+                        </div>
+                        {cost.warranty_details && (
+                          <span className="text-xs text-green-600 flex items-center gap-1">
+                            <ShieldCheck className="h-3 w-3" /> {cost.warranty_details}
+                          </span>
+                        )}
+                        {isSuperAdmin && (
+                          <div className="absolute right-0 top-0 flex items-center">
+                            <button
+                              onClick={() => openEditCost(cost)}
+                              className="p-1 text-gray-400 hover:text-blue-500 transition-colors mr-1"
+                              title="Edit"
+                            >
+                              <Pencil className="h-3 w-3" />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteCost(cost.id)}
+                              disabled={deletingCostId === cost.id}
+                              className="p-1 text-gray-400 hover:text-red-500 transition-colors"
+                              title="Delete"
+                            >
+                              {deletingCostId === cost.id ? (
+                                <Loader2 className="h-3 w-3 animate-spin" />
+                              ) : (
+                                <Trash2 className="h-3 w-3" />
+                              )}
+                            </button>
+                          </div>
+                        )}
                       </div>
                     ))}
                     <Separator className="my-2" />
