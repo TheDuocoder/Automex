@@ -26,6 +26,7 @@ export interface ServiceBookingCreate {
   fuel_type: string;
   service_name: string;
   booking_group_id?: string; // Group ID for multi-service bookings
+  skip_email?: boolean;
 }
 
 /**
@@ -350,5 +351,19 @@ export async function assignEmployeeToBooking(
   }
 
   return response.data;
+}
+
+/**
+ * Send batch booking email for a booking group
+ */
+export async function sendBatchBookingEmail(bookingGroupId: string): Promise<void> {
+  const response = await apiCall(`/api/v1/bookings/batch-email/${bookingGroupId}`, {
+    method: 'POST',
+  });
+
+  if (response.error) {
+    console.warn('Failed to send batch email:', response.error);
+    // We don't throw here to avoid disrupting the user flow if the booking was successful
+  }
 }
 

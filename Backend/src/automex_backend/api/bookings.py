@@ -397,21 +397,24 @@ async def create_service_booking(
         try:
             from automex_backend.services.email_service import send_booking_email
             
-            await send_booking_email(
-                user_name=contact_name,
-                user_email=user.email,
-                user_phone=contact_phone,
-                booking_id=booking.id,
-                service_name=booking_data.service_name,
-                car_brand=booking_data.car_brand,
-                car_model=booking_data.car_model,
-                fuel_type=booking_data.fuel_type,
-                booking_date=booking_data.booking_date,
-                booking_status=booking.status.value if hasattr(booking.status, 'value') else str(booking.status),
-                pickup_address=booking.pickup_address,
-                special_instructions=booking.special_instructions,
-                estimated_cost=booking.estimated_cost
-            )
+            if not booking_data.skip_email:
+                await send_booking_email(
+                    user_name=contact_name,
+                    user_email=user.email,
+                    user_phone=contact_phone,
+                    booking_id=booking.id,
+                    service_name=booking_data.service_name,
+                    car_brand=booking_data.car_brand,
+                    car_model=booking_data.car_model,
+                    fuel_type=booking_data.fuel_type,
+                    booking_date=booking_data.booking_date,
+                    booking_status=booking.status.value if hasattr(booking.status, 'value') else str(booking.status),
+                    pickup_address=booking.pickup_address,
+                    special_instructions=booking.special_instructions,
+                    estimated_cost=booking.estimated_cost
+                )
+            else:
+                print(f"[INFO] Email notification skipped for booking {booking.id} (part of batch)")
         except Exception as email_error:
             # Don't fail the booking creation if email fails
             print(f"[WARNING] Failed to send booking email notification: {str(email_error)}")
@@ -1527,3 +1530,57 @@ async def assign_employee_to_booking(
     
     return BookingRead(**booking_dict)
 
+
+@router.post("/batch-email/{booking_group_id}", status_code=status.HTTP_200_OK)
+async def send_batch_booking_email(
+    booking_group_id: str,
+    session: AsyncSession = Depends(get_async_session),
+    user: User = Depends(current_active_user)
+):
+    """
+    Send a single consolidated email for all bookings with the given group ID.
+    Only the booking owner (user) sends this request after processing the batch.
+    """
+    try:
+        # Fetch all bookings for this group belonging to the user
+        result = await session.execute(
+            select(Booking)
+            .where(Booking.booking_group_id == booking_group_id)
+            .where(Booking.user_id == user.id)
+            .options(selectinload(Booking.daily_work_logs)) # Just in case, though not needed for email
+        )
+        bookings = result.scalars().all()
+        
+        if not bookings:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"No bookings found for group {booking_group_id}"
+            )
+            
+        # Send consolidated email
+        from automex_backend.services.email_service import email_service
+        
+        contact_name = user.full_name if user.full_name else (user.email if user.email else "User")
+        contact_phone = user.phone_number if user.phone_number else None
+        
+        success = await email_service.send_batch_booking_email(
+            user_name=contact_name,
+            user_email=user.email,
+            user_phone=contact_phone,
+            bookings=bookings
+        )
+        
+        if not success:
+             print(f"[WARNING] Failed to send batch email for group {booking_group_id}")
+             # Not raising generic error to avoid confusing frontend if bookings were successful
+             
+        return {"message": "Batch email processed", "email_sent": success, "count": len(bookings)}
+        
+    except Exception as e:
+        print(f"[ERROR] Error processing batch email: {str(e)}")
+        import traceback
+        print(traceback.format_exc())
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to send batch email: {str(e)}"
+        )

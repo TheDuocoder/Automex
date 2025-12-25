@@ -39,6 +39,7 @@ class ServiceBookingCreate(BaseModel):
     fuel_type: str = Field(..., min_length=1, max_length=50)
     service_name: str = Field(..., min_length=1, max_length=255)
     booking_group_id: Optional[str] = Field(None, max_length=100)
+    skip_email: bool = False
 
 
 class BookingStatusUpdate(BaseModel):

@@ -66,8 +66,34 @@ const Services = () => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const { resetSelection, selectedFuelType, selectedBrandId, selectedModelId, catalog } = useCarSelectionStore();
+  const { resetSelection, selectedFuelType, selectedBrandId, selectedModelId, catalog, selectBrand, selectModel, selectFuelType } = useCarSelectionStore();
   const { items } = useCartStore();
+
+  // Hydrate selection from navigation state (e.g., coming back from Cart)
+  useEffect(() => {
+    if (location.state?.preselectedCar) {
+      const { brand, model, fuelType } = location.state.preselectedCar;
+
+      // Find matching brand in catalog
+      const foundBrand = catalog.find(b => b.name === brand);
+      if (foundBrand) {
+        selectBrand(foundBrand.id);
+
+        // Find matching model in brand's models
+        const foundModel = foundBrand.models.find(m => m.name === model);
+        if (foundModel) {
+          selectModel(foundModel.id);
+        }
+
+        if (fuelType) {
+          selectFuelType(fuelType);
+        }
+      }
+
+      // Clear location state to prevent re-hydration issues on navigation
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state, catalog, selectBrand, selectModel, selectFuelType]);
 
   const getDynamicPrice = (type: "general" | "premium", defaultPrice: number) => {
     if (!selectedBrandId) return 0;
@@ -3981,7 +4007,7 @@ const Services = () => {
       </div>
 
       {items.length > 0 && (
-        <div className="fixed bottom-6 left-4 z-50 md:bottom-8 md:left-8">
+        <div className="fixed bottom-24 left-4 z-50 md:bottom-8 md:left-8">
           <Button
             className="rounded-full shadow-lg bg-red-600 hover:bg-red-700 text-white px-6 py-4 h-auto flex items-center gap-3 animate-in fade-in slide-in-from-bottom-5"
             onClick={() => navigate('/my-cart')}

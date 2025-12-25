@@ -66,6 +66,13 @@ class Settings(BaseSettings):
     AWS_BUCKET_NAME: str = "automex-bhubaneswar"
     AWS_S3_FOLDER: str = "Backend/my-cars/"  # Base folder - actual structure: Backend/my-cars/{username}/
 
+    # EmailJS Configuration
+    EMAILJS_PUBLIC_KEY: str = ""
+    EMAILJS_PRIVATE_KEY: str = ""
+    EMAILJS_SERVICE_ID: str = ""
+    EMAILJS_TEMPLATE_ID: str = ""
+    EMAILJS_BOOKING_TEMPLATE_ID: str = "template_iadqc7t"
+
 
 settings = Settings()
 

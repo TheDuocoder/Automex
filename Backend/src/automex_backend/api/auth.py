@@ -4,7 +4,7 @@ Authentication routes using FastAPI Users
 import os
 import traceback
 from typing import Optional, List
-from fastapi import APIRouter, Depends, Request, HTTPException, status, File, UploadFile
+from fastapi import APIRouter, Depends, Request, HTTPException, status, File, UploadFile, BackgroundTasks
 from pydantic import BaseModel, EmailStr
 from fastapi_users import FastAPIUsers, BaseUserManager, IntegerIDMixin
 from fastapi_users.authentication import (
@@ -22,6 +22,7 @@ from automex_backend.database import get_async_session
 from automex_backend.models.user import User
 from automex_backend.schemas.user import UserRead, UserCreate, UserUpdate
 from automex_backend.schemas.role import RoleRead
+from automex_backend.services.email_service import email_service
 
 router = APIRouter()
 
@@ -225,11 +226,11 @@ async def get_current_user_with_role_read(
             "role_id": user_with_role.role_id,
             "role": role_read  # Use the Pydantic object directly
         }
-        
+
         # Create the response object - all data is now plain Python types
         # No SQLAlchemy relationships will be accessed
         return UserRead(**user_dict)
-    
+
     except HTTPException:
         raise
     except Exception as e:
@@ -254,12 +255,13 @@ router.include_router(
 @router.post("/register", response_model=UserRead, status_code=status.HTTP_201_CREATED, name="auth:register")
 async def register(
     user_create: UserCreate,
+    background_tasks: BackgroundTasks,
     user_manager: UserManager = Depends(get_user_manager),
     session: AsyncSession = Depends(get_async_session),
 ):
     """
     Register a new user (public endpoint - no authentication required)
-    
+
     This endpoint allows users to create a new account without being authenticated.
     Validates that email and phone_number are unique.
     """
@@ -271,7 +273,7 @@ async def register(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="An account with this email address already exists. Please use a different email or try logging in."
             )
-        
+
         # Check if phone_number already exists (if provided)
         if user_create.phone_number:
             from sqlalchemy import select
@@ -283,16 +285,20 @@ async def register(
                     status_code=status.HTTP_400_BAD_REQUEST,
                     detail="An account with this phone number already exists. Please use a different phone number."
                 )
-        
+
         # Create user using the user manager (safe=True means it won't create superusers)
         user = await user_manager.create(user_create, safe=True)
-        
+
         # Load user with role relationship
         result = await session.execute(
             select(User).where(User.id == user.id).options(selectinload(User.role))
         )
         user_with_role = result.scalar_one()
-        
+
+        # Send welcome email in background
+        user_name = user_with_role.full_name or user_with_role.email.split('@')[0]
+        background_tasks.add_task(email_service.send_welcome_email, user_with_role.email, user_name)
+
         # Return UserRead model
         return UserRead.model_validate(user_with_role)
     except HTTPException:

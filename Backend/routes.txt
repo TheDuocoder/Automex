@@ -41,6 +41,7 @@ POST                 /api/v1/bookings/{booking_id}/daily-work-logs/{log_date}/me
 DELETE               /api/v1/bookings/{booking_id}/daily-work-logs/{log_id}/media
 DELETE               /api/v1/bookings/{booking_id}/daily-work-logs/{log_date}
 PATCH                /api/v1/bookings/{booking_id}/assign-employee
+POST                 /api/v1/bookings/batch-email/{booking_group_id}
 GET                  /api/v1/costs/booking/{booking_id}
 POST                 /api/v1/costs/
 PUT                  /api/v1/costs/{cost_id}

@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCartStore, CartItem } from "@/stores/cartStore";
-import { createServiceBooking } from "@/services/bookingService";
+import { useCarSelectionStore } from "@/stores/carSelectionStore";
+import { createServiceBooking, sendBatchBookingEmail } from "@/services/bookingService";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Trash2, Calendar as CalendarIcon, Loader2, ShoppingCart, Car, ChevronLeft } from "lucide-react";
@@ -18,6 +19,7 @@ const MyCart = () => {
     const { isAuthenticated } = useAuth();
     const navigate = useNavigate();
     const { items, removeFromCart, clearCart } = useCartStore();
+    const { catalog } = useCarSelectionStore();
     const { toast } = useToast();
     const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
@@ -74,12 +76,16 @@ const MyCart = () => {
                     fuel_type: item.fuelType,
                     service_name: item.name,
                     booking_group_id: bookingGroupId,
+                    skip_email: true
                 };
 
                 await createServiceBooking(bookingData);
                 // Remove booked item from cart
                 removeFromCart(item.id, item.model);
             }
+
+            // Send single consolidated batch email
+            await sendBatchBookingEmail(bookingGroupId);
 
             toast({
                 title: "Booking Successful!",
@@ -177,7 +183,7 @@ const MyCart = () => {
                                         <div className="flex items-center gap-3">
                                             <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm p-2 overflow-hidden transition-transform duration-300 hover:scale-110 cursor-pointer">
                                                 <img
-                                                    src={`https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_brands/${groupItems[0].brand}.png`}
+                                                    src={catalog.find(b => b.name === groupItems[0].brand)?.logo || `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_brands/${groupItems[0].brand}.png`}
                                                     alt={groupItems[0].brand}
                                                     className="w-full h-full object-contain"
                                                     style={{ objectFit: 'contain' }}
@@ -186,27 +192,10 @@ const MyCart = () => {
                                                         const firstWord = brand.split(/[\s\-]/)[0];
                                                         const capitalizedBrand = firstWord.charAt(0).toUpperCase() + firstWord.slice(1).toLowerCase();
 
-                                                        // Special handling for specific brands
-                                                        if (brand.toLowerCase().includes('volkswagen')) {
-                                                            e.currentTarget.src = `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_brands/Volkswagancarlogo.png`;
-                                                        } else if (brand.toLowerCase().includes('maruti') && brand.toLowerCase().includes('suzuki')) {
-                                                            e.currentTarget.src = `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_brands/Marutisuzukicarlogo.png`;
-                                                        } else if (brand.toLowerCase().includes('toyota')) {
-                                                            e.currentTarget.src = `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_brands/Toyotacarlogo.png`;
-                                                        } else if (brand.toLowerCase().includes('hyundai')) {
-                                                            e.currentTarget.src = `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_brands/Hyundaicarlogo.png`;
-                                                        } else if (brand.toLowerCase() === 'mg' || brand.toLowerCase().includes('mg ')) {
-                                                            e.currentTarget.src = `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_brands/Mgcarlogo.png`;
-                                                        } else {
-                                                            e.currentTarget.src = `https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Car_brands/${capitalizedBrand}carlogo.png`;
-                                                        }
-
-                                                        e.currentTarget.onerror = () => {
-                                                            // Final fallback - hide image and show car icon
-                                                            e.currentTarget.style.display = 'none';
-                                                            const carIcon = e.currentTarget.nextElementSibling;
-                                                            if (carIcon) carIcon.classList.remove('hidden');
-                                                        };
+                                                        // Fallback logic if catalog image also fails
+                                                        e.currentTarget.style.display = 'none';
+                                                        const carIcon = e.currentTarget.nextElementSibling;
+                                                        if (carIcon) carIcon.classList.remove('hidden');
                                                     }}
                                                 />
                                                 <Car className="h-5 w-5 text-purple-600 hidden" />
@@ -240,7 +229,15 @@ const MyCart = () => {
                                 </CardContent>
                                 <CardFooter className="bg-gray-50/70 border-t border-gray-100 px-5 py-4 flex justify-between items-center">
                                     <Button
-                                        onClick={() => navigate("/services")}
+                                        onClick={() => navigate("/services", {
+                                            state: {
+                                                preselectedCar: {
+                                                    brand: groupItems[0].brand,
+                                                    model: groupItems[0].model,
+                                                    fuelType: groupItems[0].fuelType
+                                                }
+                                            }
+                                        })}
                                         variant="ghost"
                                         className="text-gray-700 hover:text-gray-900 hover:bg-transparent font-medium px-0 flex items-center gap-1"
                                     >
