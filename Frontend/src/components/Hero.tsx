@@ -388,17 +388,46 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
               </span>
 
               {!isAuthenticated && (
-                <span
-                  className="hero-cta md:hidden inline-block text-white px-6 py-2 rounded-full text-sm font-bold shadow-xl transition-all cursor-pointer"
-                  onClick={() => setLocalShowLoginForm(true)}
-                  style={{
-                    background: 'rgba(0,0,0,0.6)',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(255,255,255,0.2)'
-                  }}
-                >
-                  Login
-                </span>
+                <div className="flex items-center gap-2">
+                  <span
+                    className="hero-cta md:hidden inline-block text-white px-6 py-2 rounded-full text-sm font-bold shadow-xl transition-all cursor-pointer"
+                    onClick={() => setLocalShowLoginForm(true)}
+                    style={{
+                      background: 'rgba(0,0,0,0.6)',
+                      backdropFilter: 'blur(10px)',
+                      border: '1px solid rgba(255,255,255,0.2)'
+                    }}
+                  >
+                    Login
+                  </span>
+
+                  {/* Dancing Animation */}
+                  <div
+                    className="md:hidden relative w-12 h-12 flex items-center justify-center"
+                    style={{
+                      background: 'radial-gradient(circle, rgba(255,0,128,0.2) 0%, transparent 70%)',
+                    }}
+                  >
+                    <span
+                      className="text-3xl animate-bounce absolute"
+                      style={{
+                        animationDuration: '1s',
+                        filter: 'drop-shadow(0 0 8px rgba(255,105,180,0.8))'
+                      }}
+                    >
+                      💃
+                    </span>
+                    <span
+                      className="text-3xl animate-ping absolute opacity-30"
+                      style={{
+                        animationDuration: '1.5s',
+                        filter: 'drop-shadow(0 0 8px rgba(255,105,180,0.8))'
+                      }}
+                    >
+                      💃
+                    </span>
+                  </div>
+                </div>
               )}
             </div>
           </div>
