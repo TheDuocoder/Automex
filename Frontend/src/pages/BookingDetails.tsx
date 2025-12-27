@@ -982,18 +982,21 @@ const BookingDetails = () => {
           <div className="space-y-6">
 
             {/* Payment Summary */}
-            <Card className="border-none shadow-[0_8px_24px_rgba(0,0,0,0.06)] rounded-2xl mt-8">
-              <CardHeader className="border-b bg-gray-50/50 pb-6 rounded-t-2xl">
+            <Card className="border-none shadow-[0_8px_24px_rgba(0,0,0,0.06)] rounded-[20px] mt-8 overflow-hidden">
+              <CardHeader className="bg-white px-6 pt-6 pb-2">
                 <div className="flex justify-between items-center">
-                  <CardTitle className="text-base font-bold flex items-center gap-2">
+                  <CardTitle className="text-lg font-bold text-gray-900 flex items-center gap-2">
                     ₹ Payment Summary
                   </CardTitle>
                   {isAdmin && (
                     <Dialog open={isPaymentDialogOpen} onOpenChange={setIsPaymentDialogOpen}>
                       <DialogTrigger asChild>
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-md hover:bg-gray-100 hover:text-gray-900 transition-colors">
-                          <span className="text-xl leading-none">+</span>
-                        </Button>
+                        <button className="add-swipe-button scale-90 origin-right">
+                          <span className="add-swipe-button__text">Add</span>
+                          <span className="add-swipe-button__icon">
+                            <Plus className="svg" strokeWidth={2} />
+                          </span>
+                        </button>
                       </DialogTrigger>
                       <DialogContent>
                         <DialogHeader>
@@ -1087,59 +1090,62 @@ const BookingDetails = () => {
                   )}
                 </div>
               </CardHeader>
-              <CardContent className="p-6">
+              <CardContent className="p-6 pt-2">
                 {costs.length === 0 ? (
-                  <div className="text-center py-6 bg-gray-50 rounded-xl border border-dashed text-gray-400 text-sm">
+                  <div className="text-center py-8 bg-gray-50 rounded-xl border border-dashed border-gray-200 text-gray-400 text-sm">
                     No cost items added yet
                   </div>
                 ) : (
-                  <div className="space-y-3">
+                  <div className="space-y-5">
                     {costs.map((cost) => (
-                      <div key={cost.id} className="flex flex-col gap-0.5 text-sm border-b border-gray-100 last:border-0 pb-2 last:pb-0">
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-600">{cost.item_name}</span>
-                          <span className="font-medium">₹ {cost.amount.toLocaleString()}</span>
+                      <div key={cost.id} className="relative group">
+                        <div className="flex justify-between items-start mb-1">
+                          <span className="text-gray-900 font-medium capitalize text-base">{cost.item_name}</span>
+                          <span className="text-gray-600 font-medium">₹ {cost.amount.toLocaleString()}</span>
                         </div>
                         {cost.warranty_details && (
-                          <span className="text-xs text-green-600 flex items-center gap-1">
-                            <ShieldCheck className="h-3 w-3" /> {cost.warranty_details}
-                          </span>
+                          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-green-200 bg-green-50 text-green-700 text-xs font-semibold w-fit">
+                            <CheckCircle2 className="h-3 w-3" />
+                            {cost.warranty_details}
+                          </div>
                         )}
+
+                        {/* Admin Controls */}
                         {isSuperAdmin && (
-                          <div className="absolute right-0 top-0 flex items-center">
+                          <div className="absolute -right-2 top-0 opacity-0 group-hover:opacity-100 transition-opacity flex bg-white shadow-sm border rounded-md overflow-hidden z-10">
                             <button
                               onClick={() => openEditCost(cost)}
-                              className="p-1 text-gray-400 hover:text-blue-500 transition-colors mr-1"
+                              className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-colors border-r"
                               title="Edit"
                             >
-                              <Pencil className="h-3 w-3" />
+                              <Pencil className="h-3.5 w-3.5" />
                             </button>
                             <button
                               onClick={() => handleDeleteCost(cost.id)}
                               disabled={deletingCostId === cost.id}
-                              className="p-1 text-gray-400 hover:text-red-500 transition-colors"
+                              className="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors"
                               title="Delete"
                             >
                               {deletingCostId === cost.id ? (
-                                <Loader2 className="h-3 w-3 animate-spin" />
+                                <Loader2 className="h-3.5 w-3.5 animate-spin" />
                               ) : (
-                                <Trash2 className="h-3 w-3" />
+                                <Trash2 className="h-3.5 w-3.5" />
                               )}
                             </button>
                           </div>
                         )}
                       </div>
                     ))}
-                    <Separator className="my-2" />
+
+                    <div className="h-px bg-gray-100 my-6" />
                   </div>
                 )}
 
-                <div className="flex justify-between items-center mt-4 pt-4 border-t">
-                  <span className="font-bold text-gray-700">Total Amount</span>
-                  <span className="text-2xl font-bold text-red-600">₹ {totalCost.toLocaleString()}</span>
+                <div className="bg-[#FFF5F5] rounded-xl p-5 mt-4 flex justify-between items-center border border-red-100/50">
+                  <span className="font-bold text-gray-900 text-lg">Total Amount</span>
+                  <span className="font-extrabold text-2xl text-[#E62222]">₹ {totalCost.toLocaleString()}</span>
                 </div>
               </CardContent>
-              {/* Admin "Add Cost Item" hidden for User */}
             </Card>
 
             {/* Timeline / Status */}

@@ -1694,3 +1694,131 @@ All colors MUST be HSL.
     transform: translateY(-0.1em);
   }
 }
+
+/* Swipe Booking Button Animation */
+.book-swipe-button {
+  position: relative;
+  width: 150px;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border: 1px solid #34974d;
+  background-color: #3aa856;
+  overflow: hidden;
+  border-radius: 5px;
+}
+
+.book-swipe-button, .book-swipe-button__icon, .book-swipe-button__text {
+  transition: all 0.3s;
+}
+
+.book-swipe-button .book-swipe-button__text {
+  transform: translateX(30px);
+  color: #fff;
+  font-weight: 600;
+  width: 100%;
+}
+
+.book-swipe-button .book-swipe-button__icon {
+  position: absolute;
+  transform: translateX(109px);
+  height: 100%;
+  width: 39px;
+  background-color: #34974d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.book-swipe-button .svg {
+  width: 30px;
+  stroke: #fff;
+}
+
+.book-swipe-button:hover {
+  background: #34974d;
+}
+
+.book-swipe-button:hover .book-swipe-button__text {
+  color: transparent;
+}
+
+.book-swipe-button:hover .book-swipe-button__icon {
+  width: 148px;
+  transform: translateX(0);
+}
+
+.book-swipe-button:active .book-swipe-button__icon {
+  background-color: #2e8644;
+}
+
+.book-swipe-button:active {
+  border: 1px solid #2e8644;
+}
+
+
+/* Add Swipe Button Animation */
+.add-swipe-button {
+  position: relative;
+  width: 150px;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border: 1px solid #34974d;
+  background-color: #3aa856;
+  overflow: hidden;
+  border-radius: 5px;
+}
+
+.add-swipe-button, .add-swipe-button__icon, .add-swipe-button__text {
+  transition: all 0.3s;
+}
+
+.add-swipe-button .add-swipe-button__text {
+  transform: translateX(0);
+  color: #fff;
+  font-weight: 600;
+  width: 100%;
+  text-align: center;
+  padding-right: 40px;
+}
+
+.add-swipe-button .add-swipe-button__icon {
+  position: absolute;
+  transform: translateX(109px);
+  height: 100%;
+  width: 39px;
+  background-color: #34974d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-swipe-button .svg {
+  width: 30px;
+  stroke: #fff;
+}
+
+.add-swipe-button:hover {
+  background: #34974d;
+}
+
+.add-swipe-button:hover .add-swipe-button__text {
+  color: transparent;
+}
+
+.add-swipe-button:hover .add-swipe-button__icon {
+  width: 148px;
+  transform: translateX(0);
+}
+
+.add-swipe-button:active .add-swipe-button__icon {
+  background-color: #2e8644;
+}
+
+.add-swipe-button:active {
+  border: 1px solid #2e8644;
+}
+

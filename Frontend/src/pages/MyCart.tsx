@@ -6,7 +6,7 @@ import { useCarSelectionStore } from "@/stores/carSelectionStore";
 import { createServiceBooking, sendBatchBookingEmail } from "@/services/bookingService";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Trash2, Calendar as CalendarIcon, Loader2, ShoppingCart, Car, ChevronLeft } from "lucide-react";
+import { Trash2, Calendar as CalendarIcon, Loader2, ShoppingCart, Car, ChevronLeft, CalendarCheck } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useToast } from "@/hooks/use-toast";
@@ -220,7 +220,7 @@ const MyCart = () => {
                                                 variant="ghost"
                                                 size="icon"
                                                 onClick={() => removeFromCart(item.id, item.model)}
-                                                className="text-red-500 hover:text-red-700 hover:bg-red-50 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity w-11 h-11"
+                                                className="text-red-500 hover:text-red-700 hover:bg-red-50 shrink-0 transition-all duration-300 w-11 h-11 hover:scale-125 hover:rotate-12"
                                             >
                                                 <Trash2 className="h-5.5 w-5.5" />
                                             </Button>
@@ -244,12 +244,15 @@ const MyCart = () => {
                                         <ChevronLeft className="h-5 w-5" />
                                         Continue adding
                                     </Button>
-                                    <Button
+                                    <button
                                         onClick={() => handleCheckoutClick(groupItems)}
-                                        className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 shadow-sm hover:shadow transition-all"
+                                        className="book-swipe-button"
                                     >
-                                        Click to Book
-                                    </Button>
+                                        <span className="book-swipe-button__text">Book Now</span>
+                                        <span className="book-swipe-button__icon">
+                                            <CalendarCheck className="svg" strokeWidth={2} />
+                                        </span>
+                                    </button>
                                 </CardFooter>
                             </Card>
                         ))}
