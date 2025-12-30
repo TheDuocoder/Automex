@@ -39,6 +39,7 @@ POST                 /api/v1/bookings/{booking_id}/daily-work-logs
 PATCH                /api/v1/bookings/{booking_id}/daily-work-logs/{log_id}/description
 POST                 /api/v1/bookings/{booking_id}/daily-work-logs/{log_date}/media
 DELETE               /api/v1/bookings/{booking_id}/daily-work-logs/{log_id}/media
+DELETE               /api/v1/bookings/{booking_id}/daily-work-logs/log/{log_id}
 DELETE               /api/v1/bookings/{booking_id}/daily-work-logs/{log_date}
 PATCH                /api/v1/bookings/{booking_id}/assign-employee
 POST                 /api/v1/bookings/batch-email/{booking_group_id}

@@ -98,7 +98,7 @@ const AllUsers = () => {
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  
+
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 5;
@@ -174,8 +174,8 @@ const AllUsers = () => {
     >
       <style>{tableStyles}</style>
       <Card className="shadow-sm border border-gray-200 rounded-2xl overflow-hidden">
-        <CardHeader 
-          className="border-b border-gray-100 px-8 py-6" 
+        <CardHeader
+          className="border-b border-gray-100 px-8 py-6"
           style={{ background: 'linear-gradient(90deg, #a67ba9 0%, #c8a2c8 50%, #e6b8c0 100%)' }}
         >
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -264,7 +264,7 @@ const AllUsers = () => {
                 </thead>
                 <tbody>
                   {currentUsers.map((user) => (
-                    <tr 
+                    <tr
                       key={user.id}
                       onClick={() => navigate(`/admin/user-details/${user.id}`)}
                       style={{ cursor: 'pointer' }}
@@ -298,21 +298,16 @@ const AllUsers = () => {
                           }}>
                             Super Admin
                           </span>
-                        ) : user.role?.name === 'admin' ? (
-                          <span className="role-badge" style={{
-                            background: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)',
-                            color: 'white',
-                            boxShadow: '0 2px 8px rgba(249, 115, 22, 0.3)'
-                          }}>
-                            <Shield className="h-3.5 w-3.5" />
-                            Admin
-                          </span>
                         ) : (
                           <span className="role-badge" style={{
-                            background: '#f3f4f6',
-                            color: '#374151'
+                            background: user.role?.name === 'admin' ? 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)' : '#f3f4f6',
+                            color: user.role?.name === 'admin' ? 'white' : '#374151',
+                            boxShadow: user.role?.name === 'admin' ? '0 2px 8px rgba(249, 115, 22, 0.3)' : 'none'
                           }}>
-                            Normal
+                            {user.role?.name === 'admin' && <Shield className="h-3.5 w-3.5" />}
+                            {user.role?.name ?
+                              user.role.name.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
+                              : 'Normal'}
                           </span>
                         )}
                       </td>
@@ -372,21 +367,20 @@ const AllUsers = () => {
                 >
                   Previous
                 </button>
-                
+
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
                   <button
                     key={pageNumber}
                     onClick={() => handlePageChange(pageNumber)}
-                    className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
-                      currentPage === pageNumber
+                    className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${currentPage === pageNumber
                         ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-md'
                         : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
-                    }`}
+                      }`}
                   >
                     {pageNumber}
                   </button>
                 ))}
-                
+
                 <button
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === totalPages}

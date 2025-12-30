@@ -318,6 +318,19 @@ export async function deleteDailyWorkMedia(bookingId: number, logId: number, med
 }
 
 /**
+ * Delete a specific daily work log by ID (Admin/Super Admin only)
+ */
+export async function deleteDailyWorkLogById(bookingId: number, logId: number): Promise<void> {
+  const response = await apiCall(`/api/v1/bookings/${bookingId}/daily-work-logs/log/${logId}`, {
+    method: 'DELETE',
+  });
+
+  if (response.error) {
+    throw new Error(response.error);
+  }
+}
+
+/**
  * Delete all daily work log for a specific date (Admin/Super Admin only)
  */
 export async function deleteDailyWorkByDate(bookingId: number, logDate: string): Promise<void> {

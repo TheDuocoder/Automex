@@ -746,7 +746,7 @@ async def delete_booking(
         select(User).where(User.id == booking.user_id)
     )
     owner = owner_result.scalar_one_or_none()
-    owner_email = owner.email if owner else None
+    owner_identifier = owner.email if (owner and owner.email) else f"user_{booking.user_id}"
     
     # Collect all media URLs from daily work logs
     def extract_urls(items):
@@ -774,7 +774,7 @@ async def delete_booking(
                 all_media_urls.extend(extract_urls(daily_log.videos))
             
             # Collect date folders for bulk deletion
-            if daily_log.log_date and owner_email:
+            if daily_log.log_date and owner_identifier:
                 date_str = daily_log.log_date.strftime("%Y-%m-%d") if hasattr(daily_log.log_date, 'strftime') else str(daily_log.log_date)
                 date_folders_to_delete.add(date_str)
     
@@ -784,10 +784,11 @@ async def delete_booking(
     deleted_count = 0
     
     # Delete files by date folder (more efficient)
-    if owner_email:
+    if owner_identifier:
         for date_folder in date_folders_to_delete:
             try:
-                count = await s3_service.delete_files_by_date_folder(owner_email, date_folder)
+                count = await s3_service.delete_files_by_date_folder(owner_identifier, date_folder)
+
                 deleted_count += count
                 print(f"[INFO] Deleted {count} files from date folder {date_folder} for booking #{booking_id}")
             except Exception as e:
@@ -895,18 +896,18 @@ async def create_daily_work_log(
             detail="Booking not found"
         )
     
-    # Check if log already exists for this date
-    existing_log = await session.execute(
-        select(DailyWorkLog).where(
-            DailyWorkLog.booking_id == booking_id,
-            DailyWorkLog.log_date == log_data.log_date
-        )
-    )
-    if existing_log.scalar_one_or_none():
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Daily work log already exists for date {log_data.log_date}"
-        )
+    # Check if log already exists for this date - CHECK REMOVED to allow multiple logs per day
+    # existing_log = await session.execute(
+    #     select(DailyWorkLog).where(
+    #         DailyWorkLog.booking_id == booking_id,
+    #         DailyWorkLog.log_date == log_data.log_date
+    #     )
+    # )
+    # if existing_log.scalar_one_or_none():
+    #     raise HTTPException(
+    #         status_code=status.HTTP_400_BAD_REQUEST,
+    #         detail=f"Daily work log already exists for date {log_data.log_date}"
+    #     )
     
     # Create new log entry
     daily_log = DailyWorkLog(
@@ -1064,13 +1065,8 @@ async def upload_daily_work_media(
         select(User).where(User.id == booking.user_id)
     )
     owner = owner_result.scalar_one_or_none()
-    owner_email = owner.email if owner else None
-    
-    if not owner_email:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Booking owner email not found"
-        )
+    # Fallback to user_id if email is missing to ensure folder creation works
+    owner_identifier = owner.email if (owner and owner.email) else f"user_{booking.user_id}"
     
     # Validate files
     if not files or len(files) == 0:
@@ -1079,14 +1075,14 @@ async def upload_daily_work_media(
             detail="At least one file must be uploaded"
         )
     
-    # Get or create daily work log for this date
+    # Get the latest daily work log for this date (if multiple exist)
     log_result = await session.execute(
         select(DailyWorkLog).where(
             DailyWorkLog.booking_id == booking_id,
             DailyWorkLog.log_date == date_obj
-        )
+        ).order_by(DailyWorkLog.created_at.desc())
     )
-    daily_log = log_result.scalar_one_or_none()
+    daily_log = log_result.scalars().first()
     
     if not daily_log:
         # Create new log entry
@@ -1132,7 +1128,7 @@ async def upload_daily_work_media(
                     detail=f"Image {file.filename} exceeds 10MB limit"
                 )
             # Upload image with date folder
-            image_url = await s3_service.upload_file(file, booking_email=owner_email, date_folder=log_date)
+            image_url = await s3_service.upload_file(file, booking_email=owner_identifier, date_folder=log_date)
             uploaded_photos.append(image_url)
         elif file.content_type.startswith('video/'):
             if file_size > 50 * 1024 * 1024:  # 50MB
@@ -1141,7 +1137,7 @@ async def upload_daily_work_media(
                     detail=f"Video {file.filename} exceeds 50MB limit"
                 )
             # Upload video with date folder
-            video_url = await s3_service.upload_file(file, booking_email=owner_email, date_folder=log_date)
+            video_url = await s3_service.upload_file(file, booking_email=owner_identifier, date_folder=log_date)
             uploaded_videos.append(video_url)
         else:
             raise HTTPException(
@@ -1295,6 +1291,93 @@ async def delete_daily_work_media(
     return daily_log
 
 
+
+@router.delete("/{booking_id}/daily-work-logs/log/{log_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_daily_work_log(
+    booking_id: int,
+    log_id: int,
+    session: AsyncSession = Depends(get_async_session),
+    user: User = Depends(current_active_user)
+):
+    """
+    Delete a specific daily work log entry by ID (Admin and Super Admin only)
+    Deletes from both database and S3
+    """
+    # Check if user is Admin or Super Admin
+    is_admin = await is_admin_or_super_admin(user, session)
+    if not is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only Admin and Super Admin can delete daily work logs"
+        )
+    
+    # Get booking
+    result = await session.execute(
+        select(Booking).where(Booking.id == booking_id)
+    )
+    booking = result.scalar_one_or_none()
+    
+    if not booking:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Booking not found"
+        )
+    
+    # Get daily work log
+    log_result = await session.execute(
+        select(DailyWorkLog).where(
+            DailyWorkLog.id == log_id,
+            DailyWorkLog.booking_id == booking_id
+        )
+    )
+    daily_log = log_result.scalar_one_or_none()
+    
+    if not daily_log:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Daily work log not found"
+        )
+    
+    # Get booking owner's email for S3 deletion fallback
+    owner_result = await session.execute(
+        select(User).where(User.id == booking.user_id)
+    )
+    owner = owner_result.scalar_one_or_none()
+    owner_identifier = owner.email if (owner and owner.email) else f"user_{booking.user_id}"
+    
+    # Collect all media URLs to delete from S3
+    def extract_urls(items):
+        urls = []
+        for item in items or []:
+            if isinstance(item, str):
+                urls.append(item)
+            elif isinstance(item, dict) and "url" in item:
+                urls.append(item["url"])
+        return urls
+    
+    urls_to_delete = []
+    if daily_log.photos:
+        urls_to_delete.extend(extract_urls(daily_log.photos))
+    if daily_log.videos:
+        urls_to_delete.extend(extract_urls(daily_log.videos))
+    
+    # Delete media files from S3
+    from automex_backend.services.s3 import s3_service
+    
+    deleted_count = 0
+    for url in urls_to_delete:
+        if await s3_service.delete_file(url):
+            deleted_count += 1
+            
+    # Delete the log entry from database
+    await session.delete(daily_log)
+    await session.commit()
+    
+    print(f"[INFO] Deleted daily work log #{log_id} ({len(urls_to_delete)} media items, S3 deleted: {deleted_count} files)")
+    
+    return None
+
+
 @router.delete("/{booking_id}/daily-work-logs/{log_date}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_daily_work_by_date(
     booking_id: int,
@@ -1335,16 +1418,16 @@ async def delete_daily_work_by_date(
             detail="Booking not found"
         )
     
-    # Get daily work log for this date
+    # Get ALL daily work logs for this date
     log_result = await session.execute(
         select(DailyWorkLog).where(
             DailyWorkLog.booking_id == booking_id,
             DailyWorkLog.log_date == date_obj
         )
     )
-    daily_log = log_result.scalar_one_or_none()
+    daily_logs = log_result.scalars().all()
     
-    if not daily_log:
+    if not daily_logs:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"No daily work log found for date {log_date}"
@@ -1355,13 +1438,7 @@ async def delete_daily_work_by_date(
         select(User).where(User.id == booking.user_id)
     )
     owner = owner_result.scalar_one_or_none()
-    owner_email = owner.email if owner else None
-    
-    if not owner_email:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Booking owner email not found"
-        )
+    owner_identifier = owner.email if (owner and owner.email) else f"user_{booking.user_id}"
     
     # Collect all media URLs to delete from S3
     # Extract URLs from photos and videos (handle both string and object formats)
@@ -1375,24 +1452,30 @@ async def delete_daily_work_by_date(
         return urls
     
     urls_to_delete = []
-    if daily_log.photos:
-        urls_to_delete.extend(extract_urls(daily_log.photos))
-    if daily_log.videos:
-        urls_to_delete.extend(extract_urls(daily_log.videos))
+    
+    # Process all logs for this date
+    for daily_log in daily_logs:
+        if daily_log.photos:
+            urls_to_delete.extend(extract_urls(daily_log.photos))
+        if daily_log.videos:
+            urls_to_delete.extend(extract_urls(daily_log.videos))
     
     # Delete from S3
     from automex_backend.services.s3 import s3_service
-    s3_deleted_count = await s3_service.delete_files_by_date_folder(owner_email, log_date)
+    # This deletes the entire date folder, which covers all media for that date regardless of which log entry it's in
+    s3_deleted_count = await s3_service.delete_files_by_date_folder(owner_identifier, log_date)
     
-    # Also delete individual files by URL (in case some weren't in the date folder)
+    # Also delete individual files by URL (in case some weren't in the date folder for some reason)
     for url in urls_to_delete:
         await s3_service.delete_file(url)
     
-    # Delete the log entry from database
-    await session.delete(daily_log)
+    # Delete all log entries from database
+    for daily_log in daily_logs:
+        await session.delete(daily_log)
+        
     await session.commit()
     
-    print(f"[INFO] Deleted daily work log for date {log_date} ({len(urls_to_delete)} media items, S3 deleted: {s3_deleted_count} files)")
+    print(f"[INFO] Deleted {len(daily_logs)} daily work log(s) for date {log_date} ({len(urls_to_delete)} media items, S3 deleted: {s3_deleted_count} files)")
     
     return None
 

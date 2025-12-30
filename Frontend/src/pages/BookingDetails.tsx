@@ -12,7 +12,7 @@ import {
   CheckCircle2, AlertCircle, Clock, ShieldCheck, Download, FolderOpen, Plus, Trash2, X,
   Loader2, XCircle, Wrench, Car, Mail, UploadCloud, Image as ImageIcon, Video, ArrowRight, Pencil
 } from "lucide-react";
-import { getBooking, cancelBooking, getUserBookings, type Booking, BookingStatus, deleteDailyWorkByDate, updateDailyWorkLogDescription, type DailyWorkLog } from "@/services/bookingService";
+import { getBooking, cancelBooking, getUserBookings, type Booking, BookingStatus, deleteDailyWorkByDate, deleteDailyWorkLogById, updateDailyWorkLogDescription, type DailyWorkLog } from "@/services/bookingService";
 import { getBookingCosts, deleteCost, updateCost, type Cost } from "@/services/costService";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
@@ -294,13 +294,11 @@ const BookingDetails = () => {
 
 
 
-  const handleDeleteLog = async (logId: number, logDate: string) => {
+  const handleDeleteLog = async (logId: number) => {
     if (!booking) return;
     try {
       setDeletingLogId(logId);
-      // logDate is typically ISO string, we need YYYY-MM-DD
-      const dateStr = logDate.split('T')[0];
-      await deleteDailyWorkByDate(booking.id, dateStr);
+      await deleteDailyWorkLogById(booking.id, logId);
       toast({ title: "Success", description: "Work log deleted" });
       loadBooking(); // Reload to refresh list
     } catch (error: any) {
@@ -745,142 +743,166 @@ const BookingDetails = () => {
                   {isAdmin && (
                     <Dialog open={isWorkLogDialogOpen} onOpenChange={setIsWorkLogDialogOpen}>
                       <DialogTrigger asChild>
-                        <button className="group relative w-[150px] h-[40px] cursor-pointer flex items-center border border-[#34974d] bg-[#3aa856] transition-all duration-300 hover:bg-[#34974d] active:border-[#2e8644]">
-                          <span className="button__text transform translate-x-[30px] text-white font-semibold transition-all duration-300 group-hover:text-transparent text-sm">
-                            Add Log
-                          </span>
-                          <div className="button__icon absolute right-0 h-full w-[39px] bg-[#34974d] flex items-center justify-center transition-all duration-300 group-hover:w-[148px] group-hover:translate-x-0 group-active:bg-[#2e8644]">
-                            <Plus className="w-[20px] h-[20px] stroke-white stroke-[2.5]" />
-                          </div>
-                        </button>
-                      </DialogTrigger>
-                      <DialogContent className="max-w-lg w-full sm:rounded-2xl p-0 overflow-hidden">
-                        <DialogHeader className="p-6 pb-2">
-                          <DialogTitle className="text-xl font-bold flex items-center gap-2">
-                            <div className="bg-red-50 p-2 rounded-lg">
-                              <FileText className="h-5 w-5 text-red-600" />
-                            </div>
-                            Add Work Log
-                          </DialogTitle>
-                          <DialogDescription className="text-gray-500">
-                            Log progress with photos or videos for the customer.
-                          </DialogDescription>
-                        </DialogHeader>
-
-                        <div className="px-6 py-2 space-y-5">
-                          {/* Date & Description Group */}
-                          <div className="space-y-4">
-                            <div className="space-y-2">
-                              <Label htmlFor="logDate" className="text-sm font-semibold text-gray-700">Date</Label>
-                              <div className="relative">
-                                <CalendarIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                                <Input
-                                  id="logDate"
-                                  type="date"
-                                  value={logDate}
-                                  onChange={(e) => setLogDate(e.target.value)}
-                                  className="pl-9 bg-gray-50 border-gray-200 focus:bg-white transition-colors"
-                                />
-                              </div>
-                            </div>
-
-                            <div className="space-y-2">
-                              <Label htmlFor="logDesc" className="text-sm font-semibold text-gray-700">Description</Label>
-                              <Textarea
-                                id="logDesc"
-                                value={logDescription}
-                                onChange={(e) => setLogDescription(e.target.value)}
-                                placeholder="Describe the work done today..."
-                                className="min-h-[100px] bg-gray-50 border-gray-200 focus:bg-white transition-colors resize-none"
-                              />
-                            </div>
-                          </div>
-
-                          {/* Media Upload Section */}
-                          <div className="space-y-4">
-                            <Label className="text-sm font-semibold text-gray-700 flex items-center justify-between">
-                              <span>Media Attachments</span>
-                              <span className="text-xs font-normal text-gray-400">Optional</span>
-                            </Label>
-
-                            <div className="grid grid-cols-2 gap-3">
-                              {/* Photo Upload */}
-                              <div className="relative group">
-                                <input
-                                  type="file"
-                                  multiple
-                                  accept="image/*"
-                                  onChange={(e) => handleFileChange(e, 'photos')}
-                                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                                />
-                                <div className="border border-dashed border-gray-300 bg-gray-50 rounded-xl p-4 flex flex-col items-center justify-center text-center gap-2 group-hover:bg-red-50 group-hover:border-red-200 transition-colors h-full">
-                                  <div className="bg-white p-2 rounded-full shadow-sm">
-                                    <ImageIcon className="h-5 w-5 text-gray-500 group-hover:text-red-500" />
-                                  </div>
-                                  <div>
-                                    <p className="text-xs font-semibold text-gray-700">Add Photos</p>
-                                    <p className="text-[10px] text-gray-400">JPG, PNG</p>
-                                  </div>
-                                </div>
-                              </div>
-
-                              {/* Video Upload */}
-                              <div className="relative group">
-                                <input
-                                  type="file"
-                                  multiple
-                                  accept="video/*"
-                                  onChange={(e) => handleFileChange(e, 'videos')}
-                                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                                />
-                                <div className="border border-dashed border-gray-300 bg-gray-50 rounded-xl p-4 flex flex-col items-center justify-center text-center gap-2 group-hover:bg-red-50 group-hover:border-red-200 transition-colors h-full">
-                                  <div className="bg-white p-2 rounded-full shadow-sm">
-                                    <Video className="h-5 w-5 text-gray-500 group-hover:text-red-500" />
-                                  </div>
-                                  <div>
-                                    <p className="text-xs font-semibold text-gray-700">Add Videos</p>
-                                    <p className="text-[10px] text-gray-400">MP4, MOV</p>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Selected Files List */}
-                            {(logPhotos.length > 0 || logVideos.length > 0) && (
-                              <div className="flex flex-wrap gap-2 pt-2">
-                                {logPhotos.map((file, i) => (
-                                  <div key={`p-${i}`} className="text-xs bg-blue-50 text-blue-700 border border-blue-100 pl-2 pr-1 py-1 rounded-md flex items-center gap-1">
-                                    <ImageIcon className="h-3 w-3" />
-                                    <span className="max-w-[100px] truncate">{file.name}</span>
-                                    <button onClick={() => removeFile(i, 'photos')} className="hover:bg-blue-100 rounded text-blue-500 p-0.5">
-                                      <X className="h-3 w-3" />
-                                    </button>
-                                  </div>
-                                ))}
-                                {logVideos.map((file, i) => (
-                                  <div key={`v-${i}`} className="text-xs bg-purple-50 text-purple-700 border border-purple-100 pl-2 pr-1 py-1 rounded-md flex items-center gap-1">
-                                    <Video className="h-3 w-3" />
-                                    <span className="max-w-[100px] truncate">{file.name}</span>
-                                    <button onClick={() => removeFile(i, 'videos')} className="hover:bg-purple-100 rounded text-purple-500 p-0.5">
-                                      <X className="h-3 w-3" />
-                                    </button>
-                                  </div>
-                                ))}
-                              </div>
+                        <span>
+                          <button
+                            disabled={!booking.assigned_employee_id}
+                            className={cn(
+                              "group relative w-[150px] h-[40px] flex items-center border transition-all duration-300",
+                              booking.assigned_employee_id
+                                ? "cursor-pointer border-[#34974d] bg-[#3aa856] hover:bg-[#34974d] active:border-[#2e8644]"
+                                : "cursor-not-allowed border-gray-300 bg-gray-200"
                             )}
-                          </div>
-                        </div>
+                            title={!booking.assigned_employee_id ? "Assign an employee first" : "Add Work Log"}
+                          >
+                            <span className={cn(
+                              "button__text transform translate-x-[30px] font-semibold transition-all duration-300 text-sm",
+                              booking.assigned_employee_id ? "text-white group-hover:text-transparent" : "text-gray-500"
+                            )}>
+                              Add Log
+                            </span>
+                            <div className={cn(
+                              "button__icon absolute right-0 h-full w-[39px] flex items-center justify-center transition-all duration-300",
+                              booking.assigned_employee_id
+                                ? "bg-[#34974d] group-hover:w-[148px] group-hover:translate-x-0 group-active:bg-[#2e8644]"
+                                : "bg-gray-300"
+                            )}>
+                              <Plus className={cn(
+                                "w-[20px] h-[20px] stroke-[2.5]",
+                                booking.assigned_employee_id ? "stroke-white" : "stroke-gray-500"
+                              )} />
+                            </div>
+                          </button>
+                        </span>
+                      </DialogTrigger>
+                      {booking.assigned_employee_id && (
+                        <DialogContent className="max-w-lg w-full sm:rounded-2xl p-0 overflow-hidden">
+                          <DialogHeader className="p-6 pb-2">
+                            <DialogTitle className="text-xl font-bold flex items-center gap-2">
+                              <div className="bg-red-50 p-2 rounded-lg">
+                                <FileText className="h-5 w-5 text-red-600" />
+                              </div>
+                              Add Work Log
+                            </DialogTitle>
+                            <DialogDescription className="text-gray-500">
+                              Log progress with photos or videos for the customer.
+                            </DialogDescription>
+                          </DialogHeader>
 
-                        <DialogFooter className="p-6 bg-gray-50/50 gap-2 sm:gap-0">
-                          <Button variant="ghost" onClick={() => setIsWorkLogDialogOpen(false)} className="bg-white/50 border border-transparent hover:bg-white hover:border-gray-200">
-                            Cancel
-                          </Button>
-                          <Button onClick={handleAddWorkLog} disabled={isAddingLog} className="bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-100">
-                            {isAddingLog && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            Save Work Log
-                          </Button>
-                        </DialogFooter>
-                      </DialogContent>
+                          <div className="px-6 py-2 space-y-5">
+                            {/* Date & Description Group */}
+                            <div className="space-y-4">
+                              <div className="space-y-2">
+                                <Label htmlFor="logDate" className="text-sm font-semibold text-gray-700">Date</Label>
+                                <div className="relative">
+                                  <CalendarIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                                  <Input
+                                    id="logDate"
+                                    type="date"
+                                    value={logDate}
+                                    onChange={(e) => setLogDate(e.target.value)}
+                                    className="pl-9 bg-gray-50 border-gray-200 focus:bg-white transition-colors"
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="space-y-2">
+                                <Label htmlFor="logDesc" className="text-sm font-semibold text-gray-700">Description</Label>
+                                <Textarea
+                                  id="logDesc"
+                                  value={logDescription}
+                                  onChange={(e) => setLogDescription(e.target.value)}
+                                  placeholder="Describe the work done today..."
+                                  className="min-h-[100px] bg-gray-50 border-gray-200 focus:bg-white transition-colors resize-none"
+                                />
+                              </div>
+                            </div>
+
+                            {/* Media Upload Section */}
+                            <div className="space-y-4">
+                              <Label className="text-sm font-semibold text-gray-700 flex items-center justify-between">
+                                <span>Media Attachments</span>
+                                <span className="text-xs font-normal text-gray-400">Optional</span>
+                              </Label>
+
+                              <div className="grid grid-cols-2 gap-3">
+                                {/* Photo Upload */}
+                                <div className="relative group">
+                                  <input
+                                    type="file"
+                                    multiple
+                                    accept="image/*"
+                                    onChange={(e) => handleFileChange(e, 'photos')}
+                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                                  />
+                                  <div className="border border-dashed border-gray-300 bg-gray-50 rounded-xl p-4 flex flex-col items-center justify-center text-center gap-2 group-hover:bg-red-50 group-hover:border-red-200 transition-colors h-full">
+                                    <div className="bg-white p-2 rounded-full shadow-sm">
+                                      <ImageIcon className="h-5 w-5 text-gray-500 group-hover:text-red-500" />
+                                    </div>
+                                    <div>
+                                      <p className="text-xs font-semibold text-gray-700">Add Photos</p>
+                                      <p className="text-[10px] text-gray-400">JPG, PNG</p>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* Video Upload */}
+                                <div className="relative group">
+                                  <input
+                                    type="file"
+                                    multiple
+                                    accept="video/*"
+                                    onChange={(e) => handleFileChange(e, 'videos')}
+                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                                  />
+                                  <div className="border border-dashed border-gray-300 bg-gray-50 rounded-xl p-4 flex flex-col items-center justify-center text-center gap-2 group-hover:bg-red-50 group-hover:border-red-200 transition-colors h-full">
+                                    <div className="bg-white p-2 rounded-full shadow-sm">
+                                      <Video className="h-5 w-5 text-gray-500 group-hover:text-red-500" />
+                                    </div>
+                                    <div>
+                                      <p className="text-xs font-semibold text-gray-700">Add Videos</p>
+                                      <p className="text-[10px] text-gray-400">MP4, MOV</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Selected Files List */}
+                              {(logPhotos.length > 0 || logVideos.length > 0) && (
+                                <div className="flex flex-wrap gap-2 pt-2">
+                                  {logPhotos.map((file, i) => (
+                                    <div key={`p-${i}`} className="text-xs bg-blue-50 text-blue-700 border border-blue-100 pl-2 pr-1 py-1 rounded-md flex items-center gap-1">
+                                      <ImageIcon className="h-3 w-3" />
+                                      <span className="max-w-[100px] truncate">{file.name}</span>
+                                      <button onClick={() => removeFile(i, 'photos')} className="hover:bg-blue-100 rounded text-blue-500 p-0.5">
+                                        <X className="h-3 w-3" />
+                                      </button>
+                                    </div>
+                                  ))}
+                                  {logVideos.map((file, i) => (
+                                    <div key={`v-${i}`} className="text-xs bg-purple-50 text-purple-700 border border-purple-100 pl-2 pr-1 py-1 rounded-md flex items-center gap-1">
+                                      <Video className="h-3 w-3" />
+                                      <span className="max-w-[100px] truncate">{file.name}</span>
+                                      <button onClick={() => removeFile(i, 'videos')} className="hover:bg-purple-100 rounded text-purple-500 p-0.5">
+                                        <X className="h-3 w-3" />
+                                      </button>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
+                          <DialogFooter className="p-6 bg-gray-50/50 gap-2 sm:gap-0">
+                            <Button variant="ghost" onClick={() => setIsWorkLogDialogOpen(false)} className="bg-white/50 border border-transparent hover:bg-white hover:border-gray-200">
+                              Cancel
+                            </Button>
+                            <Button onClick={handleAddWorkLog} disabled={isAddingLog} className="bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-100">
+                              {isAddingLog && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                              Save Work Log
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      )}
                     </Dialog>
                   )}
 
@@ -914,57 +936,75 @@ const BookingDetails = () => {
               <CardContent className="p-4 sm:p-6">
                 {booking.daily_work_logs && booking.daily_work_logs.length > 0 ? (
                   <div className="space-y-6">
-                    {booking.daily_work_logs.map((log) => (
-                      <div key={log.id} className="relative pl-6 border-l-2 border-gray-200 pb-6 last:pb-0">
-                        <div className="absolute -left-[9px] top-0 h-4 w-4 rounded-full bg-red-500 ring-4 ring-white" />
-                        <div className="mb-2 flex justify-between items-start">
-                          <span className="text-sm font-bold text-gray-900">{format(new Date(log.log_date), "MMMM d, yyyy")}</span>
-                          {(isAdmin || isSuperAdmin) && (
-                            <div className="flex gap-2">
-                              <button
-                                onClick={() => openEditLog(log)}
-                                className="text-gray-400 hover:text-blue-500 transition-colors"
-                              >
-                                <Pencil className="h-4 w-4" />
-                              </button>
-                              <button
-                                onClick={() => handleDeleteLog(log.id, log.log_date)}
-                                disabled={deletingLogId === log.id}
-                                className="text-gray-400 hover:text-red-500 transition-colors"
-                              >
-                                {deletingLogId === log.id ? (
-                                  <Loader2 className="h-4 w-4 animate-spin" />
-                                ) : (
-                                  <Trash2 className="h-4 w-4" />
-                                )}
-                              </button>
+                    {booking.daily_work_logs
+                      .slice()
+                      .sort((a, b) => {
+                        const dateA = new Date(a.log_date).getTime();
+                        const dateB = new Date(b.log_date).getTime();
+                        if (dateA !== dateB) return dateA - dateB; // Sort by date ascending (oldest first)
+
+                        // If same date, sort by created_at ascending
+                        const timeA = new Date(a.created_at || 0).getTime();
+                        const timeB = new Date(b.created_at || 0).getTime();
+                        return timeA - timeB;
+                      })
+                      .map((log) => (
+                        <div key={log.id} className="relative pl-6 border-l-2 border-gray-200 pb-6 last:pb-0">
+                          <div className="absolute -left-[9px] top-0 h-4 w-4 rounded-full bg-red-500 ring-4 ring-white" />
+                          <div className="mb-2 flex justify-between items-start">
+                            <div className="flex flex-col">
+                              <span className="text-sm font-bold text-gray-900">{format(new Date(log.log_date), "MMMM d, yyyy")}</span>
+                              <span className="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
+                                <Clock className="h-3 w-3" />
+                                {format(new Date((log.created_at || new Date().toISOString()).endsWith('Z') ? (log.created_at || new Date().toISOString()) : (log.created_at || new Date().toISOString()) + 'Z'), "h:mm a")}
+                              </span>
+                            </div>
+                            {(isAdmin || isSuperAdmin) && (
+                              <div className="flex gap-2">
+                                <button
+                                  onClick={() => openEditLog(log)}
+                                  className="text-gray-400 hover:text-blue-500 transition-colors"
+                                >
+                                  <Pencil className="h-4 w-4" />
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteLog(log.id)}
+                                  disabled={deletingLogId === log.id}
+                                  className="text-gray-400 hover:text-red-500 transition-colors"
+                                >
+                                  {deletingLogId === log.id ? (
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                  ) : (
+                                    <Trash2 className="h-4 w-4" />
+                                  )}
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                          {log.description && <p className="text-gray-600 text-sm mb-3 bg-gray-50 p-3 rounded-lg">{log.description}</p>}
+
+                          {((log.photos && log.photos.length > 0) || (log.videos && log.videos.length > 0)) && (
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3">
+                              {(log.photos || []).map((item: any, idx: number) => {
+                                const url = typeof item === 'string' ? item : item.url;
+                                return (
+                                  <div key={`photo-${idx}`} className="aspect-square rounded-lg overflow-hidden bg-gray-100 border relative group">
+                                    <img src={url} alt="Work log" className="w-full h-full object-cover cursor-pointer hover:scale-110 transition-transform" onClick={() => window.open(url, '_blank')} />
+                                  </div>
+                                );
+                              })}
+                              {(log.videos || []).map((item: any, idx: number) => {
+                                const url = typeof item === 'string' ? item : item.url;
+                                return (
+                                  <div key={`video-${idx}`} className="aspect-square rounded-lg overflow-hidden bg-gray-100 border relative group">
+                                    <video src={url} className="w-full h-full object-cover" controls />
+                                  </div>
+                                );
+                              })}
                             </div>
                           )}
                         </div>
-                        {log.description && <p className="text-gray-600 text-sm mb-3 bg-gray-50 p-3 rounded-lg">{log.description}</p>}
-
-                        {((log.photos && log.photos.length > 0) || (log.videos && log.videos.length > 0)) && (
-                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3">
-                            {(log.photos || []).map((item: any, idx: number) => {
-                              const url = typeof item === 'string' ? item : item.url;
-                              return (
-                                <div key={`photo-${idx}`} className="aspect-square rounded-lg overflow-hidden bg-gray-100 border relative group">
-                                  <img src={url} alt="Work log" className="w-full h-full object-cover cursor-pointer hover:scale-110 transition-transform" onClick={() => window.open(url, '_blank')} />
-                                </div>
-                              );
-                            })}
-                            {(log.videos || []).map((item: any, idx: number) => {
-                              const url = typeof item === 'string' ? item : item.url;
-                              return (
-                                <div key={`video-${idx}`} className="aspect-square rounded-lg overflow-hidden bg-gray-100 border relative group">
-                                  <video src={url} className="w-full h-full object-cover" controls />
-                                </div>
-                              );
-                            })}
-                          </div>
-                        )}
-                      </div>
-                    ))}
+                      ))}
                   </div>
                 ) : (
                   <div className="text-center py-8 text-gray-500">
