@@ -6,6 +6,10 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sess
 from sqlalchemy.orm import DeclarativeBase
 
 from automex_backend.config import settings
+import logging
+
+# Setup logger
+logger = logging.getLogger(__name__)
 
 
 class Base(DeclarativeBase):
@@ -46,7 +50,7 @@ async def init_db():
         
         # Always check and update schema automatically
         try:
-            print("[INFO] Checking database schema and updating automatically...")
+            logger.info("Checking database schema and updating automatically...")
             
             # Get all tables from metadata
             metadata = Base.metadata
@@ -68,7 +72,7 @@ async def init_db():
                 table_exists = result.scalar() > 0
                 
                 if not table_exists:
-                    print(f"[INFO] Table '{table_name}' does not exist, will be created by SQLAlchemy...")
+                    logger.info(f"Table '{table_name}' does not exist, will be created by SQLAlchemy...")
                 else:
                     # Table exists, check for missing columns
                     # Get existing columns
@@ -84,7 +88,7 @@ async def init_db():
                     # Check each column in the model
                     for column in table.columns:
                         if column.name not in existing_columns:
-                            print(f"[INFO] Column '{column.name}' missing in '{table_name}', adding...")
+                            logger.info(f"Column '{column.name}' missing in '{table_name}', adding...")
                             
                             try:
                                 # Build ALTER TABLE statement
@@ -107,19 +111,19 @@ async def init_db():
                                 if default_clause:
                                     alter_sql += f" {default_clause}"
                                 
-                                print(f"[INFO] Executing: {alter_sql}")
+                                logger.info(f"Executing: {alter_sql}")
                                 await conn.execute(text(alter_sql))
-                                print(f"[INFO] ✓ Column '{column.name}' added to '{table_name}' successfully")
+                                logger.info(f"✓ Column '{column.name}' added to '{table_name}' successfully")
                             except Exception as col_error:
-                                print(f"[WARNING] Failed to add column '{column.name}' to '{table_name}': {col_error}")
+                                logger.warning(f"Failed to add column '{column.name}' to '{table_name}': {col_error}")
                                 # Continue with other columns
             
-            print("[INFO] Database schema check completed")
+            logger.info("Database schema check completed")
         
         except Exception as e:
-            print(f"[WARNING] Error during automatic schema update: {e}")
+            logger.warning(f"Error during automatic schema update: {e}")
             import traceback
-            print(f"[WARNING] Traceback: {traceback.format_exc()}")
+            logger.warning(f"Traceback: {traceback.format_exc()}")
             # Continue with normal table creation
         
         # Tables are created/updated automatically above
@@ -127,7 +131,7 @@ async def init_db():
         
         # Create all tables using async MySQL
         await conn.run_sync(Base.metadata.create_all)
-        print("[INFO] All tables created successfully")
+        logger.info("All tables created successfully")
     
     # Seed default roles
     await seed_roles()
@@ -153,9 +157,9 @@ async def seed_roles():
             
             session.add_all(roles)
             await session.commit()
-            print("[INFO] Default roles seeded successfully")
+            logger.info("Default roles seeded successfully")
         else:
-            print("[INFO] Roles already exist, skipping seed")
+            logger.info("Roles already exist, skipping seed")
 
 
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:

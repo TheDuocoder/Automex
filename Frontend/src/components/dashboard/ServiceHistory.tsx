@@ -16,13 +16,24 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { History, Plus, CheckCircle, ChevronRight, Loader2, Car as CarIcon, Check, Pencil, Trash2, Calendar, ArrowRight, Hash, Settings, X } from "lucide-react";
+
+import { History, Plus, CheckCircle, ChevronRight, Loader2, Car as CarIcon, Check, Pencil, Trash2, Calendar, ArrowRight, Hash, Settings, X, ExternalLink } from "lucide-react";
 import { serviceHistoryService, carService, Car, ServiceHistory as ServiceHistoryType, ServiceHistoryCreate } from "@/services/api";
+import { getUserBookings, Booking } from "@/services/bookingService";
 import { toast } from "sonner";
 
 interface ServiceHistoryWithCar extends ServiceHistoryType {
     car?: Car;
+    type: 'manual';
 }
+
+interface BookingWithType extends Booking {
+    type: 'booking';
+    description?: string;
+    service_date: string;
+}
+
+type HistoryItem = ServiceHistoryWithCar | BookingWithType;
 
 interface ServiceHistoryProps {
     userId?: number;
@@ -36,7 +47,8 @@ const ServiceHistory = ({ userId }: ServiceHistoryProps = {}) => {
 
     const [cars, setCars] = useState<Car[]>([]);
     const [selectedCarId, setSelectedCarId] = useState<string>("");
-    const [allHistory, setAllHistory] = useState<ServiceHistoryWithCar[]>([]);
+
+    const [allHistory, setAllHistory] = useState<HistoryItem[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isAddOpen, setIsAddOpen] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -64,18 +76,74 @@ const ServiceHistory = ({ userId }: ServiceHistoryProps = {}) => {
             }
 
             // Fetch service history (Admin sees all, User sees theirs) - filtered by userId if provided
-            const historyResponse = await serviceHistoryService.getAll(undefined, userId);
+            const [historyResponse, bookings] = await Promise.all([
+                serviceHistoryService.getAll(undefined, userId),
+                getUserBookings(userId)
+            ]);
+
+            let combinedHistory: HistoryItem[] = [];
 
             if (historyResponse.data) {
-                const combinedHistory = historyResponse.data;
-                // Sort by date (most recent first)
-                combinedHistory.sort((a, b) =>
-                    new Date(b.service_date).getTime() - new Date(a.service_date).getTime()
-                );
-                setAllHistory(combinedHistory);
-            } else {
-                setAllHistory([]);
+                const manualHistory = historyResponse.data.map((item: ServiceHistoryType) => ({
+                    ...item,
+                    type: 'manual' as const
+                }));
+                combinedHistory = [...combinedHistory, ...manualHistory];
             }
+
+            if (bookings) {
+                const bookingGroups = new Map<string, Booking[]>();
+                const standaloneBookings: Booking[] = [];
+
+                bookings.forEach(booking => {
+                    if (booking.booking_group_id) {
+                        const existing = bookingGroups.get(booking.booking_group_id) || [];
+                        bookingGroups.set(booking.booking_group_id, [...existing, booking]);
+                    } else {
+                        standaloneBookings.push(booking);
+                    }
+                });
+
+                const groupedBookingHistory: HistoryItem[] = [];
+
+                // Process grouped bookings
+                bookingGroups.forEach((groupBookings) => {
+                    if (groupBookings.length > 0) {
+                        const firstBooking = groupBookings[0];
+                        const make = firstBooking.vehicle_make || firstBooking.car_brand || '';
+                        const model = firstBooking.vehicle_model || firstBooking.car_model || '';
+                        const vehicleName = `${make} ${model}`.trim();
+
+                        groupedBookingHistory.push({
+                            ...firstBooking,
+                            type: 'booking' as const,
+                            service_name: vehicleName ? `${vehicleName} Services` : "Multiple Services",
+                            // Use a special description to indicate count, or just let the UI handle it
+                            // We can use the description field or add a temporary property if we extended the type
+                            description: `${groupBookings.length} Services`,
+                            service_date: firstBooking.booking_date,
+                        });
+                    }
+                });
+
+                // Process standalone bookings
+                const standaloneHistory = standaloneBookings.map(booking => ({
+                    ...booking,
+                    type: 'booking' as const,
+                    service_date: booking.booking_date,
+                }));
+
+                combinedHistory = [...combinedHistory, ...groupedBookingHistory, ...standaloneHistory];
+            }
+
+            // Sort by date (most recent first)
+            combinedHistory.sort((a, b) => {
+                const dateA = new Date(a.service_date).getTime();
+                const dateB = new Date(b.service_date).getTime();
+                return dateB - dateA;
+            });
+
+            setAllHistory(combinedHistory);
         } catch (error) {
             console.error("Failed to fetch data:", error);
             toast.error("Failed to fetch service history");
@@ -123,16 +191,18 @@ const ServiceHistory = ({ userId }: ServiceHistoryProps = {}) => {
         setIsSubmitting(false);
     };
 
-    const handleEdit = (record: ServiceHistoryWithCar) => {
-        setEditingId(record.id);
+    const handleEdit = (record: HistoryItem) => {
+        if (record.type === 'booking') return; // Cannot edit booking from here
+        const manualRecord = record as ServiceHistoryWithCar;
+        setEditingId(manualRecord.id);
         setFormData({
-            car_id: record.car_id,
-            service_name: record.service_name,
-            service_date: record.service_date,
-            description: record.description || "",
-            status: record.status,
+            car_id: manualRecord.car_id,
+            service_name: manualRecord.service_name,
+            service_date: manualRecord.service_date,
+            description: manualRecord.description || "",
+            status: manualRecord.status,
         });
-        setSelectedCarId(record.car_id.toString());
+        setSelectedCarId(manualRecord.car_id.toString());
         setIsAddOpen(true);
     };
 
@@ -328,173 +398,194 @@ const ServiceHistory = ({ userId }: ServiceHistoryProps = {}) => {
 
                                         {/* Service Name - Clickable */}
                                         <td className="px-6 py-4 text-center">
-                                            <Dialog>
-                                                <DialogTrigger asChild>
-                                                    <button className="text-blue-600 hover:text-blue-800 font-semibold hover:underline transition-colors">
-                                                        {record.service_name}
-                                                    </button>
-                                                </DialogTrigger>
-                                                <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto p-0 gap-0">
-                                                    {/* Sticky Header with Badge */}
-                                                    <div className="sticky top-0 z-10 bg-white border-b border-gray-100 px-8 py-6">
-                                                        <div className="flex items-center justify-between">
-                                                            <div className="flex-1">
-                                                                <h2 className="text-[26px] font-semibold text-gray-900 mb-2">
-                                                                    {record.service_name}
-                                                                </h2>
-                                                                <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-gray-100 rounded-full">
-                                                                    <span className="text-sm text-gray-700 font-medium">Service Type:</span>
-                                                                    <span className="text-sm text-gray-900 font-semibold uppercase tracking-wide">Standard</span>
+                                            {record.type === 'booking' ? (
+                                                <button
+                                                    onClick={() => navigate(`/booking/${record.id}`)}
+                                                    className="group flex items-center justify-center gap-2 w-full text-blue-600 hover:text-blue-800 font-semibold transition-colors"
+                                                >
+                                                    <span className="group-hover:underline">{record.service_name || 'Service Booking'}</span>
+                                                    <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                                </button>
+                                            ) : (
+                                                <Dialog>
+                                                    <DialogTrigger asChild>
+                                                        <button className="text-gray-900 hover:text-primary font-semibold hover:underline transition-colors">
+                                                            {record.service_name}
+                                                        </button>
+                                                    </DialogTrigger>
+                                                    <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto p-0 gap-0">
+                                                        {/* Sticky Header with Badge */}
+                                                        <div className="sticky top-0 z-10 bg-white border-b border-gray-100 px-8 py-6">
+                                                            <div className="flex items-center justify-between">
+                                                                <div className="flex-1">
+                                                                    <h2 className="text-[26px] font-semibold text-gray-900 mb-2">
+                                                                        {record.service_name}
+                                                                    </h2>
+                                                                    <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-gray-100 rounded-full">
+                                                                        <span className="text-sm text-gray-700 font-medium">Service Type:</span>
+                                                                        <span className="text-sm text-gray-900 font-semibold uppercase tracking-wide">Standard</span>
+                                                                    </div>
+                                                                </div>
+                                                                <DialogTrigger asChild>
+                                                                    <button
+                                                                        className="ml-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
+                                                                        aria-label="Close"
+                                                                    >
+                                                                        <X className="h-5 w-5 text-gray-500 hover:text-gray-700" />
+                                                                    </button>
+                                                                </DialogTrigger>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Content Container */}
+                                                        <div className="px-8 py-6 space-y-6">
+                                                            {/* Vehicle Details Card */}
+                                                            <div
+                                                                className="bg-white rounded-2xl p-6 border border-gray-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+                                                                style={{ boxShadow: '0 4px 12px rgba(0,0,0,0.06)' }}
+                                                            >
+                                                                <div className="flex items-center gap-2 mb-4">
+                                                                    <CarIcon className="h-5 w-5 text-gray-700" />
+                                                                    <h3 className="text-lg font-semibold text-gray-900">Vehicle Details</h3>
+                                                                </div>
+                                                                <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+                                                                    <div>
+                                                                        <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Make & Model</p>
+                                                                        <p className="text-base font-semibold text-gray-900">{record.car?.make} {record.car?.model}</p>
+                                                                    </div>
+                                                                    <div>
+                                                                        <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Registration No</p>
+                                                                        <p className="text-base font-semibold text-gray-900 uppercase">{record.car?.registration_number}</p>
+                                                                    </div>
+                                                                    <div>
+                                                                        <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Year</p>
+                                                                        <p className="text-base font-semibold text-gray-900">{record.car?.year}</p>
+                                                                    </div>
+                                                                    <div>
+                                                                        <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">VIN Number</p>
+                                                                        <p className="text-base font-semibold text-gray-900 font-mono tracking-wider">{record.car?.vin_number || 'N/A'}</p>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                            <DialogTrigger asChild>
-                                                                <button
-                                                                    className="ml-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
-                                                                    aria-label="Close"
+
+                                                            {/* Service Date Card */}
+                                                            <div
+                                                                className="bg-white rounded-2xl p-6 border border-gray-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+                                                                style={{ boxShadow: '0 4px 12px rgba(0,0,0,0.06)' }}
+                                                            >
+                                                                <div className="flex items-center gap-2 mb-3">
+                                                                    <Calendar className="h-5 w-5 text-gray-700" />
+                                                                    <h3 className="text-lg font-semibold text-gray-900">Service Date</h3>
+                                                                </div>
+                                                                <p className="text-gray-600 text-sm mb-1">Completed on</p>
+                                                                <p className="text-lg font-semibold text-gray-900">
+                                                                    {new Date(record.service_date).toLocaleDateString('en-US', {
+                                                                        year: 'numeric',
+                                                                        month: 'long',
+                                                                        day: 'numeric'
+                                                                    })}
+                                                                </p>
+                                                            </div>
+
+                                                            {/* Service Details Card */}
+                                                            <div
+                                                                className="bg-white rounded-2xl p-6 border border-gray-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+                                                                style={{ boxShadow: '0 4px 12px rgba(0,0,0,0.06)' }}
+                                                            >
+                                                                <div className="flex items-center gap-2 mb-3">
+                                                                    <Settings className="h-5 w-5 text-gray-700" />
+                                                                    <h3 className="text-lg font-semibold text-gray-900">Service Details</h3>
+                                                                </div>
+                                                                {record.description ? (
+                                                                    <div className="flex flex-wrap gap-2">
+                                                                        {record.description.split(',').map((service, idx) => (
+                                                                            <span
+                                                                                key={idx}
+                                                                                className="inline-flex items-center px-4 py-2 bg-slate-100 text-slate-700 text-sm font-medium rounded-full"
+                                                                            >
+                                                                                {service.trim()}
+                                                                            </span>
+                                                                        ))}
+                                                                    </div>
+                                                                ) : (
+                                                                    <span className="inline-flex items-center px-4 py-2 bg-slate-100 text-slate-700 text-sm font-medium rounded-full">
+                                                                        {record.service_name}
+                                                                    </span>
+                                                                )}
+                                                            </div>
+
+                                                            {/* Owner Info Card (Admin only) */}
+                                                            {isAdmin && record.car?.user && (
+                                                                <div
+                                                                    className="bg-blue-50 rounded-2xl p-6 border border-blue-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+                                                                    style={{ boxShadow: '0 4px 12px rgba(59, 130, 246, 0.1)' }}
                                                                 >
-                                                                    <X className="h-5 w-5 text-gray-500 hover:text-gray-700" />
-                                                                </button>
-                                                            </DialogTrigger>
-                                                        </div>
-                                                    </div>
-
-                                                    {/* Content Container */}
-                                                    <div className="px-8 py-6 space-y-6">
-                                                        {/* Vehicle Details Card */}
-                                                        <div
-                                                            className="bg-white rounded-2xl p-6 border border-gray-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
-                                                            style={{ boxShadow: '0 4px 12px rgba(0,0,0,0.06)' }}
-                                                        >
-                                                            <div className="flex items-center gap-2 mb-4">
-                                                                <CarIcon className="h-5 w-5 text-gray-700" />
-                                                                <h3 className="text-lg font-semibold text-gray-900">Vehicle Details</h3>
-                                                            </div>
-                                                            <div className="grid grid-cols-2 gap-x-8 gap-y-4">
-                                                                <div>
-                                                                    <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Make & Model</p>
-                                                                    <p className="text-base font-semibold text-gray-900">{record.car?.make} {record.car?.model}</p>
+                                                                    <h3 className="text-lg font-semibold text-blue-900 mb-2">Vehicle Owner</h3>
+                                                                    <p className="text-blue-700 font-medium">{record.car.user.full_name || record.car.user.email}</p>
                                                                 </div>
-                                                                <div>
-                                                                    <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Registration No</p>
-                                                                    <p className="text-base font-semibold text-gray-900 uppercase">{record.car?.registration_number}</p>
-                                                                </div>
-                                                                <div>
-                                                                    <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Year</p>
-                                                                    <p className="text-base font-semibold text-gray-900">{record.car?.year}</p>
-                                                                </div>
-                                                                <div>
-                                                                    <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">VIN Number</p>
-                                                                    <p className="text-base font-semibold text-gray-900 font-mono tracking-wider">{record.car?.vin_number || 'N/A'}</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        {/* Service Date Card */}
-                                                        <div
-                                                            className="bg-white rounded-2xl p-6 border border-gray-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
-                                                            style={{ boxShadow: '0 4px 12px rgba(0,0,0,0.06)' }}
-                                                        >
-                                                            <div className="flex items-center gap-2 mb-3">
-                                                                <Calendar className="h-5 w-5 text-gray-700" />
-                                                                <h3 className="text-lg font-semibold text-gray-900">Service Date</h3>
-                                                            </div>
-                                                            <p className="text-gray-600 text-sm mb-1">Completed on</p>
-                                                            <p className="text-lg font-semibold text-gray-900">
-                                                                {new Date(record.service_date).toLocaleDateString('en-US', {
-                                                                    year: 'numeric',
-                                                                    month: 'long',
-                                                                    day: 'numeric'
-                                                                })}
-                                                            </p>
-                                                        </div>
-
-                                                        {/* Service Details Card */}
-                                                        <div
-                                                            className="bg-white rounded-2xl p-6 border border-gray-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
-                                                            style={{ boxShadow: '0 4px 12px rgba(0,0,0,0.06)' }}
-                                                        >
-                                                            <div className="flex items-center gap-2 mb-3">
-                                                                <Settings className="h-5 w-5 text-gray-700" />
-                                                                <h3 className="text-lg font-semibold text-gray-900">Service Details</h3>
-                                                            </div>
-                                                            {record.description ? (
-                                                                <div className="flex flex-wrap gap-2">
-                                                                    {record.description.split(',').map((service, idx) => (
-                                                                        <span
-                                                                            key={idx}
-                                                                            className="inline-flex items-center px-4 py-2 bg-slate-100 text-slate-700 text-sm font-medium rounded-full"
-                                                                        >
-                                                                            {service.trim()}
-                                                                        </span>
-                                                                    ))}
-                                                                </div>
-                                                            ) : (
-                                                                <span className="inline-flex items-center px-4 py-2 bg-slate-100 text-slate-700 text-sm font-medium rounded-full">
-                                                                    {record.service_name}
-                                                                </span>
                                                             )}
-                                                        </div>
 
-                                                        {/* Owner Info Card (Admin only) */}
-                                                        {isAdmin && record.car?.user && (
-                                                            <div
-                                                                className="bg-blue-50 rounded-2xl p-6 border border-blue-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
-                                                                style={{ boxShadow: '0 4px 12px rgba(59, 130, 246, 0.1)' }}
-                                                            >
-                                                                <h3 className="text-lg font-semibold text-blue-900 mb-2">Vehicle Owner</h3>
-                                                                <p className="text-blue-700 font-medium">{record.car.user.full_name || record.car.user.email}</p>
-                                                            </div>
-                                                        )}
-
-                                                        {/* Status Banner - Sticky at Bottom */}
-                                                        <div className="sticky bottom-0 left-0 right-0 mt-6">
-                                                            <div
-                                                                className="bg-emerald-50 rounded-xl p-5 border border-emerald-200 flex items-center justify-center gap-3"
-                                                                style={{ boxShadow: '0 -2px 10px rgba(16, 185, 129, 0.1)' }}
-                                                            >
-                                                                <CheckCircle className="h-6 w-6 text-emerald-600" />
-                                                                <span className="text-emerald-800 font-semibold text-lg">Service Completed Successfully</span>
+                                                            {/* Status Banner - Sticky at Bottom */}
+                                                            <div className="sticky bottom-0 left-0 right-0 mt-6">
+                                                                <div
+                                                                    className="bg-emerald-50 rounded-xl p-5 border border-emerald-200 flex items-center justify-center gap-3"
+                                                                    style={{ boxShadow: '0 -2px 10px rgba(16, 185, 129, 0.1)' }}
+                                                                >
+                                                                    <CheckCircle className="h-6 w-6 text-emerald-600" />
+                                                                    <span className="text-emerald-800 font-semibold text-lg">Service Completed Successfully</span>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </DialogContent>
-                                            </Dialog>
+                                                    </DialogContent>
+                                                </Dialog>
+                                            )}
                                         </td>
 
                                         {/* Date */}
                                         <td className="px-6 py-4 text-center text-gray-700">
-                                            {new Date(record.service_date).toLocaleDateString('en-US', {
-                                                year: 'numeric',
-                                                month: 'short',
-                                                day: 'numeric'
-                                            })}
+                                            {
+                                                new Date(record.type === 'booking' ? record.booking_date : record.service_date).toLocaleDateString('en-US', {
+                                                    year: 'numeric',
+                                                    month: 'short',
+                                                    day: 'numeric'
+                                                })
+                                            }
                                         </td>
 
                                         {/* Vehicle Name */}
                                         <td className="px-6 py-4 text-center">
                                             <div className="font-semibold text-gray-800">
-                                                {record.car?.make} {record.car?.model}
+                                                {record.type === 'booking'
+                                                    ? `${record.vehicle_make || record.car_brand || ''} ${record.vehicle_model || record.car_model || ''}`
+                                                    : `${record.car?.make} ${record.car?.model}`
+                                                }
                                             </div>
                                         </td>
 
-                                        {/* Actions (Super Admin only) */}
+                                        {/* Actions (Super Admin only - only for manual records) */}
                                         {isSuperAdmin && (
                                             <td className="px-6 py-4 text-center">
                                                 <div className="flex items-center justify-center gap-2">
-                                                    <button
-                                                        onClick={() => handleEdit(record)}
-                                                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                                                        title="Edit"
-                                                    >
-                                                        <Pencil className="h-4 w-4" />
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleDelete(record.id)}
-                                                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                                                        title="Delete"
-                                                    >
-                                                        <Trash2 className="h-4 w-4" />
-                                                    </button>
+                                                    {record.type === 'manual' ? (
+                                                        <>
+                                                            <button
+                                                                onClick={() => handleEdit(record)}
+                                                                className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                                                title="Edit"
+                                                            >
+                                                                <Pencil className="h-4 w-4" />
+                                                            </button>
+                                                            <button
+                                                                onClick={() => handleDelete(record.id)}
+                                                                className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                                title="Delete"
+                                                            >
+                                                                <Trash2 className="h-4 w-4" />
+                                                            </button>
+                                                        </>
+                                                    ) : (
+                                                        <span className="text-xs text-gray-400 italic">System</span>
+                                                    )}
                                                 </div>
                                             </td>
                                         )}
@@ -503,9 +594,10 @@ const ServiceHistory = ({ userId }: ServiceHistoryProps = {}) => {
                             </tbody>
                         </table>
                     </div>
-                )}
-            </CardContent>
-        </Card>
+                )
+                }
+            </CardContent >
+        </Card >
     );
 };
 

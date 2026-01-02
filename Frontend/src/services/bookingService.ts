@@ -136,8 +136,9 @@ export async function createServiceBooking(bookingData: ServiceBookingCreate): P
 /**
  * Get all bookings for current user
  */
-export async function getUserBookings(): Promise<Booking[]> {
-  const response = await apiCall<Booking[]>('/api/v1/bookings/', {
+export async function getUserBookings(userId?: number): Promise<Booking[]> {
+  const query = userId ? `?user_id=${userId}` : '';
+  const response = await apiCall<Booking[]>(`/api/v1/bookings/${query}`, {
     method: 'GET',
   });
 

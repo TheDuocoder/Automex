@@ -491,32 +491,28 @@ const BookingDetails = () => {
       <Header />
 
       {/* Top Navigation Bar */}
-      <div className="bg-white border-b sticky top-16 z-10 px-6 py-5 shadow-[0_8px_24px_rgba(0,0,0,0.06)]">
-        <div className="container mx-auto max-w-6xl flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div>
-              <div className="flex flex-wrap items-center gap-2 mb-1">
-                <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
+      <div className="bg-white border-b sticky top-0 z-30 shadow-sm">
+        <div className="container mx-auto max-w-6xl px-4 py-3 sm:px-6 sm:py-5 flex items-center justify-between gap-3 sm:gap-4">
+          <div className="flex items-center gap-4 min-w-0 flex-1">
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mb-0.5">
+                <h1 className="text-lg sm:text-2xl font-bold text-gray-900 truncate">
                   Booking #{booking.id}
                 </h1>
-                <Badge className={cn("rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide", statusConfig.color)}>
+                <Badge className={cn("rounded-full px-2.5 py-0.5 text-[10px] sm:text-xs font-semibold uppercase tracking-wide shrink-0", statusConfig.color)}>
                   {statusConfig.label}
                 </Badge>
               </div>
-              <p className="text-xs text-gray-400">
-                Created on {format(new Date(booking.created_at.endsWith("Z") ? booking.created_at : booking.created_at + "Z"), "MMM d, yyyy")} · {format(new Date(booking.created_at.endsWith("Z") ? booking.created_at : booking.created_at + "Z"), "h:mm a")}
+              <p className="text-[10px] sm:text-xs text-gray-400 truncate">
+                Created {format(new Date(booking.created_at.endsWith("Z") ? booking.created_at : booking.created_at + "Z"), "MMM d, yyyy")}
               </p>
             </div>
           </div>
           <button
             onClick={() => navigate('/my-services')}
-            className="relative inline-block text-center font-bold py-2.5 px-6 border-3 border-[#FF0072] rounded-sm text-[#FF0072] no-underline transition-all duration-300 z-10 text-sm tracking-wider uppercase shrink-0 hover:text-white active:scale-90 before:content-[''] before:absolute before:top-0 before:left-1/2 before:right-1/2 before:bottom-0 before:opacity-0 before:bg-[#FF0072] before:-z-10 before:transition-all before:duration-500 hover:before:left-0 hover:before:right-0 hover:before:opacity-100"
-            style={{
-              boxShadow: '0 2px 10px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.1)',
-              borderWidth: '3px'
-            }}
+            className="flex items-center justify-center font-bold h-9 px-3 sm:h-auto sm:py-2.5 sm:px-6 border border-[#FF0072] sm:border-3 rounded-md sm:rounded-sm text-[#FF0072] text-[10px] sm:text-sm uppercase tracking-wider hover:bg-[#FF0072] hover:text-white transition-all duration-300 shrink-0"
           >
-            <ChevronLeft className="h-4 w-4 mr-2 inline-block" /> Back
+            <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" /> Back
           </button>
         </div>
       </div>
@@ -529,16 +525,16 @@ const BookingDetails = () => {
 
             {/* Service Card */}
             <Card className="border-none shadow-[0_8px_24px_rgba(0,0,0,0.06)] rounded-2xl overflow-hidden">
-              <div className="bg-red-50/40 p-6 flex flex-col sm:flex-row items-center sm:items-start gap-4 rounded-t-2xl">
+              <div className="bg-red-50/40 p-4 sm:p-6 flex flex-col sm:flex-row items-start gap-4 rounded-t-2xl">
                 <div className="h-16 w-16 bg-white rounded-xl flex items-center justify-center shadow-sm text-red-600">
                   <Wrench className="h-8 w-8" />
                 </div>
-                <div className="text-center sm:text-left flex-1">
+                <div className="text-left flex-1">
                   {groupedBookings.length > 1 ? (
                     <>
-                      <div className="flex items-center justify-between mb-3">
-                        <h2 className="text-xl font-bold text-gray-900">🛠 Multiple Services Booking</h2>
-                        <Badge variant="outline" className="shrink-0 rounded-full px-3 py-1">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                        <h2 className="text-lg sm:text-xl font-bold text-gray-900 leading-tight">Multiple Services Booking</h2>
+                        <Badge variant="outline" className="w-fit shrink-0 rounded-full px-3 py-1">
                           {groupedBookings.length} Services
                         </Badge>
                       </div>
@@ -548,9 +544,9 @@ const BookingDetails = () => {
                       <div className="border-t border-gray-200 pt-4">
                         <div className="space-y-2">
                           {groupedBookings.map((b, idx) => (
-                            <div key={b.id} className="text-gray-800 font-medium flex items-start gap-2">
-                              <span className="text-lg leading-none">•</span>
-                              <span>{b.service_name}</span>
+                            <div key={b.id} className="text-gray-800 font-medium flex items-start gap-3">
+                              <span className="text-lg leading-none text-gray-400 mt-0.5">•</span>
+                              <span className="flex-1 text-left leading-snug">{b.service_name}</span>
                             </div>
                           ))}
                         </div>
@@ -558,7 +554,7 @@ const BookingDetails = () => {
                     </>
                   ) : (
                     <>
-                      <h2 className="text-xl font-bold text-gray-900">{booking.service_name}</h2>
+                      <h2 className="text-lg sm:text-xl font-bold text-gray-900">{booking.service_name}</h2>
                       <p className="text-gray-600 mt-1">
                         Scheduled for <span className="font-medium">{formatDbDate(booking.booking_date, "EEEE, MMMM d, yyyy 'at' h:mm a")}</span>
                       </p>
@@ -578,7 +574,7 @@ const BookingDetails = () => {
                   <div className="hidden md:block absolute left-1/2 top-6 bottom-6 w-px bg-gray-200 -translate-x-1/2"></div>
 
                   {/* Vehicle Details */}
-                  <div className="p-6 space-y-4">
+                  <div className="p-4 sm:p-6 space-y-4">
                     <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
                       <Car className="h-4 w-4 text-gray-400" />
                       Vehicle Details
@@ -601,7 +597,7 @@ const BookingDetails = () => {
                   </div>
 
                   {/* Contact Person */}
-                  <div className="p-6 space-y-4">
+                  <div className="p-4 sm:p-6 space-y-4">
                     <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
                       <User className="h-4 w-4 text-gray-400" />
                       Contact Person
@@ -624,7 +620,7 @@ const BookingDetails = () => {
                   </div>
                 </div>
 
-                <div className="p-6 border-b rounded-b-2xl">
+                <div className="p-4 sm:p-6 border-b rounded-b-2xl">
                   <div className="flex justify-between items-start mb-4">
                     <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Assigned Technician</h3>
                     {isSuperAdmin && (
@@ -735,7 +731,7 @@ const BookingDetails = () => {
 
             {/* Daily Work Logs - Simplified for User View */}
             <Card className="border-none shadow-[0_8px_24px_rgba(0,0,0,0.06)] rounded-2xl mt-8">
-              <CardHeader className="border-b bg-gray-50/50 pb-6 rounded-t-2xl">
+              <CardHeader className="border-b bg-gray-50/50 p-4 sm:p-6 rounded-t-2xl">
                 <div className="flex justify-between items-center">
                   <CardTitle className="text-base font-bold flex items-center gap-2">
                     <FileText className="h-4 w-4" /> Daily Work Logs
@@ -1023,7 +1019,7 @@ const BookingDetails = () => {
 
             {/* Payment Summary */}
             <Card className="border-none shadow-[0_8px_24px_rgba(0,0,0,0.06)] rounded-[20px] mt-8 overflow-hidden">
-              <CardHeader className="bg-white px-6 pt-6 pb-2">
+              <CardHeader className="bg-white px-4 pt-4 sm:px-6 sm:pt-6 pb-2">
                 <div className="flex justify-between items-center">
                   <CardTitle className="text-lg font-bold text-gray-900 flex items-center gap-2">
                     ₹ Payment Summary
@@ -1031,7 +1027,7 @@ const BookingDetails = () => {
                   {isAdmin && (
                     <Dialog open={isPaymentDialogOpen} onOpenChange={setIsPaymentDialogOpen}>
                       <DialogTrigger asChild>
-                        <button className="add-swipe-button scale-90 origin-right">
+                        <button className="add-swipe-button scale-90 origin-right mr-1">
                           <span className="add-swipe-button__text">Add</span>
                           <span className="add-swipe-button__icon">
                             <Plus className="svg" strokeWidth={2} />
@@ -1130,7 +1126,7 @@ const BookingDetails = () => {
                   )}
                 </div>
               </CardHeader>
-              <CardContent className="p-6 pt-2">
+              <CardContent className="p-4 sm:p-6 pt-2">
                 {costs.length === 0 ? (
                   <div className="text-center py-8 bg-gray-50 rounded-xl border border-dashed border-gray-200 text-gray-400 text-sm">
                     No cost items added yet
@@ -1190,7 +1186,7 @@ const BookingDetails = () => {
 
             {/* Timeline / Status */}
             <Card className="border-none shadow-[0_8px_24px_rgba(0,0,0,0.06)] rounded-2xl mt-8">
-              <CardHeader className="border-b bg-gray-50/50 pb-6 rounded-t-2xl">
+              <CardHeader className="border-b bg-gray-50/50 p-4 sm:p-6 rounded-t-2xl">
                 <div className="flex justify-between items-center">
                   <CardTitle className="text-base font-bold flex items-center gap-2">
                     <Clock className="h-4 w-4" /> Timeline
@@ -1351,7 +1347,7 @@ const BookingDetails = () => {
       </AlertDialog>
 
       <Footer />
-    </div>
+    </div >
   );
 };
 

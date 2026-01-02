@@ -1,9 +1,9 @@
 """
 Booking management API routes
 """
-import re
-from typing import List, Optional, Dict
-from datetime import datetime, timezone, date
+import logging
+from typing import List, Optional, Dict, Any
+from datetime import datetime, date
 from fastapi import APIRouter, Depends, HTTPException, status, Query, UploadFile, File
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -21,7 +21,11 @@ from automex_backend.schemas.daily_work_log import (
     DailyWorkLogRead, DailyWorkLogCreate, DailyWorkLogUpdate, DailyWorkLogDescriptionUpdate
 )
 from automex_backend.schemas.booking_employee_assignment import BookingEmployeeAssignmentCreate
+from automex_backend.services.email import send_booking_confirmation_email, send_pickup_request_email, send_daily_work_log_email
 from automex_backend.api.auth import current_active_user, get_current_user_with_role
+
+# Setup logger
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -73,6 +77,7 @@ async def get_bookings(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=100),
     status_filter: Optional[BookingStatus] = None,
+    user_id: Optional[int] = None,
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(current_active_user)
 ):
@@ -89,6 +94,9 @@ async def get_bookings(
     # Non-admin users can only see their own bookings
     if not is_admin:
         query = query.where(Booking.user_id == user.id)
+    # Admin users can filter by specific user_id
+    elif user_id:
+        query = query.where(Booking.user_id == user_id)
     
     if status_filter:
         query = query.where(Booking.status == status_filter)
@@ -233,8 +241,8 @@ async def get_booking(
         raise
     except Exception as e:
         import traceback
-        print(f"[ERROR] Error getting booking {booking_id}: {str(e)}")
-        print(f"[ERROR] Traceback:\n{traceback.format_exc()}")
+        logger.error(f"Error getting booking {booking_id}: {str(e)}")
+        logger.error(f"Traceback:\n{traceback.format_exc()}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to retrieve booking: {str(e)}"
@@ -293,34 +301,32 @@ async def create_booking(
     
     # Send email notification to sales team
     try:
-        from automex_backend.services.email_service import send_booking_email
-        
         # Get service name if available
         service_name = service.name if service else (booking_data.service_name if hasattr(booking_data, 'service_name') else "Custom Service")
         car_brand = booking_data.vehicle_make or booking_data.car_brand or "Not specified"
         car_model = booking_data.vehicle_model or booking_data.car_model or "Not specified"
         fuel_type = booking_data.fuel_type or "Not specified"
         
-        await send_booking_email(
-            user_name=user.full_name or user.email,
-            user_email=user.email,
-            user_phone=user.phone_number,
-            booking_id=booking.id,
-            service_name=service_name,
-            car_brand=car_brand,
-            car_model=car_model,
-            fuel_type=fuel_type,
-            booking_date=booking_data.booking_date,
-            booking_status=booking.status.value if hasattr(booking.status, 'value') else str(booking.status),
-            pickup_address=booking_data.pickup_address,
-            special_instructions=booking_data.special_instructions,
+        await send_booking_confirmation_email(
+            to_email=user.email,
+            customer_name=user.full_name or user.email,
+            booking_details=[{
+                "service_name": service_name,
+                "car_brand": car_brand,
+                "car_model": car_model,
+                "fuel_type": fuel_type,
+                "booking_date": booking_data.booking_date,
+                "pickup_address": booking_data.pickup_address,
+                "special_instructions": booking_data.special_instructions,
+                "estimated_cost": estimated_cost
+            }],
             estimated_cost=estimated_cost
         )
     except Exception as email_error:
         # Don't fail the booking creation if email fails
-        print(f"[WARNING] Failed to send booking email notification: {str(email_error)}")
+        logger.warning(f"Failed to send booking email notification: {str(email_error)}")
         import traceback
-        print(f"[WARNING] Email error traceback: {traceback.format_exc()}")
+        logger.warning(f"Email error traceback: {traceback.format_exc()}")
     
     return booking
 
@@ -335,16 +341,16 @@ async def create_service_booking(
     Create a new service booking from frontend Zustand store data
     """
     try:
-        print(f"[INFO] Creating service booking for user {user.id}")
-        print(f"[INFO] Booking data received: {booking_data.model_dump()}")
+        logger.info(f"Creating service booking for user {user.id}")
+        logger.info(f"Booking data received: {booking_data.model_dump()}")
         
         # Pydantic automatically parses ISO datetime strings, so booking_data.booking_date is already a datetime
         # Get contact information from user
         contact_name = user.full_name if user.full_name else (user.email if user.email else "User")
         contact_phone = user.phone_number if user.phone_number else None
         
-        print(f"[INFO] Contact info: name={contact_name}, phone={contact_phone}")
-        print(f"[INFO] Booking date type: {type(booking_data.booking_date)}, value: {booking_data.booking_date}")
+        logger.info(f"Contact info: name={contact_name}, phone={contact_phone}")
+        logger.info(f"Booking date type: {type(booking_data.booking_date)}, value: {booking_data.booking_date}")
         
         # Create booking with car selection details
         # Only include fields that exist in the database to avoid column errors
@@ -368,20 +374,20 @@ async def create_service_booking(
                 "vehicle_model": booking_data.car_model,
                 "booking_group_id": booking_data.booking_group_id,
             })
-            print(f"[INFO] Added car selection fields: brand={booking_data.car_brand}, model={booking_data.car_model}, group_id={booking_data.booking_group_id}")
+            logger.info(f"Added car selection fields: brand={booking_data.car_brand}, model={booking_data.car_model}, group_id={booking_data.booking_group_id}")
         except Exception as field_error:
-            print(f"[WARNING] Could not add car selection fields: {field_error}")
+            logger.warning(f"Could not add car selection fields: {field_error}")
             # Fallback: use vehicle_make/model only
             booking_data_dict.update({
                 "vehicle_make": booking_data.car_brand,
                 "vehicle_model": booking_data.car_model,
             })
         
-        print(f"[INFO] Creating Booking object with data: {booking_data_dict}")
+        logger.info(f"Creating Booking object with data: {booking_data_dict}")
         booking = Booking(**booking_data_dict)
         
         session.add(booking)
-        print(f"[INFO] Booking added to session, committing...")
+        logger.info(f"Booking added to session, committing...")
         await session.commit()
         
         # Re-fetch with eager loading to avoid lazy loading issues
@@ -391,45 +397,43 @@ async def create_service_booking(
             .options(selectinload(Booking.daily_work_logs))
         )
         booking = result.scalar_one()
-        print(f"[INFO] Booking created successfully with ID: {booking.id}")
+        logger.info(f"Booking created successfully with ID: {booking.id}")
         
         # Send email notification to sales team
         try:
-            from automex_backend.services.email_service import send_booking_email
-            
             if not booking_data.skip_email:
-                await send_booking_email(
-                    user_name=contact_name,
-                    user_email=user.email,
-                    user_phone=contact_phone,
-                    booking_id=booking.id,
-                    service_name=booking_data.service_name,
-                    car_brand=booking_data.car_brand,
-                    car_model=booking_data.car_model,
-                    fuel_type=booking_data.fuel_type,
-                    booking_date=booking_data.booking_date,
-                    booking_status=booking.status.value if hasattr(booking.status, 'value') else str(booking.status),
-                    pickup_address=booking.pickup_address,
-                    special_instructions=booking.special_instructions,
+                await send_booking_confirmation_email(
+                    to_email=user.email,
+                    customer_name=contact_name,
+                    booking_details=[{
+                        "service_name": booking_data.service_name,
+                        "car_brand": booking_data.car_brand,
+                        "car_model": booking_data.car_model,
+                        "fuel_type": booking_data.fuel_type,
+                        "booking_date": booking_data.booking_date,
+                        "pickup_address": booking.pickup_address,
+                        "special_instructions": booking.special_instructions,
+                        "estimated_cost": booking.estimated_cost
+                    }],
                     estimated_cost=booking.estimated_cost
                 )
             else:
-                print(f"[INFO] Email notification skipped for booking {booking.id} (part of batch)")
+                logger.info(f"Email notification skipped for booking {booking.id} (part of batch)")
         except Exception as email_error:
             # Don't fail the booking creation if email fails
-            print(f"[WARNING] Failed to send booking email notification: {str(email_error)}")
+            logger.warning(f"Failed to send booking email notification: {str(email_error)}")
             import traceback
-            print(f"[WARNING] Email error traceback: {traceback.format_exc()}")
+            logger.warning(f"Email error traceback: {traceback.format_exc()}")
         
         return booking
     except Exception as e:
         import traceback
         error_trace = traceback.format_exc()
         error_msg = str(e)
-        print(f"[ERROR] Error creating service booking: {error_msg}")
-        print(f"[ERROR] Traceback:\n{error_trace}")
-        print(f"[ERROR] Booking data: {booking_data.model_dump()}")
-        print(f"[ERROR] User ID: {user.id if user else 'None'}")
+        logger.error(f"Error creating service booking: {error_msg}")
+        logger.error(f"Traceback:\n{error_trace}")
+        logger.error(f"Booking data: {booking_data.model_dump()}")
+        logger.error(f"User ID: {user.id if user else 'None'}")
         await session.rollback()
         
         # Check if it's a column error
@@ -458,7 +462,7 @@ async def update_booking_status(
     """
     Update booking status (Admin and Super Admin only)
     """
-    print(f"[DEBUG] update_booking_status called: booking_id={booking_id}, status={status_update.status}, user_id={user.id if user else None}")
+    logger.debug(f"update_booking_status called: booking_id={booking_id}, status={status_update.status}, user_id={user.id if user else None}")
     
     # Validate status first - check against enum VALUES, not names
     status_value = status_update.status.lower().strip()
@@ -483,20 +487,20 @@ async def update_booking_status(
             detail=f"Invalid status value: {status_update.status}. Valid values are: {', '.join(sorted(valid_statuses))}"
         )
     
-        print(f"[DEBUG] Validated status: {new_status.name} = {new_status.value}")
+    logger.debug(f"Validated status: {new_status.name} = {new_status.value}")
     
     try:
         # Check if user is Admin or Super Admin using helper function
         is_admin = await is_admin_or_super_admin(user, session)
         
         if not is_admin:
-            print(f"[DEBUG] User {user.id} is not admin or super, denying access")
+            logger.debug(f"User {user.id} is not admin or super, denying access")
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Only Admin and Super Admin can change booking status"
             )
         
-        print(f"[DEBUG] Permission check passed, getting booking {booking_id}")
+        logger.debug(f"Permission check passed, getting booking {booking_id}")
         
         # Get booking
         booking_result = await session.execute(
@@ -505,7 +509,7 @@ async def update_booking_status(
         booking = booking_result.scalar_one_or_none()
         
         if not booking:
-            print(f"[DEBUG] Booking {booking_id} not found")
+            logger.debug(f"Booking {booking_id} not found")
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Booking not found"
@@ -514,12 +518,12 @@ async def update_booking_status(
         # Store old status before updating (for email notification)
         old_status = booking.status
         
-        print(f"[DEBUG] Booking found, current status: {booking.status}, updating to: {new_status}")
-        print(f"[DEBUG] New status value: {new_status.value}, type: {type(new_status)}")
+        logger.debug(f"Booking found, current status: {booking.status}, updating to: {new_status}")
+        logger.debug(f"New status value: {new_status.value}, type: {type(new_status)}")
         
         # Get the string value from enum
         status_value = new_status.value if isinstance(new_status, BookingStatus) else str(new_status)
-        print(f"[DEBUG] Status string value to store: {status_value}")
+        logger.debug(f"Status string value to store: {status_value}")
         
         # Use raw SQL update to bypass SQLAlchemy's enum type conversion
         # This ensures we store the string value directly without enum name conversion
@@ -548,14 +552,14 @@ async def update_booking_status(
             """)
             params["completed_at"] = datetime.now(timezone.utc)
         
-        print(f"[DEBUG] Executing raw SQL update with status: {status_value}")
+        logger.debug(f"Executing raw SQL update with status: {status_value}")
         try:
             result = await session.execute(sql_query, params)
-            print(f"[DEBUG] Update executed, rows affected: {result.rowcount}")
+            logger.debug(f"Update executed, rows affected: {result.rowcount}")
             await session.commit()
-            print(f"[DEBUG] Update committed successfully")
+            logger.debug(f"Update committed successfully")
         except Exception as commit_error:
-            print(f"[ERROR] Commit failed: {commit_error}")
+            logger.error(f"Commit failed: {commit_error}")
             await session.rollback()
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -563,7 +567,7 @@ async def update_booking_status(
             )
         
         
-        print(f"[DEBUG] Re-fetching booking with eager loading")
+        logger.debug(f"Re-fetching booking with eager loading")
         # Re-fetch with eager loading to avoid lazy loading issues
         booking_result = await session.execute(
             select(Booking)
@@ -571,7 +575,7 @@ async def update_booking_status(
             .options(selectinload(Booking.daily_work_logs))
         )
         booking = booking_result.scalar_one()
-        print(f"[DEBUG] Booking re-fetched, status is now: {booking.status}")
+        logger.debug(f"Booking re-fetched, status is now: {booking.status}")
         
         # Get user information for email notification
         user_result = await session.execute(
@@ -584,8 +588,7 @@ async def update_booking_status(
         email_sent = False
         if booking_user and user_email:
             try:
-                print(f"[DEBUG] Preparing to send status update email to {user_email}...")
-                from automex_backend.services.email_service import send_status_update_email
+                logger.debug(f"Preparing to send status update email to {user_email}...")
                 
                 # Get service name
                 service_name = booking.service_name or "Service"
@@ -601,25 +604,25 @@ async def update_booking_status(
                 car_brand = booking.car_brand or booking.vehicle_make or "Not specified"
                 car_model = booking.car_model or booking.vehicle_model or "Not specified"
                 
-                print(f"[DEBUG] Calling send_status_update_email for booking #{booking.id}...")
-                email_sent = await send_status_update_email(
-                    user_name=booking_user.full_name or booking_user.email,
-                    user_email=user_email,
+                logger.debug(f"Calling send_pickup_request_email for booking #{booking.id}...")
+                email_sent = await send_pickup_request_email( # Reusing pickup request email for status update
+                    to_email=user_email,
+                    customer_name=booking_user.full_name or booking_user.email,
                     booking_id=booking.id,
                     service_name=service_name,
                     car_brand=car_brand,
                     car_model=car_model,
-                    old_status=old_status,
-                    new_status=status_value,
                     booking_date=booking.booking_date,
-                    sender_email="sales@automex.in"
+                    pickup_address=booking.pickup_address,
+                    status=status_value,
+                    old_status=old_status.value
                 )
-                print(f"[DEBUG] Email send result: {email_sent}")
+                logger.debug(f"Email send result: {email_sent}")
             except Exception as email_error:
                 # Don't fail the status update if email fails
-                print(f"[ERROR] Failed to send status update email notification: {str(email_error)}")
+                logger.error(f"Failed to send status update email notification: {str(email_error)}")
                 import traceback
-                print(f"[ERROR] Email error traceback: {traceback.format_exc()}")
+                logger.error(f"Email error traceback: {traceback.format_exc()}")
                 email_sent = False
         
         # Create response with user email info
@@ -632,22 +635,22 @@ async def update_booking_status(
         
         return response
     except HTTPException as http_ex:
-        print(f"[DEBUG] HTTPException raised: {http_ex.status_code} - {http_ex.detail}")
+        logger.debug(f"HTTPException raised: {http_ex.status_code} - {http_ex.detail}")
         raise
     except Exception as e:
         import traceback
         error_trace = traceback.format_exc()
         error_msg = str(e)
-        print(f"[ERROR] Error updating booking status: {error_msg}")
-        print(f"[ERROR] Booking ID: {booking_id}, New Status: {status_update.status}")
-        print(f"[ERROR] User ID: {user.id if user else 'None'}")
-        print(f"[ERROR] User is_superuser: {user.is_superuser if user else 'None'}")
-        print(f"[ERROR] User role_id: {getattr(user, 'role_id', 'N/A')}")
-        print(f"[ERROR] Traceback:\n{error_trace}")
+        logger.error(f"Error updating booking status: {error_msg}")
+        logger.error(f"Booking ID: {booking_id}, New Status: {status_update.status}")
+        logger.error(f"User ID: {user.id if user else 'None'}")
+        logger.error(f"User is_superuser: {user.is_superuser if user else 'None'}")
+        logger.error(f"User role_id: {getattr(user, 'role_id', 'N/A')}")
+        logger.error(f"Traceback:\n{error_trace}")
         try:
             await session.rollback()
         except Exception as rollback_error:
-            print(f"[ERROR] Failed to rollback: {rollback_error}")
+            logger.error(f"Failed to rollback: {rollback_error}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to update booking status: {error_msg}. Check server logs for details."
@@ -790,9 +793,9 @@ async def delete_booking(
                 count = await s3_service.delete_files_by_date_folder(owner_identifier, date_folder)
 
                 deleted_count += count
-                print(f"[INFO] Deleted {count} files from date folder {date_folder} for booking #{booking_id}")
+                logger.info(f"Deleted {count} files from date folder {date_folder} for booking #{booking_id}")
             except Exception as e:
-                print(f"[WARNING] Failed to delete date folder {date_folder}: {str(e)}")
+                logger.warning(f"Failed to delete date folder {date_folder}: {str(e)}")
     
     # Delete individual files by URL (in case some weren't in date folders)
     for url in all_media_urls:
@@ -800,21 +803,21 @@ async def delete_booking(
             if await s3_service.delete_file(url):
                 deleted_count += 1
         except Exception as e:
-            print(f"[WARNING] Failed to delete file {url}: {str(e)}")
+            logger.warning(f"Failed to delete file {url}: {str(e)}")
     
-    print(f"[INFO] Deleted {deleted_count} media files from S3 for booking #{booking_id}")
+    logger.info(f"Deleted {deleted_count} media files from S3 for booking #{booking_id}")
     
     # Delete all daily work logs from database
     if booking.daily_work_logs:
         for daily_log in booking.daily_work_logs:
             await session.delete(daily_log)
-        print(f"[INFO] Deleted {len(booking.daily_work_logs)} daily work log(s) for booking #{booking_id}")
+        logger.info(f"Deleted {len(booking.daily_work_logs)} daily work log(s) for booking #{booking_id}")
     
     # Delete the booking itself
     await session.delete(booking)
     await session.commit()
     
-    print(f"[INFO] Successfully deleted booking #{booking_id} and all related data")
+    logger.info(f"Successfully deleted booking #{booking_id} and all related data")
     
     return None
 
@@ -924,8 +927,6 @@ async def create_daily_work_log(
     
     # Send email notification to user about work log addition
     try:
-        from automex_backend.services.email_service import send_work_log_email
-        
         # Get user information
         user_result = await session.execute(
             select(User).where(User.id == booking.user_id)
@@ -954,24 +955,22 @@ async def create_daily_work_log(
             # Format log date
             log_date_str = daily_log.log_date.strftime("%B %d, %Y") if hasattr(daily_log.log_date, 'strftime') else str(daily_log.log_date)
             
-            await send_work_log_email(
-                user_name=booking_user.full_name or booking_user.email,
-                user_email=booking_user.email,
+            await send_daily_work_log_email(
+                to_email=booking_user.email,
+                customer_name=booking_user.full_name or booking_user.email,
+                date=log_date_str,
+                work_done=daily_log.description,
+                parts_replaced="N/A", # Assuming description covers this for now
+                next_steps="N/A", # Assuming description covers this for now
                 booking_id=booking.id,
-                service_name=service_name,
-                car_brand=car_brand,
-                car_model=car_model,
-                log_date=log_date_str,
-                description=daily_log.description,
-                photos_count=photos_count,
-                videos_count=videos_count,
-                sender_email="sales@automex.in"
+                photos=[p["url"] for p in daily_log.photos] if daily_log.photos else [],
+                videos=[v["url"] for v in daily_log.videos] if daily_log.videos else []
             )
     except Exception as email_error:
         # Don't fail the work log creation if email fails
-        print(f"[WARNING] Failed to send work log email notification: {str(email_error)}")
+        logger.warning(f"Failed to send work log email notification: {str(email_error)}")
         import traceback
-        print(f"[WARNING] Email error traceback: {traceback.format_exc()}")
+        logger.warning(f"Email error traceback: {traceback.format_exc()}")
     
     return daily_log
 
@@ -1172,8 +1171,6 @@ async def upload_daily_work_media(
     
     # Send email notification to user about media upload
     try:
-        from automex_backend.services.email_service import send_work_log_email
-        
         if owner and owner.email:
             # Get service name
             service_name = booking.service_name or "Service"
@@ -1196,24 +1193,22 @@ async def upload_daily_work_media(
             # Format log date
             log_date_str = daily_log.log_date.strftime("%B %d, %Y") if hasattr(daily_log.log_date, 'strftime') else str(daily_log.log_date)
             
-            await send_work_log_email(
-                user_name=owner.full_name or owner.email,
-                user_email=owner.email,
+            await send_daily_work_log_email(
+                to_email=owner.email,
+                customer_name=owner.full_name or owner.email,
+                date=log_date_str,
+                work_done=daily_log.description,
+                parts_replaced="N/A", # Assuming description covers this for now
+                next_steps="N/A", # Assuming description covers this for now
                 booking_id=booking.id,
-                service_name=service_name,
-                car_brand=car_brand,
-                car_model=car_model,
-                log_date=log_date_str,
-                description=daily_log.description,
-                photos_count=photos_count,
-                videos_count=videos_count,
-                sender_email="sales@automex.in"
+                photos=[p["url"] for p in daily_log.photos] if daily_log.photos else [],
+                videos=[v["url"] for v in daily_log.videos] if daily_log.videos else []
             )
     except Exception as email_error:
         # Don't fail the media upload if email fails
-        print(f"[WARNING] Failed to send work log email notification: {str(email_error)}")
+        logger.warning(f"Failed to send work log email notification: {str(email_error)}")
         import traceback
-        print(f"[WARNING] Email error traceback: {traceback.format_exc()}")
+        logger.warning(f"Email error traceback: {traceback.format_exc()}")
     
     return daily_log
 
@@ -1373,7 +1368,7 @@ async def delete_daily_work_log(
     await session.delete(daily_log)
     await session.commit()
     
-    print(f"[INFO] Deleted daily work log #{log_id} ({len(urls_to_delete)} media items, S3 deleted: {deleted_count} files)")
+    logger.info(f"Deleted daily work log #{log_id} ({len(urls_to_delete)} media items, S3 deleted: {deleted_count} files)")
     
     return None
 
@@ -1475,7 +1470,7 @@ async def delete_daily_work_by_date(
         
     await session.commit()
     
-    print(f"[INFO] Deleted {len(daily_logs)} daily work log(s) for date {log_date} ({len(urls_to_delete)} media items, S3 deleted: {s3_deleted_count} files)")
+    logger.info(f"Deleted {len(daily_logs)} daily work log(s) for date {log_date} ({len(urls_to_delete)} media items, S3 deleted: {s3_deleted_count} files)")
     
     return None
 
@@ -1636,34 +1631,59 @@ async def send_batch_booking_email(
         
         if not bookings:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
+                status_code=status.HTTP_404_NOT_NOT_FOUND,
                 detail=f"No bookings found for group {booking_group_id}"
             )
             
-        # Send consolidated email
-        from automex_backend.services.email_service import email_service
+        # Prepare booking details for the email
+        email_details = []
+        total_cost = 0.0
+        for booking in bookings:
+            service_name = booking.service_name or "Custom Service"
+            car_brand = booking.car_brand or booking.vehicle_make or "Not specified"
+            car_model = booking.car_model or booking.vehicle_model or "Not specified"
+            fuel_type = booking.fuel_type or "Not specified"
+            estimated_cost = float(booking.estimated_cost) if booking.estimated_cost else 0.0
+            
+            email_details.append({
+                "service_name": service_name,
+                "car_brand": car_brand,
+                "car_model": car_model,
+                "fuel_type": fuel_type,
+                "booking_date": booking.booking_date,
+                "pickup_address": booking.pickup_address,
+                "special_instructions": booking.special_instructions,
+                "estimated_cost": estimated_cost
+            })
+            total_cost += estimated_cost
+            
+        user_name = user.full_name if user.full_name else (user.email if user.email else "User")
+        user_email = user.email
         
-        contact_name = user.full_name if user.full_name else (user.email if user.email else "User")
-        contact_phone = user.phone_number if user.phone_number else None
-        
-        success = await email_service.send_batch_booking_email(
-            user_name=contact_name,
-            user_email=user.email,
-            user_phone=contact_phone,
-            bookings=bookings
-        )
-        
-        if not success:
-             print(f"[WARNING] Failed to send batch email for group {booking_group_id}")
-             # Not raising generic error to avoid confusing frontend if bookings were successful
-             
-        return {"message": "Batch email processed", "email_sent": success, "count": len(bookings)}
-        
+        # Send batch email
+        try:
+             await send_booking_confirmation_email(
+                 to_email=user_email,
+                 customer_name=user_name,
+                 booking_details=email_details,
+                 estimated_cost=total_cost
+             )
+             logger.info(f"Batch email sent successfully for group {booking_group_id} to {user_email}")
+             return {"message": "Batch email processed", "email_sent": True, "count": len(bookings)}
+        except Exception as e:
+             logger.warning(f"Failed to send batch email for group {booking_group_id}: {str(e)}")
+             import traceback
+             logger.warning(f"Email error traceback: {traceback.format_exc()}")
+             return {"message": "Batch email processed, but email sending failed", "email_sent": False, "count": len(bookings)}
+    
+    except HTTPException:
+        raise # Re-raise HTTPExceptions
     except Exception as e:
-        print(f"[ERROR] Error processing batch email: {str(e)}")
+        logger.error(f"Error processing batch email: {str(e)}")
         import traceback
-        print(traceback.format_exc())
+        logger.error(traceback.format_exc())
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to send batch email: {str(e)}"
         )
+
