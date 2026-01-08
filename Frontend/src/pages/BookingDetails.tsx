@@ -539,7 +539,7 @@ const BookingDetails = () => {
                         </Badge>
                       </div>
                       <p className="text-gray-600 mb-4">
-                        Scheduled for <span className="font-medium">{formatDbDate(booking.booking_date, "EEE, MMM d")} · {formatDbDate(booking.booking_date, "h:mm a")}</span>
+                        Scheduled for <span className="font-medium">{formatDbDate(booking.booking_date, "dd-MM-yyyy")} · {formatDbDate(booking.booking_date, "h:mm a")}</span>
                       </p>
                       <div className="border-t border-gray-200 pt-4">
                         <div className="space-y-2">
@@ -556,7 +556,7 @@ const BookingDetails = () => {
                     <>
                       <h2 className="text-lg sm:text-xl font-bold text-gray-900">{booking.service_name}</h2>
                       <p className="text-gray-600 mt-1">
-                        Scheduled for <span className="font-medium">{formatDbDate(booking.booking_date, "EEEE, MMMM d, yyyy 'at' h:mm a")}</span>
+                        Scheduled for <span className="font-medium">{formatDbDate(booking.booking_date, "dd-MM-yyyy 'at' h:mm a")}</span>
                       </p>
                     </>
                   )}

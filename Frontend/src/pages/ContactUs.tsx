@@ -1519,7 +1519,7 @@ const ContactUs = () => {
       {/* Contact Section */}
       <section className="py-16 sm:py-20 md:py-24 bg-gradient-to-b from-gray-50 to-white">
         <div className="container mx-auto px-4 sm:px-6 md:px-8 max-w-[1400px]">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-12">
+          <div className="grid grid-cols-3 md:grid-cols-3 gap-2 sm:gap-4 md:gap-8 mb-12">
             {/* Contact Information Cards */}
             {/* Phone Card */}
             <Card
@@ -1538,10 +1538,10 @@ const ContactUs = () => {
                 e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04)';
               }}
             >
-              <CardContent className="p-8">
+              <CardContent className="p-2 sm:p-4 md:p-8">
                 <div className="flex flex-col items-start">
                   <div
-                    className="w-16 h-16 rounded-full flex items-center justify-center transition-all duration-500 group-hover:scale-110 relative"
+                    className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center transition-all duration-500 group-hover:scale-110 relative"
                     style={{
                       background: 'linear-gradient(135deg, #E53935 0%, #D81B60 50%, #8E24AA 100%)',
                       boxShadow: '0 8px 24px rgba(229, 57, 53, 0.25), 0 0 0 0px rgba(229, 57, 53, 0.1)',
@@ -1557,26 +1557,26 @@ const ContactUs = () => {
                         zIndex: -1
                       }}
                     />
-                    <Phone className="w-7 h-7 text-white relative z-10" strokeWidth={1.75} />
+                    <Phone className="w-4 h-4 sm:w-5 sm:h-5 md:w-7 md:h-7 text-white relative z-10" strokeWidth={1.75} />
                   </div>
-                  <h3 className="font-bold mt-6 text-gray-900" style={{ fontSize: '20px', letterSpacing: '-0.02em', fontWeight: 700 }}>
+                  <h3 className="font-bold mt-2 sm:mt-4 md:mt-6 text-gray-900 text-xs sm:text-base md:text-xl" style={{ letterSpacing: '-0.02em', fontWeight: 700 }}>
                     Phone
                   </h3>
-                  <p className="mt-2 text-gray-500" style={{ fontSize: '14px', lineHeight: '1.6', fontWeight: 400 }}>
+                  <p className="mt-1 sm:mt-2 text-gray-500 text-[10px] sm:text-sm" style={{ lineHeight: '1.4', fontWeight: 400 }}>
                     Call us for immediate assistance
                   </p>
                   <div className="space-y-2.5 mt-6">
                     <a
                       href="tel:+918249614004"
-                      className="font-semibold block transition-all duration-300 hover:translate-x-1 text-gray-900 hover:text-[#E53935]"
-                      style={{ fontSize: '16px', fontWeight: 600, letterSpacing: '-0.01em' }}
+                      className="font-semibold block transition-all duration-300 hover:translate-x-1 text-gray-900 hover:text-[#E53935] text-[10px] sm:text-sm md:text-base"
+                      style={{ fontWeight: 600, letterSpacing: '-0.01em' }}
                     >
                       +91 8249614004
                     </a>
                     <a
                       href="tel:+919776433334"
-                      className="font-semibold block transition-all duration-300 hover:translate-x-1 text-gray-900 hover:text-[#E53935]"
-                      style={{ fontSize: '16px', fontWeight: 600, letterSpacing: '-0.01em' }}
+                      className="font-semibold block transition-all duration-300 hover:translate-x-1 text-gray-900 hover:text-[#E53935] text-[10px] sm:text-sm md:text-base"
+                      style={{ fontWeight: 600, letterSpacing: '-0.01em' }}
                     >
                       +91 9776433334
                     </a>
@@ -1602,10 +1602,10 @@ const ContactUs = () => {
                 e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04)';
               }}
             >
-              <CardContent className="p-8">
+              <CardContent className="p-2 sm:p-4 md:p-8">
                 <div className="flex flex-col items-start">
                   <div
-                    className="w-16 h-16 rounded-full flex items-center justify-center transition-all duration-500 group-hover:scale-110 relative"
+                    className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center transition-all duration-500 group-hover:scale-110 relative"
                     style={{
                       background: 'linear-gradient(135deg, #E53935 0%, #D81B60 50%, #8E24AA 100%)',
                       boxShadow: '0 8px 24px rgba(229, 57, 53, 0.25), 0 0 0 0px rgba(229, 57, 53, 0.1)',
@@ -1621,18 +1621,18 @@ const ContactUs = () => {
                         zIndex: -1
                       }}
                     />
-                    <Mail className="w-7 h-7 text-white relative z-10" strokeWidth={1.75} />
+                    <Mail className="w-4 h-4 sm:w-5 sm:h-5 md:w-7 md:h-7 text-white relative z-10" strokeWidth={1.75} />
                   </div>
-                  <h3 className="font-bold mt-6 text-gray-900" style={{ fontSize: '20px', letterSpacing: '-0.02em', fontWeight: 700 }}>
+                  <h3 className="font-bold mt-2 sm:mt-4 md:mt-6 text-gray-900 text-xs sm:text-base md:text-xl" style={{ letterSpacing: '-0.02em', fontWeight: 700 }}>
                     Email
                   </h3>
-                  <p className="mt-2 text-gray-500" style={{ fontSize: '14px', lineHeight: '1.6', fontWeight: 400 }}>
+                  <p className="mt-1 sm:mt-2 text-gray-500 text-[10px] sm:text-sm" style={{ lineHeight: '1.4', fontWeight: 400 }}>
                     Send us an email anytime
                   </p>
                   <a
                     href="mailto:sales@automex.in"
-                    className="font-semibold transition-all duration-300 hover:translate-x-1 mt-6 text-gray-900 hover:text-[#E53935] break-all"
-                    style={{ fontSize: '16px', fontWeight: 600, letterSpacing: '-0.01em' }}
+                    className="font-semibold transition-all duration-300 hover:translate-x-1 mt-2 sm:mt-4 md:mt-6 text-gray-900 hover:text-[#E53935] break-all text-[10px] sm:text-sm md:text-base"
+                    style={{ fontWeight: 600, letterSpacing: '-0.01em' }}
                   >
                     sales@automex.in
                   </a>
@@ -1657,10 +1657,10 @@ const ContactUs = () => {
                 e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04)';
               }}
             >
-              <CardContent className="p-8">
+              <CardContent className="p-2 sm:p-4 md:p-8">
                 <div className="flex flex-col items-start">
                   <div
-                    className="w-16 h-16 rounded-full flex items-center justify-center transition-all duration-500 group-hover:scale-110 relative"
+                    className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center transition-all duration-500 group-hover:scale-110 relative"
                     style={{
                       background: 'linear-gradient(135deg, #E53935 0%, #D81B60 50%, #8E24AA 100%)',
                       boxShadow: '0 8px 24px rgba(229, 57, 53, 0.25), 0 0 0 0px rgba(229, 57, 53, 0.1)',
@@ -1676,21 +1676,21 @@ const ContactUs = () => {
                         zIndex: -1
                       }}
                     />
-                    <MapPin className="w-7 h-7 text-white relative z-10" strokeWidth={1.75} />
+                    <MapPin className="w-4 h-4 sm:w-5 sm:h-5 md:w-7 md:h-7 text-white relative z-10" strokeWidth={1.75} />
                   </div>
-                  <h3 className="font-bold mt-6 text-gray-900" style={{ fontSize: '20px', letterSpacing: '-0.02em', fontWeight: 700 }}>
+                  <h3 className="font-bold mt-2 sm:mt-4 md:mt-6 text-gray-900 text-xs sm:text-base md:text-xl" style={{ letterSpacing: '-0.02em', fontWeight: 700 }}>
                     Location
                   </h3>
-                  <p className="mt-2 text-gray-500" style={{ fontSize: '14px', lineHeight: '1.6', fontWeight: 400 }}>
+                  <p className="mt-1 sm:mt-2 text-gray-500 text-[10px] sm:text-sm" style={{ lineHeight: '1.4', fontWeight: 400 }}>
                     Visit our main office
                   </p>
-                  <div className="mt-6">
-                    <p className="font-semibold leading-relaxed text-gray-900" style={{ fontSize: '16px', fontWeight: 600, letterSpacing: '-0.01em', lineHeight: '1.7' }}>
+                  <div className="mt-2 sm:mt-4 md:mt-6">
+                    <p className="font-semibold leading-relaxed text-gray-900 text-[10px] sm:text-sm md:text-base" style={{ fontWeight: 600, letterSpacing: '-0.01em', lineHeight: '1.7' }}>
                       AUTOMEX,<br />
                       Hanspal, Balianta market road<br />
                       Bhubaneswar, Odisha - 752101
                     </p>
-                    <p className="mt-3 text-gray-500" style={{ fontSize: '14px', fontWeight: 400 }}>
+                    <p className="mt-1 sm:mt-2 text-gray-500 text-[10px] sm:text-sm" style={{ fontWeight: 400 }}>
                       Contact: Tapas Parida
                     </p>
                   </div>
@@ -1906,11 +1906,11 @@ const ContactUs = () => {
               </h2>
 
               {/* Three Column Layout */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+              <div className="grid grid-cols-3 md:grid-cols-3 gap-2 sm:gap-4 md:gap-8 mb-12">
                 {/* Business Hours */}
                 <div className="flex flex-col items-start">
                   <div
-                    className="w-16 h-16 rounded-full flex items-center justify-center mb-6 transition-all duration-500 hover:scale-110 relative group"
+                    className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mb-2 sm:mb-4 md:mb-6 transition-all duration-500 hover:scale-110 relative group"
                     style={{
                       background: 'linear-gradient(135deg, #E53935 0%, #D81B60 50%, #8E24AA 100%)',
                       boxShadow: '0 8px 24px rgba(229, 57, 53, 0.3)'
@@ -1926,16 +1926,16 @@ const ContactUs = () => {
                         zIndex: -1
                       }}
                     />
-                    <Clock className="w-7 h-7 text-white relative z-10" strokeWidth={1.75} />
+                    <Clock className="w-4 h-4 sm:w-5 sm:h-5 md:w-7 md:h-7 text-white relative z-10" strokeWidth={1.75} />
                   </div>
-                  <h3 className="text-xl font-bold mb-3 text-white" style={{ letterSpacing: '-0.02em', fontWeight: 700 }}>
+                  <h3 className="text-xs sm:text-lg md:text-xl font-bold mb-1 sm:mb-2 md:mb-3 text-white" style={{ letterSpacing: '-0.02em', fontWeight: 700 }}>
                     Business Hours
                   </h3>
-                  <p className="text-base leading-relaxed text-gray-300 font-medium">
+                  <p className="text-[10px] sm:text-sm md:text-base leading-relaxed text-gray-300 font-medium">
                     Monday - Saturday:<br />
                     8:00 AM - 8:00 PM
                   </p>
-                  <p className="text-sm text-gray-400 mt-2">
+                  <p className="text-[10px] sm:text-xs md:text-sm text-gray-400 mt-1 sm:mt-2">
                     Sunday: 9:00 AM - 6:00 PM
                   </p>
                 </div>
@@ -1943,7 +1943,7 @@ const ContactUs = () => {
                 {/* Expertise */}
                 <div className="flex flex-col items-start">
                   <div
-                    className="w-16 h-16 rounded-full flex items-center justify-center mb-6 transition-all duration-500 hover:scale-110 relative group"
+                    className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mb-2 sm:mb-4 md:mb-6 transition-all duration-500 hover:scale-110 relative group"
                     style={{
                       background: 'linear-gradient(135deg, #E53935 0%, #D81B60 50%, #8E24AA 100%)',
                       boxShadow: '0 8px 24px rgba(229, 57, 53, 0.3)'
@@ -1959,16 +1959,16 @@ const ContactUs = () => {
                         zIndex: -1
                       }}
                     />
-                    <Wrench className="w-7 h-7 text-white relative z-10" strokeWidth={1.75} />
+                    <Wrench className="w-4 h-4 sm:w-5 sm:h-5 md:w-7 md:h-7 text-white relative z-10" strokeWidth={1.75} />
                   </div>
-                  <h3 className="text-xl font-bold mb-3 text-white" style={{ letterSpacing: '-0.02em', fontWeight: 700 }}>
+                  <h3 className="text-xs sm:text-lg md:text-xl font-bold mb-1 sm:mb-2 md:mb-3 text-white" style={{ letterSpacing: '-0.02em', fontWeight: 700 }}>
                     Expertise
                   </h3>
-                  <p className="text-base leading-relaxed text-gray-300 font-medium">
+                  <p className="text-[10px] sm:text-sm md:text-base leading-relaxed text-gray-300 font-medium">
                     10+ Years Experience<br />
                     Certified Technicians
                   </p>
-                  <p className="text-sm text-gray-400 mt-2">
+                  <p className="text-[10px] sm:text-xs md:text-sm text-gray-400 mt-1 sm:mt-2">
                     Premium Tools & Parts
                   </p>
                 </div>
@@ -1976,7 +1976,7 @@ const ContactUs = () => {
                 {/* Service Guarantee */}
                 <div className="flex flex-col items-start">
                   <div
-                    className="w-16 h-16 rounded-full flex items-center justify-center mb-6 transition-all duration-500 hover:scale-110 relative group"
+                    className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mb-2 sm:mb-4 md:mb-6 transition-all duration-500 hover:scale-110 relative group"
                     style={{
                       background: 'linear-gradient(135deg, #E53935 0%, #D81B60 50%, #8E24AA 100%)',
                       boxShadow: '0 8px 24px rgba(229, 57, 53, 0.3)'
@@ -1992,16 +1992,16 @@ const ContactUs = () => {
                         zIndex: -1
                       }}
                     />
-                    <ShieldCheck className="w-7 h-7 text-white relative z-10" strokeWidth={1.75} />
+                    <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 md:w-7 md:h-7 text-white relative z-10" strokeWidth={1.75} />
                   </div>
-                  <h3 className="text-xl font-bold mb-3 text-white" style={{ letterSpacing: '-0.02em', fontWeight: 700 }}>
+                  <h3 className="text-xs sm:text-lg md:text-xl font-bold mb-1 sm:mb-2 md:mb-3 text-white" style={{ letterSpacing: '-0.02em', fontWeight: 700 }}>
                     Service Guarantee
                   </h3>
-                  <p className="text-base leading-relaxed text-gray-300 font-medium">
+                  <p className="text-[10px] sm:text-sm md:text-base leading-relaxed text-gray-300 font-medium">
                     100% Genuine Parts<br />
                     Transparent Pricing
                   </p>
-                  <p className="text-sm text-gray-400 mt-2">
+                  <p className="text-[10px] sm:text-xs md:text-sm text-gray-400 mt-1 sm:mt-2">
                     Quality Assured
                   </p>
                 </div>

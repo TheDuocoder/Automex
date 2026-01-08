@@ -409,7 +409,7 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
 
           {/* Right side - Welcome Section when authenticated, Login/Register when not authenticated */}
           {isAuthenticated ? (
-            <div className="w-full md:w-[480px] order-1 md:order-2">
+            <div className="hidden md:block w-full md:w-[480px] order-1 md:order-2">
               <div className="hero-auth-card w-full">
                 {/* Welcome Section for Logged-in Users */}
                 <div className="welcome-section w-full bg-black/60 backdrop-blur-md border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4),0_0_60px_rgba(255,81,47,0.2),0_0_100px_rgba(221,36,118,0.15)] rounded-3xl p-5 relative scale-90 origin-top">

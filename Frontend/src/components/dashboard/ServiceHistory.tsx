@@ -21,6 +21,7 @@ import { History, Plus, CheckCircle, ChevronRight, Loader2, Car as CarIcon, Chec
 import { serviceHistoryService, carService, Car, ServiceHistory as ServiceHistoryType, ServiceHistoryCreate } from "@/services/api";
 import { getUserBookings, Booking } from "@/services/bookingService";
 import { toast } from "sonner";
+import { format } from "date-fns";
 
 interface ServiceHistoryWithCar extends ServiceHistoryType {
     car?: Car;
@@ -38,6 +39,29 @@ type HistoryItem = ServiceHistoryWithCar | BookingWithType;
 interface ServiceHistoryProps {
     userId?: number;
 }
+
+// Helper to format DB date strings exactly as they appear, ignoring timezone
+const formatDbDate = (dateStr: string | Date, formatStr: string) => {
+    if (!dateStr) return "";
+    try {
+        const str = dateStr instanceof Date ? dateStr.toISOString() : String(dateStr);
+        const [datePart, timePart] = str.split('T');
+        const [year, month, day] = datePart.split('-').map(Number);
+
+        let hours = 0;
+        let minutes = 0;
+        if (timePart) {
+            const [h, m] = timePart.split(':').map(Number);
+            hours = h || 0;
+            minutes = m || 0;
+        }
+
+        const date = new Date(year, month - 1, day, hours, minutes);
+        return format(date, formatStr);
+    } catch (e) {
+        return String(dateStr);
+    }
+};
 
 const ServiceHistory = ({ userId }: ServiceHistoryProps = {}) => {
     const navigate = useNavigate();
@@ -80,6 +104,8 @@ const ServiceHistory = ({ userId }: ServiceHistoryProps = {}) => {
                 serviceHistoryService.getAll(undefined, userId),
                 getUserBookings(userId)
             ]);
+            console.log("Results - History:", historyResponse.data?.length, "Bookings:", bookings?.length);
+
 
             let combinedHistory: HistoryItem[] = [];
 
@@ -336,7 +362,7 @@ const ServiceHistory = ({ userId }: ServiceHistoryProps = {}) => {
                     <div className="flex justify-center p-8">
                         <Loader2 className="h-8 w-8 animate-spin text-primary" />
                     </div>
-                ) : cars.length === 0 ? (
+                ) : cars.length === 0 && allHistory.length === 0 ? (
                     <div className="text-center p-8">
                         <div className="mb-4">
                             <CarIcon className="h-16 w-16 mx-auto text-gray-300 mb-3" />
@@ -479,11 +505,7 @@ const ServiceHistory = ({ userId }: ServiceHistoryProps = {}) => {
                                                                 </div>
                                                                 <p className="text-gray-600 text-sm mb-1">Completed on</p>
                                                                 <p className="text-lg font-semibold text-gray-900">
-                                                                    {new Date(record.service_date).toLocaleDateString('en-US', {
-                                                                        year: 'numeric',
-                                                                        month: 'long',
-                                                                        day: 'numeric'
-                                                                    })}
+                                                                    {formatDbDate(record.service_date, "dd-MM-yyyy")}
                                                                 </p>
                                                             </div>
 
