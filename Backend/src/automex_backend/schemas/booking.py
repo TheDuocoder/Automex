@@ -24,6 +24,8 @@ class BookingBase(BaseModel):
     car_model: Optional[str] = Field(None, max_length=100)
     fuel_type: Optional[str] = Field(None, max_length=50)
     service_name: Optional[str] = Field(None, max_length=255)
+    car_number: Optional[str] = Field(None, max_length=20)
+    kilometer_ran: Optional[float] = Field(None, ge=0)
 
 
 class BookingCreate(BookingBase):
@@ -40,6 +42,8 @@ class ServiceBookingCreate(BaseModel):
     service_name: str = Field(..., min_length=1, max_length=255)
     booking_group_id: Optional[str] = Field(None, max_length=100)
     skip_email: bool = False
+    car_number: Optional[str] = Field(None, max_length=20)
+    kilometer_ran: Optional[float] = Field(None, ge=0)
 
 
 class BookingStatusUpdate(BaseModel):
@@ -62,6 +66,8 @@ class BookingUpdate(BaseModel):
     estimated_cost: Optional[float] = Field(None, gt=0)
     actual_cost: Optional[float] = Field(None, gt=0)
     technician_notes: Optional[str] = None
+    car_number: Optional[str] = Field(None, max_length=20)
+    kilometer_ran: Optional[float] = Field(None, ge=0)
 
 
 class EmployeeAssignmentHistoryRead(BaseModel):
@@ -94,6 +100,8 @@ class BookingRead(BookingBase):
     car_model: Optional[str] = None
     fuel_type: Optional[str] = None
     service_name: Optional[str] = None
+    car_number: Optional[str] = None
+    kilometer_ran: Optional[float] = None
     # Booking group ID for multi-service bookings
     booking_group_id: Optional[str] = None
     # User email (for admin view)

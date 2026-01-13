@@ -27,6 +27,8 @@ export interface ServiceBookingCreate {
   service_name: string;
   booking_group_id?: string; // Group ID for multi-service bookings
   skip_email?: boolean;
+  car_number?: string;
+  kilometer_ran?: number;
 }
 
 /**
@@ -47,6 +49,8 @@ export interface Booking {
   fuel_type?: string;
   service_name?: string;
   booking_group_id?: string; // Group ID for multi-service bookings
+  car_number?: string;
+  kilometer_ran?: number;
   contact_name?: string;
   contact_phone?: string;
   pickup_address?: string;
@@ -196,6 +200,26 @@ export async function updateBookingStatus(bookingId: number, newStatus: BookingS
 
   if (!response.data) {
     throw new Error('Failed to update booking status');
+  }
+
+  return response.data;
+}
+
+/**
+ * Update booking details (Admin/Super Admin only)
+ */
+export async function updateBooking(bookingId: number, data: Partial<Booking>): Promise<Booking> {
+  const response = await apiCall<Booking>(`/api/v1/bookings/${bookingId}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  });
+
+  if (response.error) {
+    throw new Error(response.error);
+  }
+
+  if (!response.data) {
+    throw new Error('Failed to update booking');
   }
 
   return response.data;

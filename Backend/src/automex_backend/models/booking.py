@@ -54,6 +54,8 @@ class Booking(Base):
     car_model: Mapped[Optional[str]] = mapped_column(String(length=100), nullable=True)
     fuel_type: Mapped[Optional[str]] = mapped_column(String(length=50), nullable=True)
     service_name: Mapped[Optional[str]] = mapped_column(String(length=255), nullable=True)
+    car_number: Mapped[Optional[str]] = mapped_column(String(length=20), nullable=True)
+    kilometer_ran: Mapped[Optional[float]] = mapped_column(nullable=True)
     
     # Booking group ID to link multiple services booked together
     booking_group_id: Mapped[Optional[str]] = mapped_column(String(length=100), nullable=True, index=True)

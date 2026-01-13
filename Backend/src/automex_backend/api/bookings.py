@@ -373,6 +373,8 @@ async def create_service_booking(
                 "vehicle_make": booking_data.car_brand,
                 "vehicle_model": booking_data.car_model,
                 "booking_group_id": booking_data.booking_group_id,
+                "car_number": booking_data.car_number,
+                "kilometer_ran": booking_data.kilometer_ran,
             })
             logger.info(f"Added car selection fields: brand={booking_data.car_brand}, model={booking_data.car_model}, group_id={booking_data.booking_group_id}")
         except Exception as field_error:

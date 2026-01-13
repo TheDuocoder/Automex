@@ -14,6 +14,8 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const MyCart = () => {
     const { isAuthenticated } = useAuth();
@@ -26,6 +28,11 @@ const MyCart = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [bookingItems, setBookingItems] = useState<CartItem[]>([]);
 
+    // Checkout state
+    const [step, setStep] = useState(1);
+    const [carNumber, setCarNumber] = useState("");
+    const [kilometerRan, setKilometerRan] = useState("");
+
     // Group items by car model
     const groupedItems = items.reduce((acc, item) => {
         const key = `${item.brand} ${item.model} • ${item.fuelType || ''}`;
@@ -36,6 +43,10 @@ const MyCart = () => {
 
     const handleCheckoutClick = (groupItems: CartItem[]) => {
         setBookingItems(groupItems);
+        // Reset state
+        setStep(1);
+        setCarNumber("");
+        setKilometerRan("");
         setIsCheckoutOpen(true);
     };
 
@@ -76,7 +87,9 @@ const MyCart = () => {
                     fuel_type: item.fuelType,
                     service_name: item.name,
                     booking_group_id: bookingGroupId,
-                    skip_email: true
+                    skip_email: true,
+                    car_number: carNumber || undefined,
+                    kilometer_ran: kilometerRan ? parseFloat(kilometerRan) : undefined
                 };
 
                 await createServiceBooking(bookingData);
@@ -264,31 +277,72 @@ const MyCart = () => {
                     <DialogContent className="sm:max-w-[425px] p-0 overflow-hidden bg-white">
                         <div className="bg-gradient-to-r from-red-500 to-pink-500 px-6 py-4">
                             <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                                <CalendarIcon className="h-5 w-5" /> Select Date
+                                <CalendarIcon className="h-5 w-5" />
+                                {step === 1 ? "Select Date" : "Vehicle Details (Optional)"}
                             </h2>
                             <p className="text-white/80 text-sm mt-1">
-                                for {bookingItems.length} services
+                                {step === 1 ? `for ${bookingItems.length} services` : "Add extra details for your vehicle"}
                             </p>
                         </div>
                         <div className="p-6">
-                            <Calendar
-                                mode="single"
-                                selected={selectedDate}
-                                onSelect={handleDateSelect}
-                                disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
-                                className="rounded-md border shadow-sm mx-auto"
-                            />
+                            {step === 1 ? (
+                                <Calendar
+                                    mode="single"
+                                    selected={selectedDate}
+                                    onSelect={handleDateSelect}
+                                    disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+                                    className="rounded-md border shadow-sm mx-auto"
+                                />
+                            ) : (
+                                <div className="space-y-4 py-4">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="car-number">Vehicle Number</Label>
+                                        <Input
+                                            id="car-number"
+                                            placeholder="e.g. OD-02-AK-1234"
+                                            value={carNumber}
+                                            onChange={(e) => setCarNumber(e.target.value)}
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="km-ran">Odometer Reading (km)</Label>
+                                        <Input
+                                            id="km-ran"
+                                            type="number"
+                                            placeholder="e.g. 50000"
+                                            value={kilometerRan}
+                                            onChange={(e) => setKilometerRan(e.target.value)}
+                                        />
+                                    </div>
+                                </div>
+                            )}
+
                             <div className="mt-6 flex justify-end gap-3">
-                                <Button variant="outline" onClick={() => setIsCheckoutOpen(false)}>Cancel</Button>
-                                <Button
-                                    onClick={handleConfirmBooking}
-                                    disabled={!selectedDate || isSubmitting}
-                                    className="bg-green-600 hover:bg-green-700 text-white"
-                                >
-                                    {isSubmitting ? (
-                                        <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Booking...</>
-                                    ) : "Confirm Booking"}
-                                </Button>
+                                {step === 1 ? (
+                                    <>
+                                        <Button variant="outline" onClick={() => setIsCheckoutOpen(false)}>Cancel</Button>
+                                        <Button
+                                            onClick={() => setStep(2)}
+                                            disabled={!selectedDate}
+                                            className="bg-blue-600 hover:bg-blue-700 text-white"
+                                        >
+                                            Next
+                                        </Button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Button variant="outline" onClick={() => setStep(1)}>Back</Button>
+                                        <Button
+                                            onClick={handleConfirmBooking}
+                                            disabled={isSubmitting}
+                                            className="bg-green-600 hover:bg-green-700 text-white"
+                                        >
+                                            {isSubmitting ? (
+                                                <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Booking...</>
+                                            ) : "Confirm Booking"}
+                                        </Button>
+                                    </>
+                                )}
                             </div>
                         </div>
                     </DialogContent>

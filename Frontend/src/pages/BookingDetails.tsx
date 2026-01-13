@@ -12,7 +12,7 @@ import {
   CheckCircle2, AlertCircle, Clock, ShieldCheck, Download, FolderOpen, Plus, Trash2, X,
   Loader2, XCircle, Wrench, Car, Mail, UploadCloud, Image as ImageIcon, Video, ArrowRight, Pencil
 } from "lucide-react";
-import { getBooking, cancelBooking, getUserBookings, type Booking, BookingStatus, deleteDailyWorkByDate, deleteDailyWorkLogById, updateDailyWorkLogDescription, type DailyWorkLog } from "@/services/bookingService";
+import { getBooking, cancelBooking, getUserBookings, type Booking, BookingStatus, deleteDailyWorkByDate, deleteDailyWorkLogById, updateDailyWorkLogDescription, type DailyWorkLog, updateBooking } from "@/services/bookingService";
 import { getBookingCosts, deleteCost, updateCost, type Cost } from "@/services/costService";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
@@ -140,6 +140,12 @@ const BookingDetails = () => {
   const [logPhotos, setLogPhotos] = useState<File[]>([]);
   const [logVideos, setLogVideos] = useState<File[]>([]);
   const [isAddingLog, setIsAddingLog] = useState(false);
+
+  // Vehicle Edit Dialog State
+  const [isEditVehicleDialogOpen, setIsEditVehicleDialogOpen] = useState(false);
+  const [editCarNumber, setEditCarNumber] = useState("");
+  const [editKilometerRan, setEditKilometerRan] = useState("");
+  const [isUpdatingVehicle, setIsUpdatingVehicle] = useState(false);
 
   const isAdmin = user?.role?.name?.toLowerCase() === "admin" || user?.role?.name?.toLowerCase() === "super" || user?.is_superuser;
   const isSuperAdmin = user?.role?.name?.toLowerCase() === "super" || user?.is_superuser;
@@ -369,6 +375,33 @@ const BookingDetails = () => {
     }
   };
 
+  const handleUpdateVehicleDetails = async () => {
+    if (!booking) return;
+    try {
+      setIsUpdatingVehicle(true);
+      await updateBooking(booking.id, {
+        car_number: editCarNumber || undefined, // Send undefined if empty to nullify or ignore? Backend expects str/None. 
+        // Actually types say optional string. 
+        // If empty string, backend might treat as empty string. 
+        kilometer_ran: editKilometerRan ? parseFloat(editKilometerRan) : undefined
+      });
+      toast({ title: "Success", description: "Vehicle details updated" });
+      setIsEditVehicleDialogOpen(false);
+      loadBooking();
+    } catch (error: any) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } finally {
+      setIsUpdatingVehicle(false);
+    }
+  };
+
+  const openEditVehicleDialog = () => {
+    if (!booking) return;
+    setEditCarNumber(booking.car_number || "");
+    setEditKilometerRan(booking.kilometer_ran?.toString() || "");
+    setIsEditVehicleDialogOpen(true);
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'photos' | 'videos') => {
     if (e.target.files && e.target.files.length > 0) {
       const filesArray = Array.from(e.target.files);
@@ -575,10 +608,17 @@ const BookingDetails = () => {
 
                   {/* Vehicle Details */}
                   <div className="p-4 sm:p-6 space-y-4">
-                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
-                      <Car className="h-4 w-4 text-gray-400" />
-                      Vehicle Details
-                    </h3>
+                    <div className="flex justify-between items-center">
+                      <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
+                        <Car className="h-4 w-4 text-gray-400" />
+                        Vehicle Details
+                      </h3>
+                      {isAdmin && (
+                        <Button variant="ghost" size="sm" className="h-6 w-6 p-0 hover:bg-gray-100" onClick={openEditVehicleDialog}>
+                          <Pencil className="h-3 w-3 text-gray-500" />
+                        </Button>
+                      )}
+                    </div>
                     <div className="space-y-3">
                       <p className="font-bold text-lg text-gray-900">{booking.car_brand} {booking.car_model}</p>
                       <div className="flex flex-wrap gap-2">
@@ -593,6 +633,31 @@ const BookingDetails = () => {
                           </Badge>
                         )}
                       </div>
+
+                      {(booking.car_number || booking.kilometer_ran) && (
+                        <div className="pt-2 border-t border-gray-100 space-y-1">
+                          {booking.car_number && (
+                            <div className="flex justify-between text-sm">
+                              <span className="text-gray-500">Vehicle Number:</span>
+                              <span className="font-medium text-gray-900">{booking.car_number}</span>
+                            </div>
+                          )}
+                          {booking.kilometer_ran && (
+                            <div className="flex justify-between text-sm">
+                              <span className="text-gray-500">Odometer:</span>
+                              <span className="font-medium text-gray-900">{booking.kilometer_ran} km</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {!booking.car_number && !booking.kilometer_ran && isAdmin && (
+                        <div className="pt-2 border-t border-gray-100">
+                          <p className="text-xs text-amber-600 cursor-pointer hover:underline" onClick={openEditVehicleDialog}>
+                            + Add Vehicle Details
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -1328,6 +1393,46 @@ const BookingDetails = () => {
           </div>
         </div>
       </main>
+
+      {/* Edit Vehicle Details Dialog */}
+      <Dialog open={isEditVehicleDialogOpen} onOpenChange={setIsEditVehicleDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Edit Vehicle Details</DialogTitle>
+            <DialogDescription>
+              Update vehicle number and odometer reading.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="edit-car-number">Vehicle Number</Label>
+              <Input
+                id="edit-car-number"
+                value={editCarNumber}
+                onChange={(e) => setEditCarNumber(e.target.value)}
+                placeholder="e.g. OD-02-AK-1234"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="edit-km">Odometer Reading (km)</Label>
+              <Input
+                id="edit-km"
+                type="number"
+                value={editKilometerRan}
+                onChange={(e) => setEditKilometerRan(e.target.value)}
+                placeholder="e.g. 50000"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsEditVehicleDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleUpdateVehicleDetails} disabled={isUpdatingVehicle}>
+              {isUpdatingVehicle && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Save Changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>

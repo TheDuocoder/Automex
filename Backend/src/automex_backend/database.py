@@ -61,6 +61,8 @@ async def init_db():
             
             # Check each table in metadata
             for table_name, table in metadata.tables.items():
+                logger.info(f"Checking schema for table '{table_name}'...")
+                
                 # Check if table exists
                 table_check = text("""
                     SELECT COUNT(*) as count 
@@ -115,7 +117,7 @@ async def init_db():
                                 await conn.execute(text(alter_sql))
                                 logger.info(f"✓ Column '{column.name}' added to '{table_name}' successfully")
                             except Exception as col_error:
-                                logger.warning(f"Failed to add column '{column.name}' to '{table_name}': {col_error}")
+                                logger.error(f"Failed to add column '{column.name}' to '{table_name}': {col_error}")
                                 # Continue with other columns
             
             logger.info("Database schema check completed")
