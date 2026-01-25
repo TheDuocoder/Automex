@@ -8,6 +8,11 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
 if __name__ == "__main__":
     import uvicorn
+    import asyncio
+    
+    # Fix for Windows Event Loop RuntimeError
+    if sys.platform == 'win32':
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     
     print("\n" + "="*60)
     print("   AUTOMEX BACKEND SERVER")

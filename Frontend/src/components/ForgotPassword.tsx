@@ -23,8 +23,9 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
     email: "",
   });
 
-  // Form state for step 2 (password only - token is in store)
+  // Form state for step 2 (password + token)
   const [resetData, setResetData] = useState({
+    token: "",
     newPassword: "",
     confirmPassword: "",
   });
@@ -32,6 +33,7 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
   // Form errors
   const [errors, setErrors] = useState({
     email: "",
+    token: "",
     newPassword: "",
     confirmPassword: "",
   });
@@ -43,11 +45,17 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
     setErrors((prev) => ({ ...prev, email: "" }));
   };
 
-  // Handle input changes for step 2 (only password fields)
+  // Handle input changes for step 2 (token + password fields)
   const handleResetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setResetData((prev) => ({ ...prev, [name]: value }));
+    // Clear the specific error for the field being changed
     setErrors((prev) => ({ ...prev, [name]: "" }));
+
+    // Additionally, if the user is typing in either password field, clear the "mismatch" error on confirmPassword
+    if (name === "newPassword" || name === "confirmPassword") {
+      setErrors((prev) => ({ ...prev, confirmPassword: "" }));
+    }
   };
 
   // Validate step 1 (email)
@@ -63,19 +71,16 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
     return true;
   };
 
-  // Validate step 2 (password only - token is in store)
+  // Validate step 2 (token + password)
   const validateReset = () => {
-    if (!resetToken) {
-      toast({
-        title: "Token Missing",
-        description: "Reset token is missing. Please request a new token.",
-        variant: "destructive",
-      });
-      return false;
-    }
-
     let isValid = true;
     const newErrors = { ...errors };
+
+    // Check manual token first, fall back to store token if needed (though we prioritize manual now)
+    if (!resetData.token && !resetToken) {
+      newErrors.token = "Reset token is required";
+      isValid = false;
+    }
 
     if (!resetData.newPassword) {
       newErrors.newPassword = "New password is required";
@@ -98,7 +103,6 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
   };
 
   // Handle step 1 submission (request reset token)
-  // This function can be called both from form submit and from resend button
   const handleEmailSubmit = async (e?: FormEvent) => {
     if (e) {
       e.preventDefault();
@@ -119,11 +123,9 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
         body: JSON.stringify({ email: emailData.email }),
       });
 
-      // FastAPI Users returns 202 Accepted for forgot-password
       if (response.ok || response.status === 202) {
         const isResend = step === 2;
 
-        // Try to get response data (may include token in development mode)
         let responseData: any = null;
         try {
           responseData = await response.json();
@@ -131,9 +133,10 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
           // Response might be empty
         }
 
-        // If token is returned (development mode), store it in Zustand
+        // If token is returned (development mode), store it and pre-fill
         if (responseData?.token) {
           setResetToken(responseData.token, emailData.email);
+          setResetData(prev => ({ ...prev, token: responseData.token }));
           toast({
             title: isResend ? "Token Resent!" : "Reset Token Generated!",
             description: `Token has been generated. You can now set your new password.`,
@@ -145,24 +148,21 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
           });
         }
 
-        // Move to step 2 after successful request (only if not already there)
+        // Move to step 2
         if (step === 1) {
           setStep(2);
         }
       } else {
-        // Try to parse error response
         let errorMessage = "Failed to send reset email. Please try again.";
         try {
           const errorData = await response.json();
           errorMessage = errorData.detail || errorData.message || errorMessage;
         } catch {
-          // If JSON parsing fails, use status text
           errorMessage = response.statusText || errorMessage;
         }
         throw new Error(errorMessage);
       }
     } catch (error) {
-      // Handle network errors
       if (error instanceof TypeError && error.message.includes("fetch")) {
         toast({
           title: "Connection Error",
@@ -198,7 +198,7 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          token: resetToken,
+          token: resetData.token || resetToken, // Use manual token or store token
           password: resetData.newPassword,
         }),
       });
@@ -209,30 +209,26 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
           description: "Your password has been reset. You can now login with your new password.",
         });
 
-        // Reset form and clear store, then go back to login
         clearResetToken();
         setTimeout(() => {
           setStep(1);
           setEmailData({ email: "" });
-          setResetData({ newPassword: "", confirmPassword: "" });
+          setResetData({ token: "", newPassword: "", confirmPassword: "" });
           if (onBackToLogin) {
             onBackToLogin();
           }
         }, 1500);
       } else {
-        // Try to parse error response
         let errorMessage = "Failed to reset password. Please check your token and try again.";
         try {
           const errorData = await response.json();
           errorMessage = errorData.detail || errorData.message || errorMessage;
         } catch {
-          // If JSON parsing fails, use status text
           errorMessage = response.statusText || errorMessage;
         }
         throw new Error(errorMessage);
       }
     } catch (error) {
-      // Handle network errors
       if (error instanceof TypeError && error.message.includes("fetch")) {
         toast({
           title: "Connection Error",
@@ -266,7 +262,6 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
         `
       }}
     >
-      {/* Close Button */}
       {onClose && (
         <button
           onClick={onClose}
@@ -277,7 +272,6 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
         </button>
       )}
 
-      {/* Logo/Icon */}
       <div className="flex justify-center mb-4">
         <img
           src="https://automex-bhubaneswar.s3.ap-south-2.amazonaws.com/Frontend/images/Automex_icon/AUTOMEX_logo.png"
@@ -289,7 +283,6 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
         />
       </div>
 
-      {/* Title */}
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-center text-white drop-shadow-2xl">
           {step === 1 ? "Forgot Password" : "Reset Password"}
@@ -297,11 +290,10 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
         <p className="text-sm text-white/80 text-center mt-2">
           {step === 1
             ? "Enter your email to receive a reset token"
-            : "Enter your new password"}
+            : "Enter the token from your email and your new password"}
         </p>
       </div>
 
-      {/* Step 1: Email Form */}
       {step === 1 && (
         <form onSubmit={handleEmailSubmit}>
           <div className="mb-6">
@@ -344,7 +336,7 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
                 Sending...
               </>
             ) : (
-              "Send Reset Token"
+              "Reset Password"
             )}
           </Button>
 
@@ -368,10 +360,9 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
         </form>
       )}
 
-      {/* Step 2: Token + New Password Form */}
       {step === 2 && (
         <form onSubmit={handleResetSubmit}>
-          {/* Info Message Removed as per requirement */}
+          {/* Token Input Hidden (Available in State) */}
 
           {/* New Password Input */}
           <div className="mb-4">
@@ -467,7 +458,7 @@ const ForgotPassword = ({ onClose, onBackToLogin }: ForgotPasswordProps) => {
               onClick={() => {
                 setStep(1);
                 clearResetToken();
-                setResetData({ newPassword: "", confirmPassword: "" });
+                setResetData({ token: "", newPassword: "", confirmPassword: "" });
               }}
               className="text-sm font-medium transition-colors inline-flex items-center gap-2"
               style={{ color: '#DD2476' }}
