@@ -194,10 +194,6 @@ def custom_openapi():
 
 app.openapi = custom_openapi
 
-# Add Custom CORS Middleware - This will add headers to EVERY response
-print("[INFO] CORS: Using custom middleware - ALL origins (*)")
-app.add_middleware(CORSHeaderMiddleware)
-
 # Include API routes
 app.include_router(api_router, prefix="/api/v1")
 
@@ -209,24 +205,6 @@ try:
     print("[INFO] Static file serving enabled for local uploads")
 except Exception as e:
     print(f"[WARNING] Could not mount static files: {str(e)}")
-
-# Debug: Print all registered routes
-print("\n[INFO] Registered API Routes:")
-for route in app.routes:
-    if hasattr(route, 'path') and hasattr(route, 'methods'):
-        methods = ', '.join(sorted(route.methods)) if route.methods else 'N/A'
-        print(f"  {methods:20s} {route.path}")
-print(f"\n[INFO] Total routes registered: {len([r for r in app.routes if hasattr(r, 'path')])}\n")
-
-# Write routes to file for debugging
-try:
-    with open("routes.txt", "w") as f:
-        for route in app.routes:
-            if hasattr(route, 'path'):
-                methods = ', '.join(sorted(route.methods)) if hasattr(route, 'methods') and route.methods else 'N/A'
-                f.write(f"{methods:20s} {route.path}\n")
-except Exception as e:
-    print(f"Failed to write routes.txt: {e}")
 
 
 @app.get("/")

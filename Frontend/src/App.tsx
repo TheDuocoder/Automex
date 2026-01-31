@@ -13,7 +13,6 @@ import Profile from "./pages/Profile";
 import MyServices from "./pages/MyServices";
 import MyCart from "./pages/MyCart";
 import BookingDetails from "./pages/BookingDetails";
-import ServicesDemo from "./pages/ServicesDemo";
 import VehicleDetails from "./pages/VehicleDetails";
 import ExtraServices from "./pages/ExtraServices";
 import NotFound from "./pages/NotFound";
@@ -35,7 +34,6 @@ const App = () => {
               <Route path="/" element={<Index />} />
               <Route path="/contact-us" element={<ContactUs />} />
               <Route path="/services" element={<Services />} />
-              <Route path="/services-demo" element={<ProtectedRoute><ServicesDemo /></ProtectedRoute>} />
               {/* Redirect /login to landing page */}
               <Route path="/login" element={<Navigate to="/" replace state={{ showAuth: true }} />} />
               {/* Protected routes - require authentication */}
