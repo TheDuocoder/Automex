@@ -38,7 +38,7 @@ const WhatsAppFloat = () => {
 
       {/* Main Circle Button */}
       <div
-        className={`relative w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 ${isHovered ? 'scale-110' : 'scale-100'
+        className={`relative w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center transition-all duration-300 ${isHovered ? 'scale-110' : 'scale-100'
           }`}
         style={{
           background: 'linear-gradient(135deg, #25D366 0%, #20BA5A 100%)',
@@ -59,7 +59,7 @@ const WhatsAppFloat = () => {
         {/* WhatsApp Icon */}
         <svg
           viewBox="0 0 24 24"
-          className="w-8 h-8 relative z-10 text-white"
+          className="w-6 h-6 md:w-8 md:h-8 relative z-10 text-white"
           fill="currentColor"
           style={{
             filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1))'

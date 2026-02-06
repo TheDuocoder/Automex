@@ -86,7 +86,7 @@ const Footer = ({ compact = false }: FooterProps = {}) => {
         <div className={`${compact ? 'mt-6 pt-4' : 'mt-12 pt-8'} border-t border-gray-700`}>
           <div className="flex flex-col items-center justify-center">
             {/* Social Media Icons - Above Copyright */}
-            <div className="flex items-center gap-5 mb-4">
+            <div className="hidden md:flex items-center gap-5 mb-4">
               <a
                 href="https://www.instagram.com/automex__/"
                 target="_blank"

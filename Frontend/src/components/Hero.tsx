@@ -158,27 +158,27 @@ const Hero = ({ showLoginForm = false, onCloseLogin }: HeroProps) => {
           data-bg-index={index}
           style={{
             backgroundImage: `url("${image}")`,
-            filter: 'brightness(0.5)',
+            filter: 'brightness(1.15) contrast(1.4)',
             opacity: currentImageIndex === index ? 1 : 0,
             zIndex: currentImageIndex === index ? 1 : 0
           }}
         ></div>
       ))}
 
-      {/* Enhanced Overlay - Vertical gradient + Deep vignette */}
+      {/* Enhanced Overlay - Ultra Intense 4X Center Spotlight */}
       <div
         className="absolute inset-0 z-[2]"
         style={{
           background: `
-            radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.5) 100%),
-            linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.35) 100%),
-            linear-gradient(to right, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.25) 50%, transparent 100%)
+            radial-gradient(circle at center, transparent 5%, rgba(0,0,0,0.92) 70%),
+            linear-gradient(to bottom, transparent 20%, rgba(0,0,0,0.7) 100%),
+            linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 30%, transparent 60%)
           `
         }}
       ></div>
 
       {/* 3D Glass Social Media Icons - Bottom Left */}
-      <div className="absolute bottom-8 md:bottom-12 left-16 md:left-24 lg:left-32 z-[100] flex items-center gap-8">
+      <div className="hidden md:flex absolute bottom-8 md:bottom-12 left-16 md:left-24 lg:left-32 z-[100] items-center gap-8">
         {/* Instagram Icon */}
         <a
           href="https://www.instagram.com/automex__/"
