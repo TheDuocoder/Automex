@@ -19,7 +19,7 @@ services:
       - automex_network
 
   backend:
-    image: procoder9937/automex:backend
+    build: ./Backend
     container_name: automex_backend
     restart: unless-stopped
     expose:
@@ -39,7 +39,7 @@ services:
         condition: service_healthy
 
   frontend:
-    image: procoder9937/automex:frontend
+    build: ./Frontend
     container_name: automex_frontend
     restart: unless-stopped
     expose:
@@ -52,7 +52,7 @@ services:
       - automex_network
 
   nginx:
-    image: procoder9937/automex:nginx
+    build: ./nginx
     container_name: automex_nginx
     restart: unless-stopped
     ports:
